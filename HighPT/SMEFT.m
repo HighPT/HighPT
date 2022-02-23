@@ -221,138 +221,98 @@ MatchToSMEFT[arg_, \[CapitalLambda]NP_, OptionsPattern[]]:= Module[
 (*Wilson coefficient (WC) substitution rules*)
 
 
-(* ::Subsubsection:: *)
-(*d=4 (SM)*)
-
-
-(* returns the replacement rules for the SM only *)
-SubstitutionRulesSMEFT[4, \[Epsilon]_]:= Module[{list}
-	,
+(* returns the replacement rules to match the form-factors to the d=6 SMEFT in the Warsaw basis *)
+SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8},
 	list= {
+		(* SCALAR *)
+		(* NC *)
+		FF[Scalar, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> - \[Epsilon] * WC["lequ1", {a,b,i,j}] * f6,
+		FF[Scalar, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> - \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate] * f6,
+		FF[Scalar, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["ledq", {a,b,i,j}] * f6,
+		FF[Scalar, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate] * f6,
+		(* CC *)
+		FF[Scalar, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_u}]:> \[Epsilon] * WC["lequ1", {a,b,i,j}] * f6,
+		FF[Scalar, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate] * f6,
+		FF[Scalar, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_u}]:> \[Epsilon] * WC["ledq", {a,b,i,j}] * f6,
+		FF[Scalar, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_d}]:> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate] * f6,
+		
+		(* Tensor *)
+		(* NC *)
+		FF[Tensor, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> - \[Epsilon] * WC["lequ3", {a,b,i,j}] * f6,
+		FF[Tensor, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> - \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate] * f6,
+		(* CC *)
+		FF[Tensor, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_u}]:> \[Epsilon] * WC["lequ3", {a,b,i,j}] * f6,
+		FF[Tensor, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate] * f6,
+		
+		(* Vector *)
+		(* NC *)
+		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon] * (WC["lq1", {a,b,i,j}] - WC["lq3", {a,b,i,j}]) * f6,
+		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_d}]:> \[Epsilon] * (WC["lq1", {a,b,i,j}] + WC["lq3", {a,b,i,j}]) * f6,
+		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["eu", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["ed", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["lu", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["ld", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["eq", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["eq", {a,b,i,j}] * f6,
+		(* CC *)
+		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_u}]:> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {OrderlessPatternSequence[Right,_]}, {a_,b_,i_u,j_d}]:> 0,
+		FF[Vector, {"regular",{0,0}}, {OrderlessPatternSequence[Right,_]}, {a_,b_,i_d,j_u}]:> 0,
+		
+		(* Standard Model *)
 		(* NC *)
 		FF[Vector, {Photon,SM}, {_,_}, {l_[a_],l_[b_],q_[i_],q_[j_]}]:> gA[l,{a,b}] * gA[q,{i,j}],
 		FF[Vector, {ZBoson,SM}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],q_[i_],q_[j_]}]:> gZ[l,\[Chi]l,{a,b}] * gZ[q,\[Chi]q,{i,j}],
 		(* CC *)
 		FF[Vector, {WBoson,SM}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> gW[{a,b}] * gW[{i,j}],
-		(* all other FF vanish *)
-		FF[_,{_,Except[SM]},___]:> 0
-	};
-	
-	Return[list]
-]
-
-
-(* ::Subsubsection:: *)
-(*d=6*)
-
-
-(* returns the replacement rules to match the form-factors to the d=6 SMEFT in the Warsaw basis *)
-SubstitutionRulesSMEFT[6, \[Epsilon]_]:= Module[{list}
-	,
-	list= {
-		(* SCALAR *)
-		(* NC *)
-		FF[Scalar, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}] :> - \[Epsilon] * WC["lequ1", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]   :> - \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate],
-		FF[Scalar, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["ledq", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate],
-		(* CC *)
-		FF[Scalar, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_u}] :> \[Epsilon] * WC["lequ1", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]   :> \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate],
-		FF[Scalar, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_u}]  :> \[Epsilon] * WC["ledq", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_d}]  :> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate],
-		
-		(* Tensor *)
-		(* NC *)
-		FF[Tensor, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}] :> - \[Epsilon] * WC["lequ3", {a,b,i,j}],
-		FF[Tensor, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]   :> - \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate],
-		(* CC *)
-		FF[Tensor, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_u}] :> \[Epsilon] * WC["lequ3", {a,b,i,j}],
-		FF[Tensor, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]   :> \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate],
-		
-		(* Vector *)
-		(* NC *)
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]   :> \[Epsilon] * (WC["lq1", {a,b,i,j}] - WC["lq3", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_d}]   :> \[Epsilon] * (WC["lq1", {a,b,i,j}] + WC["lq3", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}] :> \[Epsilon] * WC["eu", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_d}] :> \[Epsilon] * WC["ed", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_u}]  :> \[Epsilon] * WC["lu", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["ld", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_u,j_u}]  :> \[Epsilon] * WC["eq", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["eq", {a,b,i,j}],
-		(* CC *)
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]                         :> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_u}]                         :> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {OrderlessPatternSequence[Right,_]}, {a_,b_,i_u,j_d}] :> 0,
-		FF[Vector, {"regular",{0,0}}, {OrderlessPatternSequence[Right,_]}, {a_,b_,i_d,j_u}] :> 0,
-		
-		(* Standard Model *)
-		(* NC *)
-		FF[Vector, {Photon,SM}, {_,_}, {l_[a_],l_[b_],q_[i_],q_[j_]}]     :> gA[l,{a,b}] * gA[q,{i,j}],
-		FF[Vector, {ZBoson,SM}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],q_[i_],q_[j_]}] :> gZ[l,\[Chi]l,{a,b}] * gZ[q,\[Chi]q,{i,j}],
-		(* CC *)
-		FF[Vector, {WBoson,SM}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}] :> gW[{a,b}] * gW[{i,j}],
 		
 		(* Gauge coupling modifications *)
 		(* NC *)
-		FF[Vector, {Photon,0}, ___] :> 0,
-		FF[Vector, {ZBoson,0}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],d[i_],d[j_]}] :> gZ[l,\[Chi]l,{a,b}] * \[CapitalDelta]gZd[\[Chi]q,\[Epsilon],{i,j}] + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * gZ[d,\[Chi]q,{i,j}] + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * \[CapitalDelta]gZd[\[Chi]q,\[Epsilon],{i,j}],
-		FF[Vector, {ZBoson,0}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],u[i_],u[j_]}] :> gZ[l,\[Chi]l,{a,b}] * \[CapitalDelta]gZu[\[Chi]q,\[Epsilon],{i,j}] + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * gZ[u,\[Chi]q,{i,j}] + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * \[CapitalDelta]gZu[\[Chi]q,\[Epsilon],{i,j}],
+		FF[Vector, {Photon,0}, ___]:> 0,
+		FF[Vector, {ZBoson,0}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],d[i_],d[j_]}]:> gZ[l,\[Chi]l,{a,b}] * \[CapitalDelta]gZd[\[Chi]q,\[Epsilon],{i,j}] * f6 + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * gZ[d,\[Chi]q,{i,j}] * f6 + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * \[CapitalDelta]gZd[\[Chi]q,\[Epsilon],{i,j}] * f6,
+		FF[Vector, {ZBoson,0}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],u[i_],u[j_]}]:> gZ[l,\[Chi]l,{a,b}] * \[CapitalDelta]gZu[\[Chi]q,\[Epsilon],{i,j}] * f6 + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * gZ[u,\[Chi]q,{i,j}] * f6 + \[CapitalDelta]gZe[\[Chi]l,\[Epsilon],{a,b}] * \[CapitalDelta]gZu[\[Chi]q,\[Epsilon],{i,j}] * f6,
 		(*
 		FF[Vector, {Photon,1}, ___]:> 0, (* TO DO *)
 		FF[Vector, {ZBoson,1}, ___]:> 0, (* TO DO *)
 		*)
 		(* CC *)
-		FF[Vector, {WBoson,0}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> 2*\[Pi]*\[Alpha]EM * \[Epsilon] * (KroneckerDelta[i,j] * WC["Hl3",{a,b}] + KroneckerDelta[a,b] * WC["Hq3",{i,j}]) + 2*\[Pi]*\[Alpha]EM * \[Epsilon]^2 * WC["Hl3",{a,b}] * WC["Hq3",{i,j}],
-		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],u[i_],d[j_]}]:> \[Pi]*\[Alpha]EM * \[Epsilon] * KroneckerDelta[a,b] * WC["Hud",{i,j}],
-		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],d[i_],u[j_]}]:> \[Pi]*\[Alpha]EM * \[Epsilon] * KroneckerDelta[a,b] * WC["Hud",{j,i}]\[Conjugate],
+		FF[Vector, {WBoson,0}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> 2*\[Pi]*\[Alpha]EM * \[Epsilon] * (KroneckerDelta[i,j] * WC["Hl3",{a,b}] + KroneckerDelta[a,b] * WC["Hq3",{i,j}])*f6 + 2*\[Pi]*\[Alpha]EM * \[Epsilon]^2 * WC["Hl3",{a,b}] * WC["Hq3",{i,j}]*f6,
+		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],u[i_],d[j_]}]:> \[Pi]*\[Alpha]EM * \[Epsilon] * KroneckerDelta[a,b] * WC["Hud",{i,j}] * f6,
+		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],d[i_],u[j_]}]:> \[Pi]*\[Alpha]EM * \[Epsilon] * KroneckerDelta[a,b] * WC["Hud",{j,i}]\[Conjugate] * f6,
 		(*
 		FF[Vector, {WBoson,1}, ___]:> 0, (* TO DO *)
 		*)
 		
 		(* Lepton Dipoles *)
 		(* NC *)
-		FF[DipoleL, {Photon,0}, {Right,_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> I Sqrt[2]* gA[q,{i,j}] * \[Epsilon] * (sW*WC["eW",{a,b}] - cW*WC["eB",{a,b}]),
-		FF[DipoleL, {Photon,0}, {Left,_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> -I Sqrt[2]* gA[q,{i,j}] * \[Epsilon] * (sW*WC["eW",{b,a}]\[Conjugate] - cW*WC["eB",{b,a}]\[Conjugate]),
-		FF[DipoleL, {ZBoson,0}, {Right,\[Chi]q_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> I Sqrt[2]* gZ[q,\[Chi]q,{i,j}] * \[Epsilon] * (cW*WC["eW",{a,b}] + sW*WC["eB",{a,b}]),
-		FF[DipoleL, {ZBoson,0}, {Left,\[Chi]q_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> -I Sqrt[2]* gZ[q,\[Chi]q,{i,j}] * \[Epsilon] * (cW*WC["eW",{b,a}]\[Conjugate] + sW*WC["eB",{b,a}]\[Conjugate]),
+		FF[DipoleL, {Photon,0}, {Right,_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> I Sqrt[2]* gA[q,{i,j}] * \[Epsilon] * (sW*WC["eW",{a,b}] - cW*WC["eB",{a,b}]) * f6,
+		FF[DipoleL, {Photon,0}, {Left,_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> -I Sqrt[2]* gA[q,{i,j}] * \[Epsilon] * (sW*WC["eW",{b,a}]\[Conjugate] - cW*WC["eB",{b,a}]\[Conjugate]) * f6,
+		FF[DipoleL, {ZBoson,0}, {Right,\[Chi]q_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> I Sqrt[2]* gZ[q,\[Chi]q,{i,j}] * \[Epsilon] * (cW*WC["eW",{a,b}] + sW*WC["eB",{a,b}]) * f6,
+		FF[DipoleL, {ZBoson,0}, {Left,\[Chi]q_},{l_[a_],l_[b_],q_[i_],q_[j_]}]:> -I Sqrt[2]* gZ[q,\[Chi]q,{i,j}] * \[Epsilon] * (cW*WC["eW",{b,a}]\[Conjugate] + sW*WC["eB",{b,a}]\[Conjugate]) * f6,
 		(* CC *)
-		FF[DipoleL, {WBoson,0}, {Right,Left},{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> - I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[i,j] * WC["eW",{a,b}],
-		FF[DipoleL, {WBoson,0}, {Left,Left},{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[i,j] * WC["eW",{b,a}]\[Conjugate],
+		FF[DipoleL, {WBoson,0}, {Right,Left},{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> - I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[i,j] * WC["eW",{a,b}] * f6,
+		FF[DipoleL, {WBoson,0}, {Left,Left},{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[i,j] * WC["eW",{b,a}]\[Conjugate] * f6,
 		
 		(* Quark Dipoles *)
 		(* NC *)
-		FF[DipoleQ, {Photon,0}, {_,Right},{l_[a_],l_[b_],d[i_],d[j_]}]:> I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["dW",{i,j}] - cW*WC["dB",{i,j}]),
-		FF[DipoleQ, {Photon,0}, {_,Left},{l_[a_],l_[b_],d[i_],d[j_]}]:> - I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["dW",{j,i}]\[Conjugate] - cW*WC["dB",{j,i}]\[Conjugate]),
-		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Right},{l_[a_],l_[b_],d[i_],d[j_]}]:> I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["dW",{i,j}] + sW*WC["dB",{i,j}]),
-		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Left},{l_[a_],l_[b_],d[i_],d[j_]}]:> - I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["dW",{j,i}]\[Conjugate] + sW*WC["dB",{j,i}]\[Conjugate]),
+		FF[DipoleQ, {Photon,0}, {_,Right},{l_[a_],l_[b_],d[i_],d[j_]}]:> I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["dW",{i,j}] - cW*WC["dB",{i,j}]) * f6,
+		FF[DipoleQ, {Photon,0}, {_,Left},{l_[a_],l_[b_],d[i_],d[j_]}]:> - I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["dW",{j,i}]\[Conjugate] - cW*WC["dB",{j,i}]\[Conjugate]) * f6,
+		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Right},{l_[a_],l_[b_],d[i_],d[j_]}]:> I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["dW",{i,j}] + sW*WC["dB",{i,j}]) * f6,
+		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Left},{l_[a_],l_[b_],d[i_],d[j_]}]:> - I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["dW",{j,i}]\[Conjugate] + sW*WC["dB",{j,i}]\[Conjugate]) * f6,
 		
-		FF[DipoleQ, {Photon,0}, {_,Right},{l_[a_],l_[b_],u[i_],u[j_]}]:> - I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["uW",{i,j}] + cW*WC["uB",{i,j}]),
-		FF[DipoleQ, {Photon,0}, {_,Left},{l_[a_],l_[b_],u[i_],u[j_]}]:> I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["uW",{j,i}]\[Conjugate] + cW*WC["uB",{j,i}]\[Conjugate]),
-		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Right},{l_[a_],l_[b_],u[i_],u[j_]}]:> - I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["uW",{i,j}] - sW*WC["uB",{i,j}]),
-		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Left},{l_[a_],l_[b_],u[i_],u[j_]}]:> I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["uW",{j,i}]\[Conjugate] - sW*WC["uB",{j,i}]\[Conjugate]),
+		FF[DipoleQ, {Photon,0}, {_,Right},{l_[a_],l_[b_],u[i_],u[j_]}]:> - I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["uW",{i,j}] + cW*WC["uB",{i,j}]) * f6,
+		FF[DipoleQ, {Photon,0}, {_,Left},{l_[a_],l_[b_],u[i_],u[j_]}]:> I Sqrt[2]* gA[l,{a,b}] * \[Epsilon] * (sW*WC["uW",{j,i}]\[Conjugate] + cW*WC["uB",{j,i}]\[Conjugate]) * f6,
+		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Right},{l_[a_],l_[b_],u[i_],u[j_]}]:> - I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["uW",{i,j}] - sW*WC["uB",{i,j}]) * f6,
+		FF[DipoleQ, {ZBoson,0}, {\[Chi]l_,Left},{l_[a_],l_[b_],u[i_],u[j_]}]:> I Sqrt[2]* gZ[l,\[Chi]l,{a,b}] * \[Epsilon] * (cW*WC["uW",{j,i}]\[Conjugate] - sW*WC["uB",{j,i}]\[Conjugate]) * f6,
 		
-		(* NC *)
-		FF[DipoleQ, {WBoson,0}, {Left,Right},{l1_[a_],l2_[b_],u[i_],d[j_]}]:> - I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["dW",{i,j}],
-		FF[DipoleQ, {WBoson,0}, {Left,Left},{l1_[a_],l2_[b_],d[i_],u[j_]}]:> I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["dW",{j,i}]\[Conjugate],
-		FF[DipoleQ, {WBoson,0}, {Left,Right},{l1_[a_],l2_[b_],d[i_],u[j_]}]:> - I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["uW",{i,j}],
-		FF[DipoleQ, {WBoson,0}, {Left,Left},{l1_[a_],l2_[b_],u[i_],d[j_]}]:> I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["uW",{j,i}]\[Conjugate]
+		(* CC *)
+		FF[DipoleQ, {WBoson,0}, {Left,Right},{l1_[a_],l2_[b_],u[i_],d[j_]}]:> - I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["dW",{i,j}] * f6,
+		FF[DipoleQ, {WBoson,0}, {Left,Left},{l1_[a_],l2_[b_],d[i_],u[j_]}]:> I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["dW",{j,i}]\[Conjugate] * f6,
+		FF[DipoleQ, {WBoson,0}, {Left,Right},{l1_[a_],l2_[b_],d[i_],u[j_]}]:> - I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["uW",{i,j}] * f6,
+		FF[DipoleQ, {WBoson,0}, {Left,Left},{l1_[a_],l2_[b_],u[i_],d[j_]}]:> I Sqrt[2]* Sqrt[4*\[Pi]*\[Alpha]EM]/sW * \[Epsilon] * KroneckerDelta[a,b] * WC["uW",{j,i}]\[Conjugate] * f6
 	};
-	Return[list]
-]
-
-
-(* ::Subsubsection:: *)
-(*d=8*)
-
-
-MatchToSMEFT::nodim8= "Dimension 8 matching of form factors has not been included yet.";
-
-
-SubstitutionRulesSMEFT[8, \[Epsilon]_]:= Module[{list}
-	,
-	Message[MatchToSMEFT::nodim8];
-	Abort[];
+	Return[list/.f6->If[dim<=4,0,1]/.f8->If[dim<=6,0,1]];
 ]
 
 
