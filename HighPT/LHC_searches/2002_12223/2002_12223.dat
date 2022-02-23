@@ -1,0 +1,40 @@
+Begin["HighPT`Experiments`PackagePrivate`"]
+
+(* Information on search 2002.12223 *)
+
+$Info["2002_12223"] = <|
+	"PROCESS"					->	"p p > \!\(\*SuperscriptBox[\(\[Tau]\), \(-\)]\) \!\(\*SuperscriptBox[\(\[Tau]\), \(+\)]\)",
+	"FINALSTATE"				->	"{e[3],e[3]}",
+	"EXPERIMENT"				->	"ATLAS",
+	"ARXIV"						->	Hyperlink["2002.12223", "https://arxiv.org/abs/2002.12223"],
+	"SOURCE"					->	Hyperlink["https://doi.org/10.17182/hepdata.93071.v4/t3", "https://doi.org/10.17182/hepdata.93071.v4/t3"],
+	"DESCRIPTION"				->	"Observed and predicted mTtot distribution in the b-veto category of the 2tau_h channel. The last bin includes overflows.",
+	"OBSERVABLE"				->	"\!\(\*SubsuperscriptBox[m, T, tot]\)",
+	"BINS"						->	<|
+										"OBSERVABLE"	-> {150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1150, 1500},
+										"MLL"			-> {150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1150, 1500},
+										"PT"			-> {0, Infinity}
+									|>,
+	"LUMINOSITY"			 	-> 139 (* in fb$^{-1}$ *),
+	"CMENERGY"		 			-> 13000 (* in GeV *)
+|>
+
+(* - - - - - - - - - - - - - - - - - - - - - - - *)
+
+(* Observed number of events per bin *)
+
+$NEventsObserved["2002_12223"] = {1167.0, 1568.0, 1409.0, 1455.0, 1292.0, 650.0, 377.0, 288.0, 92.0, 57.0, 27.0, 14.0, 11.0, 13.0}
+
+(* - - - - - - - - - - - - - - - - - - - - - - - *)
+
+(* Predicted number of events per bin (SM + background) *)
+
+$NEventsPredicted["2002_12223"] = {1125.2, 1498.3, 1434.54, 1495.3, 1276.9, 656.11, 353.42, 327.85, 123.3, 61.49, 33.42, 17.43, 11.97, 10.65}
+
+(* - - - - - - - - - - - - - - - - - - - - - - - *)
+
+(* Combined uncertainty (summed in quadrature) per bins *)
+
+$NEventsUncertainty["2002_12223"] = {41.4616, 52.2108, 55.603, 75.9643, 93.8217, 62.1782, 39.6698, 39.2406, 18.3311, 10.9369, 6.7967, 4.48256, 3.83814, 4.17861}
+
+End[]
