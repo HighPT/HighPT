@@ -105,8 +105,8 @@ BinnedCrossSection[{\[Alpha]_,\[Beta]_}, ptBinList_List, mllBinList_List, Option
 				\[Sigma]result= ParallelMap[
 					(# /. $xSec->CrossSection)&,
 					\[Sigma]result,
-					DistributedContexts -> {"HighPT`"},
-					ProgressReporting   -> True
+					DistributedContexts -> {"HighPT`"}
+					(*,ProgressReporting   -> True*)
 				];
 			];
 			,
@@ -391,9 +391,9 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension],
 			Efficiency        -> True
-		(*],
-		"\[Sigma] computation: "*)
-	];
+		](*,
+		"\[Sigma] computation: "
+	]*);
 
 	(* This is no longer possible since BinnedCrossSection always returns 1d Lists now *)
 	(*	

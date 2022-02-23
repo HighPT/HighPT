@@ -642,3 +642,26 @@ $OptionValueAssociation= <|
 
 
 OptionCheck::optionvalue= "Invalid OptionValue specified: `1`->`2`, the allowed values for `1` must match `3`.";
+
+
+(* ::Section:: *)
+(*EchoTiming*)
+
+
+(* ::Text:: *)
+(*Include custom EchoTiming for v12.1 and older*)
+
+
+If[($VersionNumber==12 && $ReleaseNumber<=2) ||$VersionNumber<12,
+	SetAttributes[HighPT`PackageScope`EchoTiming,{HoldFirst,SequenceHold}];
+	HighPT`PackageScope`EchoTiming[x_]:= Evaluate@Module[{time,result},
+		{time,result}=Timing[x];
+		Echo[time, "time: "];
+		Return[result]
+	];
+	HighPT`PackageScope`EchoTiming[x_,y_]:=Evaluate@Module[{time,result},
+		{time,result}=Timing[x];
+		Echo[time,"time: " <> ToString[y] <>": "];
+		Return[result]
+	];
+];
