@@ -378,7 +378,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	}];
 	
 	(* compute binned cross section *)
-	\[Sigma]Binned= EchoTiming[
+	\[Sigma]Binned= (*EchoTiming[*)
 		BinnedCrossSection[
 			finalstate, ptBins, sBins,
 			(* due to the way efficiencies are included this has to be done afterwards. *)
@@ -391,8 +391,8 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension],
 			Efficiency        -> True
-		],
-		"\[Sigma] computation: "
+		(*],
+		"\[Sigma] computation: "*)
 	];
 
 	(* This is no longer possible since BinnedCrossSection always returns 1d Lists now *)
@@ -441,12 +441,12 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	(* convolution with efficiency kernels *)
 	If[$ParallelHighPT,
 		(* parallel substitute *)
-		EchoTiming[With[{eff= Dispatch[efficiencies]},
+		(*EchoTiming[*)With[{eff= Dispatch[efficiencies]},
 			\[Sigma]Observable= ParallelMap[(#/.eff)&, \[Sigma]Binned];
-		], "\[Epsilon] substitution: "];
+		](*, "\[Epsilon] substitution: "]*);
 		,
 		(* standard substitution *)
-		\[Sigma]Observable= EchoTiming[\[Sigma]Binned/.efficiencies, "\[Epsilon] substitution: "];
+		\[Sigma]Observable= (*EchoTiming[*)\[Sigma]Binned/.efficiencies(*, "\[Epsilon] substitution: "]*);
 	];
 	
 	(* check if there are efficiencies remaining and set them to zero *)
