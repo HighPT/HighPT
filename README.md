@@ -10,7 +10,7 @@ All below is just copied from matchete ...
 
 The simplest way to download and install HighPT is to run the following command in a Mathematica session:
 
-> Import["https://github.com/HighPT/HighPT/-/raw/master/install.m"]
+> Import["https://github.com/HighPT/HighPT/raw/master/install.m"]
 [This does not yet work]
 
 This will download and install HighPT in the Applications folder of Mathematica's base directory. To load HighPT use the command:
