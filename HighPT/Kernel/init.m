@@ -4,11 +4,11 @@
 (*Initialization [HighPT`]*)
 
 
-(* Generate warning for Mathematica versions earlier than 11.0.0 *)
-If[$VersionNumber < 11.0, 
+(* Generate warning for Mathematica versions earlier than 12.0.0 *)
+If[$VersionNumber < 12.0, 
 CellPrint[{
 TextCell[
-"HighPT` was developed for Mathematica 11.0.0 and later. 
+"HighPT` was developed for Mathematica 12.0.0 and later. 
 Your current Mathematica version [" <> ToString@$Version <> "] might not be compatible. 
 In case you are experiencing problems with HighPT`, please update your Mathematica version.",
 "Text",Background->LightRed]
