@@ -246,13 +246,21 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8},
 		
 		(* Vector *)
 		(* NC *)
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon] * (WC["lq1", {a,b,i,j}] - WC["lq3", {a,b,i,j}]) * f6,
+		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon] * (WC["lq1", {a,b,i,j}] - WC["lq3", {a,b,i,j}]) * f6+
+		f8 * 1/2 * \[Epsilon]^2 * (WC["l2q2H21", {a,b,i,j}]+WC["l2q2H22", {a,b,i,j}]-WC["l2q2H23", {a,b,i,j}]-WC["l2q2H24", {a,b,i,j}])+
+		f8 * 1/2 * \[Epsilon]^2 * mZ^2 * (gZ[l,Left,{a,b}]*(WC["q2H2D31", {i,j}]\[Conjugate]-WC["q2H2D32", {i,j}]\[Conjugate]-WC["q2H2D33", {i,j}]\[Conjugate]+WC["q2H2D34", {i,j}]\[Conjugate])+gZ[q,Left,{i,j}]*(WC["l2H2D31", {a,b}]-WC["l2H2D32", {a,b}]+WC["l2H2D33", {a,b}]-WC["l2H2D34", {a,b}])),
 		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_d}]:> \[Epsilon] * (WC["lq1", {a,b,i,j}] + WC["lq3", {a,b,i,j}]) * f6,
-		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["eu", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["eu", {a,b,i,j}] * f6+
+		f8 * 1/2 * \[Epsilon]^2 * (WC["e2u2H2", {a,b,i,j}])+
+		f8 * 1/2 * \[Epsilon]^2 * mZ^2 * (gZ[l,Right,{a,b}]*(WC["u2H2D31", {i,j}]\[Conjugate]-WC["u2H2D32", {i,j}]\[Conjugate])+gZ[q,Right,{i,j}]*(WC["e2H2D31", {a,b}]-WC["e2H2D32", {a,b}])),
 		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["ed", {a,b,i,j}] * f6,
-		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["lu", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["lu", {a,b,i,j}] * f6+
+		f8 * 1/2 * \[Epsilon]^2 * (WC["l2u2H21", {a,b,i,j}]+WC["l2u2H22", {a,b,i,j}])+
+		f8 * 1/2 * \[Epsilon]^2 * mZ^2 * (gZ[l,Left,{a,b}]*(WC["u2H2D31", {i,j}]\[Conjugate]-WC["u2H2D32", {i,j}]\[Conjugate])+gZ[q,Right,{i,j}]*(WC["l2H2D31", {a,b,i,j}]-WC["l2H2D32", {a,b}]+WC["l2H2D33", {a,b}]-WC["l2H2D34", {a,b}])),
 		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["ld", {a,b,i,j}] * f6,
-		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["eq", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon] * WC["eq", {a,b,i,j}] * f6+
+		f8 * 1/2 * \[Epsilon]^2 * (WC["q2e2H21", {a,b,i,j}]+WC["q2e2H22", {a,b,i,j}])+
+		f8 * 1/2 * \[Epsilon]^2 * mZ^2 * (gZ[l,Right,{a,b}]*(WC["q2H2D31", {i,j}]\[Conjugate]-WC["q2H2D32", {i,j}]\[Conjugate]-WC["q2H2D33", {i,j}]\[Conjugate]+WC["q2H2D34", {i,j}]\[Conjugate])+gZ[q,Left,{i,j}]*(WC["e2H2D31", {a,b}]-WC["e2H2D32", {a,b}])),
 		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]:> \[Epsilon] * WC["eq", {a,b,i,j}] * f6,
 		(* CC *)
 		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6,
@@ -364,10 +372,35 @@ gW[{p_,r_}]:= Sqrt[4*\[Pi]*\[Alpha]EM]/(Sqrt[2]*sW) * KroneckerDelta[p,r]
 (*Hermitian WC*)
 
 
-HermitianWC4= Alternatives["lq1", "lq3", "eu", "ed", "lu", "ld", "eq"];
+HermitianWC4= Alternatives[
+				(* dim 6 *)
+						  "lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
+				(* Psi^4 H^2 *)
+						   "l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
+						   "l2u2H21","l2u2H22","l2d2H21","l2d2H22",
+						   "q2e2H21","q2e2H22",
+						   "e2u2H2", "e2d2H2",
+						   "l2q2D21","l2q2D22","l2q2D23","l2q2D24",
+						   "l2u2D21","l2u2D22","l2u2D23","l2u2D24",
+				(* Psi^4 D^2 *)
+						   "l2q2D21","l2q2D22","l2q2D23","l2q2D24",
+						   "l2u2D21","l2u2D22","l2u2D23","l2u2D24",
+						   "q2e2D21","q2e2D22",
+						   "e2u2D21","e2u2D22","e2u2D23","e2u2D24"
+						   ];
 
 
-HermitianWC2= Alternatives["Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd"];
+HermitianWC2= Alternatives["Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
+				(* Psi^2 H^4 D *)
+						   "l2H4D1","l2H4D2","l2H4D3","l2H4D4",
+						   "q2H4D1","q2H4D2","q2H4D3","q2H4D4",
+						   "e2H4D","u2H4D","d2H4D",
+				(* Psi^2 H^2 D^3 *)
+						   "l2H2D31","l2H2D32","l2H2D33","l2H2D34",
+						   "e2H2D31","e2H2D32",
+						   "q2H2D31","q2H2D32","q2H2D33","q2H2D34",
+						   "u2H2D31","u2H2D32",
+						   "d2H2D31","d2H2D32"];
 
 
 (* ::Subsection:: *)
