@@ -707,7 +707,7 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 		]
 	};
 	
-	MyExpand[expr/.ccRules/.ncRules]
+	Return[expr/.ccRules/.ncRules]
 ]
 
 

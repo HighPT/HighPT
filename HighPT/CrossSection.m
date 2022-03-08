@@ -117,7 +117,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 (*Phase-space integration*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*IntegrateT*)
 
 
@@ -283,7 +283,7 @@ PartialFractioning[t_]:= {
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Integrated CrossSection*)
 
 
@@ -509,7 +509,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Differential cross-section in s (for internal use)*)
 
 
@@ -586,8 +586,8 @@ HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= M
 	];
 	
 	(* rotate from mass to weak basis for quark flavor indices *)
-	\[Sigma]HadronDifferential= \[Sigma]HadronDifferential/. RotateFFtoWeakEigenbasis;
-	
+	(*\[Sigma]HadronDifferential= \[Sigma]HadronDifferential/. RotateFFtoWeakEigenbasis;*)
+	\[Sigma]HadronDifferential= RotateMassToWeakBasis[\[Sigma]HadronDifferential];
 	(* change units from GeV^-2 to pb *)
 	\[Sigma]HadronDifferential= GeV2toPB * \[Sigma]HadronDifferential;
 	
