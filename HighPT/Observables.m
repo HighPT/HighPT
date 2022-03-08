@@ -371,6 +371,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	{"SOURCE",            ":", expInfo["SOURCE"]},
 	{"OBSERVABLE",        ":", expInfo["OBSERVABLE"]},
 	{"BINNING " <> expInfo["OBSERVABLE"] <> " [GeV]", ":", TraditionalForm[expInfo["BINS"]["OBSERVABLE"]]},
+	{"EVENTS OBSERVED",   ":", ToString@searchData["Observed"]},
 	{"LUMINOSITY [\!\(\*SuperscriptBox[\(fb\), \(-1\)]\)]", ":", lumi},
 	(* for internal computation *)
 	{"BINNING \!\(\*SqrtBox[OverscriptBox[\(s\), \(^\)]]\) [GeV]", ":", TraditionalForm[sBins]},

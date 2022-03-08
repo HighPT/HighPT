@@ -652,6 +652,7 @@ OptionCheck::optionvalue= "Invalid OptionValue specified: `1`->`2`, the allowed 
 (*Include custom EchoTiming for v12.1 and older*)
 
 
+(*
 If[($VersionNumber==12 && $ReleaseNumber<=2) ||$VersionNumber<12,
 	SetAttributes[HighPT`PackageScope`EchoTiming,{HoldFirst,SequenceHold}];
 	HighPT`PackageScope`EchoTiming[x_]:= Evaluate@Module[{time,result},
@@ -665,3 +666,4 @@ If[($VersionNumber==12 && $ReleaseNumber<=2) ||$VersionNumber<12,
 		Return[result]
 	];
 ];
+*)
