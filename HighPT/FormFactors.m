@@ -515,6 +515,10 @@ FF[Tensor,_,{Right,Right},{_,_,_,_d}]:= 0
 FF[Tensor,_,{Left,Left},{_,_,_d,_}]:= 0
 
 (* opposite chiralities are already removed for Tensors *)
+(*
+- still add this explicitely?
+- we might want to gneralize to theories w/o linearly realized SU(2)xU(1) and Hypercharge conservation (a la LEFT) where such operators are allowed.
+*)
 
 
 FF[Scalar,_,{Right,Right},{_,_,_,_d}]:= 0
