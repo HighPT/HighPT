@@ -620,6 +620,97 @@ RotateFFtoWeakEigenbasis= {
 };
 
 
+(* preliminary definitions of Subscript[V, u] and Subscript[V, d] *)
+Vu[[i_,j_]]:= CKM[[j,i]]\[Conjugate]
+Vd[[i_,j_]]:= KroneckerDelta[i,j]
+
+
+(* WORK IN PROGRES *)
+RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
+	ccRules= {
+		(* ud *)
+		FF[Vector, x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, u[i_], d[j_]}]:> (Sum[
+			Vu[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], d[n]}] * Vd[[j,n]]\[Conjugate]
+			,
+			{k,1,3},{n,1,3}
+		]/.DiagonalizeWBosonSM)
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_e, b_\[Nu], u[i_], d[j_]}]:> (Sum[
+			FF[type, x, {\[Chi]L, Left}, {a, b, u[i], d[k]}] * Vd[[j,k]]\[Conjugate]
+			,
+			{k,1,3}
+		]/.DiagonalizeWBosonSM)
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_e, b_\[Nu], u[i_], d[j_]}]:> (Sum[
+			Vu[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, u[k], d[j]}]
+			,
+			{k,1,3}
+		]/.DiagonalizeWBosonSM)
+		,
+		(* du *)
+		FF[Vector, x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, d[i_], u[j_]}]:> (Sum[
+			Vd[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, d[k], u[n]}] * Vu[[j,n]]\[Conjugate]
+			,
+			{k,1,3},{n,1,3}
+		]/.DiagonalizeWBosonSM)
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_e, b_\[Nu], d[i_], u[j_]}]:> (Sum[
+			FF[type, x, {\[Chi]L, Left}, {a, b, d[i], u[k]}] * Vu[[j,k]]\[Conjugate]
+			,
+			{k,1,3}
+		]/.DiagonalizeWBosonSM)
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_e, b_\[Nu], d[i_], u[j_]}]:> (Sum[
+			Vd[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, d[k], u[j]}]
+			,
+			{k,1,3}
+		]/.DiagonalizeWBosonSM)
+	};
+	
+	ncRules= {
+		(* uu *)
+		FF[Vector, x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, u[i_], u[j_]}]:> Sum[
+			Vu[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], u[n]}] * Vu[[j,n]]\[Conjugate]
+			,
+			{k,1,3},{n,1,3}
+		]
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, u[i_], u[j_]}]:> Sum[
+			FF[type, x, {\[Chi]L, Left}, {a, b, u[i], u[n]}] * Vu[[j,n]]\[Conjugate]
+			,
+			{n,1,3}
+		]
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_\[Nu], b_e, u[i_], u[j_]}]:> Sum[
+			Vu[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, u[k], u[j]}]
+			,
+			{k,1,3}
+		]
+		,
+		(* dd *)
+		FF[Vector, x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, d[i_], d[j_]}]:> Sum[
+			Vd[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, d[k], d[n]}] * Vd[[j,n]]\[Conjugate]
+			,
+			{k,1,3},{n,1,3}
+		]
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, d[i_], d[j_]}]:> Sum[
+			FF[type, x, {\[Chi]L, Left}, {a, b, d[i], d[n]}] * Vd[[j,n]]\[Conjugate]
+			,
+			{n,1,3}
+		]
+		,
+		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_\[Nu], b_e, d[i_], d[j_]}]:> Sum[
+			Vd[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, d[k], d[j]}]
+			,
+			{k,1,3}
+		]
+	};
+	
+	MyExpand[expr/.ccRules/.ncRules]
+]
+
+
 (* ::Section:: *)
 (*Auxiliary functions*)
 
