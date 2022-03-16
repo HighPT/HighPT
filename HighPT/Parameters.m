@@ -48,8 +48,9 @@ PackageExport["sW"]
 PackageExport["cW"]
 
 
-PackageScope["CKM"]
-PackageScope["V"]
+PackageExport["CKM"]
+PackageExport["Wolfenstein"]
+PackageExport["Vckm"]
 
 
 (* ::Subsection:: *)
@@ -103,7 +104,11 @@ CKM::usage= "CKM
 	Denotes the CKM matrix.";
 
 
-V::usage= "V[\!\(\*SubscriptBox[\(u\), \(i\)]\)\!\(\*SubscriptBox[\(d\), \(j\)]\)]
+Wolfenstein::usage= "Wolfenstein
+	is an Option of DefineParameters[...] and should be given as Wolfenstein -> {\[Lambda], A, \!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\), \!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}.";
+
+
+Vckm::usage= "Vckm[i,j]
 	Denotes the ij element of the CKM matrix.";
 
 
@@ -181,7 +186,7 @@ Format[\[Alpha]EM, TraditionalForm]:= Subscript["\[Alpha]","EM"]
 
 
 Format[CKM, TraditionalForm]:= Subscript["V","CKM"]
-Format[V[x_], TraditionalForm]:= Subscript["V",x]
+Format[Vckm[x_,y_], TraditionalForm]:= Subscript["V",ToString[x]<>ToString[y]]
 
 
 (* ::Section:: *)
@@ -208,18 +213,26 @@ mZ$default = 91.1876;
 (*CKM*)
 
 
-\[Lambda]Wolfenstein= 0.22650;
-AWolfenstein= 0.790;
-\[Rho]BarWolfenstein= 0.141;
-\[Eta]BarWolfenstein= 0.357;
-\[Rho]Wolfenstein= \[Rho]BarWolfenstein/(1-\[Lambda]Wolfenstein^2/2);
-\[Eta]Wolfenstein= \[Eta]BarWolfenstein/(1-\[Lambda]Wolfenstein^2/2);
+\[Lambda]Wolfenstein$default    = 0.22650;
+AWolfenstein$default    = 0.790;
+\[Rho]BarWolfenstein$default = 0.141;
+\[Eta]BarWolfenstein$default = 0.357;
+
+Wolfenstein$default = {
+	\[Lambda]Wolfenstein$default,
+	AWolfenstein$default,
+	\[Rho]BarWolfenstein$default,
+	\[Eta]BarWolfenstein$default
+}
+
+(*\[Rho]Wolfenstein= \[Rho]BarWolfenstein/(1-\[Lambda]Wolfenstein^2/2);
+\[Eta]Wolfenstein= \[Eta]BarWolfenstein/(1-\[Lambda]Wolfenstein^2/2);*)
 
 
 CKM= {
-	{V["ud"],V["us"],V["ub"]},
-	{V["cd"],V["cs"],V["cb"]},
-	{V["td"],V["ts"],V["tb"]}
+	{Vckm[1,1], Vckm[1,2], Vckm[1,3]},
+	{Vckm[2,1], Vckm[2,2], Vckm[2,3]},
+	{Vckm[3,1], Vckm[3,2], Vckm[3,3]}
 };
 
 
@@ -229,14 +242,21 @@ CKM= {
 
 DefineParameters::usage= "DefineParameters[]
 	Defines all SM parameters: \[Alpha]EM, VEV, sW, cW, Mass[ZBoson], Width[ZBoson], Mass[WBoson], Width[WBoson], Mass[Photon], Width[Photon], CKM.
-	The input scheme uses the parameters \[Alpha]EM, GF, mZ, \[CapitalGamma]Z, \[CapitalGamma]W which can be specified via Options.
+	The input scheme uses the parameters \[Alpha]EM, GF, mZ, \[CapitalGamma]Z, \[CapitalGamma]W, Wolfenstein which can be specified via Options.
 	Example:
 		To set the electromagnetic fine structure constant to \!\(\*SubscriptBox[\(\[Alpha]\), \(EM\)]\) = \!\(\*SuperscriptBox[\(137\), \(-1\)]\) use
 		DefineParameters[\[Alpha]EM \[Rule] 1/137].
 ";
 
 
-Options[DefineParameters]={\[Alpha]EM->\[Alpha]EM$default, GF->GF$default, mZ->mZ$default, \[CapitalGamma]Z->\[CapitalGamma]Z$default, \[CapitalGamma]W->\[CapitalGamma]W$default};
+Options[DefineParameters]= {
+	\[Alpha]EM         -> \[Alpha]EM$default,
+	GF          -> GF$default,
+	mZ          -> mZ$default,
+	\[CapitalGamma]Z          -> \[CapitalGamma]Z$default,
+	\[CapitalGamma]W          -> \[CapitalGamma]W$default,
+	Wolfenstein -> Wolfenstein$default
+};
 
 
 DefineParameters[OptionsPattern[]] := Module[
@@ -248,13 +268,21 @@ DefineParameters[OptionsPattern[]] := Module[
 		$\[CapitalGamma]W  = OptionValue[\[CapitalGamma]W],
 		$mW,
 		$sW,
-		$vev
+		$vev,
+		$Wolfenstein = OptionValue[Wolfenstein], 
+		$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar, $\[Rho], $\[Eta]
 	}
 	,
+	(* set the Wolfentein parameters *)
+	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
+	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
+	$\[Eta] = $\[Eta]Bar/(1-$\[Lambda]^2/2);
+	
 	(* compute the non-input parameters *)
 	$mW = Sqrt[$mZ^2/2.+Sqrt[$mZ^4/4.-($\[Alpha]EM*\[Pi]*$mZ^2)/($GF*Sqrt[2])]];
 	$sW = Sqrt[1. - $mW^2/$mZ^2];
 	$vev = ($mW*$sW)/Sqrt[\[Pi]*$\[Alpha]EM];
+	
 	(* Create the appropriate supstitution rule *)
 	ExperimentalParameters = <|
 		\[Alpha]EM           -> $\[Alpha]EM,
@@ -272,17 +300,17 @@ DefineParameters[OptionsPattern[]] := Module[
 			{-\[Lambda]Wolfenstein, 1-\[Lambda]Wolfenstein^2/2, AWolfenstein * \[Lambda]Wolfenstein^2},
 			{AWolfenstein * \[Lambda]Wolfenstein^3 * (1 - \[Rho]Wolfenstein - \[ImaginaryI]*\[Eta]Wolfenstein), -AWolfenstein * \[Lambda]Wolfenstein^2, 1}
 		},*)
-		V["ud"] -> 1-\[Lambda]Wolfenstein^2/2,
-		V["us"] -> \[Lambda]Wolfenstein,
-		V["ub"] -> AWolfenstein * \[Lambda]Wolfenstein^3 * (\[Rho]Wolfenstein - I*\[Eta]Wolfenstein),
+		Vckm[1,1] -> 1-$\[Lambda]^2/2,
+		Vckm[1,2] -> $\[Lambda],
+		Vckm[1,3] -> $A * $\[Lambda]^3 * ($\[Rho] - I*$\[Eta]),
 		
-		V["cd"] -> -\[Lambda]Wolfenstein,
-		V["cs"] -> 1-\[Lambda]Wolfenstein^2/2,
-		V["cb"] -> AWolfenstein * \[Lambda]Wolfenstein^2,
+		Vckm[2,1] -> -$\[Lambda],
+		Vckm[2,2] -> 1-$\[Lambda]^2/2,
+		Vckm[2,3] -> $A * $\[Lambda]^2,
 		
-		V["td"] -> AWolfenstein * \[Lambda]Wolfenstein^3 * (1 - \[Rho]Wolfenstein - I*\[Eta]Wolfenstein),
-		V["ts"] -> -AWolfenstein * \[Lambda]Wolfenstein^2,
-		V["tb"] -> 1
+		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
+		Vckm[3,2] -> -$A * $\[Lambda]^2,
+		Vckm[3,3] -> 1
 		(*unit conversion*)
 		(*,GeV2toPB -> (10^9)/(2.56819)*)
 	|>;
