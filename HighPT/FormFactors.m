@@ -478,7 +478,7 @@ ExpandFormFactors::usage= "ExpandFormFactors[arg] performs the form-factor expan
 (*Definitions*)
 
 
-Options[ExpandFormFactors] = {OperatorDimension:> GetOperatorDimension[]};
+Options[ExpandFormFactors] = {OperatorDimension :> GetOperatorDimension[]};
 
 
 ExpandFormFactors[arg_, OptionsPattern[]]:= Module[

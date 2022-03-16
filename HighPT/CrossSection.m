@@ -61,14 +61,17 @@ PackageScope["PartialFractioning"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton-level cross-section*)
 
 
 PartonCrossSection::usage="PartonCrossSection[___] compiutes the parton-level cross-section for the process ... .";
 
 
-Options[PartonCrossSection]= {PTcuts->{0,\[Infinity]}};
+Options[PartonCrossSection]= {
+	PTcuts            -> {0,\[Infinity]},
+	OperatorDimension :> GetOperatorDimension[]
+};
 
 
 PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
@@ -85,7 +88,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 	temp= SpinSummedAmplitude2[s,t,{\[Alpha],\[Beta],i,j}];
 	
 	(* Expand the FormFactors *)
-	temp= ExpandFormFactors[temp];
+	temp= ExpandFormFactors[temp, OperatorDimension -> OptionValue[OperatorDimension]];
 	
 	(* Perform phase-space integration over t *)
 	temp= IntegrateT[temp, t];
@@ -392,7 +395,11 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	ptCuts= OptionValue[PTcuts];
 	
 	(* compute differential hadronic cross section *)
-	\[Sigma]= HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, PTcuts->ptCuts, Efficiency->OptionValue[Efficiency]];
+	\[Sigma]= HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, 
+		PTcuts            -> ptCuts,
+		Efficiency        -> OptionValue[Efficiency],
+		OperatorDimension -> OptionValue[OperatorDimension]
+	];
 	
 	(* Find and collect all s-integrals *)
 	\[Sigma]= Integrand[\[Sigma],s];
@@ -509,7 +516,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Differential cross-section in s (for internal use)*)
 
 
@@ -518,8 +525,9 @@ HadronicDifferentialCrossSection::usage= "HadronicDifferentialCrossSection[]
 
 
 Options[HadronicDifferentialCrossSection]= {
-	PTcuts     -> {0,\[Infinity]},
-	Efficiency -> False
+	PTcuts            -> {0,\[Infinity]},
+	Efficiency        -> False,
+	OperatorDimension :> GetOperatorDimension[]
 };
 
 
@@ -531,7 +539,10 @@ HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= M
 	}
 	,
 	(* derive parton-level cross-section with generic flavor indices *)
-	\[Sigma]General= PartonCrossSection[s, {\[Alpha],\[Beta],i,j}, PTcuts->OptionValue[PTcuts]];
+	\[Sigma]General= PartonCrossSection[s, {\[Alpha],\[Beta],i,j}, 
+		PTcuts            -> OptionValue[PTcuts],
+		OperatorDimension -> OptionValue[OperatorDimension]
+	];
 	
 	(* distinguish charged-current from neutral-current *)
 	Switch[{Head[\[Alpha]],Head[\[Beta]]},
@@ -613,11 +624,11 @@ DifferentialCrossSection::usage= "DifferentialCrossSection[{\!\(\*SubscriptBox[\
 
 
 Options[DifferentialCrossSection]= {
-	OutputFormat -> FF,
-	Coefficients -> All,
-	EFTorder :> GetEFTorder[],
+	OutputFormat      -> FF,
+	Coefficients      -> All,
+	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	PTcuts -> {0,\[Infinity]}
+	PTcuts            -> {0,\[Infinity]}
 };
 
 
@@ -628,7 +639,10 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	OptionCheck[#,OptionValue[#]]& /@ {OutputFormat, Coefficients, EFTorder, OperatorDimension, PTcuts};
 	
 	(* compute d\[Sigma]/ds *)
-	\[Sigma]= HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, PTcuts->OptionValue[PTcuts]];
+	\[Sigma]= HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, 
+		PTcuts -> OptionValue[PTcuts],
+		OperatorDimension -> OptionValue[OperatorDimension]
+	];
 	
 	(* replace constants *)
 	\[Sigma]= \[Sigma]/.ReplacePropagators;
