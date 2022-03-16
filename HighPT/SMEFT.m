@@ -354,7 +354,7 @@ SubstitutionRulesSMEFT[8, \[Epsilon]_]:= Module[{list}
 	Message[MatchToSMEFT::nodim8];
 	list={
 		FF[Vector, {"regular",{1,0}}, {Left,Left}, {a_,b_,i_d,j_d}]:> 
-		\[Epsilon]^2 * (WC["llqqDD1", {a,b,i,j}] + WC["llqqDD2", {a,b,i,j}]+WC["llqqDD3", {a,b,i,j}]+WC["llqqDD4", {a,b,i,j}])
+		\[Epsilon]^2 * (WC["llqqDD1", {a,b,i,j}] + WC["llqqDD2", {a,b,i,j}] - WC["llqqDD3", {a,b,i,j}] - WC["llqqDD4", {a,b,i,j}])
 	};
 	Join[SubstitutionRulesSMEFT[6, \[Epsilon]],list]
 ]
