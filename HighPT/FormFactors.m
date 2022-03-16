@@ -576,6 +576,13 @@ FF[DipoleQ, {WBoson,0}, {Right,_},___]:= 0
 FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
 
 
+(* ::Subsubsection:: *)
+(*The photon vertex does not receive corrections in the SMEFT at d=6*)
+
+
+FF[Vector, {Photon,Except[SM]},___]:= 0
+
+
 (* ::Section:: *)
 (*Weak basis rotation for form factors*)
 
