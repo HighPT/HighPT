@@ -161,7 +161,7 @@ InitializeModel[list_List]:= Module[
 	DefineSM[];
 	
 	(* removes some unnecessary stuff *)
-	SetEFTorder[6];
+	SetEFTorder[0];
 	
 	(* set Model run mode *)
 	$RunMode= "Model";
