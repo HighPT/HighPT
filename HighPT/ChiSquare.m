@@ -38,6 +38,9 @@ PackageExport["PlotConfidenceRegion"]
 PackageExport["PlotConfidenceIntervals"]
 
 
+PackageExport["CombineBins"]
+
+
 (* ::Text:: *)
 (*rm*)
 
@@ -50,6 +53,13 @@ PackageExport["PlotConfidenceIntervals"]
 
 (* ::Chapter:: *)
 (*Private:*)
+
+
+CombineBins::usage= "CombineBins
+	is an Option of ChiSquareLHC[...] that allows to combine several bins of the exerpimental search. 
+	The bins used in a given search \"xxx\" and the corresponding event count per bin can be displayed using LHCSearch[\"xxx\"].
+	Example: for combining the 2nd and 3rd bin as well as the bins 7 to 9 one should specify CombineBins->{{2,3},{7,8,9}}.
+	By default no bins are merged."
 
 
 (* ::Section:: *)
@@ -66,14 +76,16 @@ ChiSquareLHC::usage="ChiSquareLHC[\"proc\"]
 		OutputFormat \[Rule] FF,
 		Coefficients \[Rule] All,
 		EFTorder \[RuleDelayed] GetEFTorder[],
-		OperatorDimension \[RuleDelayed] GetOperatorDimension[].";
+		OperatorDimension \[RuleDelayed] GetOperatorDimension[],
+		CombineBins -> {}.";
 
 
 Options[ChiSquareLHC]= {
-	OutputFormat -> FF,
-	Coefficients -> All,
-	EFTorder :> GetEFTorder[],
-	OperatorDimension :> GetOperatorDimension[]
+	OutputFormat      -> FF,
+	Coefficients      -> All,
+	EFTorder          :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[],
+	CombineBins       -> {}
 };
 
 
@@ -160,6 +172,11 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	NPredicted = expData["Expected"];
 	\[Sigma]N         = expData["Error"];
 	
+	(* merging bins if requested *)
+	If[OptionValue[CombineBins]=!={},
+		{\[Sigma]Predicted,NObserved,NPredicted,\[Sigma]N}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted,\[Sigma]N}, OptionValue[CombineBins]]
+	];
+	
 	(* # events differences *)
 	\[CapitalDelta]Events= NObserved - NPredicted;
 	
@@ -168,6 +185,44 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	
 	(* * *)
 	Return[chi2]
+]
+
+
+(* combines the desired bins *)
+MergeBins[lists_List, merge_List]:= Module[
+	{
+		combinedBins,
+		allBins
+	}
+	,
+	(* auxiliary list of all bins *)
+	allBins = Table[{i},{i,Length@First[lists]}];
+	
+	(* sort the bins *)
+	combinedBins= SortBy[
+		(* create a list of all bins where the ones that should be grouped are combined *)
+		Join[
+			merge,
+			Complement[
+				allBins,
+				Table[{n},{n,Flatten[merge]}]
+			]
+		],
+		First
+	];
+	
+	Print["Merging bins as: ", combinedBins];
+	
+	Table[
+		(* sum the bins *)
+		Table[
+			Plus@@list[[bin]]
+			,
+			{bin, combinedBins}
+		]
+		,
+		{list,lists}
+	]
 ]
 
 
