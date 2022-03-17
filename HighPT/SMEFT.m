@@ -29,10 +29,6 @@ PackageExport["MatchToSMEFT"]
 PackageExport["WC"]
 
 
-PackageExport["WCxf"]
-PackageExport["MapToWCxf"]
-
-
 PackageExport["SetEFTorder"]
 
 
@@ -253,33 +249,33 @@ SubstitutionRulesSMEFT[6, \[Epsilon]_]:= Module[{list}
 		(* SCALAR *)
 		(* NC *)
 		FF[Scalar, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}] :> - \[Epsilon] * WC["lequ1", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]   :> - \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate],
-		FF[Scalar, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["ledq", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate],
+		FF[Scalar, {"regular",{0,0}}, {Left,Left},   {a_,b_,i_u,j_u}] :> - \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate],
+		FF[Scalar, {"regular",{0,0}}, {Right,Left},  {a_,b_,i_d,j_d}] :> \[Epsilon] * WC["ledq", {a,b,i,j}],
+		FF[Scalar, {"regular",{0,0}}, {Left,Right},  {a_,b_,i_d,j_d}] :> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate],
 		(* CC *)
 		FF[Scalar, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_u}] :> \[Epsilon] * WC["lequ1", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]   :> \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate],
-		FF[Scalar, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_u}]  :> \[Epsilon] * WC["ledq", {a,b,i,j}],
-		FF[Scalar, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_d}]  :> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate],
+		FF[Scalar, {"regular",{0,0}}, {Left,Left},   {a_,b_,i_u,j_d}] :> \[Epsilon] * WC["lequ1", {b,a,j,i}]\[Conjugate],
+		FF[Scalar, {"regular",{0,0}}, {Right,Left},  {a_,b_,i_d,j_u}] :> \[Epsilon] * WC["ledq", {a,b,i,j}],
+		FF[Scalar, {"regular",{0,0}}, {Left,Right},  {a_,b_,i_u,j_d}] :> \[Epsilon] * WC["ledq", {b,a,j,i}]\[Conjugate],
 		
 		(* Tensor *)
 		(* NC *)
 		FF[Tensor, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}] :> - \[Epsilon] * WC["lequ3", {a,b,i,j}],
-		FF[Tensor, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]   :> - \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate],
+		FF[Tensor, {"regular",{0,0}}, {Left,Left},   {a_,b_,i_u,j_u}] :> - \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate],
 		(* CC *)
 		FF[Tensor, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_u}] :> \[Epsilon] * WC["lequ3", {a,b,i,j}],
-		FF[Tensor, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]   :> \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate],
+		FF[Tensor, {"regular",{0,0}}, {Left,Left},   {a_,b_,i_u,j_d}] :> \[Epsilon] * WC["lequ3", {b,a,j,i}]\[Conjugate],
 		
 		(* Vector *)
 		(* NC *)
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_u}]   :> \[Epsilon] * (WC["lq1", {a,b,i,j}] - WC["lq3", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_d}]   :> \[Epsilon] * (WC["lq1", {a,b,i,j}] + WC["lq3", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,0}}, {Left,Left},   {a_,b_,i_u,j_u}] :> \[Epsilon] * (WC["lq1", {a,b,i,j}] - WC["lq3", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,0}}, {Left,Left},   {a_,b_,i_d,j_d}] :> \[Epsilon] * (WC["lq1", {a,b,i,j}] + WC["lq3", {a,b,i,j}]),
 		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_u,j_u}] :> \[Epsilon] * WC["eu", {a,b,i,j}],
 		FF[Vector, {"regular",{0,0}}, {Right,Right}, {a_,b_,i_d,j_d}] :> \[Epsilon] * WC["ed", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_u,j_u}]  :> \[Epsilon] * WC["lu", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Left,Right}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["ld", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_u,j_u}]  :> \[Epsilon] * WC["eq", {a,b,i,j}],
-		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]  :> \[Epsilon] * WC["eq", {a,b,i,j}],
+		FF[Vector, {"regular",{0,0}}, {Left,Right},  {a_,b_,i_u,j_u}] :> \[Epsilon] * WC["lu", {a,b,i,j}],
+		FF[Vector, {"regular",{0,0}}, {Left,Right},  {a_,b_,i_d,j_d}] :> \[Epsilon] * WC["ld", {a,b,i,j}],
+		FF[Vector, {"regular",{0,0}}, {Right,Left},  {a_,b_,i_u,j_u}] :> \[Epsilon] * WC["eq", {a,b,i,j}],
+		FF[Vector, {"regular",{0,0}}, {Right,Left},  {a_,b_,i_d,j_d}] :> \[Epsilon] * WC["eq", {a,b,i,j}],
 		(* CC *)
 		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]                         :> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}],
 		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_u}]                         :> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}],
@@ -443,35 +439,3 @@ WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:=
 
 
 WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
-
-
-(* ::Section:: *)
-(*WCxf*)
-
-
-WCxf::usage= "WCxf[\"coef\"]
-	Denotes the Wilson coefficient that is labeld by coef in the Warsaw basis as specified by the WCxf format.";
-
-
-MapToWCxf::usage= "MapToWCxf
-	List of replacement rules that maps the HighPTio Wilson coefficient notation to the WCxf conventions.";
-
-
-MapToWCxf= {
-	(* C_qe *)
-	WC["eq", {\[Alpha]_,\[Beta]_,i_,j_}] :> Module[{ret, ind={i,j,\[Alpha],\[Beta]}},
-		If[(ind[[1]]>ind[[2]]) || (ind[[1]]==ind[[2]] && ind[[3]]>ind[[4]]),
-			ind={ind[[2]],ind[[1]],ind[[4]],ind[[3]]};
-			ret= Conjugate@ WCxf["qe" <> "_" <> ToString[ind[[1]]] <> ToString[ind[[2]]] <> ToString[ind[[3]]] <> ToString[ind[[4]]]]
-			,
-			ret= WCxf["qe" <> "_" <> ToString[ind[[1]]] <> ToString[ind[[2]]] <> ToString[ind[[3]]] <> ToString[ind[[4]]]]
-		];
-		ret
-	],
-	
-	(* four fermion operators except for C_qe *)
-	WC[a:Except["eq",_String], {\[Alpha]_,\[Beta]_,i_,j_}] :> WCxf[a <> "_" <> ToString[\[Alpha]] <> ToString[\[Beta]] <> ToString[i] <> ToString[j]],
-	
-	(* two fermion operators *)
-	WC[a_String, {p_,r_}] :> WCxf[StringReplace[a, "H"->"phi"] <> "_" <> ToString[p] <> ToString[r]]
-};
