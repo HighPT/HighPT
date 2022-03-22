@@ -570,6 +570,13 @@ FF[DipoleQ, {WBoson,0}, {Right,_},___]:= 0
 
 
 (* ::Subsubsection:: *)
+(*For CC processes the regular vector FF only contribute to the LL chirality configuration*)
+
+
+FF[Vector, {"regular",_}, {OrderlessPatternSequence[Right,_]}, {_,_,_u,_d}|{_,_,_d,_u}]:= 0
+
+
+(* ::Subsubsection:: *)
 (*Consider only left-handed neutrinos*)
 
 

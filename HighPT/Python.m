@@ -26,6 +26,9 @@ Package["HighPT`"]
 PackageExport["PythonExport"]
 
 
+PackageExport["WCxf"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
