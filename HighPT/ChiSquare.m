@@ -438,7 +438,7 @@ PlotConfidenceIntervals[regions:{ImplicitRegion[_,{_}]..}, OptionsPattern[]]:= M
 	,
 	(* define default lables *)
 	If[labels===Automatic,
-		labels= Placed[TraditionalForm[#], Before]&/@(regions[[;;,-1,1]]);
+		labels= Placed[TraditionalForm[Style[#,Large]], Before]&/@(regions[[;;,-1,1]]);
 	];
 	
 	(* Write out the confidence intervals *)
