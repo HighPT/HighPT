@@ -295,15 +295,25 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8},
 		f8 * \[Epsilon]^2 * 1/2 * mZ^2/VEV^2 * (gZ[e,Right,{a,b}]*(WC["d2H2D31", {j,i}]\[Conjugate]-WC["d2H2D32", {j,i}]\[Conjugate])+
                                         gZ[d,Right,{i,j}]*(WC["e2H2D31", {a,b}]-WC["e2H2D32", {a,b}])),
 		
-		(* energy enhanced *)
-		FF[Vector, {"regular",{1,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * (WC["l2q2D21", {a,b,i,j}]+WC["l2q2D22", {a,b,i,j}]-WC["l2q2D23", {a,b,i,j}]-WC["l2q2D24", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * 2 * (WC["l2q2D22", {a,b,i,j}]-WC["l2q2D24", {a,b,i,j}]),
-		FF[Vector, {"regular",{1,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * (WC["l2u2D21", {a,b,i,j}]+WC["l2u2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Left,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * 2 * WC["l2u2D22", {a,b,i,j}],
-		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * (WC["q2e2D21", {a,b,i,j}]+WC["q2e2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * 2 * WC["q2e2D22", {a,b,i,j}],
-		FF[Vector, {"regular",{1,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * (WC["e2u2D21", {a,b,i,j}]+WC["e2u2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_u,j_u}]:> \[Epsilon]^2 * 2 * WC["e2u2D22", {a,b,i,j}],
+		(* energy enhanced UP *)
+		FF[Vector, {"regular",{1,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["l2q2D21", {a,b,i,j}]+WC["l2q2D22", {a,b,i,j}]-WC["l2q2D23", {a,b,i,j}]-WC["l2q2D24", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * (WC["l2q2D22", {a,b,i,j}]-WC["l2q2D24", {a,b,i,j}]),
+		FF[Vector, {"regular",{1,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["l2u2D21", {a,b,i,j}]+WC["l2u2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["l2u2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["q2e2D21", {a,b,i,j}]+WC["q2e2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["q2e2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["e2u2D21", {a,b,i,j}]+WC["e2u2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["e2u2D22", {a,b,i,j}],
+		
+		(* energy enhanced DOWN *)
+		FF[Vector, {"regular",{1,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["l2q2D21", {a,b,i,j}]+WC["l2q2D22", {a,b,i,j}]+WC["l2q2D23", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * (WC["l2q2D22", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
+		FF[Vector, {"regular",{1,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["l2d2D21", {a,b,i,j}]+WC["l2d2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["l2d2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 *  \[Epsilon]^2 * (WC["q2e2D21", {a,b,i,j}]+WC["q2e2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["q2e2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["e2d2D21", {a,b,i,j}]+WC["e2d2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["e2d2D22", {a,b,i,j}],
 		
 		(* CC *)
 		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6,
@@ -353,6 +363,36 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8},
 		f8 * \[Epsilon]^2 * mZ^2/VEV^2 * (-1) * (gZ[l,Right,{a,b}]*WC["u2H4D",{i,j}]+gZ[u,Right,{i,j}]*WC["e2H4D",{a,b}])+
 		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[l,Right,{a,b}] * (WC["u2H2D31",{i,j}]-WC["u2H2D32",{i,j}])+
 		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[u,Right,{i,j}] * (WC["e2H2D31",{a,b}]-WC["e2H2D32",{a,b}]),
+		
+		
+		(* Gauge coupling modifications DOWN*)
+		FF[Vector, {ZBoson,0}, {Left,Left}, {l_[a_],l_[b_],d[i_],d[j_]}]:> 
+		f6 * (-2) * mZ^2/VEV^2 * \[Epsilon] * (gZ[l,Left,{a,b}]*(WC["Hq1",{i,j}] + WC["Hq3",{i,j}])+gZ[d,Left,{i,j}]*(WC["Hl1",{a,b}] + WC["Hl3",{a,b}]))+
+		f6 * \[Epsilon]^2 * mZ^2/VEV^2 * (WC["Hq1",{i,j}] + WC["Hq3",{i,j}])*(WC["Hl1",{a,b}] + WC["Hl3",{a,b}])+
+		f8 * \[Epsilon]^2 * mZ^2/VEV^2 * (-1) * (gZ[l,Left,{a,b}]*(WC["q2H4D1",{i,j}]+2*WC["q2H4D2",{i,j}])+gZ[d,Left,{i,j}]*(WC["l2H4D1",{a,b}]+2*WC["l2H4D2",{a,b}]))+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[l,Left,{a,b}] * (WC["q2H2D31",{i,j}]-WC["q2H2D32",{i,j}]+WC["q2H2D33",{i,j}]-WC["q2H2D34",{i,j}])+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[d,Left,{i,j}] * (WC["l2H2D31",{a,b}]-WC["l2H2D32",{a,b}]+WC["l2H2D33",{a,b}]-WC["l2H2D34",{a,b}]),
+		
+		FF[Vector, {ZBoson,0}, {Left,Right}, {l_[a_],l_[b_],d[i_],d[j_]}]:> 
+		f6 * (-2) * mZ^2/VEV^2 * \[Epsilon] * (gZ[l,Left,{a,b}]*(WC["Hd",{i,j}])+gZ[d,Right,{i,j}]*(WC["Hl1",{a,b}] + WC["Hl3",{a,b}]))+
+		f6 * \[Epsilon]^2 * mZ^2/VEV^2 * (WC["Hd",{i,j}])*(WC["Hl1",{a,b}] + WC["Hl3",{a,b}])+
+		f8 * \[Epsilon]^2 * mZ^2/VEV^2 * (-1) * (gZ[l,Left,{a,b}]*(WC["d2H4D",{i,j}])+gZ[d,Right,{i,j}]*(WC["l2H4D1",{a,b}]+2*WC["l2H4D2",{a,b}]))+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[l,Left,{a,b}] * (WC["d2H2D31",{i,j}]-WC["d2H2D32",{i,j}])+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[d,Right,{i,j}] * (WC["l2H2D31",{a,b}]-WC["l2H2D32",{a,b}]+WC["l2H2D33",{a,b}]-WC["l2H2D34",{a,b}]),
+		
+		FF[Vector, {ZBoson,0}, {Right,Left}, {l_[a_],l_[b_],d[i_],d[j_]}]:> 
+		f6 * (-2) * mZ^2/VEV^2 * \[Epsilon] * (gZ[l,Right,{a,b}]*(WC["Hq1",{i,j}] + WC["Hq3",{i,j}])+gZ[d,Left,{i,j}]*(WC["He",{a,b}]))+
+		f6 * \[Epsilon]^2 * mZ^2/VEV^2 * (WC["Hq1",{i,j}] + WC["Hq3",{i,j}])*(WC["He",{a,b}])+
+		f8 * \[Epsilon]^2 * mZ^2/VEV^2 * (-1) * (gZ[l,Right,{a,b}]*(WC["q2H4D1",{i,j}]+2*WC["q2H4D2",{i,j}])+gZ[d,Left,{i,j}]*(WC["e2H4D",{a,b}]))+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[l,Right,{a,b}] * (WC["q2H2D31",{i,j}]-WC["q2H2D32",{i,j}]+WC["q2H2D33",{i,j}]-WC["q2H2D34",{i,j}])+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[d,Left,{i,j}] * (WC["e2H2D31",{a,b}]-WC["e2H2D32",{a,b}]),
+		
+		FF[Vector, {ZBoson,0}, {Right,Right}, {l_[a_],l_[b_],d[i_],d[j_]}]:> 
+		f6 * (-2) * mZ^2/VEV^2 * \[Epsilon] * (gZ[l,Right,{a,b}]*(WC["Hd",{i,j}])+gZ[d,Right,{i,j}]*(WC["He",{a,b}]))+
+		f6 * \[Epsilon]^2 * mZ^2/VEV^2 * (WC["Hd",{i,j}]*WC["He",{a,b}])+
+		f8 * \[Epsilon]^2 * mZ^2/VEV^2 * (-1) * (gZ[l,Right,{a,b}]*WC["d2H4D",{i,j}]+gZ[d,Right,{i,j}]*WC["e2H4D",{a,b}])+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[l,Right,{a,b}] * (WC["d2H2D31",{i,j}]-WC["d2H2D32",{i,j}])+
+		f8 * \[Epsilon]^2 * mZ^4/VEV^4 * 1/2 * gZ[d,Right,{i,j}] * (WC["e2H2D31",{a,b}]-WC["e2H2D32",{a,b}]),
 		
 		
 		(*
