@@ -196,7 +196,7 @@ MatchToSMEFT[arg_, \[CapitalLambda]NP_, OptionsPattern[]]:= Module[
 	If[!FreeQ[temp,_FF], Message[MatchToSMEFT::remainingFF, DeleteDuplicates@Cases[temp,_FF,All]]];
 	
 	(* substitute in constants *)
-	(*temp= temp/.ReplaceConstants[];   TO UNCOMMENT*)
+	temp= temp/.ReplaceConstants[];
 	
 	(* EFT truncation of results *)
 	temp= Expand@ ExpandConjugate[temp];
@@ -210,7 +210,7 @@ MatchToSMEFT[arg_, \[CapitalLambda]NP_, OptionsPattern[]]:= Module[
 	(* substitute in the power counting parameter *)
 	temp= temp/.\[Epsilon] -> (VEV/\[CapitalLambda]NP)^2;
 	(* substitute vev *)
-	(*temp= temp/.ReplaceConstants[];    TO UNCOMMENT*)
+	temp= temp/.ReplaceConstants[];
 	
 	(* result *)
 	Return[temp/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}]
