@@ -509,6 +509,20 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 
 
 (* ::Text:: *)
+(*FF should be neutral*)
+
+
+FF[_,_,{_,_},{_e,_e,_d,_u}]:=0
+FF[_,_,{_,_},{_e,_e,_u,_d}]:=0
+FF[_,_,{_,_},{_\[Nu],_\[Nu],_d,_u}]:=0
+FF[_,_,{_,_},{_\[Nu],_\[Nu],_u,_d}]:=0
+FF[_,_,{_,_},{_e,_\[Nu],_u,_u}]:=0
+FF[_,_,{_,_},{_e,_\[Nu],_d,_d}]:=0
+FF[_,_,{_,_},{_\[Nu],_e,_u,_u}]:=0
+FF[_,_,{_,_},{_\[Nu],_e,_d,_d}]:=0
+
+
+(* ::Text:: *)
 (*The following constraints follow from Hypercharge conservation similar to the scalar and tensor operators in the SMEFT*)
 
 
@@ -516,10 +530,15 @@ FF[Tensor,_,{Right,Right},{_,_,_,_d}]:= 0
 FF[Tensor,_,{Left,Left},{_,_,_d,_}]:= 0
 
 (* opposite chiralities are already removed for Tensors *)
+
 (*
 - still add this explicitely?
 - we might want to gneralize to theories w/o linearly realized SU(2)xU(1) and Hypercharge conservation (a la LEFT) where such operators are allowed.
 *)
+
+FF[Tensor,_,{Right,Left},{_,_,_,_}]:= 0
+FF[Tensor,_,{Left,Right},{_,_,_,_}]:= 0
+
 
 
 FF[Scalar,_,{Right,Right},{_,_,_,_d}]:= 0
