@@ -316,8 +316,17 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8},
 		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["e2d2D22", {a,b,i,j}],
 		
 		(* CC *)
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6,
-		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_u}]:> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6,
+		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> 
+		\[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6+
+		f8 * \[Epsilon]^2 * (WC["l2q2H23",{a,b,i,j}]+I*WC["l2q2H25",{a,b,i,j}])+
+		f8 * \[Epsilon]^2 * (-1) mW^2/VEV^2 * ((WC["l2H2D33",{a,b}]-WC["l2H2D34",{b,a}]\[Conjugate])*KroneckerDelta[i,j]+
+		                               (WC["q2H2D33",{j,i}]\[Conjugate]+WC["q2H2D34",{i,j}])*KroneckerDelta[a,b]),
+		                               
+		(* energy enhanced CC *)
+		FF[Vector, {"regular",{1,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> f8 * \[Epsilon]^2 * 2 * (WC["l2q2D23", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_u,j_d}]:> f8 * \[Epsilon]^2 * 4 * (WC["l2q2D24", {a,b,i,j}]),
+		
+		(*FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_d,j_u}]:> \[Epsilon] * 2 * WC["lq3", {a,b,i,j}] * f6,*)
 		FF[Vector, {"regular",{0,0}}, {OrderlessPatternSequence[Right,_]}, {a_,b_,i_u,j_d}]:> 0,
 		FF[Vector, {"regular",{0,0}}, {OrderlessPatternSequence[Right,_]}, {a_,b_,i_d,j_u}]:> 0,
 		
@@ -400,9 +409,22 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8},
 		FF[Vector, {ZBoson,1}, ___]:> 0, (* TO DO *)
 		*)
 		(* CC *)
-		FF[Vector, {WBoson,0}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> 2*\[Pi]*\[Alpha]EM * \[Epsilon] * (KroneckerDelta[i,j] * WC["Hl3",{a,b}] + KroneckerDelta[a,b] * WC["Hq3",{i,j}])*f6 + 2*\[Pi]*\[Alpha]EM * \[Epsilon]^2 * WC["Hl3",{a,b}] * WC["Hq3",{i,j}]*f6,
+		
+		(* Gauge coupling modifications CC*)
+		FF[Vector, {WBoson,0}, {Left,Left}, {l1_[a_],l2_[b_],u[i_],d[j_]}]:>
+		f6 * \[Epsilon] * mW^2/VEV^2 * 2 *(WC["Hl3",{b,a}]\[Conjugate]*KroneckerDelta[i,j]+WC["Hq3",{i,j}]*KroneckerDelta[a,b])+
+		f6 * \[Epsilon] * mW^2/VEV^2 * 2 * WC["Hl3",{b,a}]\[Conjugate] * WC["Hq3",{i,j}]+
+		f8 * \[Epsilon]^2 * mW^2/VEV^2 * KroneckerDelta[i,j] * (WC["l2H4D2",{b,a}]\[Conjugate]-WC["l2H4D3",{b,a}]\[Conjugate]+WC["l2H4D4",{a,b}])+
+		f8 * \[Epsilon]^2 * mW^2/VEV^2 * KroneckerDelta[a,b] * (WC["q2H4D2",{i,j}]-WC["q2H4D",{i,j}]+WC["q2H4D",{j,i}]\[Conjugate])+
+		f8 * \[Epsilon]^2 * mW^2/VEV^2 * (-1) * KroneckerDelta[i,j] * (WC["l2H2D33",{a,b}]-WC["l2H2D34",{b,a}]\[Conjugate])+
+		f8 * \[Epsilon]^2 * mW^2/VEV^2 * (-1) * KroneckerDelta[a,b] * (WC["q2H2D34",{i,j}]-WC["q2H2D33",{j,i}]\[Conjugate]),
+		
+		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],u[i_],d[j_]}]:>
+		f6 * \[Epsilon] mW^2/VEV^2 * KroneckerDelta[a,b] * WC["Hud",{i,j}],
+		
+		(*FF[Vector, {WBoson,0}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> 2*\[Pi]*\[Alpha]EM * \[Epsilon] * (KroneckerDelta[i,j] * WC["Hl3",{a,b}] + KroneckerDelta[a,b] * WC["Hq3",{i,j}])*f6 + 2*\[Pi]*\[Alpha]EM * \[Epsilon]^2 * WC["Hl3",{a,b}] * WC["Hq3",{i,j}]*f6,
 		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],u[i_],d[j_]}]:> \[Pi]*\[Alpha]EM * \[Epsilon] * KroneckerDelta[a,b] * WC["Hud",{i,j}] * f6,
-		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],d[i_],u[j_]}]:> \[Pi]*\[Alpha]EM * \[Epsilon] * KroneckerDelta[a,b] * WC["Hud",{j,i}]\[Conjugate] * f6,
+		FF[Vector, {WBoson,0}, {Left,Right}, {l1_[a_],l2_[b_],d[i_],u[j_]}]:> \[Pi]*\[Alpha]EM * \[Epsilon] * KroneckerDelta[a,b] * WC["Hud",{j,i}]\[Conjugate] * f6,*)
 		(*
 		FF[Vector, {WBoson,1}, ___]:> 0, (* TO DO *)
 		*)
