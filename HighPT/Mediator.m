@@ -110,6 +110,21 @@ $MediatorCouplings= <|
 
 
 (* ::Section:: *)
+(*Hermitian couplings*)
+
+
+HermitianCouplings= Alternatives[
+	(* Z' *)
+	"g1u","g1d","g1e","g1q","g1l",
+	(* W' *)
+	"g3q","g3l"
+]
+
+
+Coupling[herm:HermitianCouplings,{p_Integer,r_Integer}]:= Coupling[herm,{r,p}]\[Conjugate] /; p>r
+
+
+(* ::Section:: *)
 (*Matching the form-factors to the mediators*)
 
 
