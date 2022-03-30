@@ -174,7 +174,8 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	
 	(* merging bins if requested *)
 	If[OptionValue[CombineBins]=!={},
-		{\[Sigma]Predicted,NObserved,NPredicted,\[Sigma]N}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted,\[Sigma]N}, OptionValue[CombineBins]]
+		{\[Sigma]Predicted,NObserved,NPredicted}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, OptionValue[CombineBins]];
+		{\[Sigma]N}= MergeBins[{\[Sigma]N}, OptionValue[CombineBins]]
 	];
 	
 	(* # events differences *)
@@ -226,7 +227,45 @@ MergeBins[lists_List, merge_List]:= Module[
 ]
 
 
-(* ::Section:: *)
+(* combines the desired bins by adding their squares and taking the sqrt of the result*)
+MergeBinsSquared[lists_List, merge_List]:= Module[
+	{
+		combinedBins,
+		allBins
+	}
+	,
+	(* auxiliary list of all bins *)
+	allBins = Table[{i},{i,Length@First[lists]}];
+	
+	(* sort the bins *)
+	combinedBins= SortBy[
+		(* create a list of all bins where the ones that should be grouped are combined *)
+		Join[
+			merge,
+			Complement[
+				allBins,
+				Table[{n},{n,Flatten[merge]}]
+			]
+		],
+		First
+	];
+	
+	(*Print["Merging bins as: ", combinedBins];*)
+	
+	Table[
+		(* sum the bins *)
+		Table[
+			Sqrt[Plus@@Power[list[[bin]],2]]
+			,
+			{bin, combinedBins}
+		]
+		,
+		{list,lists}
+	]
+]
+
+
+(* ::Section::Closed:: *)
 (*\[Chi]^2 minimization*)
 
 
@@ -392,7 +431,7 @@ PlotConfidenceRegion[regions:{ImplicitRegion[_,{_,_}]..}, {xMin_,xMax_}, {yMin_,
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*PlotConfidenceIntervals*)
 
 
