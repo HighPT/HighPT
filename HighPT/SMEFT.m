@@ -319,14 +319,14 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8,$DelayedRule},
 		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["e2u2D22", {a,b,i,j}],
 		
 		(* energy enhanced DOWN *)
-		FF[Vector, {"regular",{1,0}}, {Left,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["l2q2D21", {a,b,i,j}]+WC["l2q2D22", {a,b,i,j}]+WC["l2q2D23", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * (WC["l2q2D22", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
-		FF[Vector, {"regular",{1,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["l2d2D21", {a,b,i,j}]+WC["l2d2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["l2d2D22", {a,b,i,j}],
-		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 *  \[Epsilon]^2 * (WC["q2e2D21", {a,b,i,j}]+WC["q2e2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["q2e2D22", {a,b,i,j}],
-		FF[Vector, {"regular",{1,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["e2d2D21", {a,b,i,j}]+WC["e2d2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["e2d2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Left,Left}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * (WC["l2q2D21", {a,b,i,j}]+WC["l2q2D22", {a,b,i,j}]+WC["l2q2D23", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * (WC["l2q2D22", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
+		FF[Vector, {"regular",{1,0}}, {Left,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * (WC["l2d2D21", {a,b,i,j}]+WC["l2d2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Left,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * WC["l2d2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_d,j_d}]:> f8 *  \[Epsilon]^2 * (WC["q2e2D21", {a,b,i,j}]+WC["q2e2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * WC["q2e2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * (WC["e2d2D21", {a,b,i,j}]+WC["e2d2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * WC["e2d2D22", {a,b,i,j}],
 		
 		(* CC *)
 		FF[Vector, {"regular",{0,0}}, {Left,Left}, {a_,b_,i_u,j_d}]:> 
