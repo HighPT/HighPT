@@ -176,8 +176,10 @@ LHCSearch[]:= $Searches
 
 
 $Searches= <|
-	"tata" -> Hyperlink["arXiv:2002.12223", "https://arxiv.org/abs/2002.12223"],
-	"tanu" -> Hyperlink["ATLAS-CONF-2021-025", "https://cds.cern.ch/record/2773301/"]
+	"di-tau-ATLAS"        -> Hyperlink["arXiv:2002.12223", "https://arxiv.org/abs/2002.12223"],
+	"mono-tau-ATLAS"      -> Hyperlink["ATLAS-CONF-2021-025", "https://cds.cern.ch/record/2773301/"],
+	"mono-muon-ATLAS"     -> Hyperlink["arXiv:1906.05609", "https://arxiv.org/abs/1906.05609"],
+	"mono-electron-ATLAS" -> Hyperlink["arXiv:1906.05609", "https://arxiv.org/abs/1906.05609"]
 |>
 
 
@@ -186,6 +188,8 @@ $Searches= <|
 
 
 $SearchDirectories= <|
-	"tata" -> "2002_12223",
-	"tanu" -> "ATLAS-CONF-2021-025"
+	"di-tau-ATLAS"        -> "di-tau_ATLAS_2002_12223",
+	"mono-tau-ATLAS"      -> "mono-tau_ATLAS-CONF-2021-025",
+	"mono-muon-ATLAS"     -> "mono-muon_ATLAS_1906_05609",
+	"mono-electron-ATLAS" -> "mono-electron_ATLAS_1906_05609"
 |>
