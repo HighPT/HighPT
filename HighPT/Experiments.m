@@ -189,6 +189,8 @@ $Searches= <|
 
 $SearchDirectories= <|
 	"di-tau-ATLAS"        -> "di-tau_ATLAS_2002_12223",
+	"di-muon-ATLAS"       -> "",
+	"di-electron-ATLAS"   -> "",
 	"mono-tau-ATLAS"      -> "mono-tau_ATLAS-CONF-2021-025",
 	"mono-muon-ATLAS"     -> "mono-muon_ATLAS_1906_05609",
 	"mono-electron-ATLAS" -> "mono-electron_ATLAS_1906_05609"
