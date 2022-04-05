@@ -2,7 +2,7 @@ Begin["HighPT`Experiments`PackagePrivate`"]
 
 (* Information on search ATLAS-CONF-2021-025 *)
 
-$Info["ATLAS-CONF-2021-025"] = <|
+$Info["mono-tau_ATLAS-CONF-2021-025"] = <|
 	"PROCESS"					->	"p p > \[Tau] \[Nu]",
 	"FINALSTATE"				->	"{e[3],\[Nu]} | {\[Nu],e[3]}",
 	"EXPERIMENT"				->	"ATLAS",
@@ -23,7 +23,7 @@ $Info["ATLAS-CONF-2021-025"] = <|
 
 (* Observed number of events per bin *)
 
-$NEventsObserved["ATLAS-CONF-2021-025"] = {
+$NEventsObserved["mono-tau_ATLAS-CONF-2021-025"] = {
 	2939.24166, 10471.2855, 3052.85293, 978.561748,
     401.355678, 187.982598, 94.9832573, 53.7759678,
     21.2353207, 12.7264092, 9.94596803, 3.92751314,
@@ -34,7 +34,7 @@ $NEventsObserved["ATLAS-CONF-2021-025"] = {
 
 (* Predicted number of events per bin (SM + background) *)
 
-$NEventsPredicted["ATLAS-CONF-2021-025"] = {
+$NEventsPredicted["mono-tau_ATLAS-CONF-2021-025"] = {
 	2939.24166, 10274.5949, 2995.50872, 1016.38635,
     401.355678, 184.451569, 94.9832573, 47.9928422,
     26.6613633, 15.0946668, 8.22799687, 4.93107010,
@@ -45,7 +45,7 @@ $NEventsPredicted["ATLAS-CONF-2021-025"] = {
 
 (* Combined uncertainty (summed in quadrature) per bins *)
 
-$NEventsUncertainty["ATLAS-CONF-2021-025"] = {
+$NEventsUncertainty["mono-tau_ATLAS-CONF-2021-025"] = {
 	154.045, 552.37, 189.112, 75.7941, 
 	35.0634, 20.0409, 12.5365, 8.43366, 
 	5.67964, 4.39279, 3.55724, 2.27465, 

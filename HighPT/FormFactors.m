@@ -240,13 +240,23 @@ InterferenceMatrix[_,x:Except[{_,_}]]:= (Message[InterferenceMatrix::unknownchir
 (*Definition*)
 
 
-InterferenceMatrix[z_, {X_, Y_}]:= 
+(*InterferenceMatrix[z_, {X_, Y_}]:= 
 {
 	{MSS[], 0, MST[z, X, Y], 0, 0},
 	{0, MVV[z, X, Y], 0, 0, 0},
 	{MTS[z, X, Y], 0, MTT[z, X, Y], 0, 0},
 	{0, 0, 0, MDD[z, X, Y], 0},
 	{0, 0, 0, 0, MDD[z, X, Y]}
+}*)
+
+
+InterferenceMatrix[s_, t_, {X_, Y_}]:= 
+{
+	{MSS[], 0, MST[t/s, X, Y], 0, 0},
+	{0, MVV[t/s, X, Y], 0, 0, 0},
+	{MTS[t/s, X, Y], 0, MTT[t/s, X, Y], 0, 0},
+	{0, 0, 0, s/VEV^2*MDD[t/s, X, Y], 0},
+	{0, 0, 0, 0, s/VEV^2*MDD[t/s, X, Y]}
 }
 
 
@@ -318,7 +328,8 @@ ComputeInterferencePattern::usage= "ComputeInterferencePattern[s, t, {X,Y}, {\[A
 ComputeInterferencePattern[s_, t_, {X_,Y_}, {a_,b_,i_,j_}]:= Module[
 	{res}
 	,
-	res= ConjugateTranspose@FormFactorVector[s,t,{X,Y},{a,b,i,j}] . InterferenceMatrix[t/s,{X,Y}] . FormFactorVector[s,t,{X,Y},{a,b,i,j}];
+	(*res= ConjugateTranspose@FormFactorVector[s,t,{X,Y},{a,b,i,j}] . InterferenceMatrix[t/s,{X,Y}] . FormFactorVector[s,t,{X,Y},{a,b,i,j}];*)
+	res= ConjugateTranspose@FormFactorVector[s,t,{X,Y},{a,b,i,j}] . InterferenceMatrix[s,t,{X,Y}] . FormFactorVector[s,t,{X,Y},{a,b,i,j}];
 	res= First@Flatten[res];
 	Return[res]
 ]
