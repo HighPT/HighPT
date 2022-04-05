@@ -442,7 +442,7 @@ ExpandSingularFF[OptionsPattern[]]:= Module[
 			0
 		],
 		SChannelSum[s, FF[type,{"s",0},{X,Y},{\[Alpha],\[Beta],i,j}]],
-		d8 * $d8 * t * SChannelSum[s, FF[type,{"s",1},{X,Y},{\[Alpha],\[Beta],i,j}]], (* this probably does not exist anyway? *)
+		(*d8 * $d8 * t * SChannelSum[s, FF[type,{"s",1},{X,Y},{\[Alpha],\[Beta],i,j}]],*) (* this probably does not exist anyway? *)
 		TChannelSum[t, FF[type,{"t",0},{X,Y},{\[Alpha],\[Beta],i,j}]],
 		UChannelSum[-s-t, FF[type,{"u",0},{X,Y},{\[Alpha],\[Beta],i,j}]]
 	]
