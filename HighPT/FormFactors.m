@@ -515,10 +515,6 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 (*Basic form factor properties*)
 
 
-(* ::Subsubsection:: *)
-(*Simplifications for Tensor and Scalar form-factors*)
-
-
 (* ::Text:: *)
 (*FF should be neutral*)
 
@@ -531,6 +527,10 @@ FF[_,_,{_,_},{_e,_\[Nu],_u,_u}]:=0
 FF[_,_,{_,_},{_e,_\[Nu],_d,_d}]:=0
 FF[_,_,{_,_},{_\[Nu],_e,_u,_u}]:=0
 FF[_,_,{_,_},{_\[Nu],_e,_d,_d}]:=0
+
+
+(* ::Subsubsection:: *)
+(*Simplifications for Tensor and Scalar form-factors*)
 
 
 (* ::Text:: *)
