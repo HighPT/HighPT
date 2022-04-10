@@ -3,18 +3,18 @@ Begin["HighPT`Experiments`PackagePrivate`"]
 (* Information on CMS search CMS-PAS-EXO-19-014 *)
 
 $Info["electon-tau_CMS-PAS-EXO-19-014"] = <|
-	"PROCESS"					->	"p p > e \[Ta]",
+	"PROCESS"					->	"p p > e \[Tau]",
 	"FINALSTATE"				->	"{e[1],e[3]} | {e[3],e[1]}",
 	"EXPERIMENT"				->	"CMS",
 	"ARXIV"						->	Hyperlink["CMS-PAS-EXO-19-014", "https://cds.cern.ch/record/2779023?ln=en"],
 	"SOURCE"					->	Hyperlink["figure", "http://cds.cern.ch/record/2779023/files/Figure_001-b.png?version=1"],
 	"DESCRIPTION"				->	"Final states with an electron and a tau.",
-	"OBSERVABLE"				->	"\!\(\*SubscriptBox[m, e \[Mu]]\)",
+	"OBSERVABLE"				->	"\!\(\*SubscriptBox[\(m\), \(e\[Tau]\)]\)",
 	"BINS"						->	<|
 										"OBSERVABLE"	-> {
 											
 										},
-										"MLL"			-> {200.0,250.0,300.0,350.0,400.0,450.0,500.0,550.0,600.0, 650.0,725.0,800.0,900.0,1000.0,1100.0,1200.0,1300.0,1400.0,1550.0,1700.0,1850.0, 2000.0,2200.0,2400.0,2700.0,3000.0}, (* 2 PT_min <= MLL_min *)
+										"MLL"			-> {200.0,250.0,300.0,350.0,400.0,450.0,500.0,550.0,600.0, 650.0,725.0,800.0,900.0,1000.0,1100.0,1200.0,1300.0,1400.0,1550.0,1700.0,1850.0, 2000.0,2200.0,2400.0,2700.0,3000.0},
 										"PT"			-> {0, Infinity}
 									|>,
 	"LUMINOSITY"			 	-> 137.1 (* in fb$^{-1}$ *),
@@ -26,9 +26,6 @@ $Info["electon-tau_CMS-PAS-EXO-19-014"] = <|
 (* Observed number of events per bin *)
 
 $NEventsObserved["electon-tau_CMS-PAS-EXO-19-014"] = {
-1423.432372,
-1854.262743,
-3968.721231,
 5550.470731,
 3908.487352,
 2852.056437,
@@ -61,9 +58,6 @@ $NEventsObserved["electon-tau_CMS-PAS-EXO-19-014"] = {
 (* Predicted number of events per bin (background) *)
 
 $NEventsPredicted["electon-tau_CMS-PAS-EXO-19-014"] = {
-1186.193643,
-1765.964517,
-4026.23893,
 5511.105691,
 4083.494248,
 3095.255048,
@@ -96,9 +90,6 @@ $NEventsPredicted["electon-tau_CMS-PAS-EXO-19-014"] = {
 (* Combined uncertainty (summed in quadrature) per bins *)
 
 $NEventsUncertainty["electon-tau_CMS-PAS-EXO-19-014"] = {
-408.4412145,
-770.6599444,
-1755.420603,
 2245.043818,
 1547.157886,
 1150.905877,

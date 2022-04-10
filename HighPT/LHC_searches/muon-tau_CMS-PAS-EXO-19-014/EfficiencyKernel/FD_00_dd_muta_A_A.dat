@@ -5,7 +5,7 @@
 # qq~ : dd~
 # FF  : dipole
 # XY  : LL LR RL RR
-# coef : 00
+# coef : 0 0
 # type : A*A
 # Nevs : 50000
 #===============

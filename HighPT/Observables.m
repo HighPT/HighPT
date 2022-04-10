@@ -452,6 +452,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	
 	(* check if there are efficiencies remaining and set them to zero *)
 	If[!FreeQ[\[Sigma]Observable,_Efficiency],
+		Print/@DeleteDuplicates@ Cases[\[Sigma]Observable, eff_Efficiency:> Drop[eff,-1], All];
 		Message[
 			EventYield::missingeff,
 			DeleteDuplicates@ Cases[\[Sigma]Observable, eff_Efficiency:> Drop[eff,-1], All]

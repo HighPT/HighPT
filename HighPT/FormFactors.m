@@ -571,14 +571,28 @@ FF[Vector, {Except[WBoson],SM}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:
 (*Quark dipoles must be diagonal in leptons*)
 
 
-FF[DipoleQ, {Photon|ZBoson|WBoson,0}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]:= 0 /; (\[Alpha]!=\[Beta])
+FF[DipoleQ, {Photon|ZBoson|WBoson,0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]:= 0 /; (\[Alpha]!=\[Beta])
 
 
 (* ::Text:: *)
 (*Lepton dipoles must be diagonal in quarks for Photon and ZBosons*)
 
 
-FF[DipoleL, {Photon|ZBoson,0}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
+FF[DipoleL, {Photon|ZBoson,0}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
+
+
+(* ::Subsubsection:: *)
+(*Remove SM FF for other s-channel mediators*)
+
+
+FF[Vector, {field:Except["s"], SM}, ___] := 0 /; !MatchQ[field,Photon|ZBoson|WBoson]
+
+
+(* ::Subsubsection:: *)
+(*Z-coupling modifications cannot be both LFV and QFV at the same time*)
+
+
+FF[Vector, {ZBoson,0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; ((\[Alpha]!=\[Beta])&&(i!=j))
 
 
 (* ::Subsubsection:: *)
@@ -626,6 +640,7 @@ FF[Vector, {Photon,Except[SM]},___]:= 0
 
 (* After rotating the FF to the weak basis the SM contibution by the W should be diagonalized in quark generation space *)
 DiagonalizeWBosonSM= {
+	(* W-boson *)
 	FF[Vector, {WBoson,SM}, {Left,Left},{l1_,l2_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]/;i!=j-> 0,
 	FF[DipoleL, {WBoson,0}, {_,Left},{l1_,l2_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]/;i!=j-> 0
 }

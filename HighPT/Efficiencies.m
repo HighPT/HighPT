@@ -136,7 +136,7 @@ IncludeEfficiencies[expr_(*, bin_*)]:= Module[
 (*Load Efficiencies*)
 
 
-LoadEfficiencies::unabletoreadfiles= "Error while interpreting efficiency files.";
+LoadEfficiencies::unabletoreadfiles= "Error while interpreting efficiency files: `1`.";
 
 
 LoadEfficiencies::duobledef= "Efficiencies defined multiple times: `1`.";
@@ -156,12 +156,12 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 	
 	(* load fiels in that directory *)
 	files= Import[
-		FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", $SearchDirectories[proc], "EfficiencyKernel", "*"}],
+		FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", $SearchDirectories[proc], "EfficiencyKernel", "*.dat"}],
 		"Table"
 	];
 
 	(* Find substitutions for all files *)
-	substitutions= EfficiencyReplacements[files];
+	substitutions= EfficiencyReplacements[files,proc];
 	
 	(* check for double definitions *)
 	If[!DuplicateFreeQ[substitutions[[;;,1]]],
@@ -179,12 +179,12 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 (*Build up substitution rules for all efficiencies*)
 
 
-EfficiencyReplacements[files_List]:= Module[
+EfficiencyReplacements[files_List, proc_]:= Module[
 	{tab}
 	,
 	(* Build efficiency rules for each file *)
 	tab= Table[
-		BuildEfficiencies[file],
+		BuildEfficiencies[file, proc],
 		{file,files}
 	];
 	(* flatten results *)
@@ -198,13 +198,24 @@ EfficiencyReplacements[files_List]:= Module[
 (*Build up substitution rules for one file*)
 
 
-BuildEfficiencies[file_]:= Module[
+BuildEfficiencies[file_, proc_]:= Module[
 	{info, effTable, eff, replace={}}
 	,
+	(*
 	(* file header *)
 	info= file[[2;;8,4;;]];
 	(* efficiency table *)
 	effTable= file[[13;;,4;;]];
+	*)
+	
+	Switch[proc,
+		"muon-tau-CMS" | "electron-tau-CMS" | "electron-muon-CMS",
+			info= file[[4;;10,4;;]];
+			effTable= file[[15;;,4;;]];,
+		_,
+			info= file[[2;;8,4;;]];
+			effTable= file[[13;;,4;;]];
+	];
 	
 	(* construct efficiency *)
 	eff= EfficiencyFromHeader[info];
@@ -260,7 +271,7 @@ EfficiencyFromHeader[info_]:= Module[
 		"ud~", flavorQ= {d[1],u[1]},
 		
 		(* this should be all configurations *)
-		_, Message[LoadEfficiencies::unabletoreadfiles]
+		_, Message[LoadEfficiencies::unabletoreadfiles, "flavorQ"<>ToString@info]
 	];
 	
 	(* lepton flavor *)
@@ -274,29 +285,29 @@ EfficiencyFromHeader[info_]:= Module[
 		"tavt", Switch[flavorQ,
 					{_u,_d}, flavorL= {e[3],\[Nu]},
 					{_d,_u}, flavorL= {\[Nu],e[3]},
-					_, Message[LoadEfficiencies::unabletoreadfiles]
+					_, Message[LoadEfficiencies::unabletoreadfiles, "flavorL"]
 				],
 		"muvm", Switch[flavorQ,
 					{_u,_d}, flavorL= {e[2],\[Nu]},
 					{_d,_u}, flavorL= {\[Nu],e[2]},
-					_, Message[LoadEfficiencies::unabletoreadfiles]
+					_, Message[LoadEfficiencies::unabletoreadfiles, "flavorL"]
 				],
 		"eve", Switch[flavorQ,
 					{_u,_d}, flavorL= {e[1],\[Nu]},
 					{_d,_u}, flavorL= {\[Nu],e[1]},
-					_, Message[LoadEfficiencies::unabletoreadfiles]
+					_, Message[LoadEfficiencies::unabletoreadfiles, "flavorL"]
 				],
 				
 		(* LFV di-lepton *)
-		"tamu", flavorL= {e[3],e[2]},
-		"muta", flavorL= {e[2],e[3]},
-		"tae",  flavorL= {e[3],e[1]},
-		"eta",  flavorL= {e[1],e[3]},
-		"emu",  flavorL= {e[1],e[2]},
-		"mue",  flavorL= {e[2],e[1]},
+		"tamu", flavorL= {e[3|2],e[2|3]},
+		"muta", flavorL= {e[2|3],e[3|2]},
+		"tae",  flavorL= {e[3|1],e[1|3]},
+		"eta",  flavorL= {e[1|3],e[3|1]},
+		"emu",  flavorL= {e[1|2],e[2|1]},
+		"mue",  flavorL= {e[2|1],e[1|2]},
 		
 		(* this should be all configurations *)
-		_, Message[LoadEfficiencies::unabletoreadfiles]
+		_, Message[LoadEfficiencies::unabletoreadfiles, "flavorL"]
 	];
 	
 	(* lorentz structure *)
@@ -314,7 +325,7 @@ EfficiencyFromHeader[info_]:= Module[
 	];
 	
 	(* coefficient (s,t) powers *)
-	coeff= info[[5]];
+	coeff= info[[5]]/.{0}->{0,0};
 	
 	(* type *)
 	Switch[info[[6,1]],
@@ -326,7 +337,7 @@ EfficiencyFromHeader[info_]:= Module[
 		"Z*Z", type= {ZBoson,ZBoson},
 		"A*Z"|"Z*A", type= {Photon,ZBoson},
 		"W*W", type= {WBoson,WBoson},
-		_, Message[LoadEfficiencies::unabletoreadfiles]
+		_, Message[LoadEfficiencies::unabletoreadfiles, "type"]
 	];
 	
 	(* build up the efficiency *)

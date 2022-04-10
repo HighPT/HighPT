@@ -177,9 +177,16 @@ LHCSearch[]:= $Searches
 
 $Searches= <|
 	"di-tau-ATLAS"        -> Hyperlink["arXiv:2002.12223", "https://arxiv.org/abs/2002.12223"],
+	(*
+	"di-muon-CMS"           -> "",
+	"di-electron-CMS"       -> "",
+	*)
 	"mono-tau-ATLAS"      -> Hyperlink["ATLAS-CONF-2021-025", "https://cds.cern.ch/record/2773301/"],
 	"mono-muon-ATLAS"     -> Hyperlink["arXiv:1906.05609", "https://arxiv.org/abs/1906.05609"],
-	"mono-electron-ATLAS" -> Hyperlink["arXiv:1906.05609", "https://arxiv.org/abs/1906.05609"]
+	"mono-electron-ATLAS" -> Hyperlink["arXiv:1906.05609", "https://arxiv.org/abs/1906.05609"],
+	"muon-tau-CMS"        -> Hyperlink["CMS-PAS-EXO-19-014", "https://cds.cern.ch/record/2779023"],
+	"electron-tau-CMS"    -> Hyperlink["CMS-PAS-EXO-19-014", "https://cds.cern.ch/record/2779023"],
+	"electron-muon-CMS"   -> Hyperlink["CMS-PAS-EXO-19-014", "https://cds.cern.ch/record/2779023"]
 |>
 
 
@@ -189,9 +196,15 @@ $Searches= <|
 
 $SearchDirectories= <|
 	"di-tau-ATLAS"        -> "di-tau_ATLAS_2002_12223",
-	"di-muon-ATLAS"       -> "",
-	"di-electron-ATLAS"   -> "",
+	(*
+	"di-muon-CMS"           -> "",
+	"di-electron-CMS"       -> "",
+	*)
 	"mono-tau-ATLAS"      -> "mono-tau_ATLAS-CONF-2021-025",
 	"mono-muon-ATLAS"     -> "mono-muon_ATLAS_1906_05609",
-	"mono-electron-ATLAS" -> "mono-electron_ATLAS_1906_05609"
+	"mono-electron-ATLAS" -> "mono-electron_ATLAS_1906_05609",
+	
+	"muon-tau-CMS"        -> "muon-tau_CMS-PAS-EXO-19-014",
+	"electron-tau-CMS"    -> "electon-tau_CMS-PAS-EXO-19-014",
+	"electron-muon-CMS"   -> "electon-muon_CMS-PAS-EXO-19-014"
 |>
