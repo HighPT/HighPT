@@ -606,7 +606,7 @@ HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= M
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Differential cross section (for external use)*)
 
 
@@ -668,7 +668,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	\[Sigma]= MyExpand[\[Sigma]];
 	
 	With[{xSec=\[Sigma]},
-		Return@ Function[x,xSec/.s->x]
+		Return@ Function[x,Re[xSec]/.s->x]
 	];	
 ]
 

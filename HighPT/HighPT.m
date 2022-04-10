@@ -399,14 +399,14 @@ ReplaceChannelSums[]:= {
 	,
 	TChannelSum[t_,FF[type_,{"t",0},chirality_,indices_]]:> Sum[
 		VEV^2 * 
-		FF[type, {mediator}, chirality, indices] * 
+		FF[type, {mediator,0}, chirality, indices] * 
 		Propagator[t,mediator],
 		{mediator, Keys[GetMediators["t", type]]}
 	]
 	,
 	UChannelSum[u_,FF[type_,{"u",0},chirality_,indices_]]:> Sum[
 		VEV^2 * 
-		FF[type, {mediator}, chirality, indices] * 
+		FF[type, {mediator,0}, chirality, indices] * 
 		Propagator[u,mediator],
 		{mediator, Keys[GetMediators["u", type]]}
 	]
