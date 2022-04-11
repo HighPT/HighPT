@@ -428,7 +428,7 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_]:= Module[{list,f6,f8,$DelayedRule},
 		f6 * \[Epsilon] * Mass[WBoson]^2/VEV^2 * 2 *(WC["Hl3",{b,a}]\[Conjugate]*KroneckerDelta[i,j]+WC["Hq3",{i,j}]*KroneckerDelta[a,b])+
 		f6 * \[Epsilon] * Mass[WBoson]^2/VEV^2 * 2 * WC["Hl3",{b,a}]\[Conjugate] * WC["Hq3",{i,j}]+
 		f8 * \[Epsilon]^2 * Mass[WBoson]^2/VEV^2 * KroneckerDelta[i,j] * (WC["l2H4D2",{b,a}]\[Conjugate]-WC["l2H4D3",{b,a}]\[Conjugate]+WC["l2H4D4",{a,b}])+
-		f8 * \[Epsilon]^2 * Mass[WBoson]^2/VEV^2 * KroneckerDelta[a,b] * (WC["q2H4D2",{i,j}]-WC["q2H4D",{i,j}]+WC["q2H4D",{j,i}]\[Conjugate])+
+		f8 * \[Epsilon]^2 * Mass[WBoson]^2/VEV^2 * KroneckerDelta[a,b] * (WC["q2H4D2",{i,j}]-WC["q2H4D3",{i,j}]+WC["q2H4D4",{j,i}]\[Conjugate])+
 		f8 * \[Epsilon]^2 * Mass[WBoson]^2/VEV^2 * (-1) * KroneckerDelta[i,j] * (WC["l2H2D33",{a,b}]-WC["l2H2D34",{b,a}]\[Conjugate])+
 		f8 * \[Epsilon]^2 * Mass[WBoson]^2/VEV^2 * (-1) * KroneckerDelta[a,b] * (WC["q2H2D34",{i,j}]-WC["q2H2D33",{j,i}]\[Conjugate]),
 		
@@ -565,13 +565,13 @@ HermitianWC4= Alternatives[
 	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
 	"q2e2H21","q2e2H22",
 	"e2u2H2", "e2d2H2",
-	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
-	"l2u2D21","l2u2D22","l2u2D23","l2u2D24",
 	(* Psi^4 D^2 *)
 	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
-	"l2u2D21","l2u2D22","l2u2D23","l2u2D24",
+	"l2u2D21","l2u2D22",
+	"l2d2D21","l2d2D22",
 	"q2e2D21","q2e2D22",
-	"e2u2D21","e2u2D22","e2u2D23","e2u2D24"
+	"e2u2D21","e2u2D22",
+	"e2d2D21","e2d2D22"
 ];
 
 
@@ -667,13 +667,13 @@ $WCList4=List[
 	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
 	"q2e2H21","q2e2H22",
 	"e2u2H2", "e2d2H2",
-	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
-	"l2u2D21","l2u2D22","l2u2D23","l2u2D24",
 	(* Psi^4 D^2 *)
 	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
-	"l2u2D21","l2u2D22","l2u2D23","l2u2D24",
+	"l2u2D21","l2u2D22",
+	"l2d2D21","l2d2D22",
 	"q2e2D21","q2e2D22",
-	"e2u2D21","e2u2D22","e2u2D23","e2u2D24",
+	"e2u2D21","e2u2D22",
+	"e2d2D21","e2d2D22",
 	
 	(* non-hermitian *)
 	"ledq", "lequ1", "lequ3"
@@ -694,13 +694,13 @@ WC[l:Except[Alternatives@@Join[$WCList2,$WCList4]],___]:=(
 (*Check WC indices*)
 
 
-WC[l:Alternatives@@$WCList2, ind:Except[{_,_}]]:=(
+(*WC[l:Alternatives@@$WCList2, ind:Except[{_,_}]]:=(
 	Message[WC::wrongindexnumber, TraditionalForm[HoldForm[$wc[l,ind]]/.$wc->WC]];
 	Abort[]
-)
+)*)
 
 
-WC[l:Alternatives@@$WCList4, ind:Except[{_,_,_,_}]]:=(
+(*WC[l:Alternatives@@$WCList4, ind:Except[{_,_,_,_}]]:=(
 	Message[WC::wrongindexnumber, TraditionalForm[HoldForm[$wc[l,ind]]/.$wc->WC]];
 	Abort[]
-)
+)*)

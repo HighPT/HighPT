@@ -61,7 +61,7 @@ PackageScope["PartialFractioning"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section*)
 
 
@@ -265,7 +265,7 @@ ReduceIntegrands[t_]:= {
 *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*PartialFractioning*)
 
 
@@ -317,7 +317,7 @@ CrossSection::inteval= "Not all \!\(\*OverscriptBox[\(s\), \(^\)]\) integrals ha
 
 
 Options[CrossSection]= {
-	MLLcuts           -> {50,5000},
+	MLLcuts           -> {50,10000},
 	PTcuts            -> {0,\[Infinity]},
 	OutputFormat      -> FF,
 	Coefficients      -> All,
@@ -411,6 +411,15 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	\[Sigma]= \[Sigma]/.PartialFractioning[s];
 	(*\[Sigma]= \[Sigma]//.ReduceIntegrands[s];*) (* no improvements *)
 	
+(*
+	(* - - - - - - - - - - - - - - *)
+	(* OLD INTEGRAL COMPUTATION *)
+	\[Sigma]= Collect[\[Sigma],_Integrand];
+	\[Sigma]= (\[Sigma]/.ReplacePropagators);
+	\[Sigma]= (\[Sigma]/.ReplaceConstants[]);
+	\[Sigma]= (\[Sigma]/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}]);
+*)	
+	
 	(* - - - - - - - - - - - - - - *)
 	(* NEW INTEGRAL COMPUTATION: identifying complex conjugated integrals *)
 	(* Integrands need to be expanded to simplify *)
@@ -485,6 +494,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	If[!FreeQ[\[Sigma], _dummyIntegral],
 		Message[CrossSection::inteval, Length@DeleteDuplicates@Cases[\[Sigma], _dummyIntegral, All]]
 	];
+
 	(* replace remaining propagators and constants outside integrands *)
 	\[Sigma]= \[Sigma]/.ReplacePropagators;
 	\[Sigma]= \[Sigma]/.ReplaceConstants[];

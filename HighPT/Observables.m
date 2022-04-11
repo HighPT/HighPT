@@ -126,10 +126,10 @@ BinnedCrossSection[{\[Alpha]_,\[Beta]_}, ptBinList_List, mllBinList_List, Option
 (*EventYield*)
 
 
-EventYield::usage= "EventYield[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}]
-	Computes the expected number of events for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\) in each bin of the observable used for the specific process.
+EventYield::usage= "EventYield[\"proc\"]
+	Computes the expected number of events for all bins of the observables in the search specified by the argument \"proc\".
 	The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}.
-	For neutrinos no flavor index can be specified and a summation of all \[Nu] flavor is implicit.
+	For neutrinos no flavor index can be specified in which case a summation of all \[Nu] flavors is implicit.
 	The options and their default values are: 
 		OutputFormat \[Rule] FF,
 		Coefficients \[Rule] All,
