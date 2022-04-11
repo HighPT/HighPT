@@ -65,7 +65,11 @@ PackageScope["PartialFractioning"]
 (*Parton-level cross-section*)
 
 
-PartonCrossSection::usage="PartonCrossSection[___] compiutes the parton-level cross-section for the process ... .";
+PartonCrossSection::usage="PartonCrossSection[\!\(\*OverscriptBox[\(s\), \(^\)]\),{\!\(\*SubscriptBox[\(l\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(l\), \(2\)]\)[\[Beta]],\!\(\*SubscriptBox[\(q\), \(1\)]\)[i],\!\(\*SubscriptBox[\(q\), \(2\)]\)[j]}]
+	Computes the parton-level cross-section for the process \!\(\*OverscriptBox[SubscriptBox[\(q\), \(1\)], \(_\)]\) \!\(\*SubscriptBox[\(q\), \(2\)]\) -> \!\(\*OverscriptBox[SubscriptBox[\(l\), \(1\)], \(_\)]\) \!\(\*SubscriptBox[\(l\), \(2\)]\) in units of \!\(\*SuperscriptBox[\(GeV\), \(-2\)]\).
+	The options and their default values are: 
+		PTcuts \[Rule] {0,\[Infinity]} [GeV],
+		OperatorDimension \[RuleDelayed] GetOperatorDimension[].";
 
 
 Options[PartonCrossSection]= {
@@ -286,12 +290,12 @@ PartialFractioning[t_]:= {
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Integrated CrossSection*)
 
 
 CrossSection::usage= "CrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}]
-	Computes the total hadronic cross section \[Sigma]=\[Integral]\!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\)\[DifferentialD]s for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\).
+	Computes the total hadronic cross section \[Sigma]=\[Integral]\!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\)\[DifferentialD]s for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\) in units of picobarn.
 	The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}.
 	The cross section is obtained by integrating over a specific bin in the dilepton invariant mass and in the transverse momentum.
 	The options and their default values are: 
@@ -606,12 +610,12 @@ HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= M
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Differential cross section (for external use)*)
 
 
 DifferentialCrossSection::usage= "DifferentialCrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}]
-	Computes the differential hadronic cross section \!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\) for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\).
+	Computes the differential hadronic cross section \!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\) for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\) in units of picobarn.
 	The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}.
 	The result is returned as a function of the partonic center of mass energy \!\(\*OverscriptBox[\(s\), \(^\)]\).
 	Usage: if \[Sigma]=DifferentialCrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}]; then \[Sigma][\!\(\*OverscriptBox[\(s\), \(^\)]\)] can be used to evaluate the cross section at any value \!\(\*OverscriptBox[\(s\), \(^\)]\).

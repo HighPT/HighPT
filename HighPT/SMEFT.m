@@ -620,3 +620,87 @@ WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:=
 
 
 WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
+
+
+(* ::Section:: *)
+(*WC argument check*)
+
+
+WC::unknownWClabel= "The label `1` is not an allowed label for Wilson coefficients (WC)."
+
+
+WC::wrongindexnumber= "The number of flavor indices specified for the Wilson coefficients is incorrect: `1`"
+
+
+(* ::Subsubsection:: *)
+(*psi^2*)
+
+
+$WCList2=List[
+	(* Psi^2 H^2 D *)
+	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
+	(* Psi^2 H^4 D *)
+	"l2H4D1","l2H4D2","l2H4D3","l2H4D4",
+	"q2H4D1","q2H4D2","q2H4D3","q2H4D4",
+	"e2H4D","u2H4D","d2H4D",
+	(* Psi^2 H^2 D^3 *)
+	"l2H2D31","l2H2D32","l2H2D33","l2H2D34",
+	"e2H2D31","e2H2D32",
+	"q2H2D31","q2H2D32","q2H2D33","q2H2D34",
+	"u2H2D31","u2H2D32",
+	"d2H2D31","d2H2D32",
+	
+	(* non-hermitain *)
+	"Hud", "eW", "eB", "uW", "uB", "dW", "dB"
+]
+
+
+(* ::Subsubsection:: *)
+(*psi^4*)
+
+
+$WCList4=List[
+	(* Psi^4 *)
+	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
+	(* Psi^4 H^2 *)
+	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
+	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
+	"q2e2H21","q2e2H22",
+	"e2u2H2", "e2d2H2",
+	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
+	"l2u2D21","l2u2D22","l2u2D23","l2u2D24",
+	(* Psi^4 D^2 *)
+	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
+	"l2u2D21","l2u2D22","l2u2D23","l2u2D24",
+	"q2e2D21","q2e2D22",
+	"e2u2D21","e2u2D22","e2u2D23","e2u2D24",
+	
+	(* non-hermitian *)
+	"ledq", "lequ1", "lequ3"
+];
+
+
+(* ::Subsection:: *)
+(*Check WC label*)
+
+
+WC[l:Except[Alternatives@@Join[$WCList2,$WCList4]],___]:=(
+	Message[WC::unknownWClabel,l];
+	Abort[]
+)
+
+
+(* ::Subsection:: *)
+(*Check WC indices*)
+
+
+WC[l:Alternatives@@$WCList2, ind:Except[{_,_}]]:=(
+	Message[WC::wrongindexnumber, TraditionalForm[HoldForm[$wc[l,ind]]/.$wc->WC]];
+	Abort[]
+)
+
+
+WC[l:Alternatives@@$WCList4, ind:Except[{_,_,_,_}]]:=(
+	Message[WC::wrongindexnumber, TraditionalForm[HoldForm[$wc[l,ind]]/.$wc->WC]];
+	Abort[]
+)
