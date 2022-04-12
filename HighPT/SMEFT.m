@@ -684,7 +684,7 @@ $WCList4=List[
 (*Check WC label*)
 
 
-WC[l:Except[Alternatives@@Join[$WCList2, $WCList4, {_Pattern, _Blank, _Except}]],___]:=(
+WC[l:Except[Alternatives@@Join[$WCList2, $WCList4, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WC::unknownWClabel,l];
 	Abort[]
 )

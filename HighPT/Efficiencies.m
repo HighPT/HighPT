@@ -211,7 +211,7 @@ BuildEfficiencies[file_, proc_]:= Module[
 	Switch[proc,
 		"muon-tau-CMS" | "electron-tau-CMS" | "electron-muon-CMS",
 			info= file[[4;;10,4;;]];
-			effTable= file[[15;;,4;;]];,
+			effTable= file[[15;;30,4;;28]];,
 		_,
 			info= file[[2;;8,4;;]];
 			effTable= file[[13;;,4;;]];

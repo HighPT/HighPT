@@ -42,7 +42,7 @@ PackageExport["ConstantInput"]
 
 
 (*
-PackageExport["VEV"]
+(*PackageExport["VEV"]*)
 PackageExport["\[Alpha]EM"]
 PackageExport["GF"]
 PackageExport["mZ"]

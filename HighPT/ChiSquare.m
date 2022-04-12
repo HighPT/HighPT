@@ -180,12 +180,12 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	
 	(* # events differences *)
 	\[CapitalDelta]Events= NObserved - NPredicted;
-	Print["xxx"];
-	Print["\[CapitalDelta]Events: ",Length[\[CapitalDelta]Events]];
-	Print["\[Sigma]Predicted: ",Length[\[Sigma]Predicted]];
+	
+	(*Print["\[CapitalDelta]Events: ",Length[\[CapitalDelta]Events]];
+	Print["\[Sigma]Predicted: ",Length[\[Sigma]Predicted]];*)
 	(* chi^2 per bin *)
 	chi2= ((\[CapitalDelta]Events-\[Sigma]Predicted)/\[Sigma]N)^2;
-	Print["zzz"];
+	
 	(* * *)
 	Return[chi2]
 ]
