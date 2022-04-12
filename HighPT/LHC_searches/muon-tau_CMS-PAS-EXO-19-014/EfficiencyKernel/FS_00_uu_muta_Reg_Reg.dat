@@ -5,7 +5,7 @@
 # qq~ : uu~
 # FF  : scalar
 # XY  : LL LR RL RR
-# coef : 0 0
+# coef : 00
 # type : Reg*Reg
 # Nevs : 50000
 #===============

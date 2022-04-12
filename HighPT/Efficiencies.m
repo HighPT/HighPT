@@ -35,7 +35,7 @@ PackageScope["IncludeEfficiencies"]
 PackageScope["LoadEfficiencies"]
 
 
-PackageExport["\[Epsilon]"] (* remove this? *)
+(*PackageExport["\[Epsilon]"] (* remove this? *)*)
 
 
 (* ::Chapter:: *)

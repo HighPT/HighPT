@@ -33,11 +33,15 @@ PackageExport["DefineParameters"]
 PackageExport["GetParameters"]
 
 
+PackageExport["ConstantInput"]
+
+
 (* ::Text:: *)
 (*Everything below should be combined in one head, e.g. Parameter["..."]*)
 (*OR: PackageScope everything*)
 
 
+(*
 PackageExport["VEV"]
 PackageExport["\[Alpha]EM"]
 PackageExport["GF"]
@@ -46,10 +50,11 @@ PackageExport["\[CapitalGamma]Z"]
 PackageExport["\[CapitalGamma]W"]
 PackageExport["sW"]
 PackageExport["cW"]
+*)
 
 
 PackageExport["CKM"]
-PackageExport["Wolfenstein"]
+(*PackageExport["Wolfenstein"]*)
 PackageExport["Vckm"]
 
 
@@ -72,24 +77,33 @@ PackageScope["WeakIsospin3"]
 (*Constants*)
 
 
+ConstantInput::usage="ConstantInput[\"label\"]
+	Denotes the constant parameter \"label\". The defined parameters are: 
+		\"\[Alpha]EM\" : electromagnetic fine structure constant,
+		\"GF\" : Fermi's constant,
+		\"vev\" : electroweak vacuum expectation value,
+		\"sW\" : sine of the weak mixing angle,
+		\"cW\" : cosine of the weak mixing angle."
+
+
 (* ::Subsection:: *)
 (*Vacuum expectation value*)
 
 
-VEV::usage="VEV
-	Denotes the electroweak vacuum expectation value and is formated as \[ScriptV] in TraditionalForm.";
+(*VEV::usage="VEV
+	Denotes the electroweak vacuum expectation value and is formated as \[ScriptV] in TraditionalForm.";*)
 
 
-\[Alpha]EM::usage="\[Alpha]EM
-	Denotes the electromagnetic fine structure constant and is formated as \!\(\*SubscriptBox[\(\[Alpha]\), \(EM\)]\) in TraditionalForm.";
+(*\[Alpha]EM::usage="\[Alpha]EM
+	Denotes the electromagnetic fine structure constant and is formated as \!\(\*SubscriptBox[\(\[Alpha]\), \(EM\)]\) in TraditionalForm.";*)
 
 
-sW::usage= "sW
-	Denotes the sine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(s\), \(W\)]\) in TraditionalForm."
+(*sW::usage= "sW
+	Denotes the sine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(s\), \(W\)]\) in TraditionalForm."*)
 
 
-cW::usage= "cW
-	Denotes the cosine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(c\), \(W\)]\) in TraditionalForm."
+(*cW::usage= "cW
+	Denotes the cosine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(c\), \(W\)]\) in TraditionalForm."*)
 
 
 Mass::usage= "Mass[\[Phi]]
@@ -101,15 +115,11 @@ Width::usage= "Width[\[Phi]]
 
 
 CKM::usage= "CKM
-	Denotes the CKM matrix.";
+	Denotes the CKM matrix, with CKM[[n,m]] given by Vckm[n,m].";
 
 
-Wolfenstein::usage= "Wolfenstein
-	is an Option of DefineParameters[...] and should be given as Wolfenstein -> {\[Lambda], A, \!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\), \!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}.";
-
-
-Vckm::usage= "Vckm[i,j]
-	Denotes the ij element of the CKM matrix.";
+Vckm::usage= "Vckm[n,m]
+	Denotes the element of the CKM matrix in the \!\(\*SuperscriptBox[\(n\), \(th\)]\) row and \!\(\*SuperscriptBox[\(m\), \(th\)]\) column.";
 
 
 (* ::Section:: *)
@@ -147,16 +157,24 @@ ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 (*Real constants*)
 
 
-VEV/:Conjugate[VEV]:= VEV
+$realParameters = Alternatives[
+	"vev", "\[Alpha]EM", "sW", "cW", "GF"
+]
 
 
-\[Alpha]EM/:Conjugate[\[Alpha]EM]:= \[Alpha]EM
+ConstantInput/:Conjugate[ConstantInput[x:$realParameters]] := ConstantInput[x]
 
 
-sW/:Conjugate[sW]:= sW
+(*VEV/:Conjugate[VEV]:= VEV*)
 
 
-cW/:Conjugate[cW]:= cW
+(*\[Alpha]EM/:Conjugate[\[Alpha]EM]:= \[Alpha]EM*)
+
+
+(*sW/:Conjugate[sW]:= sW*)
+
+
+(*cW/:Conjugate[cW]:= cW*)
 
 
 Mass/:Conjugate[Mass[a_]]:= Mass[a]
@@ -175,14 +193,21 @@ Format[Mass[f_], TraditionalForm]:= Subscript["M",f]
 Format[Width[f_], TraditionalForm]:= Subscript["\[CapitalGamma]",f]
 
 
-Format[VEV, TraditionalForm]:= "\[ScriptV]"
+(*Format[VEV, TraditionalForm]:= "\[ScriptV]"*)
 
 
-Format[sW, TraditionalForm]:= Subscript["s","W"]
-Format[cW, TraditionalForm]:= Subscript["c","W"]
+(*Format[sW, TraditionalForm]:= Subscript["s","W"]
+Format[cW, TraditionalForm]:= Subscript["c","W"]*)
 
 
-Format[\[Alpha]EM, TraditionalForm]:= Subscript["\[Alpha]","EM"]
+(*Format[\[Alpha]EM, TraditionalForm]:= Subscript["\[Alpha]","EM"]*)
+
+
+Format[ConstantInput["vev"], TraditionalForm]:= "\[ScriptV]"
+Format[ConstantInput["\[Alpha]EM"], TraditionalForm]:= Subscript["\[Alpha]","EM"]
+Format[ConstantInput["sW"], TraditionalForm]:= Subscript["s","W"]
+Format[ConstantInput["cW"], TraditionalForm]:= Subscript["c","W"]
+Format[ConstantInput["GF"], TraditionalForm]:= Subscript["G","F"]
 
 
 Format[CKM, TraditionalForm]:= Subscript["V","CKM"]
@@ -241,31 +266,33 @@ CKM= {
 
 
 DefineParameters::usage= "DefineParameters[]
-	Defines all SM parameters: \[Alpha]EM, VEV, sW, cW, Mass[ZBoson], Width[ZBoson], Mass[WBoson], Width[WBoson], Mass[Photon], Width[Photon], CKM.
-	The input scheme uses the parameters \[Alpha]EM, GF, mZ, \[CapitalGamma]Z, \[CapitalGamma]W, Wolfenstein which can be specified via Options.
+	Defines all SM parameters: ConstantInput[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[ZBoson | WBoson | Photon], Width[ZBoson | WBoson | Photon], and the CKM.
+	The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options.
+	Each option value must be a number, except for the optionvalue of \"Wolfenstein\" which msut be a list of the Wolfenstein parameters {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}.
+	To obtain the current values of the parameters the routine GetParameters[] can be used.
 	Example:
 		To set the electromagnetic fine structure constant to \!\(\*SubscriptBox[\(\[Alpha]\), \(EM\)]\) = \!\(\*SuperscriptBox[\(137\), \(-1\)]\) use
-		DefineParameters[\[Alpha]EM \[Rule] 1/137].
+		DefineParameters[\"\[Alpha]EM\" \[Rule] 1/137].
 ";
 
 
 Options[DefineParameters]= {
-	\[Alpha]EM         -> \[Alpha]EM$default,
-	GF          -> GF$default,
-	mZ          -> mZ$default,
-	\[CapitalGamma]Z          -> \[CapitalGamma]Z$default,
-	\[CapitalGamma]W          -> \[CapitalGamma]W$default,
-	Wolfenstein -> Wolfenstein$default
+	"\[Alpha]EM"         -> \[Alpha]EM$default,
+	"GF"          -> GF$default,
+	"mZ"          -> mZ$default,
+	"\[CapitalGamma]Z"          -> \[CapitalGamma]Z$default,
+	"\[CapitalGamma]W"          -> \[CapitalGamma]W$default,
+	"Wolfenstein" -> Wolfenstein$default
 };
 
 
 DefineParameters[OptionsPattern[]] := Module[
 	{
-		$\[Alpha]EM = OptionValue[\[Alpha]EM],
-		$GF  = OptionValue[GF],
-		$mZ  = OptionValue[mZ],
-		$\[CapitalGamma]Z  = OptionValue[\[CapitalGamma]Z],
-		$\[CapitalGamma]W  = OptionValue[\[CapitalGamma]W],
+		$\[Alpha]EM = OptionValue["\[Alpha]EM"],
+		$GF  = OptionValue["GF"],
+		$mZ  = OptionValue["mZ"],
+		$\[CapitalGamma]Z  = OptionValue["\[CapitalGamma]Z"],
+		$\[CapitalGamma]W  = OptionValue["\[CapitalGamma]W"],
 		$mW,
 		$sW,
 		$vev,
@@ -285,21 +312,18 @@ DefineParameters[OptionsPattern[]] := Module[
 	
 	(* Create the appropriate supstitution rule *)
 	ExperimentalParameters = <|
-		\[Alpha]EM           -> $\[Alpha]EM,
-		VEV           -> $vev,
-		sW            -> $sW,
-		cW            -> Sqrt[1. - $sW^2],
-		Mass[ZBoson]  -> $mZ,
-		Width[ZBoson] -> $\[CapitalGamma]Z,
-		Mass[WBoson]  -> $mW,
-		Width[WBoson] -> $\[CapitalGamma]W,
-		Mass[Photon]  -> 0,
-		Width[Photon] -> 0,
-		(*CKM-> {
-			{1-\[Lambda]Wolfenstein^2/2, \[Lambda]Wolfenstein, AWolfenstein * \[Lambda]Wolfenstein^3 * (\[Rho]Wolfenstein - \[ImaginaryI]*\[Eta]Wolfenstein)},
-			{-\[Lambda]Wolfenstein, 1-\[Lambda]Wolfenstein^2/2, AWolfenstein * \[Lambda]Wolfenstein^2},
-			{AWolfenstein * \[Lambda]Wolfenstein^3 * (1 - \[Rho]Wolfenstein - \[ImaginaryI]*\[Eta]Wolfenstein), -AWolfenstein * \[Lambda]Wolfenstein^2, 1}
-		},*)
+		ConstantInput["\[Alpha]EM"] -> $\[Alpha]EM,
+		ConstantInput["vev"] -> $vev,
+		ConstantInput["sW"]  -> $sW,
+		ConstantInput["cW"]  -> Sqrt[1. - $sW^2],
+		(* masses & widths *)
+		Mass[ZBoson]         -> $mZ,
+		Width[ZBoson]        -> $\[CapitalGamma]Z,
+		Mass[WBoson]         -> $mW,
+		Width[WBoson]        -> $\[CapitalGamma]W,
+		Mass[Photon]         -> 0,
+		Width[Photon]        -> 0,
+		
 		Vckm[1,1] -> 1-$\[Lambda]^2/2,
 		Vckm[1,2] -> $\[Lambda],
 		Vckm[1,3] -> $A * $\[Lambda]^3 * ($\[Rho] - I*$\[Eta]),
@@ -311,8 +335,6 @@ DefineParameters[OptionsPattern[]] := Module[
 		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
 		Vckm[3,3] -> 1
-		(*unit conversion*)
-		(*,GeV2toPB -> (10^9)/(2.56819)*)
 	|>;
 ]
 

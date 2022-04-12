@@ -255,8 +255,8 @@ InterferenceMatrix[s_, t_, {X_, Y_}]:=
 	{MSS[], 0, MST[t/s, X, Y], 0, 0},
 	{0, MVV[t/s, X, Y], 0, 0, 0},
 	{MTS[t/s, X, Y], 0, MTT[t/s, X, Y], 0, 0},
-	{0, 0, 0, s/VEV^2*MDD[t/s, X, Y], 0},
-	{0, 0, 0, 0, s/VEV^2*MDD[t/s, X, Y]}
+	{0, 0, 0, s/ConstantInput["vev"]^2*MDD[t/s, X, Y], 0},
+	{0, 0, 0, 0, s/ConstantInput["vev"]^2*MDD[t/s, X, Y]}
 }
 
 
@@ -313,7 +313,7 @@ SpinSummedAmplitude2[s_, t_, {\[Alpha]_,\[Beta]_,i_,j_}]:= Module[
 	(* Set KroneckerDelta[L,R]=0 *)
 	result= result/.(KroneckerDelta[OrderlessPatternSequence[Left,Right]]->0);
 	(* rescale result *)
-	Return[1/12*(4*s^2)/VEV^4*result]
+	Return[1/12*(4*s^2)/ConstantInput["vev"]^4*result]
 ]
 
 
@@ -409,7 +409,10 @@ ExpandRegularFF[OptionsPattern[]]:= Module[
 	];
 	
 	If[$RunMode==="SMEFT",
-		rule= (RegularFF[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[type,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + d8 * $d8 * (s/VEV^2*FF[type,{"regular",{1,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + t/VEV^2*FF[type,{"regular",{0,1}},{X,Y},{\[Alpha],\[Beta],i,j}]))
+		rule= {
+			RegularFF[Vector,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[Vector,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + d8 * $d8 * (s/ConstantInput["vev"]^2*FF[Vector,{"regular",{1,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + t/ConstantInput["vev"]^2*FF[Vector,{"regular",{0,1}},{X,Y},{\[Alpha],\[Beta],i,j}]),
+			RegularFF[type:Except[Vector],s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[type,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}]
+		}
 		,
 		(* The following needs modifications if we want to allow for a mixed run mode. *)
 		rule= RegularFF[___]:> 0
@@ -495,18 +498,35 @@ Options[ExpandFormFactors] = {OperatorDimension :> GetOperatorDimension[]};
 ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 	{
 		temp= arg,
-		dim= OptionValue[OperatorDimension]
+		dim= OptionValue[OperatorDimension],
+		$aux
 	}
 	,
+	(* $aux is real *)
+	$aux/:Conjugate[$aux]:=$aux;
+	
 	(* split FF into regular and singular part *)
 	temp= temp/.SplitFF;
+	
 	(* expand regular part of FF *)
 	temp= temp/.ExpandRegularFF[OperatorDimension->dim];
+	
 	(* expand singular part of FF *)
 	temp= temp/.ExpandSingularFF[OperatorDimension->dim];
 	
+	(* remove interference of d=8 FF with d=6 FF regular and singular *)
+	temp= Expand[temp];
+	temp= temp/.{
+		FF[Vector,{"regular",{0,0}}, rest___]:> ($aux * FF[Vector,{"regular",{0,0}}, rest]),
+		SChannelSum[s_, FF[type_,{"s",0},rest___]]:> ($aux * SChannelSum[s, FF[type,{"s",0},rest]]),
+		TChannelSum[t_, FF[type_,{"t",0},rest___]]:> ($aux * TChannelSum[t, FF[type,{"t",0},rest]]),
+		UChannelSum[u_, FF[type_,{"u",0},rest___]]:> ($aux * UChannelSum[u, FF[type,{"u",0},rest]]),
+		FF[Vector,{"regular",pow:({1,0}|{0,1})}, rest___]:> ($aux^2 * FF[Vector,{"regular",pow}, rest])
+	};
+	temp= (Expand@ExpandConjugate@Expand[temp])/.Power[$aux,n_/;n>=3]:>0;
+	
 	Return[
-		Expand[ExpandConjugate[temp]]/.$d8->1
+		Expand[ExpandConjugate[temp]]/.{$d8->1, $aux->1}
 	]
 ]
 

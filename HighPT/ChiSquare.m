@@ -29,13 +29,13 @@ PackageExport["ChiSquareLHC"]
 PackageExport["MinimizeChiSquare"]
 
 
-PackageExport["ConfidenceRegion"]
+PackageScope["ConfidenceRegion"]
 
 
-PackageExport["PlotConfidenceRegion"]
+PackageScope["PlotConfidenceRegion"]
 
 
-PackageExport["PlotConfidenceIntervals"]
+PackageScope["PlotConfidenceIntervals"]
 
 
 PackageExport["CombineBins"]
