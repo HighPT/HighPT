@@ -175,7 +175,7 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	(* merging bins if requested *)
 	If[OptionValue[CombineBins]=!={},
 		{\[Sigma]Predicted,NObserved,NPredicted}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, OptionValue[CombineBins]];
-		{\[Sigma]N}= MergeBins[{\[Sigma]N}, OptionValue[CombineBins]]
+		{\[Sigma]N}= MergeBinsSquared[{\[Sigma]N}, OptionValue[CombineBins]]
 	];
 	
 	(* # events differences *)

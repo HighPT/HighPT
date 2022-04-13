@@ -1,9 +1,11 @@
 #===============
+# Experiment : ATLAS
+# Search : 1906_05609
 # ll~ : muvm
 # qq~ : du~
 # FF  : vector
 # XY  : LR RL
-# coef : 00
+# coef : 0 0
 # type : W*W
 # Nevs : 50000
 #===============

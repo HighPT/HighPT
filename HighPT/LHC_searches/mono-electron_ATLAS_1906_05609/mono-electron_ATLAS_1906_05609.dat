@@ -12,7 +12,7 @@ $Info["mono-electron_ATLAS_1906_05609"] = <|
 	"OBSERVABLE"				->	"\!\(\*SubscriptBox[m, T]\)",
 	"BINS"						->	<|
 										"OBSERVABLE"	-> {
-											130,138.982,148.585,158.852,169.828,181.562,194.107,
+											(* 130,138.982,148.585,158.852,169.828,181.562,194.107, *)
 											207.519,221.857,237.186,253.575,271.095,289.827,
 											309.852,331.261,354.15,378.62,404.781,432.749,462.65,
 											494.616,528.792,565.329,604.39,646.15,690.796,738.526,
@@ -35,6 +35,7 @@ $Info["mono-electron_ATLAS_1906_05609"] = <|
 (* Observed number of events per bin *)
 
 $NEventsObserved["mono-electron_ATLAS_1906_05609"] = {
+(*
 563230,
 673665,
 560331,
@@ -42,6 +43,7 @@ $NEventsObserved["mono-electron_ATLAS_1906_05609"] = {
 324635,
 243844,
 184520,
+*)
 140146,
 107018,
 82526,
@@ -107,6 +109,7 @@ $NEventsObserved["mono-electron_ATLAS_1906_05609"] = {
 (* Predicted number of events per bin (SM + background) [post-fit] *)
 
 $NEventsPredicted["mono-electron_ATLAS_1906_05609"] = {
+(*
 565503,
 671643,
 560006,
@@ -114,6 +117,7 @@ $NEventsPredicted["mono-electron_ATLAS_1906_05609"] = {
 326287,
 246645,
 184232,
+*)
 140195,
 106535,
 81525.6,
@@ -179,6 +183,7 @@ $NEventsPredicted["mono-electron_ATLAS_1906_05609"] = {
 (* Combined uncertainty (summed in quadrature) per bins *)
 
 $NEventsUncertainty["mono-electron_ATLAS_1906_05609"] = {
+(*
 3614.365274,
 3299.760498,
 2838.003249,
@@ -186,6 +191,7 @@ $NEventsUncertainty["mono-electron_ATLAS_1906_05609"] = {
 1807.389912,
 1408.16641,
 1000.927515,
+*)
 871.2485511,
 628.2747312,
 518.2638855,

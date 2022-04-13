@@ -212,6 +212,18 @@ BuildEfficiencies[file_, proc_]:= Module[
 		"muon-tau-CMS" | "electron-tau-CMS" | "electron-muon-CMS",
 			info= file[[4;;10,4;;]];
 			effTable= file[[15;;30,4;;28]];,
+		"mono-tau-ATLAS",
+			info= file[[4;;10,4;;]];
+			effTable= file[[15;;,4;;]];,
+		"mono-electron-ATLAS",
+			info= file[[4;;10,4;;]];
+			effTable= file[[15;;,4+7;;]];,
+		"mono-muon-ATLAS",
+			info= file[[4;;10,4;;]];
+			effTable= file[[15;;,4+8;;]];,
+		"di-electron-CMS",
+			info= file[[4;;10,4;;]];
+			effTable= file[[15;;,4+5;;]];,
 		_,
 			info= file[[2;;8,4;;]];
 			effTable= file[[13;;,4;;]];
