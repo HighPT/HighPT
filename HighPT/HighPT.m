@@ -531,8 +531,8 @@ SelectTerms[arg_, terms:({_FF..} | {_WC..} | {___})]:= Module[
 	{rule}
 	,
 	Switch[terms,
-		{_FF..}, rule= (Except[Alternatives@@terms, _FF]:> 0),
-		{_WC..}, rule= (Except[Alternatives@@terms, _WC]:> 0),
+		{_FF..}, rule= {Except[Alternatives@@terms, _FF] :> 0, _WC -> 0},
+		{_WC..}, rule= {Except[Alternatives@@terms, _WC] :> 0, _FF -> 0},
 		{___}  , rule= {_WC -> 0, _FF -> 0}
 	];
 	Return[(arg/.rule)/.{0.->0,Complex[0.,0.]->0}]

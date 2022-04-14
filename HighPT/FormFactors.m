@@ -666,6 +666,7 @@ DiagonalizeWBosonSM= {
 }
 
 
+(*
 (* superseeded by RotateMassToWeakBasis *)
 RotateFFtoWeakEigenbasis= {
 	FF[
@@ -698,6 +699,7 @@ RotateFFtoWeakEigenbasis= {
 		{k,1,3}
 	]
 };
+*)
 
 
 (* preliminary definitions of Subscript[V, u] and Subscript[V, d] *)
@@ -715,7 +717,7 @@ Vd= {
 RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 	ccRules= {
 		(* ud *)
-		FF[Vector, x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, u[i_], d[j_]}]:> (Sum[
+		FF[Vector, x_, {\[Chi]L_, Left}, {a_e, b_\[Nu], u[i_], d[j_]}]:> (Sum[
 			Vu[[k,i]]\[Conjugate] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], d[n]}] * Vd[[n,j]]
 			,
 			{k,1,3},{n,1,3}

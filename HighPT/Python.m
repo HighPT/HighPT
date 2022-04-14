@@ -71,7 +71,7 @@ MapToWCxf= {
 
 PythonExport::usage= "PythonExport[\"label\", list]
 	Exports the expressions given in list to a python file \"label.py\" using the Wilson coefficient exchange format (WCxf).
-	Each element of list will be stored as a seperate python function, where the function for the \!\(\*SuperscriptBox[\(n\), \(th\)]\) element is named label_n.
+	Each element of list will be stored as a separate python function, where the function for the \!\(\*SuperscriptBox[\(n\), \(th\)]\) element is named label_n.
 	By default functions are stored in the directory given by NotebookDirectory[]. Alternative locations can be specified through the Option Directory.
 	Example:
 		PythonExport[\"tata\", {1711.9`\[VeryThinSpace]+0.15737` WC[\"lq1\",{3,3,3,3}]+0.043601` WC[\"lq1\",{3,3,3,3}\!\(\*SuperscriptBox[\(]\), \(2\)]\)}] will create the file \"tata.py\" with the content:
