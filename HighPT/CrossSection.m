@@ -116,15 +116,15 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 	];
 	
 	(* rescale the result *)
-	Return[factor * \[Sigma]] (* in GeV^-2 *)
+	Return@ Expand[factor * \[Sigma]] (* in GeV^-2 *)
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Phase-space integration*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsubsection::Closed:: *)
 (*IntegrateT*)
 
 
@@ -165,7 +165,7 @@ IntegrateT[arg_, t_]:= Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Integrand*)
 
 
@@ -616,7 +616,7 @@ HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= M
 	(* change units from GeV^-2 to pb *)
 	\[Sigma]HadronDifferential= GeV2toPB * \[Sigma]HadronDifferential;
 	
-	Return[\[Sigma]HadronDifferential] (* in pb *)
+	Return@ Expand[\[Sigma]HadronDifferential] (* in pb *)
 ]
 
 

@@ -129,6 +129,16 @@ $ParallelHighPT=True;
 (*Defining the run mode*)
 
 
+(* ::Text:: *)
+(*By default the SMEFT modes is chosen with:*)
+(*InitializeModel[*)
+(*	"SMEFT",*)
+(*	EFTorder :> 4*)
+(*	OperatorDimension :> 6*)
+(*]*)
+(*this is done in the init.m*)
+
+
 $RunMode= "SMEFT";
 
 
@@ -148,43 +158,13 @@ InitializeModel::invalidmediator= "The mediator `1` could not be defined."
 
 
 (* ::Subsection:: *)
-(*Initialize a specific NP model*)
-
-
-InitializeModel[list_List]:= Module[
-	{}
-	,
-	(* reset all mediators *)
-	ResetMediators[];
-	
-	(* define the SM mediators *)
-	DefineSM[];
-	
-	(* removes some unnecessary stuff *)
-	SetEFTorder[0];
-	
-	(* set Model run mode *)
-	$RunMode= "Model";
-	
-	(* define mediators of the given model *)
-	Do[
-		AddMediator[mediator];
-		,
-		{mediator,list}
-	];
-	
-	Print["Run mode set to: model with the mediators:"];
-	Print["  s-channel: ", GetMediators["s"]];
-	Print["  t-channel: ", GetMediators["t"]];
-	Print["  u-channel: ", GetMediators["u"]];
-]
-
-
-(* ::Subsection:: *)
 (*Initialize the SMEFT*)
 
 
-Options[InitializeModel]={EFTorder:> GetEFTorder[], OperatorDimension:> GetOperatorDimension[]}
+Options[InitializeModel]={
+	EFTorder          :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[]
+}
 
 
 InitializeModel["SMEFT", OptionsPattern[]]:= Module[
@@ -210,20 +190,123 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 
 
 (* ::Subsection:: *)
+(*Initialize a specific NP model*)
+
+
+InitializeModel::undefmed= "The given mediator `1` is not in the list of predefined mediators: `2`"
+
+
+InitializeModel::undefmass= "In the current version only mediators with a fixed mass of 2000 GeV are supported."
+
+
+InitializeModel::undefwidth= "In the current version only mediators with a fixed width of ??? GeV are supported."
+
+
+(* ::Subsubsection:: *)
+(*new*)
+
+
+InitializeModel[{med_String, mass_, width_}]:= Module[
+	{}
+	,
+	(* check that med corresponds to a defined mediator *)
+	If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
+		Message[InitializeModel::undefmed, med, Keys@$MediatorList];
+		Abort[]
+	];
+	
+	(* check mass and width *)
+	If[mass=!=2000,
+		Message[InitializeModel::undefmass];
+		Abort[]
+	];
+	(*If[width=!=_,
+		Message[InitializeModel::undefwidth];
+		Abort[]
+	];*)
+	
+	(* reset all mediators *)
+	ResetMediators[];
+	
+	(* define the SM mediators *)
+	DefineSM[];
+	
+	(* removes some unnecessary stuff *)
+	SetEFTorder[0];
+	SetOperatorDimension[4];
+	
+	(* set EFT contributions to SM mediators to zero *)
+	FF[_,{Photon,0},___]=0;
+	FF[_,{ZBoson,0},___]=0;
+	FF[_,{WBoson,0},___]=0;
+	
+	(* set Model run mode *)
+	$RunMode= "Model";
+	
+	(* add a mediators to the model *)
+	AddMediator[med, mass, width, Sequence@@$MediatorList[med]];
+	(* no support for multiple NP mediators as of now *)
+	(*Do[
+		AddMediator[mediator];
+		,
+		{mediator,list}
+	];*)
+	
+	Print["Run mode set to: model with the mediators:"];
+	Print["  s-channel: ", GetMediators["s"]];
+	Print["  t-channel: ", GetMediators["t"]];
+	Print["  u-channel: ", GetMediators["u"]];
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*old*)
+
+
+(*InitializeModel[list_List]:= Module[
+	{}
+	,
+	(* reset all mediators *)
+	ResetMediators[];
+	
+	(* define the SM mediators *)
+	DefineSM[];
+	
+	(* removes some unnecessary stuff *)
+	SetEFTorder[0];
+	
+	(* set Model run mode *)
+	$RunMode= "Model";
+	
+	(* define mediators of the given model *)
+	Do[
+		AddMediator[mediator];
+		,
+		{mediator,list}
+	];
+	
+	Print["Run mode set to: model with the mediators:"];
+	Print["  s-channel: ", GetMediators["s"]];
+	Print["  t-channel: ", GetMediators["t"]];
+	Print["  u-channel: ", GetMediators["u"]];
+]*)
+
+
+(* ::Subsection:: *)
 (*DefineSM*)
 
 
 (* define the SM mediators \[Gamma],Z,W *)
 DefineSM[]:= Module[{param= GetParameters[]},
 	(*Photon::uasge= "Photon ccc";*)
-	AddMediator[Photon, 0, 0, "s", "NC", {Vector, DipoleL, DipoleQ}];
-	AddMediator[ZBoson, param[Mass[ZBoson]], param[Width[ZBoson]], "s", "NC", {Vector, DipoleL, DipoleQ}];
-	AddMediator[WBoson, param[Mass[WBoson]], param[Width[WBoson]], "s", "CC", {Vector, DipoleL, DipoleQ}];
+	AddMediator[Photon, 0, 0, {"s"}, {"NC"}, {Vector,DipoleL,DipoleQ}];
+	AddMediator[ZBoson, param[Mass[ZBoson]], param[Width[ZBoson]], {"s"}, {"NC"}, {Vector,DipoleL,DipoleQ}];
+	AddMediator[WBoson, param[Mass[WBoson]], param[Width[WBoson]], {"s"}, {"CC"}, {Vector,DipoleL,DipoleQ}];
 	
 	(* photons do not couple to neutrinos *)
-	FF[_,{Photon,_},_,{OrderlessPatternSequence[_ \[Nu],___]}]:= 0;
+	FF[_,{Photon,_},_,{OrderlessPatternSequence[_\[Nu],___]}]:= 0;
 	(*Photon/:Conjugate[Photon]= Photon;*) (* This might screw up IbP *)
-]
+];
 
 
 Format[Photon,TraditionalForm]:= "\[Gamma]"
@@ -269,7 +352,7 @@ ResetMediators[]:= Module[{med= Keys[$Mediators]},
 	$Channels["t"]= <||>;
 	$Channels["u"]= <||>;
 	
-	(* remove NC|CC definitions of the pevious mediators *)
+	(* remove NC|CC definitions of the previously used mediators *)
 	Do[
 		Quiet[FF[_,{m,_},_,{OrderlessPatternSequence[_u,_d,___]}]=.];
 		Quiet[FF[_,{m,_},_,{OrderlessPatternSequence[_u,_u,___]}]=.];
@@ -277,7 +360,11 @@ ResetMediators[]:= Module[{med= Keys[$Mediators]},
 		,
 		{m,med}
 	];
-	Quiet[FF[_,{Photon,_},_,{OrderlessPatternSequence[_ \[Nu],___]}]=.];
+	Quiet[FF[_,{Photon,_},_,{OrderlessPatternSequence[_\[Nu],___]}]=.];
+	
+	Quiet[FF[_,{Photon,0},___]=.];
+	Quiet[FF[_,{ZBoson,0},___]=.];
+	Quiet[FF[_,{WBoson,0},___]=.];
 ]
 
 
@@ -292,21 +379,40 @@ AddMediator::usage= "AddMediator[label, Mass, Width, channel, current, {type}]
 AddMediator[{a___}]:= AddMediator[a]
 
 
-AddMediator[l_, m_, w_, c:Alternatives["s","t","u","tu"], current:"NC"|"CC"|"All", lorentz_List]:= Module[
+AddMediator[l_, m_, w_, c:{("s"|"t"|"u")..}, current:{("NC"|"CC")..}, lorentz:{(Scalar|Vector|Tensor|DipoleL|DipoleQ)..}]:= Module[
 	{}
 	,
+	(* add mediator to list of currently used mediators *)
 	AppendTo[$Mediators, l->{m,w,c,current,lorentz}];
-	Switch[c,
-		"s", AppendTo[$Channels["s"], l->{m,w,c,current,lorentz}],
-		"t", AppendTo[$Channels["t"], l->{m,w,c,current,lorentz}],
-		"u", AppendTo[$Channels["u"], l->{m,w,c,current,lorentz}],
-		"tu",AppendTo[$Channels["t"], l->{m,w,c,current,lorentz}]; AppendTo[$Channels["u"], l->{m,w,c,current,lorentz}]
+	(* append mediator to all channels it contributes to *)
+	Do[
+		AppendTo[$Channels[chan], l->{m,w,c,current,lorentz}]
+		,
+		{chan,c}
 	];
+	
+	(* this needs a rework *)
+	(* make the mediators NC or CC *)
+	If[FreeQ[current,"NC"],
+		MakeCC[l]
+	];
+	If[FreeQ[current,"CC"],
+		MakeNC[l]
+	];
+	
+	(*Switch[c,
+		{"s"}, AppendTo[$Channels["s"], l->{m,w,c,current,lorentz}],
+		{"t"}, AppendTo[$Channels["t"], l->{m,w,c,current,lorentz}],
+		{"u"}, AppendTo[$Channels["u"], l->{m,w,c,current,lorentz}],
+		{"tu"},AppendTo[$Channels["t"], l->{m,w,c,current,lorentz}]; AppendTo[$Channels["u"], l->{m,w,c,current,lorentz}]
+	];
+	
 	Switch[current,
 		"NC", MakeNC[l];,
 		"CC", MakeCC[l];
 	];
-]
+	*)
+];
 
 
 AddMediator[a___]:= Message[InitializeModel::invalidmediator, Flatten[{a}]]
@@ -330,28 +436,6 @@ GetMediators[]:= $Mediators
 GetMediators[c:Alternatives["s","t","u"]]:= $Channels[c]
 
 
-(* return all mediators of the specified channel with the specified Lorentz structure that contribute to the CC or NC current *)
-(*
-GetMediators[c:Alternatives["s","t","u"], current_, typ_]:= Module[
-	{channel= $Channels[c]},
-	(* loop over all mediators in this channel *)
-	Do[
-		(* drop if mediator does not have the correct Lorentz structure *)
-		If[!MatchQ[Last[channel[key]], {OrderlessPatternSequence[typ,___]}],
-			KeyDropFrom[channel,key],
-			(* drop if mediator does not contribute to the CC|NC process *)
-			If[!MatchQ[(channel[key])[[-2]], (current|"All")],
-				KeyDropFrom[channel,key]
-			]
-		]
-		,
-		{key, Keys[channel]}
-	];
-	Return[channel]
-]
-*)
-
-
 GetMediators[c:Alternatives["s","t","u"], typ_]:= Module[
 	{channel= $Channels[c]},
 	(* loop over all mediators in this channel *)
@@ -368,14 +452,6 @@ GetMediators[c:Alternatives["s","t","u"], typ_]:= Module[
 
 
 (* ::Subsection:: *)
-(*[now done in init.m] Initialization in SMEFT d=6 mode*)
-
-
-(* when loading the package initialize with SMEFT at d=6 with NP^2 contributions *)
-(*InitializeModel["SMEFT", EFTorder-> 4, OperatorDimension-> 6];*)
-
-
-(* ::Subsection:: *)
 (*ReplaceChannelSums*)
 
 
@@ -387,9 +463,6 @@ ReplaceChannelSums::usage= "ReplaceChannelSums[]
 ReplaceChannelSums[]:= {
 	SChannelSum[s_,FF[type_,{"s",ord_},chirality_,indices_]]:> Sum[
 		ConstantInput["vev"]^2 * 
-		(* (* What is this doing? *)
-		EFTcontribution[mediator,ord] *
-		*)
 		FlavorDiagonalSM[mediator, type, ord, indices] * 
 		LeftHandedWSM[mediator, type, ord, chirality] * 
 		FF[type,{mediator,ord},chirality,indices] * 
@@ -411,30 +484,6 @@ ReplaceChannelSums[]:= {
 		{mediator, Keys[GetMediators["u", type]]}
 	]
 }
-
-
-(* checks whether the given process is a charged current or neutral current process *)
-(*
-CurrentType[{a_,b_,i_,j_}]:= If[Head[i]===Head[j],
-	Return["NC"],
-	Return["CC"]
-]
-*)
-
-
-(* ::Text:: *)
-(*??? remove this ???*)
-
-
-(* returns 1 if marginal contribution, returns 0 if EFT contribution that is not associated to \[Gamma]|Z|W *)
-EFTcontribution[mediator_,ord_]:= If[ord===0,
-	Return[1]
-	,
-	If[MatchQ[mediator,Photon|ZBoson|WBoson],
-		Return[1],
-		Return[0]
-	]
-]
 
 
 (* Ensures that \[Gamma]- and Z-couplings are always flavor diagonal *)
@@ -642,28 +691,3 @@ $OptionValueAssociation= <|
 
 
 OptionCheck::optionvalue= "Invalid OptionValue specified: `1`->`2`, the allowed values for `1` must match `3`.";
-
-
-(* ::Section:: *)
-(*EchoTiming*)
-
-
-(* ::Text:: *)
-(*Include custom EchoTiming for v12.1 and older*)
-
-
-(*
-If[($VersionNumber==12 && $ReleaseNumber<=2) ||$VersionNumber<12,
-	SetAttributes[HighPT`PackageScope`EchoTiming,{HoldFirst,SequenceHold}];
-	HighPT`PackageScope`EchoTiming[x_]:= Evaluate@Module[{time,result},
-		{time,result}=Timing[x];
-		Echo[time, "time: "];
-		Return[result]
-	];
-	HighPT`PackageScope`EchoTiming[x_,y_]:=Evaluate@Module[{time,result},
-		{time,result}=Timing[x];
-		Echo[time,"time: " <> ToString[y] <>": "];
-		Return[result]
-	];
-];
-*)

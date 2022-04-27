@@ -484,7 +484,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	];
 	
 	(* multiply by luminosity [lumi]=fb^-1 *)
-	nEvents= (1000 * lumi) * \[Sigma]Observable;
+	nEvents= Expand[(1000 * lumi) * \[Sigma]Observable];
 	
 	Return[nEvents/.{Complex[0.,0.]-> 0, 0.-> 0}]
 ]
