@@ -174,7 +174,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 	ResetMediators[];
 	
 	(* define the SM mediators *)
-	DefineSM[];
+	DefineSM[True];
 	
 	(* define EFT power counting *)
 	SetEFTorder[eftOrd];
@@ -229,7 +229,7 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 	ResetMediators[];
 	
 	(* define the SM mediators *)
-	DefineSM[];
+	DefineSM[False];
 	
 	(* removes some unnecessary stuff *)
 	SetEFTorder[0];
@@ -297,11 +297,21 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 
 
 (* define the SM mediators \[Gamma],Z,W *)
-DefineSM[]:= Module[{param= GetParameters[]},
-	(*Photon::uasge= "Photon ccc";*)
-	AddMediator[Photon, 0, 0, {"s"}, {"NC"}, {Vector,DipoleL,DipoleQ}];
-	AddMediator[ZBoson, param[Mass[ZBoson]], param[Width[ZBoson]], {"s"}, {"NC"}, {Vector,DipoleL,DipoleQ}];
-	AddMediator[WBoson, param[Mass[WBoson]], param[Width[WBoson]], {"s"}, {"CC"}, {Vector,DipoleL,DipoleQ}];
+DefineSM[eft_]:= Module[
+	{
+		param = GetParameters[],
+		lorentz
+	},
+	(* include dipoles in EFT scenario *)
+	If[eft,
+		lorentz = {Vector,DipoleL,DipoleQ},
+		lorentz = {Vector}
+	];
+	
+	(* add SM mediators *)
+	AddMediator[Photon, 0, 0, {"s"}, {"NC"}, lorentz];
+	AddMediator[ZBoson, param[Mass[ZBoson]], param[Width[ZBoson]], {"s"}, {"NC"}, lorentz];
+	AddMediator[WBoson, param[Mass[WBoson]], param[Width[WBoson]], {"s"}, {"CC"}, lorentz];
 	
 	(* photons do not couple to neutrinos *)
 	FF[_,{Photon,_},_,{OrderlessPatternSequence[_\[Nu],___]}]:= 0;

@@ -160,7 +160,7 @@ SubstitutionRulesMediators[Photon]={
 SubstitutionRulesMediators[ZBoson]={
 	(* Vector *)
 	(* NC *)
-	FF[Vector, {ZBoson,SM}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],q_[i_],q_[j_]}]      :> gZ[l,\[Chi]l,{a,b}] * gZ[q,\[Chi]q,{i,j}]
+	FF[Vector, {ZBoson,SM}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],q_[i_],q_[j_]}] :> gZ[l,\[Chi]l,{a,b}] * gZ[q,\[Chi]q,{i,j}]
 }
 
 
@@ -226,7 +226,7 @@ SubstitutionRulesMediators["Zp"]={
 
 
 (* ::Subsubsection:: *)
-(*\!\(\*OverscriptBox[\(Z\), \(~\)]\)'*)
+(*Z'~*)
 
 
 (*
@@ -248,11 +248,11 @@ SubstitutionRulesMediators["Wp"]={
 }
 
 
-FF[_,{"Wp",0}, {OrderlessPatternSequence[Right,_]}] = 0
+FF[_, {"Wp",0}, {OrderlessPatternSequence[Right,_]}] = 0
 
 
 (* ::Subsubsection:: *)
-(*Subscript[S, 1]*)
+(*S1*)
 
 
 SubstitutionRulesMediators["S1"]={
@@ -277,11 +277,11 @@ SubstitutionRulesMediators["S1"]={
 }
 
 
-FF[_,{"S1",0},_,{_,_,_d,_d}] = 0
+FF[_, {"S1",0}, _, {_,_,_d,_d}] = 0
 
 
 (* ::Subsubsection:: *)
-(*Subscript[\!\(\*OverscriptBox[\(S\), \(~\)]\), 1]*)
+(*S1~*)
 
 
 SubstitutionRulesMediators["S1t"]={
@@ -292,7 +292,7 @@ SubstitutionRulesMediators["S1t"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[U, 1]*)
+(*U1*)
 
 
 SubstitutionRulesMediators["U1"]={
@@ -312,7 +312,7 @@ SubstitutionRulesMediators["U1"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[\!\(\*OverscriptBox[\(U\), \(~\)]\), 1]*)
+(*U1~*)
 
 
 SubstitutionRulesMediators["U1t"]={
@@ -323,7 +323,7 @@ SubstitutionRulesMediators["U1t"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[R, 2]*)
+(*R2*)
 
 
 SubstitutionRulesMediators["R2"]={
@@ -348,7 +348,7 @@ SubstitutionRulesMediators["R2"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[\!\(\*OverscriptBox[\(R\), \(~\)]\), 2]*)
+(*R2~*)
 
 
 SubstitutionRulesMediators["R2t"]={
@@ -359,7 +359,7 @@ SubstitutionRulesMediators["R2t"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[V, 2]*)
+(*V2*)
 
 
 SubstitutionRulesMediators["V2"]={
@@ -378,7 +378,7 @@ SubstitutionRulesMediators["V2"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[\!\(\*OverscriptBox[\(V\), \(~\)]\), 2]*)
+(*V2~*)
 
 
 SubstitutionRulesMediators["V2t"]={
@@ -389,7 +389,7 @@ SubstitutionRulesMediators["V2t"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[S, 3]*)
+(*S3*)
 
 
 SubstitutionRulesMediators["S3"]={
@@ -403,7 +403,7 @@ SubstitutionRulesMediators["S3"]={
 
 
 (* ::Subsubsection:: *)
-(*Subscript[U, 3]*)
+(*U3*)
 
 
 SubstitutionRulesMediators["U3"]={
@@ -421,29 +421,65 @@ SubstitutionRulesMediators["U3"]={
 
 
 SubstituteFF::usage= "SubstituteFF[expr]
-	Substitutes all form-factors FF[...] in the given argument expr by the corresponding Wilson coefficients or coupling constants depenting on the run mode."
+	Substitutes all form-factors FF[...] in the given argument expr by the corresponding Wilson coefficients or coupling constants depenting on the run mode.
+	If running in the SMEFT mode, SubstituteFF takes the following options:
+		EFTorder \[RuleDelayed] n,
+			Specifies that the result is expanded up to and including terms of order \!\(\*SuperscriptBox[\(\[CapitalLambda]\), \(-n\)]\). The default is n=GetEFTorder[].
+		OperatorDimension \[Rule] d,
+			Specifies that EFT operators up to mass dimension d should be included. The default is d=GetOperatorDimension[].
+		Scale -> \[CapitalLambda],
+			Specifies the EFT cutoff scale used for the substitutions. The default is \[CapitalLambda]=1000 (GeV).
+	In the mediator mode these Options are ignored."
 
 
 SubstituteFF::remainingFF= "Not all form-factors have been replaced. The remaining FF are: `1`"
 
 
+Options[SubstituteFF]= {
+	EFTorder          :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[],
+	Scale             -> 1000
+};
+
+
 SubstituteFF[arg_, OptionsPattern[]]:= Module[
 	{
+		\[Epsilon], (* \[Epsilon] = \[Vee]^2/(\[CapitalLambda]^2) *)
 		subst,
 		temp= arg
 	}
 	,
+	If[$RunMode === "SMEFT",
+		(* make power counting parameter \[Epsilon] real *)
+		\[Epsilon]/:Conjugate[\[Epsilon]]:= \[Epsilon];
+		(* automatic truncation of EFT series *)
+		(* much faster than any other way of truncating the EFT series! *)
+		Switch[(OptionValue[EFTorder]/2),
+			0, \[Epsilon]=0,
+			_, \[Epsilon]/:Power[\[Epsilon],n_/;n>(OptionValue[EFTorder]/2)] = 0
+		];
+	];
+	
 	(* get mediator substitution rules *)
 	subst = Flatten@Table[
 		SubstitutionRulesMediators[med]
 		,
 		{med, Keys[GetMediators[]]}
 	];
+	
+	(* add SMEFT substitution rules *)
+	If[$RunMode === "SMEFT",
+		subst = Join[
+			subst,
+			SubstitutionRulesSMEFT[OptionValue[OperatorDimension], \[Epsilon]]
+		]
+	];
+	
 	subst= Dispatch[subst];
 	
 	(* apply substitution rules *)
-	temp= temp/.CanonizeFF;
-	temp= temp/.subst;
+	temp= EchoTiming[temp/.CanonizeFF, "FF canonization"];
+	temp= EchoTiming[temp/.subst, "FF substitution"];
 	
 	(* check that no form-factors are left *)
 	If[!FreeQ[temp,_FF], Message[SubstituteFF::remainingFF, DeleteDuplicates@Cases[temp,_FF,All]]];
@@ -451,6 +487,19 @@ SubstituteFF[arg_, OptionsPattern[]]:= Module[
 	(* substitute in constants *)
 	temp= temp/.ReplaceConstants[];
 	temp= ExpandConjugate[temp];
+	
+	(* truncate the EFT series at the desired order *)
+	If[$RunMode === "SMEFT",
+		(* next line no longer necessary with automatic EFT series truncation, applying Expand is enough *)
+		(*
+		temp= EchoTiming[Normal@Series[temp,{\[Epsilon],0,OptionValue[EFTorder]/2}], "EFT Series"];
+		*)
+		temp= EchoTiming[Expand[temp],"Expand"];
+		(* substitute in the power counting parameter *)
+		temp= temp/.\[Epsilon] -> (ConstantInput["vev"]/OptionValue[Scale])^2;
+		(* substitute vev *)
+		temp= temp/.ReplaceConstants[];
+	];
 	
 	(* result *)
 	Return[temp/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}/.{0.->0}]
