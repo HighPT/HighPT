@@ -248,7 +248,7 @@ SubstitutionRulesMediators["Wp"]={
 }
 
 
-FF[_, {"Wp",0}, {OrderlessPatternSequence[Right,_]}] = 0
+FF[_, {"Wp",0}, {OrderlessPatternSequence[Right,_]}, _] = 0
 
 
 (* ::Subsubsection:: *)
@@ -278,6 +278,7 @@ SubstitutionRulesMediators["S1"]={
 
 
 FF[_, {"S1",0}, _, {_,_,_d,_d}] = 0
+FF[_, {"S1",0}, {OrderlessPatternSequence[Right,Left]}, _] = 0
 
 
 (* ::Subsubsection:: *)
@@ -289,6 +290,10 @@ SubstitutionRulesMediators["S1t"]={
 	(* NC *)
 	FF[Vector, {"S1t",0}, {Right,Right}, {a_,b_,i_d,j_d}] :> 1/2 Coupling["y1Rt",{j,b}]Coupling["y1Rt",{i,a}]\[Conjugate]
 }
+
+
+FF[_, {"S1t",0}, {OrderlessPatternSequence[Left,_]}, _] = 0
+FF[_, {"S1t",0}, _, {_,_,_u,_u}] = 0
 
 
 (* ::Subsubsection:: *)
@@ -311,6 +316,12 @@ SubstitutionRulesMediators["U1"]={
 }
 
 
+FF[_, {"U1",0}, _, {_,_,_u,_u}] = 0
+FF[Vector, {"U1",0}, {OrderlessPatternSequence[Left,Right]}, _] = 0
+FF[Scalar, {"U1",0}, {Right,Right}, _] = 0
+FF[Scalar, {"U1",0}, {Left,Left}, _] = 0
+
+
 (* ::Subsubsection:: *)
 (*U1~*)
 
@@ -320,6 +331,10 @@ SubstitutionRulesMediators["U1t"]={
 	(* NC *)
 	FF[Vector, {"U1t",0}, {Right,Right}, {a_,b_,i_u,j_u}] :> Coupling["x1Rt",{i,b}]Coupling["x1Rt",{j,a}]\[Conjugate]
 }
+
+
+FF[_, {"U1t",0}, _, {_,_,_d,_d}] = 0
+FF[_, {"U1t",0}, {OrderlessPatternSequence[Left,_]}, _] = 0
 
 
 (* ::Subsubsection:: *)
@@ -347,6 +362,16 @@ SubstitutionRulesMediators["R2"]={
 }
 
 
+FF[Scalar, {"R2",0}, {OrderlessPatternSequence[Right,_]}, _] = 0
+FF[Tensor, {"R2",0}, {OrderlessPatternSequence[Right,_]}, _] = 0
+FF[Scalar, {"R2",0}, {Left,Left}, {_,_,_d,_d}] = 0
+FF[Tensor, {"R2",0}, {Left,Left}, {_,_,_d,_d}] = 0
+FF[Vector, {"R2",0}, {Left,Left}, _] = 0
+FF[Vector, {"R2",0}, {Right,Right}, _] = 0
+FF[Vector, {"R2",0}, {Left,Right}, {_,_,_d,_d}] = 0
+FF[Vector, {"R2",0}, _, {_,_,_u,_d}] = 0
+
+
 (* ::Subsubsection:: *)
 (*R2~*)
 
@@ -356,6 +381,12 @@ SubstitutionRulesMediators["R2t"]={
 	(* NC *)
 	FF[Vector, {"R2t",0}, {Left,Right}, {a_,b_,i_d,j_d}] :> 1/2 Coupling["y2Lt",{i,b}]Coupling["y2Lt",{j,a}]\[Conjugate]
 }
+
+
+FF[_, {"R2t",0}, _, {_,_,_u,_u}] = 0
+FF[_, {"R2t",0}, {Left,Left}, _] = 0
+FF[_, {"R2t",0}, {Right,Left}, _] = 0
+FF[_, {"R2t",0}, {Right,Right}, _] = 0
 
 
 (* ::Subsubsection:: *)
@@ -373,8 +404,18 @@ SubstitutionRulesMediators["V2"]={
 	(* NC *)
 	FF[Vector, {"V2",0}, {Right,Left}, {a_,b_,i_u,j_u}] :> - Coupling["x2R",{i,a}]\[Conjugate]Coupling["x2R",{j,b}],
 	FF[Vector, {"V2",0}, {Left,Right}, {a_,b_,i_d,j_d}] :> - Coupling["x2L",{i,a}]\[Conjugate]Coupling["x2L",{j,b}],
-	FF[Vector, {"V2",0}, {Left,Right}, {a_,b_,i_d,j_d}] :> - Coupling["x2R",{i,a}]\[Conjugate]Coupling["x2R",{j,b}]
+	FF[Vector, {"V2",0}, {Right,Left}, {a_,b_,i_d,j_d}] :> - Coupling["x2R",{i,a}]\[Conjugate]Coupling["x2R",{j,b}]
 }
+
+
+FF[Vector, {"V2",0}, _, {_,_,_u,_d}] = 0
+FF[Vector, {"V2",0}, {Left,Left}, _] = 0
+FF[Vector, {"V2",0}, {Right,Right}, _] = 0
+FF[Vector, {"V2",0}, {Left,Right}, {_,_,_u,_u}] = 0
+FF[Scalar, {"V2",0}, _, {_,_,_u,_u}] = 0
+FF[Scalar, {"V2",0}, {Left,Left}, _] = 0
+FF[Scalar, {"V2",0}, {Right,Right}, _] = 0
+FF[Scalar, {"V2",0}, {Right,Left}, _] = 0
 
 
 (* ::Subsubsection:: *)
@@ -386,6 +427,12 @@ SubstitutionRulesMediators["V2t"]={
 	(* NC *)
 	FF[Vector, {"V2t",0}, {Left,Right}, {a_,b_,i_u,j_u}] :> Coupling["x2Lt",{i,a}]\[Conjugate]Coupling["x2Lt",{j,b}]
 }
+
+
+FF[_, {"V2t",0}, _, {_,_,_d,_d}] = 0
+FF[_, {"V2t",0}, {Right,Right}, _] = 0
+FF[_, {"V2t",0}, {Left,Left}, _] = 0
+FF[_, {"V2t",0}, {Right,Left}, _] = 0
 
 
 (* ::Subsubsection:: *)
@@ -402,6 +449,9 @@ SubstitutionRulesMediators["S3"]={
 }
 
 
+FF[_, {"S3",0}, {OrderlessPatternSequence[Right,_]}, _] = 0
+
+
 (* ::Subsubsection:: *)
 (*U3*)
 
@@ -414,6 +464,9 @@ SubstitutionRulesMediators["U3"]={
 	(* CC *)
 	FF[Vector, {"U3",0}, {Left,Left}, {a_,b_,i_u,j_d}] :> -Coupling["x3L",{i,b}]Coupling["x3L",{j,a}]\[Conjugate]
 }
+
+
+FF[_, {"U3",0}, {OrderlessPatternSequence[Right,_]}, _] = 0
 
 
 (* ::Section:: *)
