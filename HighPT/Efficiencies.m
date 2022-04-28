@@ -35,22 +35,8 @@ PackageScope["IncludeEfficiencies"]
 PackageScope["LoadEfficiencies"]
 
 
-(*PackageExport["\[Epsilon]"] (* remove this? *)*)
-
-
 (* ::Chapter:: *)
 (*Private:*)
-
-
-(* ::Section:: *)
-(*EventYield*)
-
-
-(*
-EventYield::usage="EventYield[{l1[\[Alpha]],l2[\[Beta]]}, \"mLLcuts\"->{800,13000}, \"pTcuts\"->{0,\[Infinity]}, \"Luminosity\"->139]
-	Computes the expected number of events for the process p p -> \!\(\*SubscriptBox[OverscriptBox[\(l1\), \(_\)], \(\[Alpha]\)]\) \!\(\*SubscriptBox[\(l2\), \(\[Beta]\)]\), where l1,l2\[Element]{e,\[Nu]}.
-	The optional arguments allow to modify the cuts for the invariant mass of the dilepton system (\"mLLcuts\"), the cuts for the transverse momentum of the leptons (\"pTcuts\"), and the luminosity of the colider (\"Luminosity\").";
-*)
 
 
 (* ::Section:: *)
@@ -113,9 +99,10 @@ Efficiency[{{Tensor,a1_}, {Scalar,a2_}}, rest___]:= Efficiency["scalar-tensor", 
 (* fix (s,t) powers for singular terms *)
 Efficiency[str_String, {OrderlessPatternSequence[{type:Photon|ZBoson|WBoson,SM},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
 Efficiency[str_String, {OrderlessPatternSequence[{type:Photon|ZBoson|WBoson,a1_?IntegerQ},x_]}, rest___]:= Efficiency[str, {{type,{0,a1}},x}, rest]
+Efficiency[str_String, {OrderlessPatternSequence[{type_,0},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
 
 
-(* compactify second argument *)
+(* compactify second argument SMEFT *)
 Efficiency[str_String, {{type1_,a1_List}, {type2_,a2_List}}, rest___]:= Efficiency[str, Sort[{type1,type2}], Flatten[{a1+a2}], rest]
 
 
@@ -144,21 +131,41 @@ LoadEfficiencies::duobledef= "Efficiencies defined multiple times: `1`.";
 
 LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 	{(*directory,*) files, substitutions}
-	,
-	(*
-	(* determine required directory *)
-	Switch[{\[Alpha],\[Beta]},
-		{3,3}, directory= "tata",
-		{2,2}, directory= "mumu",
-		{1,1}, directory= "ee"
+	,	
+	(* load fiels in the required directory *)
+	Switch[$RunMode,
+		(* SMEFT mode *)
+		"SMEFT",
+			files= Import[
+				FileNameJoin[{Global`$DirectoryHighPT,
+					"LHC_searches",
+					$SearchDirectories[proc],
+					"SMEFT",
+					"*.dat"
+				}],
+				"Table"
+			],
+		(* mediator mode *)
+		"Model",
+			files= Import[
+				FileNameJoin[{
+					Global`$DirectoryHighPT,
+					"LHC_searches",
+					$SearchDirectories[proc],
+					"Mediators",
+					"GeV_2000",
+					"*",
+					"*.dat"
+				}],
+				"Table"
+			]
 	];
-	*)
-	
-	(* load fiels in that directory *)
+	(*
 	files= Import[
-		FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", $SearchDirectories[proc], "EfficiencyKernel", "*.dat"}],
+		FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", $SearchDirectories[proc], "SMEFT", "*.dat"}],
 		"Table"
 	];
+	*)
 
 	(* Find substitutions for all files *)
 	substitutions= EfficiencyReplacements[files,proc];
@@ -199,7 +206,7 @@ EfficiencyReplacements[files_List, proc_]:= Module[
 
 
 BuildEfficiencies[file_, proc_]:= Module[
-	{info, effTable, eff, replace={}}
+	{info, effTable, eff, replace={},c}
 	,
 	(*
 	(* file header *)
@@ -207,6 +214,10 @@ BuildEfficiencies[file_, proc_]:= Module[
 	(* efficiency table *)
 	effTable= file[[13;;,4;;]];
 	*)
+	Switch[$RunMode,
+		"SMEFT", c=0,
+		"Model", c=1
+	];
 	
 	Switch[proc,
 		"muon-tau-CMS" | "electron-tau-CMS" | "electron-muon-CMS",
@@ -346,17 +357,34 @@ EfficiencyFromHeader[info_]:= Module[
 	coeff= info[[5]]/.{0}->{0,0};
 	
 	(* type *)
+	(*
 	Switch[info[[6,1]],
-		"Reg*Reg", type= {"regular","regular"},
+		"Reg*Reg",       type= {"regular","regular"},
 		"A*Reg"|"Reg*A", type= {"regular",Photon},
 		"Z*Reg"|"Reg*Z", type= {"regular",ZBoson},
 		"W*Reg"|"Reg*W", type= {"regular",WBoson},
-		"A*A", type= {Photon,Photon},
-		"Z*Z", type= {ZBoson,ZBoson},
-		"A*Z"|"Z*A", type= {Photon,ZBoson},
-		"W*W", type= {WBoson,WBoson},
-		_, Message[LoadEfficiencies::unabletoreadfiles, "type"]
+		"A*A",           type= {Photon,Photon},
+		"Z*Z",           type= {ZBoson,ZBoson},
+		"A*Z"|"Z*A",     type= {Photon,ZBoson},
+		"W*W",           type= {WBoson,WBoson},
+		"S1*S1",         type= {"S1","S1"},
+		"S3*S3",         type= {"S3","S3"},
+		"U1*U1",         type= {"U1","U1"},
+		"U3*U3",         type= {"U3","U3"},
+		"R2*R2",         type= {"R2","R2"},
+		"V2*V2",         type= {"V2","V2"},
+		"A*S1",          type= {"S1","S1"},
+		_, Message[LoadEfficiencies::unabletoreadfiles, "type: "<>ToString[info[[6,1]]]]
 	];
+	*)
+	type = StringSplit[info[[6,1]],"*"];
+	type = type /. {
+		"Reg" -> "regular",
+		"A"   -> Photon,
+		"Z"   -> ZBoson,
+		"W"   -> WBoson
+	};
+	type = Sort[type];
 	
 	(* build up the efficiency *)
 	eff= Efficiency[lorentz, type, coeff, \[Chi], Join[flavorL,flavorQ]];
