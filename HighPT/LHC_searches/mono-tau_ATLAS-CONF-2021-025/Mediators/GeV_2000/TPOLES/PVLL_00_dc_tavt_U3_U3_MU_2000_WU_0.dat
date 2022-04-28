@@ -5,7 +5,7 @@
 # qq~ : dc~
 # FF  : vector
 # coef : 0 0
-# type : U3*U3
+# type : U3*U3 U1*U1
 # Nevs : 50000
 #===============
 #

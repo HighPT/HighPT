@@ -158,6 +158,18 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 					"*.dat"
 				}],
 				"Table"
+			]/.{"scalar"->("scalar"|"tensor"|"scalar-tensor")};
+			files = Join[
+				files,
+				Import[
+					FileNameJoin[{Global`$DirectoryHighPT,
+						"LHC_searches",
+						$SearchDirectories[proc],
+						"SMEFT",
+						"*.dat"
+					}],
+					"Table"
+				]
 			]
 	];
 	(*
@@ -377,14 +389,26 @@ EfficiencyFromHeader[info_]:= Module[
 		_, Message[LoadEfficiencies::unabletoreadfiles, "type: "<>ToString[info[[6,1]]]]
 	];
 	*)
-	type = StringSplit[info[[6,1]],"*"];
-	type = type /. {
-		"Reg" -> "regular",
-		"A"   -> Photon,
-		"Z"   -> ZBoson,
-		"W"   -> WBoson
-	};
-	type = Sort[type];
+	If[Length[info[[6]]]===1,
+		type = StringSplit[info[[6,1]],"*"];
+		type = type /. {
+			"Reg" -> "regular",
+			"A"   -> Photon,
+			"Z"   -> ZBoson,
+			"W"   -> WBoson
+		};
+		type = Sort[type];
+		,
+		type = (StringSplit[#,"*"]&/@(info[[6]]));
+		type = Alternatives@@type;
+		type = type /. {
+			"Reg" -> "regular",
+			"A"   -> Photon,
+			"Z"   -> ZBoson,
+			"W"   -> WBoson
+		};
+		type = Sort/@type;
+	];
 	
 	(* build up the efficiency *)
 	eff= Efficiency[lorentz, type, coeff, \[Chi], Join[flavorL,flavorQ]];
