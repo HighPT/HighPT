@@ -32,6 +32,9 @@ PackageExport["Coupling"]
 PackageScope["$MediatorList"]
 
 
+PackageScope["SubstitutionRulesMediators"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -531,8 +534,8 @@ SubstituteFF[arg_, OptionsPattern[]]:= Module[
 	subst= Dispatch[subst];
 	
 	(* apply substitution rules *)
-	temp= EchoTiming[temp/.CanonizeFF, "FF canonization"];
-	temp= EchoTiming[temp/.subst, "FF substitution"];
+	temp= MyTiming[temp/.CanonizeFF, "FF canonization"];
+	temp= MyTiming[temp/.subst, "FF substitution"];
 	
 	(* check that no form-factors are left *)
 	If[!FreeQ[temp,_FF], Message[SubstituteFF::remainingFF, DeleteDuplicates@Cases[temp,_FF,All]]];
@@ -547,7 +550,7 @@ SubstituteFF[arg_, OptionsPattern[]]:= Module[
 		(*
 		temp= EchoTiming[Normal@Series[temp,{\[Epsilon],0,OptionValue[EFTorder]/2}], "EFT Series"];
 		*)
-		temp= EchoTiming[Expand[temp],"Expand"];
+		temp= MyTiming[Expand[temp],"Expand"];
 		(* substitute in the power counting parameter *)
 		temp= temp/.\[Epsilon] -> (ConstantInput["vev"]/OptionValue[Scale])^2;
 		(* substitute vev *)

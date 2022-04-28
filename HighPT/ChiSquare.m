@@ -77,93 +77,34 @@ ChiSquareLHC::usage="ChiSquareLHC[\"proc\"]
 		Coefficients \[Rule] All,
 		EFTorder \[RuleDelayed] GetEFTorder[],
 		OperatorDimension \[RuleDelayed] GetOperatorDimension[],
-		CombineBins -> {}.";
+		CombineBins -> Default.";
 
 
 Options[ChiSquareLHC]= {
-	OutputFormat      -> FF,
+	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	CombineBins       -> {}
+	CombineBins       -> Default,
+	Scale             :> GetScale[]
 };
-
-
-(* TODO: proper combination of different observables *)
-(*
-ChiSquareLHC[list:{_String..}, OptionsPattern[]]:= If[OptionValue["binned"],
-	Table[ChiSquareLHC[obs, "binned"->True],{obs,list}],
-	Apply[Plus, ChiSquareLHC[#, "binned"->False]&/@list]
-]
-*)
-
-
-(*ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
-	{
-		\[CapitalDelta]Events, \[Delta]tot, chi2, expData, NObs, NSM, \[Delta]SM, \[Delta]Obs,
-		\[Sigma]Predicted,finalstate
-	}
-	,
-	(* determine final state *)
-	finalstate= Switch[proc,
-		"tata", {e[3],e[3]},
-		"mumu", {e[2],e[2]},
-		"ee",   {e[1],e[1]},
-		(* TODO: properly consider CC of the processes below *)
-		"muta"|"tamu", {e[2],e[3]},
-		"eta"|"tae",   {e[1],e[3]},
-		"emu"|"mue",   {e[1],e[2]},
-		"ta",          {e[3],\[Nu]},
-		"mu",          {e[2],\[Nu]},
-		"e",           {e[1],\[Nu]}
-		
-	];
-	
-	(* compute event yield for all bins subtracting SM prediction*)
-	\[Sigma]Predicted= EventYield[
-		finalstate,
-		OutputFormat      -> OptionValue[OutputFormat],
-		Coefficients      -> OptionValue[Coefficients],
-		EFTorder          -> OptionValue[EFTorder],
-		OperatorDimension -> OptionValue[OperatorDimension],
-		SM                -> False
-	];
-	
-	(* prepare experimental data *)
-	expData= GetExperimentData[proc];
-	NObs= expData["Observed"][[;;,4]];
-	NSM= expData["SM"][[;;,4]];
-	\[Delta]SM= expData["SM"][[;;,5;;]];
-	\[Delta]Obs= expData["Observed"][[;;,-1]];
-	
-	(* # event differences *)
-	\[CapitalDelta]Events= NObs - NSM;
-	
-	(* combined uncertainties *)
-	\[Delta]tot= Sqrt[(Apply[Plus,#]& /@ \[Delta]SM^2) + \[Delta]Obs^2];
-	
-	(* chi^2 per bin *)
-	chi2= ((\[CapitalDelta]Events-\[Sigma]Predicted)/\[Delta]tot)^2;
-	
-	(* * *)
-	Return[chi2]
-]*)
 
 
 ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	{
 		\[CapitalDelta]Events, \[Delta]tot, chi2, expData, NObserved, NPredicted, \[Sigma]N,
-		\[Sigma]Predicted
+		\[Sigma]Predicted, mybins
 	}
 	,	
 	(* compute event yield for all bins subtracting SM prediction*)
 	\[Sigma]Predicted= EventYield[
 		proc,
-		OutputFormat      -> OptionValue[OutputFormat],
+		FF                -> OptionValue[FF],
 		Coefficients      -> OptionValue[Coefficients],
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
-		SM                -> False
+		SM                -> False,
+		Scale             -> OptionValue[Scale]
 	];
 	
 	(* prepare experimental data *)
@@ -173,9 +114,14 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	\[Sigma]N         = expData["Error"];
 	
 	(* merging bins if requested *)
-	If[OptionValue[CombineBins]=!={},
-		{\[Sigma]Predicted,NObserved,NPredicted}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, OptionValue[CombineBins]];
-		{\[Sigma]N}= MergeBinsSquared[{\[Sigma]N}, OptionValue[CombineBins]]
+	Switch[OptionValue[CombineBins],
+		Default, mybins = $DefaultCombinedBins[proc],
+		None,    mybins = {},
+		_,       mybins = OptionValue[CombineBins]
+	];
+	If[mybins=!={},
+		{\[Sigma]Predicted,NObserved,NPredicted}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, mybins];
+		{\[Sigma]N}= MergeBinsSquared[{\[Sigma]N}, mybins]
 	];
 	
 	(* # events differences *)

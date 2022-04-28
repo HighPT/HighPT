@@ -42,7 +42,7 @@ PackageScope["BinnedCrossSection"]
 
 
 Options[BinnedCrossSection]= {
-	OutputFormat      -> FF,
+	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
@@ -54,7 +54,7 @@ Options[BinnedCrossSection]= {
 BinnedCrossSection[a_Alternatives, ptBinList_List, mllBinList_List, OptionsPattern[]]:= Sum[
 	PrintTemporary["Computing cross sections for finalstate: ", finalstate];
 	BinnedCrossSection[finalstate, ptBinList, mllBinList,
-		OutputFormat      -> OptionValue[OutputFormat],
+		FF                -> OptionValue[FF],
 		Coefficients      -> OptionValue[Coefficients],
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
@@ -87,7 +87,7 @@ BinnedCrossSection[{\[Alpha]_,\[Beta]_}, ptBinList_List, mllBinList_List, Option
 		\[Sigma]aux= $CrossSection[{\[Alpha],\[Beta]},
 			PTcuts            -> #,
 			MLLcuts           -> mll,
-			OutputFormat      -> OptionValue[OutputFormat],
+			FF                -> OptionValue[FF],
 			Coefficients      -> OptionValue[Coefficients],
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension],
@@ -146,167 +146,18 @@ EventYield::invalidfinalstate= "The argument `1` is not a valid final state part
 
 
 Options[EventYield]= {
-	OutputFormat      -> FF,
+	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	SM                -> True
+	SM                -> True,
+	Scale             -> Scale
 	(*,
 	Luminosity        -> Default*)
 };
 
 
 EventYield::binning2d= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[ScriptL]\)]\) and \!\(\*SubscriptBox[\(p\), \(T\)]\) detected. Currently 2d binning is not supported.";
-
-
-(*EventYield[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
-	{
-		\[Sigma]Binned,
-		efficiencies,
-		\[Sigma]Observable,
-		lumi= OptionValue[Luminosity] (* in fb^-1 *),
-		nEvents,
-		sBins,
-		ptBins,
-		\[Epsilon]sm,
-		expInfo
-	}
-	,
-	(* Check arguments *)
-	If[!MatchQ[\[Alpha], (e[1]|e[2]|e[3]|\[Nu])],
-		Message[EventYield::invalidfinalstate, \[Alpha]];
-		Abort[]
-	];
-	If[!MatchQ[\[Beta], (e[1]|e[2]|e[3]|\[Nu])],
-		Message[EventYield::invalidfinalstate, \[Beta]];
-		Abort[]
-	];
-	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {OutputFormat, Coefficients, EFTorder, OperatorDimension, Luminosity};
-	
-	(* get experimental info -> postponed to below *)
-	(*expInfo= ExperimentInfo[{\[Alpha],\[Beta]}];*)
-	
-	(* binning info for all observables *) (* ? MOVE THIS SWITCH TO Experiments.m ? *)
-	Switch[{\[Alpha],\[Beta]},
-		{e[3],e[3]},
-			sBins= {150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1150, 1500}; (* check the last bin *)
-			ptBins= {0, \[Infinity]};
-			expInfo= ExperimentInfo["tata"];
-			lumi = expInfo["LUMINOSITY"],
-		_,
-			Abort[]
-	];
-	
-	(* modify luminosity is required *)
-	If[OptionValue[Luminosity]=!=Default,
-		lumi= OptionValue[Luminosity]
-	];
-	
-	(* print info *)
-	Print@TableForm[{
-	{"PROCESS",           ":", ("pp \[Rule] " <> (\[Alpha]/.PrintRuleLepton) <> (\[Beta]/.PrintRuleAntiLepton) <> " | " <> expInfo["PROCESS"])},
-	{"EXPERIMENT",        ":", expInfo["EXPERIMENT"]},
-	{"ARXIV",             ":", expInfo["ARXIV"]},
-	{"OBSERVABLE",        ":", expInfo["OBSERVABLE"]},
-	{"BINNING " <> expInfo["OBSERVABLE"] <> " [GeV]", ":", TraditionalForm[expInfo["BINNING"]]},
-	{"LUMINOSITY [\!\(\*SuperscriptBox[\(fb\), \(-1\)]\)]", ":", lumi},
-	(* for internal computation *)
-	{"BINNING \!\(\*SqrtBox[OverscriptBox[\(s\), \(^\)]]\) [GeV]",  ":", TraditionalForm[sBins]},
-	{"BINNING \!\(\*SubscriptBox[\(p\), \(T\)]\) [GeV]",  ":", TraditionalForm[ptBins]}
-	}];
-	
-	(* compute binned cross section *)
-	\[Sigma]Binned= EchoTiming[
-		BinnedCrossSection[
-			{\[Alpha],\[Beta]}, ptBins, sBins,
-			(* due to the way efficiencies are included this has to be done afterwards. *)
-			(*
-			OutputFormat -> OptionValue[OutputFormat],
-			Coefficients -> OptionValue[Coefficients],
-			*)
-			OutputFormat      -> FF,
-			Coefficients      -> All,
-			EFTorder          -> OptionValue[EFTorder],
-			OperatorDimension -> OptionValue[OperatorDimension]
-		],
-		"\[Sigma] computation: "
-	];
-	
-	(* check that binning is 1d *)
-	If[!MatchQ[Dimensions[\[Sigma]Binned], {OrderlessPatternSequence[_,1]}], 
-		Message[EventYield::binning2d];
-		Abort[]
-	];
-	
-	(* flatten \[Sigma] *)
-	\[Sigma]Binned= Flatten[\[Sigma]Binned];
-	
-	(* remove SM contribution if required *)
-	\[Epsilon]sm/:Conjugate[\[Epsilon]sm]:= \[Epsilon]sm;
-	If[!OptionValue[SM],
-		\[Sigma]Binned= \[Sigma]Binned/.(a:FF[_,{_,SM},___]:>\[Epsilon]sm*a);
-		\[Sigma]Binned= MyExpand/@\[Sigma]Binned;
-		\[Sigma]Binned= \[Sigma]Binned/.\[Epsilon]sm^2->0;
-		\[Sigma]Binned= \[Sigma]Binned/.\[Epsilon]sm->1;
-	];
-	
-	(* include efficiencies *)
-	Do[
-		\[Sigma]Binned[[i]]= IncludeEfficiencies[\[Sigma]Binned[[i]], i]
-		,
-		{i, Length[\[Sigma]Binned]}
-	];
-	
-	(* load efficiencies *)
-	efficiencies= LoadEfficiencies[{\[Alpha],\[Beta]}];
-	
-	(* expand all bins *)
-	\[Sigma]Binned= MyExpand/@\[Sigma]Binned;
-	
-	(* inactivate all the weird Plus, Times, Power, ... behaviour of List *)
-	\[Sigma]Binned= Hold/@ \[Sigma]Binned;
-	
-	(* transform from mll or pt bins to bins in the observables *)
-	\[Sigma]Observable= EchoTiming[\[Sigma]Binned/.efficiencies, "\[Epsilon] substitution: "];
-	(*efficiencies= EchoTiming[Dispatch[efficiencies], "Dispatch: "];*) (* no improvement *)
-	
-	(* check if there are efficiencies remaining and set them to zero *)
-	If[!FreeQ[\[Sigma]Observable,_Efficiency],
-		Message[
-			EventYield::missingeff,
-			DeleteDuplicates@ Cases[\[Sigma]Observable, eff_Efficiency:> Drop[eff,-1], All]
-		];
-		(* set remaining efficiencies to zero *)
-		\[Sigma]Observable= \[Sigma]Observable/. Efficiency[___] -> Table[0, Length[efficiencies[[1,2]]]]
-	];
-	
-	(* activate Plus, Times, Power, ... behaviour of List again *)
-	\[Sigma]Observable= ReleaseHold[\[Sigma]Observable];
-	
-	(* sum contribution to each bin *)
-	\[Sigma]Observable= Plus@@ \[Sigma]Observable;
-	
-	(* Substitute in WC if recuired *)
-	If[MatchQ[OptionValue[OutputFormat],{"SMEFT",_}],
-		\[Sigma]Observable= MatchToSMEFT[
-			#,
-			OptionValue[OutputFormat][[2]],
-			EFTorder-> OptionValue[EFTorder],
-			OperatorDimension-> OptionValue[OperatorDimension]
-		]& /@ \[Sigma]Observable
-	];
-	
-	(* Set coefficients to zero if required *)
-	If[!MatchQ[OptionValue[Coefficients], All],
-		\[Sigma]Observable= SelectTerms[#, OptionValue[Coefficients]]& /@ \[Sigma]Observable
-	];
-	
-	(* multiply by luminosity [lumi]=fb^-1 *)
-	nEvents= (1000 * lumi) * \[Sigma]Observable;
-	
-	Return[nEvents/.{Complex[0.,0.]-> 0, 0.-> 0}]
-]*)
 
 
 EventYield::undefinedsearch= "The LHC search `1` is not defined; defined searches are `2`.";
@@ -337,7 +188,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	];
 	
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {OutputFormat, Coefficients, EFTorder, OperatorDimension(*, Luminosity*)};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, Scale (*, Luminosity*)};
 	
 	(* Load all experimental data for this search *)	
 	searchData= LHCSearch[proc];
@@ -387,7 +238,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 			OutputFormat -> OptionValue[OutputFormat],
 			Coefficients -> OptionValue[Coefficients],
 			*)
-			OutputFormat      -> FF,
+			FF                -> True,
 			Coefficients      -> All,
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension],
@@ -468,13 +319,13 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	(* sum contribution to each bin *)
 	\[Sigma]Observable= Plus@@ \[Sigma]Observable;
 	
-	(* Substitute in WC if recuired *)
-	If[MatchQ[OptionValue[OutputFormat],{"SMEFT",_}],
-		\[Sigma]Observable= MatchToSMEFT[
+	(* Substitute in WC if required *)
+	If[!OptionValue[FF],
+		\[Sigma]Observable= SubstituteFF[
 			#,
-			OptionValue[OutputFormat][[2]],
-			EFTorder-> OptionValue[EFTorder],
-			OperatorDimension-> OptionValue[OperatorDimension]
+			Scale             -> OptionValue[Scale],
+			EFTorder          -> OptionValue[EFTorder],
+			OperatorDimension -> OptionValue[OperatorDimension]
 		]& /@ \[Sigma]Observable
 	];
 	

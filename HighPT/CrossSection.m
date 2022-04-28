@@ -290,7 +290,7 @@ PartialFractioning[t_]:= {
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Integrated CrossSection*)
 
 
@@ -319,11 +319,12 @@ CrossSection::inteval= "Not all \!\(\*OverscriptBox[\(s\), \(^\)]\) integrals ha
 Options[CrossSection]= {
 	MLLcuts           -> {50,10000},
 	PTcuts            -> {0,\[Infinity]},
-	OutputFormat      -> FF,
+	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	Efficiency        -> False
+	Efficiency        -> False,
+	Scale             :> GetScale[]
 };
 
 
@@ -336,11 +337,12 @@ CrossSection[{e[a_],\[Nu]}, OptionsPattern[]]:= Module[
 		{e[a],\[Nu][b]},
 		MLLcuts           -> OptionValue[MLLcuts],
 		PTcuts            -> OptionValue[PTcuts],
-		OutputFormat      -> OptionValue[OutputFormat],
+		FF                -> OptionValue[FF],
 		Coefficients      -> OptionValue[Coefficients],
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
-		Efficiency        -> OptionValue[Efficiency]
+		Efficiency        -> OptionValue[Efficiency],
+		Scale             -> OptionValue[Scale]
 	];
 	(* sum over \[Nu] flavors *)
 	\[Sigma]= (\[Sigma]/.b->1) + (\[Sigma]/.b->2) + (\[Sigma]/.b->3);
@@ -358,11 +360,12 @@ CrossSection[{\[Nu],e[b_]}, OptionsPattern[]]:= Module[
 		{\[Nu][a],e[b]},
 		MLLcuts           -> OptionValue[MLLcuts],
 		PTcuts            -> OptionValue[PTcuts],
-		OutputFormat      -> OptionValue[OutputFormat],
+		FF                -> OptionValue[FF],
 		Coefficients      -> OptionValue[Coefficients],
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
-		Efficiency        -> OptionValue[Efficiency]
+		Efficiency        -> OptionValue[Efficiency],
+		Scale             -> OptionValue[Scale]
 	];
 	(* sum over \[Nu] flavors *)
 	\[Sigma]= (\[Sigma]/.a->1) + (\[Sigma]/.a->2) + (\[Sigma]/.a->3);
@@ -387,7 +390,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	}
 	,
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {OutputFormat, Coefficients, EFTorder, OperatorDimension, PTcuts, MLLcuts};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, MLLcuts, Scale};
 	
 	(* make s real *)
 	s/:Conjugate[s]:= s;
@@ -510,12 +513,12 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	(* - - - - - - - - - - - - - - *)
 	
 	(* Substitute in WC if recuired *)
-	If[MatchQ[OptionValue[OutputFormat],{"SMEFT",_}],
-		\[Sigma]= MatchToSMEFT[
+	If[!OptionValue[FF],
+		\[Sigma]= SubstituteFF[
 			\[Sigma],
-			OptionValue[OutputFormat][[2]],
-			EFTorder-> OptionValue[EFTorder],
-			OperatorDimension-> OptionValue[OperatorDimension]
+			Scale             -> OptionValue[Scale],
+			EFTorder          -> OptionValue[EFTorder],
+			OperatorDimension -> OptionValue[OperatorDimension]
 		]
 	];
 	
@@ -620,7 +623,7 @@ HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= M
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Differential cross section (for external use)*)
 
 
@@ -638,11 +641,12 @@ DifferentialCrossSection::usage= "DifferentialCrossSection[{\!\(\*SubscriptBox[\
 
 
 Options[DifferentialCrossSection]= {
-	OutputFormat      -> FF,
+	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	PTcuts            -> {0,\[Infinity]}
+	PTcuts            -> {0,\[Infinity]},
+	Scale             :> GetScale[]
 };
 
 
@@ -650,7 +654,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	{\[Sigma],s}
 	,
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {OutputFormat, Coefficients, EFTorder, OperatorDimension, PTcuts};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, Scale};
 	
 	(* compute d\[Sigma]/ds *)
 	\[Sigma]= HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, 
@@ -665,12 +669,12 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	\[Sigma]= MyExpand[\[Sigma]];
 	
 	(* Substitute in WC *)
-	If[MatchQ[OptionValue[OutputFormat],{"SMEFT",_}],
-		\[Sigma]= MatchToSMEFT[
+	If[!OptionValue[FF],
+		\[Sigma]= SubstituteFF[
 			\[Sigma],
-			OptionValue[OutputFormat][[2]],
-			EFTorder-> OptionValue[EFTorder],
-			OperatorDimension-> OptionValue[OperatorDimension]
+			Scale             -> OptionValue[Scale],
+			EFTorder          -> OptionValue[EFTorder],
+			OperatorDimension -> OptionValue[OperatorDimension]
 		]
 	];
 	

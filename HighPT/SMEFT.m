@@ -29,16 +29,16 @@ PackageExport["MatchToSMEFT"]
 PackageExport["WC"]
 
 
-PackageExport["SetEFTorder"]
+PackageScope["SetEFTorder"]
+PackageScope["GetEFTorder"]
 
 
-PackageExport["GetEFTorder"]
+PackageScope["SetOperatorDimension"]
+PackageScope["GetOperatorDimension"]
 
 
-PackageExport["SetOperatorDimension"]
-
-
-PackageExport["GetOperatorDimension"]
+PackageScope["SetScale"]
+PackageScope["GetScale"]
 
 
 PackageScope["CanonizeFF"]
@@ -125,6 +125,19 @@ SetEFTorder[n:Except[0|2|4]]:= (Message[SetEFTorder::invalidEFTorder,d];Abort[])
 GetEFTorder[]:= $EFTorder
 
 
+(* ::Subsection:: *)
+(*Scale*)
+
+
+$Scale= 2000;
+
+
+SetScale[\[CapitalLambda]_]:= ($Scale=\[CapitalLambda]);
+
+
+GetScale[]:= $Scale
+
+
 (* ::Section:: *)
 (*Wilson coefficients*)
 
@@ -185,6 +198,10 @@ MatchToSMEFT::usage="MatchToSMEFT[arg, \[CapitalLambda]]
 MatchToSMEFT::remainingFF= "Not all form-factors have been replaced. The remaining FF are: `1`"
 
 
+(* ::Text:: *)
+(*MatchToSMEFT is superseded by SubstituteFF*)
+
+
 MatchToSMEFT[arg_, \[CapitalLambda]NP_, OptionsPattern[]]:= Module[
 	{\[Epsilon], subst, temp= arg}
 	,
@@ -192,7 +209,16 @@ MatchToSMEFT[arg_, \[CapitalLambda]NP_, OptionsPattern[]]:= Module[
 	\[Epsilon]/:Conjugate[\[Epsilon]]:= \[Epsilon];
 	
 	(* get substitution rules *)
+	subst = Join[
+		SubstitutionRulesMediators[Photon],
+		SubstitutionRulesMediators[ZBoson],
+		SubstitutionRulesMediators[WBoson],
+		SubstitutionRulesSMEFT[OptionValue[OperatorDimension], \[Epsilon]] (* \[Epsilon] = \[Vee]^2/(\[CapitalLambda]^2) *)
+	];
+	subst = Dispatch@subst;
+	(*
 	subst= SubstitutionRulesSMEFT[OptionValue[OperatorDimension], \[Epsilon]]; (* \[Epsilon] = \[Vee]^2/(\[CapitalLambda]^2) *)
+	*)
 	
 	(* apply substitution rules *)
 	temp= temp/.CanonizeFF;

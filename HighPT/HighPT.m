@@ -76,6 +76,10 @@ PackageScope["ReplacePropagators"]
 PackageScope["$RunMode"]
 
 
+PackageScope["MyTiming"]
+PackageScope["$Verbose"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -163,12 +167,17 @@ InitializeModel::invalidmediator= "The mediator `1` could not be defined."
 
 Options[InitializeModel]={
 	EFTorder          :> GetEFTorder[],
-	OperatorDimension :> GetOperatorDimension[]
+	OperatorDimension :> GetOperatorDimension[],
+	Scale             :> GetScale[]
 }
 
 
 InitializeModel["SMEFT", OptionsPattern[]]:= Module[
-	{eftOrd= OptionValue[EFTorder], opDim= OptionValue[OperatorDimension]}
+	{
+		eftOrd= OptionValue[EFTorder],
+		opDim=  OptionValue[OperatorDimension],
+		\[CapitalLambda]NP=    OptionValue[Scale]
+	}
 	,
 	(* reset all mediators *)
 	ResetMediators[];
@@ -179,6 +188,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 	(* define EFT power counting *)
 	SetEFTorder[eftOrd];
 	SetOperatorDimension[opDim];
+	SetScale[\[CapitalLambda]NP];
 	
 	(* set SMEFT run mode *)
 	$RunMode= "SMEFT";
@@ -608,7 +618,7 @@ PackageScope["OptionCheck"]
 PackageExport["Coefficients"]
 
 
-PackageExport["OutputFormat"]
+(*PackageExport["OutputFormat"]*)
 
 
 PackageExport["EFTorder"]
@@ -650,12 +660,12 @@ OperatorDimension::usage= "OperatorDimension -> d
 	This option can be used with: DifferentialCrossSection, CrossSection, EventYield, MatchToSMEFT.";
 
 
-OutputFormat::usage= "OutputFormat -> X
+(*OutputFormat::usage= "OutputFormat -> X
 	Option specifying whether the result should be expressed in terms of:
 		- form factors (default): X=FF
 		- Wilson coefficients with NP scale \[CapitalLambda]: X={\"SMEFT\",\[CapitalLambda]}
 		- coupling constants: [to be added]
-	This option can be used with: DifferentialCrossSection, CrossSection, EventYield.";
+	This option can be used with: DifferentialCrossSection, CrossSection, EventYield.";*)
 
 
 Coefficients::usage= "Coefficients -> X
@@ -690,14 +700,36 @@ OptionCheck[opt_, optVal_]:= If[!MatchQ[optVal, $OptionValueAssociation[opt]],
 
 
 $OptionValueAssociation= <|
-	OutputFormat -> FF | {"SMEFT",_},
-	Coefficients -> All | {} | {_FF..} | {_WC..} (*| {Rule[_WC,_]..} | {Rule[_FF,_]..}*),
-	EFTorder -> 0 | 2 | 4 | 6 | 8,
+	FF                -> True | False,
+	Coefficients      -> All | {} | {_FF..} | {_WC..} (*| {Rule[_WC,_]..} | {Rule[_FF,_]..}*),
+	EFTorder          -> 0 | 2 | 4 | 6 | 8,
 	OperatorDimension -> 4 | 6 | 8,
-	Luminosity -> Default | _?NumericQ,
-	PTcuts -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
-	MLLcuts -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000)
+	Luminosity        -> Default | _?NumericQ,
+	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
+	MLLcuts           -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000),
+	Scale             -> _?NumericQ | _Symbol
 |>;
 
 
 OptionCheck::optionvalue= "Invalid OptionValue specified: `1`->`2`, the allowed values for `1` must match `3`.";
+
+
+(* ::Section:: *)
+(*Auxiliary function*)
+
+
+$Verbose = 0
+
+
+MyTiming[arg_]:= If[$Verbose==0,
+	Return[arg]
+	,
+	Return@EchoTiming[arg]
+]
+
+
+MyTiming[arg_, aux_]:= If[$Verbose==0,
+	Return[arg]
+	,
+	Return@EchoTiming[arg, aux]
+]

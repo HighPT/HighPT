@@ -36,6 +36,9 @@ PackageExport["LHCSearch"]
 PackageScope["$SearchDirectories"]
 
 
+PackageScope["$DefaultCombinedBins"]
+
+
 (*PackageScope["GetExperimentData"]*)
 
 
@@ -206,4 +209,23 @@ $SearchDirectories= <|
 	"muon-tau-CMS"        -> "muon-tau_CMS-PAS-EXO-19-014",
 	"electron-tau-CMS"    -> "electron-tau_CMS-PAS-EXO-19-014",
 	"electron-muon-CMS"   -> "electron-muon_CMS-PAS-EXO-19-014"
+|>
+
+
+(* ::Subsection:: *)
+(*Default combined bins*)
+
+
+$DefaultCombinedBins= <|
+	"di-tau-ATLAS"        -> {},
+	"di-muon-CMS"         -> {Range[26,28], Range[27,37]},
+	"di-electron-CMS"     -> {Range[43,43], Range[45,46], Range[47,48], Range[49,51], Range[52,94]},
+	
+	"mono-tau-ATLAS"      -> {Range[12,16]},
+	"mono-muon-ATLAS"     -> {Range[27,28], Range[29,46]},
+	"mono-electron-ATLAS" -> {Range[34,58]},
+	
+	"muon-tau-CMS"        -> {Range[16,17], Range[18,25]},
+	"electron-tau-CMS"    -> {Range[19,25]},
+	"electron-muon-CMS"   -> {Range[19,25]}
 |>
