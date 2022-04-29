@@ -76,8 +76,9 @@ PackageScope["ReplacePropagators"]
 PackageScope["$RunMode"]
 
 
-PackageScope["MyTiming"]
 PackageScope["$Verbose"]
+PackageScope["MyTiming"]
+PackageScope["MyEcho"]
 
 
 (* ::Chapter:: *)
@@ -196,6 +197,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 	Print["Using model: SMEFT"];
 	Print["  Maximum operator mass dimension: ", opDim];
 	Print["  EFT series truncation at: ", With[{x=ToString[-eftOrd]}, "\!\(\*SubsuperscriptBox[\(\[CapitalLambda]\), \(NP\), " <> x <> "]\)"]];
+	Print["  EFT cutoff scale \!\(\*SubscriptBox[\(\[CapitalLambda]\), \(NP\)]\): ", N[\[CapitalLambda]NP/1000], " TeV"];
 ]
 
 
@@ -732,4 +734,26 @@ MyTiming[arg_, aux_]:= If[$Verbose==0,
 	Return[arg]
 	,
 	Return@EchoTiming[arg, aux]
+]
+
+
+MyEcho[arg_]:= If[$Verbose>1,
+	Return[arg]
+	,
+	Return@Echo[arg]
+]
+
+
+MyEcho[arg_, aux_]:= If[$Verbose>1,
+	Return[arg]
+	,
+	Return@Echo[arg, aux]
+]
+
+
+MyEcho[arg_, aux_, f_]:= If[$Verbose>1,
+	Return[arg]
+	,
+	Echo[f[arg], aux];
+	Return[arg]
 ]

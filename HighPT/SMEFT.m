@@ -119,7 +119,7 @@ SetEFTorder[n:(0|2|4)]:= (
 );
 
 
-SetEFTorder[n:Except[0|2|4]]:= (Message[SetEFTorder::invalidEFTorder,d];Abort[])
+SetEFTorder[n:Except[0|2|4]]:= (Message[SetEFTorder::invalidEFTorder,n];Abort[])
 
 
 GetEFTorder[]:= $EFTorder
