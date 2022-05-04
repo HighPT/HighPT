@@ -720,6 +720,10 @@ OptionCheck::optionvalue= "Invalid OptionValue specified: `1`->`2`, the allowed 
 (*Auxiliary function*)
 
 
+SetAttributes[MyTiming, HoldFirst];
+SetAttributes[MyEcho, HoldFirst];
+
+
 $Verbose = 0
 
 

@@ -290,7 +290,7 @@ PartialFractioning[t_]:= {
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Integrated CrossSection*)
 
 
@@ -487,7 +487,8 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	integralAssocReverse= integralAssocReverse/.ReplacePropagators;
 	integralAssocReverse= integralAssocReverse/.ReplaceConstants[];
 	integralAssocReverse= integralAssocReverse/.{MyMin->Min, MyMax->Max};
-	integralAssocReverse= integralAssocReverse/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}(*, AccuracyGoal\[Rule]4*)]; (* modify accuracy goal ? *)
+	MyEcho[Length[integralAssocReverse], "# Integrals"];
+	integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}(*, AccuracyGoal\[Rule]4*)], "NIntegrate"]; (* modify accuracy goal ? *)
 	integralAssocReverse= Association[integralAssocReverse];
 	
 	(* substitute in cross section *)
