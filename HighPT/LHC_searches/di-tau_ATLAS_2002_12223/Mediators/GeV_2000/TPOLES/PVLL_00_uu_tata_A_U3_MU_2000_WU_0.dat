@@ -6,7 +6,7 @@
 # FF  : vector
 # XY  :  LL LR RL RR
 # coef : 0 0
-# type : A*U3
+# type : A*U3 A*U1t
 # Nevs : 50000
 #===============
 #
