@@ -818,11 +818,11 @@ ExpandConjugate[arg_]:= (arg //. {Conjugate[x_Plus]:> Conjugate/@x, Conjugate[x_
 (*MyExpand*)
 
 
-MyExpand::usage= "MyExpand[arg]
-	Does what Expand[arg] does, just much faster for large sums.";
+(*MyExpand::usage= "MyExpand[arg]
+	Does what Expand[arg] does, just much faster for large sums.";*)
 
 
-MyExpand[arg:(_Plus|_List)]:= MyExpand/@arg
+MyExpand[arg:(_Plus|_List)]:= Expand/@arg
 
 
 MyExpand[arg:Except[_Plus|_List]]:= Expand[arg]

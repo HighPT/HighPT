@@ -167,9 +167,9 @@ InitializeModel::invalidmediator= "The mediator `1` could not be defined."
 
 
 Options[InitializeModel]={
-	EFTorder          :> GetEFTorder[],
-	OperatorDimension :> GetOperatorDimension[],
-	Scale             :> GetScale[]
+	EFTorder          -> 4,
+	OperatorDimension -> 6,
+	Scale             -> 1000
 }
 
 
