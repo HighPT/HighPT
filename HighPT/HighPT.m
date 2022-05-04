@@ -742,21 +742,21 @@ MyTiming[arg_, aux_]:= If[$Verbose==0,
 ]
 
 
-MyEcho[arg_]:= If[$Verbose>1,
+MyEcho[arg_]:= If[$Verbose<=1,
 	Return[arg]
 	,
 	Return@Echo[arg]
 ]
 
 
-MyEcho[arg_, aux_]:= If[$Verbose>1,
+MyEcho[arg_, aux_]:= If[$Verbose<=1,
 	Return[arg]
 	,
 	Return@Echo[arg, aux]
 ]
 
 
-MyEcho[arg_, aux_, f_]:= If[$Verbose>1,
+MyEcho[arg_, aux_, f_]:= If[$Verbose<=1,
 	Return[arg]
 	,
 	Echo[f[arg], aux];
