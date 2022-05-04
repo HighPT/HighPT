@@ -373,6 +373,7 @@ FF[Vector, {"R2",0}, {Left,Left}, _] = 0
 FF[Vector, {"R2",0}, {Right,Right}, _] = 0
 FF[Vector, {"R2",0}, {Left,Right}, {_,_,_d,_d}] = 0
 FF[Vector, {"R2",0}, _, {_,_,_u,_d}] = 0
+FF[Vector, {"R2",0}, _, {_,_,_d,_u}] = 0
 
 
 (* ::Subsubsection:: *)
@@ -412,6 +413,7 @@ SubstitutionRulesMediators["V2"]={
 
 
 FF[Vector, {"V2",0}, _, {_,_,_u,_d}] = 0
+FF[Vector, {"V2",0}, _, {_,_,_d,_u}] = 0
 FF[Vector, {"V2",0}, {Left,Left}, _] = 0
 FF[Vector, {"V2",0}, {Right,Right}, _] = 0
 FF[Vector, {"V2",0}, {Left,Right}, {_,_,_u,_u}] = 0
