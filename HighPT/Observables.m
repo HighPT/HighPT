@@ -176,7 +176,8 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 		expInfo,
 		searchData,
 		finalstate,
-		printState
+		printState,
+		temp
 	}
 	,
 	(* Check that proc corresponds to a specified search *)
@@ -285,20 +286,33 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	efficiencies= LoadEfficiencies[proc];
 	
 	(* expand all bins *)
-	\[Sigma]Binned= MyExpand/@\[Sigma]Binned;
+	\[Sigma]Binned= MyTiming[MyExpand/@\[Sigma]Binned, "Expand in EventYield"];
 	
 	(* inactivate all the weird Plus, Times, Power, ... behaviour of List *)
 	\[Sigma]Binned= Hold/@ \[Sigma]Binned;
 	
+	(* group bins and efficiencies *)
+	temp= Transpose[{\[Sigma]Binned,Dispatch[efficiencies]}];
+	
 	(* convolution with efficiency kernels *)
+	(* with the new code it is more efficient to only use a single kernel for the substitutions *)
+	(*
 	If[$ParallelHighPT,
 		(* parallel substitute *)
-		(*EchoTiming[*)With[{eff= Dispatch[efficiencies]},
-			\[Sigma]Observable= ParallelMap[(#/.eff)&, \[Sigma]Binned];
-		](*, "\[Epsilon] substitution: "]*);
+		With[{eff= temp},
+			\[Sigma]Observable= ParallelMap[MyTiming[First[#]/.Last[#],"Substituting Efficiencies"]&, temp]
+			(*\[Sigma]Observable= ParallelMap[MyTiming[(#/.eff),"Substituting Efficiencies"]&, \[Sigma]Binned];*)
+		]
 		,
 		(* standard substitution *)
-		\[Sigma]Observable= (*EchoTiming[*)\[Sigma]Binned/.efficiencies(*, "\[Epsilon] substitution: "]*);
+		\[Sigma]Observable= Map[MyTiming[First[#]/.Last[#],"Substituting Efficiencies"]&, temp]
+		(*\[Sigma]Observable= (*EchoTiming[*)\[Sigma]Binned/.efficiencies(*, "\[Epsilon] substitution: "]*);*)
+	];
+	*)
+	MyTiming[
+	\[Sigma]Observable= Map[(First[#]/.Last[#])&, temp];
+	,
+	"Substituting Efficiencies"
 	];
 	
 	(* check if there are efficiencies remaining and set them to zero *)
@@ -314,10 +328,18 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	];
 	
 	(* activate Plus, Times, Power, ... behaviour of List again *)
+	MyTiming[
 	\[Sigma]Observable= ReleaseHold[\[Sigma]Observable];
+	,
+	"ReleaseHold for Efficiencies"
+	];
 	
 	(* sum contribution to each bin *)
+	MyTiming[
 	\[Sigma]Observable= Plus@@ \[Sigma]Observable;
+	,
+	"Sum Efficiencies"
+	];
 	
 	(* Substitute in WC if required *)
 	If[!OptionValue[FF],
@@ -335,7 +357,11 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	];
 	
 	(* multiply by luminosity [lumi]=fb^-1 *)
+	MyTiming[
 	nEvents= Expand[(1000 * lumi) * \[Sigma]Observable];
+	,
+	"Final Expand in EventYield"
+	];
 	
 	Return[nEvents/.{Complex[0.,0.]-> 0, 0.-> 0}]
 ]

@@ -61,7 +61,7 @@ PackageScope["PartialFractioning"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton-level cross-section*)
 
 
@@ -78,8 +78,7 @@ Options[PartonCrossSection]= {
 };
 
 
-PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= MyTiming[
-Module[
+PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 	{
 		temp, t, t1, t2, t3, t4, pTmin, pTmax, 
 		factor= 1/(16*\[Pi]*s^2),
@@ -118,9 +117,6 @@ Module[
 	
 	(* rescale the result *)
 	Return@ Expand[factor * \[Sigma]] (* in GeV^-2 *)
-]
-,
-"Computing partonic cross-section"
 ]
 
 
@@ -545,7 +541,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 		\[Sigma]= SelectTerms[\[Sigma], OptionValue[Coefficients]]
 	];
 	
-	\[Sigma]= MyTiming@MyExpand[\[Sigma]];
+	\[Sigma]= MyExpand[\[Sigma]];
 	
 	Return[\[Sigma]/.{Complex[a_,0.`]:> a, Complex[b_,0]:> b}/.{0.`->0}] (* in pb *)
 ]
