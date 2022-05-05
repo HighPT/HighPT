@@ -190,6 +190,9 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 		]
 	];
 	
+	(* group efficiencies by bin *)
+	substitutions= GatherBy[substitutions,Last@First[#]&];
+	
 	Return[substitutions]
 ]
 
