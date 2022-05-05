@@ -120,11 +120,11 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Phase-space integration*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IntegrateT*)
 
 
@@ -192,39 +192,34 @@ Integrand[a_,t_]:= a*Integrand[1,t]/;(FreeQ[a,t] && !MatchQ[a,1])
 
 
 (* This is forbidden *)
+(*
 Integrand/:Conjugate[Integrand[f_,x_]]:= Integrand[
 	(ExpandConjugate@Conjugate[f] //. {
 		Conjugate[InterpolatingFunction[pol___][y_]]:> InterpolatingFunction[pol][y]
 	}),
 	x
 ]
+*)
 
 
 (* ::Subsubsection::Closed:: *)
-(*ReplaceIntegrals*)
+(*PartialFractioning*)
 
 
-ReplaceIntegrals::usage= "ReplaceIntegrals[t, tMin, tMax]
-	Returns the replacement rules required for all master integrals in t with lower and uper bounds tMin and tMax respectively.";
+PartialFractioning::usage= "PartialFractioning[t]
+	Yields the replacement rule that can be used to apply the partial fractioning identities to two distinct t-channel propagators.
+";
 
 
-ReplaceIntegrals[t_]:= {
-	(* polynomials *)
-	Integrand[1,t]:> t,
-	Integrand[t,t]:> 1/2*t^2,
-	Integrand[Power[t,n_/;(IntegerQ[n] && n>0)],t]:> 1/(n+1) * Power[t,n+1],
-	(* t-channels *)
-	Integrand[Propagator[t, m1_],t]:> - Log[Propagator[t, m1]],
-	Integrand[Propagator[t, m1_] * Propagator[t, Conjugate[m1_]],t]:> If[GetMediators[][m1][[2]] == 0,
-		- Propagator[t, m1], (* for zero width particles *)
-		-(ArcTan[(Mass[m1]^2-t)/(Mass[m1]*Width[m1])]/(Mass[m1]*Width[m1])) (* for no-zero width particles *)
-	],
-	(* u-channels *)
-	Integrand[Propagator[-t-s_, m1_],t]:> - Log[-Propagator[-t-s, m1]],
-	Integrand[Propagator[-t-s_, m1_] * Propagator[-t-s_, Conjugate[m1_]],t]:> If[GetMediators[][m1][[2]] == 0,
-		- Propagator[t, m1], (* for zero width particles *)
-		-(ArcTan[(Mass[m1]*Width[m1])/(t+s+Mass[m1]^2)]/(Mass[m1]*Width[m1])) (* for no-zero width particles *)
-	]	
+PartialFractioning[t_]:= {
+	(* t x t *)
+	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]-Propagator[t,Conjugate[m2]]) /; m1=!=m2,
+	(* u x u *)
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]-Propagator[-t-s,Conjugate[m2]]) /; m1=!=m2,
+	(* t x u *) (* the conditions m1=!=m2 can be removed since we have s>0 *)
+	Propagator[t,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]+Propagator[-t-s,Conjugate[m2]]) (*/; m1=!=m2*),
+	(* u x t *)
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]+Propagator[t,Conjugate[m2]]) (*/; m1=!=m2*)
 }
 
 
@@ -265,24 +260,33 @@ ReduceIntegrands[t_]:= {
 *)
 
 
-(* ::Subsubsection::Closed:: *)
-(*PartialFractioning*)
+(* ::Subsubsection:: *)
+(*ReplaceIntegrals*)
 
 
-PartialFractioning::usage= "PartialFractioning[t]
-	Yields the replacement rule that can be used to apply the partial fractioning identities to two distinct t-channel propagators.
-";
+ReplaceIntegrals::usage= "ReplaceIntegrals[t, tMin, tMax]
+	Returns the replacement rules required for all master integrals in t with lower and uper bounds tMin and tMax respectively.";
 
 
-PartialFractioning[t_]:= {
-	(* t x t *)
-	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]-Propagator[t,Conjugate[m2]]) /; m1=!=m2,
-	(* u x u *)
-	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]-Propagator[-t-s,Conjugate[m2]]) /; m1=!=m2,
-	(* t x u *) (* the conditions m1=!=m2 can be removed since we have s>0 *)
-	Propagator[t,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]+Propagator[-t-s,Conjugate[m2]]) (*/; m1=!=m2*),
-	(* u x t *)
-	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]+Propagator[t,Conjugate[m2]]) (*/; m1=!=m2*)
+ReplaceIntegrals[t_]:= {
+	(* polynomials *)
+	Integrand[1,t]:> t,
+	Integrand[t,t]:> 1/2*t^2,
+	Integrand[Power[t,n_/;(IntegerQ[n] && n>0)],t]:> 1/(n+1) * Power[t,n+1],
+	(* t-channels *)
+	Integrand[Propagator[t, m1_],t]:> Log[1/Propagator[t, m1]],
+	Integrand[Propagator[t, m1:Except[_Conjugate]] * Propagator[t, Conjugate[m1_]],t]:> If[GetMediators[][m1][[2]] == 0,
+		- Propagator[t, m1], (* for zero width particles *)
+		(*(ArcTan[(t-Mass[m1]^2)/(Mass[m1]*Width[m1])]/(Mass[m1]*Width[m1]))*) (* for no-zero width particles *)
+		(Log[1/Propagator[t,m1]]-Log[1/Propagator[t,Conjugate[m1]]])/((-1/Propagator[0,m1])+(1/Propagator[0,Conjugate[m1]]))
+	],
+	(* u-channels *)
+	Integrand[Propagator[-t-s_, m1_],t]:> - Log[-1/Propagator[-t-s, m1]],
+	Integrand[Propagator[-t-s_, m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m1_]],t]:> If[GetMediators[][m1][[2]] == 0,
+		- Propagator[-t-s, m1], (* for zero width particles *)
+		-(ArcTan[(Mass[m1]*Width[m1])/(t+s+Mass[m1]^2)]/(Mass[m1]*Width[m1])) (* <- this seems wrong *) (* for no-zero width particles *)
+		(*(-Log[-1/Propagator[-t-s,m1]]+Log[-1/Propagator[-t-s,Conjugate[m1]]])/((-1/Propagator[0,m1])+(1/Propagator[0,Conjugate[m1]]))*)
+	]	
 }
 
 
@@ -290,7 +294,7 @@ PartialFractioning[t_]:= {
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Integrated CrossSection*)
 
 
@@ -435,11 +439,6 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	
 	(* - - - - - - - - - - - - - - *)
 	(* NEW INTEGRAL COMPUTATION: identifying complex conjugated integrals *)
-	(* Integrands need to be expanded to simplify *)
-	\[Sigma]= MyTiming[
-	\[Sigma] /. Integrand[var_,x_] :> Integrand[Expand[var], x]
-	, "Expand Integrand"
-	];
 	(* Min and Max are OneIdentity which breaks patternmatching below *)
 	\[Sigma]= \[Sigma] /. {Min->MyMin, Max->MyMax};
 	(* find list of all non-equivalent integrals *)
@@ -709,7 +708,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton luminosity functions*)
 
 

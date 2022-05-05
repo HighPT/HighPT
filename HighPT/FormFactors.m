@@ -410,7 +410,7 @@ ExpandRegularFF[OptionsPattern[]]:= Module[
 	
 	If[$RunMode==="SMEFT",
 		rule= {
-			RegularFF[Vector,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[Vector,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + d8 * $d8 * (s/ConstantInput["vev"]^2*FF[Vector,{"regular",{1,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + t/ConstantInput["vev"]^2*FF[Vector,{"regular",{0,1}},{X,Y},{\[Alpha],\[Beta],i,j}]),
+			RegularFF[Vector,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[Vector,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + d8 * $d8 * (s/(ConstantInput["vev"]^2)*FF[Vector,{"regular",{1,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + t/(ConstantInput["vev"]^2)*FF[Vector,{"regular",{0,1}},{X,Y},{\[Alpha],\[Beta],i,j}]),
 			RegularFF[type:Except[Vector],s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[type,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}]
 		}
 		,
