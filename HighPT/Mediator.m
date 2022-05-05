@@ -418,15 +418,13 @@ SubstitutionRulesMediators["V2"]={
 }
 
 
-FF[Vector, {"V2",0}, _, {_,_,_u,_d}] = 0
-FF[Vector, {"V2",0}, _, {_,_,_d,_u}] = 0
-FF[Vector, {"V2",0}, {Left,Left}, _] = 0
-FF[Vector, {"V2",0}, {Right,Right}, _] = 0
+FF[Vector, {"V2",0}, _, {_,_,_u,_d}|{_,_,_d,_u}] = 0
+FF[Vector, {"V2",0}, {Left,Left}|{Right,Right}, _] = 0
 FF[Vector, {"V2",0}, {Left,Right}, {_,_,_u,_u}] = 0
 FF[Scalar, {"V2",0}, _, {_,_,_u,_u}] = 0
-FF[Scalar, {"V2",0}, {Left,Left}, _] = 0
-FF[Scalar, {"V2",0}, {Right,Right}, _] = 0
-FF[Scalar, {"V2",0}, {Right,Left}, _] = 0
+FF[Scalar, {"V2",0}, {Left,Left}|{Right,Right}, _] = 0
+FF[Scalar, {"V2",0}, {Left,Right}, {_,_,_d,_u}] = 0
+FF[Scalar, {"V2",0}, {Right,Left}, {_,_,_u,_d}] = 0
 
 
 (* ::Subsubsection:: *)
