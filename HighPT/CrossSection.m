@@ -78,7 +78,8 @@ Options[PartonCrossSection]= {
 };
 
 
-PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
+PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= MyTiming[
+Module[
 	{
 		temp, t, t1, t2, t3, t4, pTmin, pTmax, 
 		factor= 1/(16*\[Pi]*s^2),
@@ -117,6 +118,9 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 	
 	(* rescale the result *)
 	Return@ Expand[factor * \[Sigma]] (* in GeV^-2 *)
+]
+,
+"Computing partonic cross-section"
 ]
 
 
@@ -393,7 +397,11 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, MLLcuts, Scale};
 	
 	(* make s real *)
+	(*
+	(* The line below slows down the final Expand in HadronicDifferentialCrossSection by a lot, for whatever reason...
+	However, the way the code works Conjugate[s] anyway no longer appears. *)
 	s/:Conjugate[s]:= s;
+	*)
 	MyMin/:Conjugate[MyMin]:= MyMin;
 	MyMax/:Conjugate[MyMax]:= MyMax;
 	
@@ -409,9 +417,15 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	];
 	
 	(* Find and collect all s-integrals *)
-	\[Sigma]= Integrand[\[Sigma],s];
+	\[Sigma]= MyTiming[
+	Integrand[\[Sigma],s]
+	, "Integrand (s)"
+	];
 	
-	\[Sigma]= \[Sigma]/.PartialFractioning[s];
+	\[Sigma]= MyTiming[
+	\[Sigma]/.PartialFractioning[s]
+	, "PartialFractioning (s)"
+	];
 	(*\[Sigma]= \[Sigma]//.ReduceIntegrands[s];*) (* no improvements *)
 	
 (*
@@ -426,7 +440,10 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	(* - - - - - - - - - - - - - - *)
 	(* NEW INTEGRAL COMPUTATION: identifying complex conjugated integrals *)
 	(* Integrands need to be expanded to simplify *)
-	\[Sigma]= \[Sigma] /. Integrand[var_,x_] :> Integrand[Expand[var], x];
+	\[Sigma]= MyTiming[
+	\[Sigma] /. Integrand[var_,x_] :> Integrand[Expand[var], x]
+	, "Expand Integrand"
+	];
 	(* Min and Max are OneIdentity which breaks patternmatching below *)
 	\[Sigma]= \[Sigma] /. {Min->MyMin, Max->MyMax};
 	(* find list of all non-equivalent integrals *)
@@ -528,7 +545,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 		\[Sigma]= SelectTerms[\[Sigma], OptionValue[Coefficients]]
 	];
 	
-	\[Sigma]= MyExpand[\[Sigma]];
+	\[Sigma]= MyTiming@MyExpand[\[Sigma]];
 	
 	Return[\[Sigma]/.{Complex[a_,0.`]:> a, Complex[b_,0]:> b}/.{0.`->0}] (* in pb *)
 ]
@@ -549,7 +566,8 @@ Options[HadronicDifferentialCrossSection]= {
 };
 
 
-HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
+HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= MyTiming[
+Module[
 	{
 		\[Sigma]General, \[Sigma], \[Sigma]HadronDifferential,
 		a,b,i,j,
@@ -619,12 +637,15 @@ HadronicDifferentialCrossSection[s_, {\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= M
 	\[Sigma]HadronDifferential= RotateMassToWeakBasis[\[Sigma]HadronDifferential];
 	(* change units from GeV^-2 to pb *)
 	\[Sigma]HadronDifferential= GeV2toPB * \[Sigma]HadronDifferential;
-	
+	(*MyEcho[\[Sigma]HadronDifferential, "\[Sigma]", TraditionalForm];*)
 	Return@ Expand[\[Sigma]HadronDifferential] (* in pb *)
+]
+,
+"HadronicDifferentialCrossSection"
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Differential cross section (for external use)*)
 
 

@@ -321,6 +321,10 @@ SubstitutionRulesMediators["U1"]={
 
 FF[_, {"U1",0}, _, {_,_,_u,_u}] = 0
 FF[Vector, {"U1",0}, {OrderlessPatternSequence[Left,Right]}, _] = 0
+
+FF[Scalar, {"U1",0}, {Right,_}, {_,_,_u,_d}] = 0
+FF[Scalar, {"U1",0}, {Left,_}, {_,_,_d,_u}] = 0
+
 FF[Scalar, {"U1",0}, {Right,Right}, _] = 0
 FF[Scalar, {"U1",0}, {Left,Left}, _] = 0
 
@@ -365,15 +369,17 @@ SubstitutionRulesMediators["R2"]={
 }
 
 
-FF[Scalar, {"R2",0}, {OrderlessPatternSequence[Right,_]}, _] = 0
-FF[Tensor, {"R2",0}, {OrderlessPatternSequence[Right,_]}, _] = 0
-FF[Scalar, {"R2",0}, {Left,Left}, {_,_,_d,_d}] = 0
-FF[Tensor, {"R2",0}, {Left,Left}, {_,_,_d,_d}] = 0
+FF[Scalar|Tensor, {"R2",0}, {Right,_}, {_,_,_u,_d}] = 0
+FF[Scalar|Tensor, {"R2",0}, {Left,_}, {_,_,_d,_u}]  = 0
+
+FF[Scalar|Tensor, {"R2",0}, _, {_,_,_d,_d}] = 0
+FF[Scalar, {"R2",0}, {OrderlessPatternSequence[Left,Right]}, _] = 0
+
 FF[Vector, {"R2",0}, {Left,Left}, _] = 0
 FF[Vector, {"R2",0}, {Right,Right}, _] = 0
 FF[Vector, {"R2",0}, {Left,Right}, {_,_,_d,_d}] = 0
-FF[Vector, {"R2",0}, _, {_,_,_u,_d}] = 0
-FF[Vector, {"R2",0}, _, {_,_,_d,_u}] = 0
+
+FF[Vector, {"R2",0}, _, {_,_,_u,_d}|{_,_,_d,_u}] = 0
 
 
 (* ::Subsubsection:: *)
