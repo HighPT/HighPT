@@ -202,7 +202,7 @@ Integrand/:Conjugate[Integrand[f_,x_]]:= Integrand[
 *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*PartialFractioning*)
 
 
@@ -283,9 +283,9 @@ ReplaceIntegrals[t_]:= {
 	(* u-channels *)
 	Integrand[Propagator[-t-s_, m1_],t]:> - Log[-1/Propagator[-t-s, m1]],
 	Integrand[Propagator[-t-s_, m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m1_]],t]:> If[GetMediators[][m1][[2]] == 0,
-		- Propagator[-t-s, m1], (* for zero width particles *)
-		-(ArcTan[(Mass[m1]*Width[m1])/(t+s+Mass[m1]^2)]/(Mass[m1]*Width[m1])) (* <- this seems wrong *) (* for no-zero width particles *)
-		(*(-Log[-1/Propagator[-t-s,m1]]+Log[-1/Propagator[-t-s,Conjugate[m1]]])/((-1/Propagator[0,m1])+(1/Propagator[0,Conjugate[m1]]))*)
+		Propagator[-t-s, m1], (* for zero width particles *)
+		(*-(ArcTan[(Mass[m1]*Width[m1])/(t+s+Mass[m1]^2)]/(Mass[m1]*Width[m1]))*) (* for no-zero width particles *)
+		(-Log[-1/Propagator[-t-s,m1]]+Log[-1/Propagator[-t-s,Conjugate[m1]]])/((-1/Propagator[0,m1])+(1/Propagator[0,Conjugate[m1]]))
 	]	
 }
 
