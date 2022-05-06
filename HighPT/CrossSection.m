@@ -61,7 +61,7 @@ PackageScope["PartialFractioning"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section*)
 
 
@@ -124,7 +124,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 (*Phase-space integration*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IntegrateT*)
 
 
@@ -202,7 +202,7 @@ Integrand/:Conjugate[Integrand[f_,x_]]:= Integrand[
 *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*PartialFractioning*)
 
 
@@ -213,9 +213,9 @@ PartialFractioning::usage= "PartialFractioning[t]
 
 PartialFractioning[t_]:= {
 	(* t x t *)
-	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]-Propagator[t,Conjugate[m2]]) /; m1=!=m2,
+	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]-Propagator[t,Conjugate[m2]]) /; (m1=!=m2 || GetMediators[][m1][[2]]!=0),
 	(* u x u *)
-	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]-Propagator[-t-s,Conjugate[m2]]) /; m1=!=m2,
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]-Propagator[-t-s,Conjugate[m2]]) /; (m1=!=m2 || GetMediators[][m1][[2]]!=0),
 	(* t x u *) (* the conditions m1=!=m2 can be removed since we have s>0 *)
 	Propagator[t,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]+Propagator[-t-s,Conjugate[m2]]) (*/; m1=!=m2*),
 	(* u x t *)
@@ -260,7 +260,7 @@ ReduceIntegrands[t_]:= {
 *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*ReplaceIntegrals*)
 
 
@@ -290,11 +290,21 @@ ReplaceIntegrals[t_]:= {
 }
 
 
+(* ::Subsubsection::Closed:: *)
+(*SimplifySIntegrals*)
+
+
+PartialFractioningSIntegrals[s_]:={
+	Propagator[s,med_]/s :> Propagator[0,med](1/s - Propagator[s,med]) /; !MatchQ[GetMediators[][med/.Conjugate[m_]:>m][[1]], 0|0.],
+	s^n_Integer*Propagator[s,med_] :> Propagator[0,med](s^n - s^(n+1)*Propagator[s,med]) /; (n<-1 && (!MatchQ[GetMediators[][med/.Conjugate[m_]:>m][[1]], 0|0.]))
+}
+
+
 (* ::Section:: *)
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Integrated CrossSection*)
 
 
@@ -422,11 +432,12 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	, "Integrand (s)"
 	];
 	
-	\[Sigma]= MyTiming[
-	\[Sigma]/.PartialFractioning[s]
-	, "PartialFractioning (s)"
-	];
-	(*\[Sigma]= \[Sigma]//.ReduceIntegrands[s];*) (* no improvements *)
+	\[Sigma]= \[Sigma]/.PartialFractioning[s];
+
+	\[Sigma]= \[Sigma]//.ReduceIntegrands[s];
+	
+	\[Sigma]= \[Sigma]//.PartialFractioningSIntegrals[s];
+	
 	
 (*
 	(* - - - - - - - - - - - - - - *)
@@ -500,6 +511,14 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	integralAssocReverse= integralAssocReverse/.ReplaceConstants[];
 	integralAssocReverse= integralAssocReverse/.{MyMin->Min, MyMax->Max};
 	MyEcho[Length[integralAssocReverse], "# Integrals"];
+	(*
+	(* Print all integrals *)
+	Do[
+		Print[int]
+		,
+		{int, DeleteDuplicates@Cases[integralAssocReverse,ig_Integrand :> (ig/.{s->Global`s, _InterpolatingFunction->Global`IF}), All]}
+	];
+	*)
 	integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}(*, AccuracyGoal\[Rule]4*)], "NIntegrate"]; (* modify accuracy goal ? *)
 	integralAssocReverse= Association[integralAssocReverse];
 	

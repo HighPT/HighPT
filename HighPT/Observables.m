@@ -151,7 +151,7 @@ Options[EventYield]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	SM                -> True,
-	Scale             -> Scale
+	Scale             :> GetScale[]
 	(*,
 	Luminosity        -> Default*)
 };
