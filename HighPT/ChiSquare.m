@@ -144,9 +144,6 @@ MergeBins[lists_List, merge_List]:= Module[
 		allBins
 	}
 	,
-	Print[Length[lists[[1]]]];
-	Print[Length[lists[[2]]]];
-	Print[Length[lists[[3]]]];
 	(* auxiliary list of all bins *)
 	allBins = Table[{i},{i,Length@First[lists]}];
 	

@@ -220,7 +220,7 @@ $SearchDirectories= <|
 
 $DefaultCombinedBins= <|
 	"di-tau-ATLAS"        -> {},
-	"di-muon-CMS"         -> {Range[26,28], Range[27,37]},
+	"di-muon-CMS"         -> {Range[26,28], Range[27,41]},
 	"di-electron-CMS"     -> {Range[43,43], Range[45,46], Range[47,48], Range[49,51], Range[52,94]},
 	
 	"mono-tau-ATLAS"      -> {Range[12,16]},
