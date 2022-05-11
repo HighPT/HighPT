@@ -282,6 +282,9 @@ SubstitutionRulesMediators["S1"]={
 
 FF[_, {"S1",0}, _, {_,_,_d,_d}] = 0
 FF[_, {"S1",0}, {OrderlessPatternSequence[Right,Left]}, _] = 0
+FF[Scalar|Tensor, {"S1",0}, {Right,Right}, {_,_,_u,_d}] = 0
+FF[Scalar|Tensor, {"S1",0}, {Left,Left}, {_,_,_d,_u}] = 0
+FF[Vector, {"S1",0}, {Right,Right}, {_,_,_u,_d}|{_,_,_d,_u}] = 0
 
 
 (* ::Subsubsection:: *)
