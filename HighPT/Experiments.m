@@ -152,18 +152,20 @@ LHCSearch[\"proc\"]
 	Loads and returns all available date for the LHC search specified by the string \"proc\" as an association."
 
 
-LHCSearch[str_String]:= Module[{proc=str},
+LHCSearch[str_String]:= Module[{proc=str, temp},
 	(* use alias if available *)
 	If[KeyExistsQ[$Searches, str], proc= $SearchDirectories[str]];
 	(* Load experimental results *)
 	LoadExperimentalResults[proc];
 	(* set experimental data *)
-	LHCSearch[str]= <|
-		"Info"     -> $Info[proc],
-		"Observed" -> $NEventsObserved[proc],
-		"Expected" -> $NEventsPredicted[proc],
-		"Error"    -> $NEventsUncertainty[proc]
-	|>
+	(*LHCSearch[str]*)temp= <|
+		"Info"                  -> $Info[proc],
+		"Observed"              -> $NEventsObserved[proc],
+		"Expected"              -> $NEventsPredicted[proc],
+		"Error"                 -> $NEventsUncertainty[proc],
+		"DefaultBinCombination" -> $DefaultCombinedBins[str]
+	|>;
+	Return[temp]
 ]
 
 

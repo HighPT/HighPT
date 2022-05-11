@@ -57,6 +57,9 @@ PackageScope["ReduceIntegrands"]
 PackageScope["PartialFractioning"]
 
 
+PackageScope["PartialFractioningSIntegrals"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 

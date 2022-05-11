@@ -31,7 +31,7 @@ PackageExport["Yield"]
 
 
 (* ::Section:: *)
-(*EventYield*)
+(*Yield*)
 
 
 Yield::usage= "EventYield[\"proc\"]
@@ -71,14 +71,16 @@ Yield::undefinedsearch= "The LHC search `1` is not defined; defined searches are
 
 Yield[proc_String, OptionsPattern[]]:= Module[
 	{
-		s,sMin,sMax,ptCuts,
-		\[Sigma]Dif,
+		coeff,
+		finalstate, ptBins, sBins,
+		\[Sigma], pTmin, pTmax, s, aux,
 		temp
 	}
 	,
+	(*** CHECKS ***)
 	(* Check options *)
 	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, Scale (*, Luminosity*)};
-	
+	coeff = OptionValue[Coefficients];
 	(* Check that proc corresponds to a specified search *)
 	If[KeyExistsQ[LHCSearch[], proc],
 		Print["Computing observable for ", proc, " search: ", LHCSearch[][proc]]
@@ -87,25 +89,66 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 		Abort[]
 	];
 	
-	(* figure out which cross sections to compute *)
+	(*** extract and print process info ***)
+	{finalstate, ptBins, sBins} = Echo@ExtractProcessInfo[proc];
+	(* for mll bining fix pTmin/pTmax*)
+	If[Length[ptBins]==1, 
+		pTmin= ptBins[[1,1]];
+		pTmax= ptBins[[1,2]];
+	];
 	
+	(*** loop over all final states of the search ***)
+	Do[
+		(* compute differential hadronic cross-section *)
+		\[Sigma] = HadronicDifferentialCrossSection[s, fstate/.\[Nu]->\[Nu][i], 
+			(*PTcuts            -> {pTmin,pTmax},*)
+			Efficiency        -> True,
+			OperatorDimension -> OptionValue[OperatorDimension]
+		];
+		
+		(* remove pure SM contribution if required *)
+		If[!OptionValue[SM],
+			\[Sigma] = DropSMFF[\[Sigma]]
+		];
+		
+		(* remove FF *)
+		If[!FreeQ[coeff, _FF],
+			\[Sigma] = SelectTerms[\[Sigma], Cases[coeff, _FF, All]]
+		];
+		
+		(* Substitute FF by WC and/or Coupling *)
+		If[!OptionValue[FF],
+			(*aux=Table[
+				pol -> Unique[]
+				,
+				{pol, DeleteDuplicates@Cases[\[Sigma], _InterpolatingFunction, All]}
+			];
+			\[Sigma] = \[Sigma] /. aux;*)
+			\[Sigma] = SubstituteFF[\[Sigma],
+				OperatorDimension -> OptionValue[OperatorDimension],
+				EFTorder          -> OptionValue[EFTorder],
+				Scale             -> OptionValue[Scale]
+			];
+			(*aux = aux/.(Rule[a_,b_] :> Rule[b,a]);
+			\[Sigma] = \[Sigma] /. aux*)
+		];
+		
+		(* remove WC and/or Coupling *)
+		If[!FreeQ[coeff, _WC],
+			\[Sigma] = SelectTerms[\[Sigma], Cases[coeff, _WC, All]]
+		];
+		If[!FreeQ[coeff, _Coupling],
+			\[Sigma] = SelectTerms[\[Sigma], Cases[coeff, _Coupling, All]]
+		];
+		
+		(* collect integrands *)
+		\[Sigma] = CollectIntegrals[\[Sigma],s];
+		
+		,
+		{fstate,finalstate}
+	];
 	
-	(* compute differential hadronic cross-section *)
-	(*\[Sigma]Dif = HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, 
-		PTcuts            -> ptCuts,
-		Efficiency        -> OptionValue[Efficiency],
-		OperatorDimension -> OptionValue[OperatorDimension]
-	];*)
-	
-	(* perform find all s-integrals *)
-	
-	(* remove SM contribution *)
-	
-	(* remove FF if required *)
-	
-	(* substitute remaining FF if required *)
-	
-	(* remove WC if required *)
+(*******************************************************************)	
 	
 	(* load efficiencies *)
 	
@@ -114,7 +157,72 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 		(* substitute efficiencies *)
 	
 	(* sum all computed bins to obtain experimental bins *)
-	Return[temp]
+	Return[\[Sigma]]
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Extracting search details*)
+
+
+ExtractProcessInfo[proc_]:= Module[
+	{searchData,expInfo,finalstate,sBins,ptBins,lumi,printState}
+	,
+	(* Load all experimental data for this search *)	
+	searchData= LHCSearch[proc];
+	expInfo= searchData["Info"];
+	finalstate= ToExpression[expInfo["FINALSTATE"]];
+	sBins= expInfo["BINS"]["MLL"];
+	ptBins= expInfo["BINS"]["PT"];
+	lumi= expInfo["LUMINOSITY"];
+	
+	(* prepare printing labels *)
+	If[MatchQ[finalstate,_Alternatives],
+		printState= Table[
+			"pp \[Rule] " <> (First[state]/.PrintRuleLepton) <> (Last[state]/.PrintRuleAntiLepton) <> " | "
+			,
+			{state, List@@finalstate}
+		];
+		printState= StringDrop[printState,-3]
+		,
+		printState= "pp \[Rule] " <> (First[finalstate]/.PrintRuleLepton) <> (Last[finalstate]/.PrintRuleAntiLepton)
+	];
+	
+	(* print info *)
+	Print@TableForm[{
+	{"PROCESS",           ":", printState },
+	{"EXPERIMENT",        ":", expInfo["EXPERIMENT"]},
+	{"ARXIV",             ":", expInfo["ARXIV"]},
+	{"SOURCE",            ":", expInfo["SOURCE"]},
+	{"OBSERVABLE",        ":", expInfo["OBSERVABLE"]},
+	{"BINNING " <> expInfo["OBSERVABLE"] <> " [GeV]", ":", TraditionalForm[expInfo["BINS"]["OBSERVABLE"]]},
+	{"EVENTS OBSERVED",   ":", ToString@searchData["Observed"]},
+	{"LUMINOSITY [\!\(\*SuperscriptBox[\(fb\), \(-1\)]\)]", ":", lumi},
+	(* for internal computation *)
+	{"BINNING \!\(\*SqrtBox[OverscriptBox[\(s\), \(^\)]]\) [GeV]", ":", TraditionalForm[sBins]},
+	{"BINNING \!\(\*SubscriptBox[\(p\), \(T\)]\) [GeV]", ":", TraditionalForm[ptBins]}
+	}];
+	
+	(* create list of mll bins *)
+	sBins= Table[
+		{sBins[[n]],sBins[[n+1]]}
+		,
+		{n, Length[sBins]-1}
+	];
+	(* create list of pt bins *)
+	ptBins= Table[
+		{ptBins[[n]],ptBins[[n+1]]}
+		,
+		{n, Length[ptBins]-1}
+	];
+	
+	finalstate= Switch[Head[finalstate],
+		Alternatives, List@@finalstate,
+		List, {finalstate}
+	];
+	
+	(* return info required by Yield *)
+	Return[{finalstate, ptBins, sBins}]
 ]
 
 
@@ -134,3 +242,54 @@ PrintRuleAntiLepton= {
 	e[1] -> "\!\(\*SuperscriptBox[\(e\), \(+\)]\)",
 	\[Nu]    -> "\!\(\*OverscriptBox[\(\[Nu]\), \(_\)]\)"
 };
+
+
+(* ::Subsection::Closed:: *)
+(*Collect integrals*)
+
+
+(* ::Text:: *)
+(*Function that collects and simplifies all integrals*)
+
+
+CollectIntegrals[arg_,s_] := MyTiming[
+Module[
+	{\[Sigma]=arg}
+	,
+	(* collect all integrals *)
+	\[Sigma] = Integrand[\[Sigma],s];
+	
+	(* partial fraction identities *)
+	\[Sigma]= \[Sigma]/.PartialFractioning[s];
+	
+	(* integral reduction identities *)
+	\[Sigma]= \[Sigma]//.ReduceIntegrands[s];
+	
+	(* special partial fractioning for s-integration *)
+	\[Sigma]= \[Sigma]//.PartialFractioningSIntegrals[s];
+	
+	Return[\[Sigma]]
+]
+,
+"CollectIntegrals"
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Remove SM*)
+
+
+DropSMFF[arg_] := MyTiming[
+Module[
+	{\[Epsilon]sm, temp=arg}
+	,
+	\[Epsilon]sm/:Conjugate[\[Epsilon]sm]:= \[Epsilon]sm;
+	temp= temp/.(a:FF[_,{_,SM},___]:>\[Epsilon]sm*a);
+	temp= MyExpand/@temp;
+	temp= temp/.\[Epsilon]sm^2->0;
+	temp= temp/.\[Epsilon]sm->1;
+	Return[temp]
+]
+,
+"DropSM"
+]
