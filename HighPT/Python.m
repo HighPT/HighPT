@@ -26,9 +26,6 @@ Package["HighPT`"]
 PackageExport["PythonExport"]
 
 
-PackageExport["WCxf"]
-
-
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -41,11 +38,16 @@ WCxf::usage= "WCxf[\"coef\"]
 	Denotes the Wilson coefficient that is labeld by coef in the Warsaw basis as specified by the WCxf format.";
 
 
+Cxf::usage "Cxf[\"coupling\"]
+	Denotes the NP coupling constant that is labeld by \"coupling\"."
+
+
 MapToWCxf::usage= "MapToWCxf
 	List of replacement rules that maps the HighPTio Wilson coefficient notation to the WCxf conventions.";
 
 
 MapToWCxf= {
+	(* WILSON COEFFICIENTS *)
 	(* C_qe *)
 	WC["eq", {\[Alpha]_,\[Beta]_,i_,j_}] :> Module[{ret, ind={i,j,\[Alpha],\[Beta]}},
 		If[(ind[[1]]>ind[[2]]) || (ind[[1]]==ind[[2]] && ind[[3]]>ind[[4]]),
@@ -61,7 +63,10 @@ MapToWCxf= {
 	WC[a:Except["eq",_String], {\[Alpha]_,\[Beta]_,i_,j_}] :> WCxf["'" <> a <> "_" <> ToString[\[Alpha]] <> ToString[\[Beta]] <> ToString[i] <> ToString[j] <> "'"],
 	
 	(* two fermion operators *)
-	WC[a_String, {p_,r_}] :> WCxf["'" <> StringReplace[a, "H"->"phi"] <> "_" <> ToString[p] <> ToString[r] <> "'"]
+	WC[a_String, {p_,r_}] :> WCxf["'" <> StringReplace[a, "H"->"phi"] <> "_" <> ToString[p] <> ToString[r] <> "'"],
+	
+	(* COUPLINGS *)
+	Coupling[label_String,{i_,a_}] :> Cxf["'" <> label <> "_"<> ToString[i] <> ToString[a] <> "'"]
 };
 
 
@@ -92,6 +97,9 @@ PythonExport[label_String, expr_List, OptionsPattern[]]:= Module[
 	,
 	(* open an new python file *)
 	file= OpenWrite[dir];
+	
+	(* import numpy *)
+	WriteString[file, "import numpy as np" <> "\n\n"];
 	
 	(* write one function for each element of expr *)
 	Do[
@@ -126,11 +134,21 @@ ToPythonString[expr_]:= Module[
 	{temp= expr/.MapToWCxf} (* use WCxf conventions *)
 	,
 	(* use FortranForm to handle Power *)
-	temp= ToString[temp,FortranForm];
+	temp= ToString[temp /. Complex[x_,y_]:>complex[x,y] ,FortranForm];
+	
+	(* write complex numbers and conjugate *)
+	temp= StringReplace[temp, "HighPTxPythonxPackagePrivatexcomplex"->"complex"];
+	temp= StringReplace[temp, "Conjugate"->"np.conjugate"];
+	
 	(* remove " *)
 	temp= StringDelete[temp,"\""];
-	(* addapt to flavio/smelli conventions using dictionaries *)
-	temp= StringReplace[temp,"WCxf("~~a__~~")"/;StringFreeQ[a,")"] :> "C["<>a<>"]"];
+	
+	(* addapt to WCxf convention using dictionaries *)
+	temp= StringReplace[temp,"HighPTxPythonxPackagePrivatexWCxf("~~a__~~")"/;StringFreeQ[a,")"] :> "C["<>a<>"]"];
+	
+	(* addapt to WCxf like notation for coupling constants *)
+	temp= StringReplace[temp,"HighPTxPythonxPackagePrivatexCxf("~~a__~~")"/;StringFreeQ[a,")"] :> "C["<>a<>"]"];
+	
 	(* * *)
 	Return[temp]
 ]
