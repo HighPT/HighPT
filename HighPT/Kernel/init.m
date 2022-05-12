@@ -22,8 +22,9 @@ If[MemberQ[$Packages,"HighPT`"],
 	Print[Style["The package HighPT` is already loaded. Please restart the kernel to reload it.",RGBColor[.8,.4706,0.2573]]],
 	
 	(* Set directory of XSection package *)
-	Clear[$DirectoryHighPT];
+	Clear[$DirectoryHighPT, $LogoHighPT];
 	$DirectoryHighPT= DirectoryName[$InputFileName, 2];
+	$LogoHighPT= First@ Import[FileNameJoin[{$DirectoryHighPT,"Kernel","logo.pdf"}]];
 
 	(* Loading *)
 	Check[
@@ -38,13 +39,16 @@ If[MemberQ[$Packages,"HighPT`"],
 			{
 				Thickness[0.0025],
 				RGBColor[0.04,0.22,0.52],
-				Line[{{0,0},{4,0}}]
+				Line[{{0,0},{4.5,0}}]
 			},
-			PlotRange->{{0,4},{-0.01,+0.01}}
+			PlotRange->{{0,4.5},{-0.01,+0.01}}
 		],
 		Magnification->3
 	];
 	
+	(*CellPrint[ExpressionCell[Style[$LogoHighPT,Magnification\[Rule]0.5],CellMargins->{{70,5},{5,5}}]];*)
+	
+	(*
 	Print@ TableForm[
 	{
 		{Style["HighPT",Bold, 18, RGBColor[0.04,0.22,0.52]], Style[":",Bold, 18, RGBColor[0.04,0.22,0.52]], Style["High-\!\(\*SubscriptBox[\(p\), \(T\)]\) Tails", Bold, 16, RGBColor[0.04,0.22,0.52]]},
@@ -55,19 +59,25 @@ If[MemberQ[$Packages,"HighPT`"],
 		{Style["Website", Bold, 14], Style[":", Bold, 14], Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]}
 	}
 	];
+	*)
+	
+	Print@ Style["HighPT",Bold, 20, RGBColor[0.04,0.22,0.52]];
+	Print@ Style["Authors: Lukas Allwicher, Darius A. Faroughy, Florentin Jaffredo, Olcyr Sumensari, and Felix Wilsch", Bold, 14];
+	Print[ Style["Reference: ", Bold, 14], Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]];
+	Print[ Style["Website: ", Bold, 14], Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]];
 	
 	(* licensing *)
-	Print@ Style["HighPT is free software under the terms of the MIT License.", 14];
-	Print@ Style["Please submit bugs and feature requests using GitHub's issue system at:", 14];
-	Print@ Style[Hyperlink["https://github.com/HighPT/HighPT/issues","https://github.com/HighPT/HighPT/issues", BaseStyle->RGBColor[0.04,0.22,0.52]], 14];
+	Print@ Style["HighPT is free software under the terms of the MIT License.", 12];
+	Print@ Style["Please submit bugs and feature requests using GitHub's issue system at:", 12];
+	Print@ Style[Hyperlink["https://github.com/HighPT/HighPT/issues","https://github.com/HighPT/HighPT/issues", BaseStyle->RGBColor[0.04,0.22,0.52]], 12];
 	Print@ Style[
 		Graphics[
 			{
 				Thickness[0.0025],
 				RGBColor[0.04,0.22,0.52],
-				Line[{{0,0},{4,0}}]
+				Line[{{0,0},{4.5,0}}]
 			},
-			PlotRange->{{0,4},{-0.01,+0.01}}
+			PlotRange->{{0,4.5},{-0.01,+0.01}}
 		],
 		Magnification->3
 	];
