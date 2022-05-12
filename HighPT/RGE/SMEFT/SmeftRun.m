@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPT`Template`*)
+(*HighPT`SmeftRun`*)
 
 
 (* ::Subtitle:: *)
-(*Template .m file*)
+(*SMEFT running*)
 
 
 (* ::Chapter:: *)
@@ -23,9 +23,19 @@ Package["HighPT`"]
 (*Exported*)
 
 
+PackageExport["SMEFTRun"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
 
 (* ::Chapter:: *)
 (*Private:*)
+
+
+(* ::Section:: *)
+(*SMEFTRun*)
+
+
+SMEFTRun[lowscale_, highscale_]:=wc_WC->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAnomalousDimension[wc])

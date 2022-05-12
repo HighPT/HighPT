@@ -56,11 +56,30 @@ PackageExport["LEFTSector"]
 PackageExport["WCL"]
 
 
+PackageExport["ReplaceYukawas"]
+
+
+PackageExport["ReplaceGaugeCouplings"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
 
 PackageScope["$FlavorInputDirectory"]
+
+
+PackageScope["Hypercharge"]
+
+
+PackageScope["YukawaMatrix"]
+PackageScope["YukawaCoupling"]
+
+
+PackageScope["Nc"]
+
+
+PackageScope["GaugeCoupling"]
 
 
 (* ::Chapter:: *)
@@ -141,3 +160,27 @@ Mass["\!\(\*SubscriptBox[\(B\), \(c\)]\)"] = 6.27447
 
 
 Mass["h"] = 125.25
+
+
+(* ::Section:: *)
+(*Replacements*)
+
+
+ReplaceYukawas = <|
+	YukawaCoupling["u"]->0,
+	YukawaCoupling["d"]->0,
+	YukawaCoupling["s"]->0,
+	YukawaCoupling["c"]->Sqrt[2]Mass["c"]/ConstantInput["vev"],
+	YukawaCoupling["b"]->Sqrt[2]Mass["b"]/ConstantInput["vev"],
+	YukawaCoupling["t"]->Sqrt[2]Mass["t"]/ConstantInput["vev"]
+	|>
+
+
+ReplaceGaugeCouplings = <|
+	GaugeCoupling["g1"]->Sqrt[4\[Pi] ConstantInput["\[Alpha]EM"]]/Sqrt[1/2 (1+(1-(4\[Pi] ConstantInput["\[Alpha]EM"])/(Sqrt[2]GF Mass[ZBoson]^2))^(1/2))]/.{GF->1/(Sqrt[2]ConstantInput["vev"]^2)},
+	GaugeCoupling["g2"]->2 Sqrt[Sqrt[2]GF] Mass[ZBoson] Sqrt[1/2 (1+(1-(4\[Pi] ConstantInput["\[Alpha]EM"])/(Sqrt[2]GF Mass[ZBoson]^2))^(1/2))]/.{GF->1/(Sqrt[2]ConstantInput["vev"]^2)},
+	GaugeCoupling["g3"]->Sqrt[4\[Pi] \[Alpha]sMz]/.\[Alpha]sMz->0.1179
+	|>
+
+
+Nc=3
