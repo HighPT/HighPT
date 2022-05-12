@@ -4,8 +4,9 @@
 # ll~ : mumu
 # qq~ : cc~
 # FF  : vector
+# XY  :  LL RR
 # coef : 0 0
-# type : U3*U3 U1t*U1t
+# type : U3*U3 U1~*U1~
 # Nevs : 50000
 #===============
 #

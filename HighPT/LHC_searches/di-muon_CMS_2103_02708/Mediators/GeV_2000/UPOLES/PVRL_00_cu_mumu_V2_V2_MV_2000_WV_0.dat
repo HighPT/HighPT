@@ -6,7 +6,7 @@
 # FF  : vector
 # XY  : LR RL
 # coef : 0 0
-# type : V2*V2 V2t*V2t
+# type : V2*V2 V2~*V2~
 # Nevs : 50000
 #===============
 #
