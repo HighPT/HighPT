@@ -51,8 +51,8 @@ FlavorObservables["b->c,leptonic"] = {"B(\!\(\*SubscriptBox[\(B\), \(c\)]\)\[Rul
 FlavorObservables["b->c,semileptonic"] = {
 	"\!\(\*SuperscriptBox[SubscriptBox[\(R\), \(D\)], \((\[Tau]/l)\)]\)",
 	"\!\(\*SuperscriptBox[SubscriptBox[\(R\), \(D\)], \((\[Mu]/e)\)]\)",
-	"\!\(\*SuperscriptBox[SubscriptBox[\(R\), \(\(D\)\(*\)\)], \((\[Tau]/l)\)]\)",
-	"\!\(\*SuperscriptBox[SubscriptBox[\(R\), \(\(D\)\(*\)\)], \((\[Mu]/e)\)]\)"
+	"\!\(\*SuperscriptBox[SubscriptBox[\(R\), SuperscriptBox[\(D\), \(*\)]], \((\[Tau]/l)\)]\)",
+	"\!\(\*SuperscriptBox[SubscriptBox[\(R\), SuperscriptBox[\(D\), \(*\)]], \((\[Mu]/e)\)]\)"
 	};
 
 
@@ -60,4 +60,4 @@ FlavorObservables["b->c,semileptonic"] = {
 (*Scale*)
 
 
-LowScale[Alternatives@@(FlavorObservables["b->c"]//Flatten)] = "mb"
+LowScale[Alternatives@@(FlavorObservables["b->c"]//Flatten)] = "\[Mu]b"

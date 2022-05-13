@@ -68,3 +68,13 @@ WCL["Tudl\[Nu]",{i_,j_,k_,l_}]->-(ConstantInput["vev"]^2/(2$NPScale^2)) 1/Vckm[i
 
 (* ::Section:: *)
 (*llll*)
+
+
+(* ::Section:: *)
+(*full*)
+
+
+SMEFTLEFTMatching["full"] = Join[
+	SMEFTLEFTMatching["cc"],
+	{}
+];

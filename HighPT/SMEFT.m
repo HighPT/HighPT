@@ -47,6 +47,10 @@ PackageScope["CanonizeFF"]
 PackageScope["SubstitutionRulesSMEFT"]
 
 
+PackageScope["$WCList2"]
+PackageScope["$WCList4"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
