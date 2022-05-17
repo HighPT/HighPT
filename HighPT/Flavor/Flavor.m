@@ -42,6 +42,7 @@ PackageExport["ExpInfo"]
 
 
 PackageExport["NPContribution"]
+PackageExport["NPContributionError"]
 
 
 PackageExport["NPInfo"]
@@ -66,9 +67,6 @@ PackageExport["ReplaceGaugeCouplings"]
 (*Internal*)
 
 
-PackageScope["$FlavorInputDirectory"]
-
-
 PackageScope["Hypercharge"]
 
 
@@ -90,9 +88,6 @@ $FlavorSectors = {"ChargedCurrents"};
 
 
 FlavorObservables[] = FlavorObservables/@$FlavorSectors
-
-
-$FlavorInputDirectory = Global`$DirectoryHighPT <> "Flavor/Inputs/"
 
 
 (* ::Section:: *)

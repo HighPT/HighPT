@@ -245,10 +245,10 @@ mZ$default = 91.1876;
 (*CKM*)
 
 
-\[Lambda]Wolfenstein$default    = 0.22650;
-AWolfenstein$default    = 0.790;
-\[Rho]BarWolfenstein$default = 0.141;
-\[Eta]BarWolfenstein$default = 0.357;
+\[Lambda]Wolfenstein$default    = 0.2233;
+AWolfenstein$default    = 0.810;
+\[Rho]BarWolfenstein$default = 0.153;
+\[Eta]BarWolfenstein$default = 0.393;
 
 Wolfenstein$default = {
 	\[Lambda]Wolfenstein$default,

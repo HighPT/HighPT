@@ -33,6 +33,12 @@ PackageExport["Observables"]
 (*Internal*)
 
 
+PackageScope["ExpCorrelation"]
+
+
+PackageScope["THCorrelation"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -44,8 +50,8 @@ ExpCov[i_,j_] := Module[
 	,
 	If[i==j,
 		cov=ExpValue[i][[2]]^2,
-		If[NumberQ[ExpCorr[i,j]],
-			cov=ExpValue[i][[2]]*ExpValue[j][[2]]*ExpCorr[i,j],
+		If[NumberQ[ExpCorrelation[i,j]],
+			cov=ExpValue[i][[2]]*ExpValue[j][[2]]*ExpCorrelation[i,j],
 			cov=0
 		];
 	];
@@ -61,8 +67,8 @@ THCov[i_,j_] := Module[
 	If[(NumberQ[SMPrediction[i][[1]]] && NumberQ[SMPrediction[j][[1]]]),
 		If[i==j,
 			cov=SMPrediction[i][[2]]^2,
-			If[NumberQ[THCorr[i,j]],
-				cov=SMPrediction[i][[2]]*SMPrediction[j][[2]]*THCorr[i,j],
+			If[NumberQ[THCorrelation[i,j]],
+				cov=SMPrediction[i][[2]]*SMPrediction[j][[2]]*THCorrelation[i,j],
 				cov=0
 			];
 		];,
