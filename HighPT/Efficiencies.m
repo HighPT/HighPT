@@ -394,6 +394,7 @@ EfficiencyFromHeader[info_]:= Module[
 	*)
 	If[Length[info[[6]]]===1,
 		type = StringSplit[info[[6,1]],"*"];
+		type = type /. str_String:> StringReplace[str,"~"->"t"];
 		type = type /. {
 			"Reg" -> "regular",
 			"A"   -> Photon,
@@ -404,11 +405,12 @@ EfficiencyFromHeader[info_]:= Module[
 		,
 		type = (StringSplit[#,"*"]&/@(info[[6]]));
 		type = Alternatives@@type;
+		type = type /. str_String:> StringReplace[str,"~"->"t"];
 		type = type /. {
-			"Reg" -> "regular",
-			"A"   -> Photon,
-			"Z"   -> ZBoson,
-			"W"   -> WBoson
+			"Reg"    -> "regular",
+			"A"      -> Photon,
+			"Z"      -> ZBoson,
+			"W"      -> WBoson
 		};
 		type = Sort/@type;
 	];

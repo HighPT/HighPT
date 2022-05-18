@@ -63,8 +63,15 @@ If[MemberQ[$Packages,"HighPT`"],
 	
 	Print@ Style["HighPT",Bold, 20, RGBColor[0.04,0.22,0.52]];
 	Print@ Style["Authors: Lukas Allwicher, Darius A. Faroughy, Florentin Jaffredo, Olcyr Sumensari, and Felix Wilsch", Bold, 14];
-	Print[ Style["Reference: ", Bold, 14], Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]];
-	Print[ Style["Website: ", Bold, 14], Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]];
+	Print[
+		Style["Reference: ", Bold, 14],
+		Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14],
+		Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
+	];
+	Print[
+		Style["Website: ", Bold, 14], 
+		Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
+	];
 	
 	(* licensing *)
 	Print@ Style["HighPT is free software under the terms of the MIT License.", 12];

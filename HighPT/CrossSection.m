@@ -123,7 +123,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Phase-space integration*)
 
 
@@ -523,6 +523,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	];
 	*)
 	integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}(*, AccuracyGoal\[Rule]4*)], "NIntegrate"]; (* modify accuracy goal ? *)
+	(*integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> CachedIntegrals[arg,{x,sMin,sMax}(*, AccuracyGoal\[Rule]4*)], "NIntegrate"]; (* modify accuracy goal ? *)*)
 	integralAssocReverse= Association[integralAssocReverse];
 	
 	(* substitute in cross section *)
@@ -565,6 +566,32 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	\[Sigma]= MyExpand[\[Sigma]];
 	
 	Return[\[Sigma]/.{Complex[a_,0.`]:> a, Complex[b_,0]:> b}/.{0.`->0}] (* in pb *)
+]
+
+
+(* ::Subsubsection:: *)
+(*Cached numeric integrals*)
+
+
+$NumericIntegrals= FileNameJoin[{Global`$DirectoryHighPT,"NumericIntegrals"}];
+
+
+CachedIntegrals[integrand_,{s_,sMin_,sMax_}] := Module[
+	{
+		int,
+		solution,
+		file = FileNameJoin[{$NumericIntegrals, $CurrentSearch <> ".m"}],
+		str
+	}
+	,
+	int = NIntegrate[integrand,{s,sMin,sMax}];
+	solution = <|(Integrand[integrand,{s,sMin,sMax}]/.s->Pattern[Global`s,Blank[]]) -> int|>;
+	
+	str = OpenAppend[file];
+	Write[str, solution];
+	Close[str];
+	
+	Return[int]
 ]
 
 

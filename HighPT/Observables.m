@@ -33,8 +33,14 @@ PackageExport["EventYield"]
 PackageScope["BinnedCrossSection"]
 
 
+PackageScope["$CurrentSearch"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
+
+
+$CurrentSearch = None
 
 
 (* ::Section:: *)
@@ -190,6 +196,9 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	
 	(* Check options *)
 	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, Scale (*, Luminosity*)};
+	
+	(* Set the current search *)
+	$CurrentSearch= proc;
 	
 	(* Load all experimental data for this search *)	
 	searchData= LHCSearch[proc];
@@ -362,6 +371,9 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	,
 	"Final Expand in EventYield"
 	];
+	
+	(* Reset the current search *)
+	$CurrentSearch= None;
 	
 	Return[nEvents/.{Complex[0.,0.]-> 0, 0.-> 0}]
 ]

@@ -194,7 +194,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 	(* set SMEFT run mode *)
 	$RunMode= "SMEFT";
 	
-	Print["Using model: SMEFT"];
+	Print["Initialized SMEFT mode:"];
 	Print["  Maximum operator mass dimension: ", opDim];
 	Print["  EFT series truncation at: ", With[{x=ToString[-eftOrd]}, "\!\(\*SubsuperscriptBox[\(\[CapitalLambda]\), \(NP\), " <> x <> "]\)"]];
 	Print["  EFT cutoff scale \!\(\*SubscriptBox[\(\[CapitalLambda]\), \(NP\)]\): ", N[\[CapitalLambda]NP/1000], " TeV"];
@@ -264,7 +264,7 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 		{mediator,list}
 	];*)
 	
-	Print["Run mode set to: model with the mediators:"];
+	Print["Initialized mediator mode:"];
 	Print["  s-channel: ", GetMediators["s"]];
 	Print["  t-channel: ", GetMediators["t"]];
 	Print["  u-channel: ", GetMediators["u"]];
