@@ -318,6 +318,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 		(*\[Sigma]Observable= (*EchoTiming[*)\[Sigma]Binned/.efficiencies(*, "\[Epsilon] substitution: "]*);*)
 	];
 	*)
+
 	MyTiming[
 	\[Sigma]Observable= Map[(First[#]/.Last[#])&, temp];
 	,
@@ -326,14 +327,14 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	
 	(* check if there are efficiencies remaining and set them to zero *)
 	If[!FreeQ[\[Sigma]Observable,_Efficiency],
-		Print/@DeleteDuplicates@ Cases[\[Sigma]Observable, eff_Efficiency:> Drop[eff,-1], All];
+		(*Print/@DeleteDuplicates@ Cases[\[Sigma]Observable, eff_Efficiency:> Drop[eff,-1], All];*)
 		Message[
 			EventYield::missingeff,
 			DeleteDuplicates@ Cases[\[Sigma]Observable, eff_Efficiency:> Drop[eff,-1], All]
 		];
 		(*Print[DeleteDuplicates@ Cases[\[Sigma]Observable, eff_Efficiency:> Drop[eff,-1], All]];*)
 		(* set remaining efficiencies to zero *)
-		\[Sigma]Observable= \[Sigma]Observable/. Efficiency[___] -> Table[0, Length[efficiencies[[1,2]]]]
+		\[Sigma]Observable= \[Sigma]Observable/. Efficiency[___] -> Table[0, Length[efficiencies[[1,1,2]]]]
 	];
 	
 	(* activate Plus, Times, Power, ... behaviour of List again *)

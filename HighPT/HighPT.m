@@ -76,6 +76,9 @@ PackageScope["ReplacePropagators"]
 PackageScope["$RunMode"]
 
 
+PackageScope["$ModelMass"]
+
+
 PackageScope["$Verbose"]
 PackageScope["MyTiming"]
 PackageScope["MyEcho"]
@@ -230,7 +233,7 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 	(* check mass and width *)
 	If[mass=!=2000,
 		Message[InitializeModel::undefmass];
-		Abort[]
+		(*Abort[]*) (* uncommented for 5 TeV runs *)
 	];
 	(*If[width=!=_,
 		Message[InitializeModel::undefwidth];
@@ -254,6 +257,7 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 	
 	(* set Model run mode *)
 	$RunMode= "Model";
+	$ModelMass= mass;
 	
 	(* add a mediators to the model *)
 	AddMediator[med, mass, width, Sequence@@$MediatorList[med]];

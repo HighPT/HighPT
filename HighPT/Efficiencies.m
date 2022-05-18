@@ -153,7 +153,7 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 					"LHC_searches",
 					$SearchDirectories[proc],
 					"Mediators",
-					"GeV_2000",
+					"GeV_" <> ToString[$ModelMass],
 					"*",
 					"*.dat"
 				}],
