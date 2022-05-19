@@ -60,6 +60,10 @@ PackageScope["PartialFractioning"]
 PackageScope["PartialFractioningSIntegrals"]
 
 
+PackageScope["PartonLuminosityFunction"]
+PackageScope["PartonLuminosity"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -595,7 +599,7 @@ CachedIntegrals[integrand_,{s_,sMin_,sMax_}] := Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Differential cross-section in s (for internal use)*)
 
 
@@ -604,9 +608,10 @@ HadronicDifferentialCrossSection::usage= "HadronicDifferentialCrossSection[]
 
 
 Options[HadronicDifferentialCrossSection]= {
-	PTcuts            -> {0,\[Infinity]},
-	Efficiency        -> False,
-	OperatorDimension :> GetOperatorDimension[]
+	PTcuts             -> {0,\[Infinity]},
+	Efficiency         -> False,
+	OperatorDimension  :> GetOperatorDimension[],
+	"PartonLuminosity" -> True
 };
 
 
@@ -627,42 +632,42 @@ Module[
 	(* distinguish charged-current from neutral-current *)
 	Switch[{Head[\[Alpha]],Head[\[Beta]]},
 		{e,e},(* NC *)
-			\[Sigma]["d_dbar"]= 1/s * PartonLuminosityFunction["d_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->d[1]};
-			\[Sigma]["d_sbar"]= 1/s * PartonLuminosityFunction["d_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->d[1]};
-			\[Sigma]["d_bbar"]= 1/s * PartonLuminosityFunction["d_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->d[1]};
-			\[Sigma]["s_dbar"]= 1/s * PartonLuminosityFunction["s_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->d[2]};
-			\[Sigma]["s_sbar"]= 1/s * PartonLuminosityFunction["s_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->d[2]};
-			\[Sigma]["s_bbar"]= 1/s * PartonLuminosityFunction["s_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->d[2]};
-			\[Sigma]["b_dbar"]= 1/s * PartonLuminosityFunction["b_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->d[3]};
-			\[Sigma]["b_sbar"]= 1/s * PartonLuminosityFunction["b_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->d[3]};
-			\[Sigma]["b_bbar"]= 1/s * PartonLuminosityFunction["b_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->d[3]};
-			\[Sigma]["u_ubar"]= 1/s * PartonLuminosityFunction["u_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->u[1]};
-			\[Sigma]["u_cbar"]= 1/s * PartonLuminosityFunction["u_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->u[1]};
-			\[Sigma]["c_ubar"]= 1/s * PartonLuminosityFunction["c_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->u[2]};
-			\[Sigma]["c_cbar"]= 1/s * PartonLuminosityFunction["c_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->u[2]};
+			\[Sigma]["d_dbar"]= 1/s * PartonLuminosity["d_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->d[1]};
+			\[Sigma]["d_sbar"]= 1/s * PartonLuminosity["d_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->d[1]};
+			\[Sigma]["d_bbar"]= 1/s * PartonLuminosity["d_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->d[1]};
+			\[Sigma]["s_dbar"]= 1/s * PartonLuminosity["s_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->d[2]};
+			\[Sigma]["s_sbar"]= 1/s * PartonLuminosity["s_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->d[2]};
+			\[Sigma]["s_bbar"]= 1/s * PartonLuminosity["s_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->d[2]};
+			\[Sigma]["b_dbar"]= 1/s * PartonLuminosity["b_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->d[3]};
+			\[Sigma]["b_sbar"]= 1/s * PartonLuminosity["b_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->d[3]};
+			\[Sigma]["b_bbar"]= 1/s * PartonLuminosity["b_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->d[3]};
+			\[Sigma]["u_ubar"]= 1/s * PartonLuminosity["u_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->u[1]};
+			\[Sigma]["u_cbar"]= 1/s * PartonLuminosity["u_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->u[1]};
+			\[Sigma]["c_ubar"]= 1/s * PartonLuminosity["c_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->u[2]};
+			\[Sigma]["c_cbar"]= 1/s * PartonLuminosity["c_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->u[2]};
 			\[Sigma]HadronDifferential= Plus[
 				\[Sigma]["d_dbar"], \[Sigma]["d_sbar"], \[Sigma]["d_bbar"], \[Sigma]["s_dbar"], \[Sigma]["s_sbar"], \[Sigma]["s_bbar"],
 				\[Sigma]["b_dbar"], \[Sigma]["b_sbar"], \[Sigma]["b_bbar"], \[Sigma]["u_ubar"], \[Sigma]["u_cbar"], \[Sigma]["c_ubar"], \[Sigma]["c_cbar"]
 			]
 		,
 		{e,\[Nu]},(* CC *)
-			\[Sigma]["d_ubar"]= 1/s * PartonLuminosityFunction["d_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->d[1]};
-			\[Sigma]["d_cbar"]= 1/s * PartonLuminosityFunction["d_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->d[1]};
-			\[Sigma]["s_ubar"]= 1/s * PartonLuminosityFunction["s_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->d[2]};
-			\[Sigma]["s_cbar"]= 1/s * PartonLuminosityFunction["s_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->d[2]};
-			\[Sigma]["b_ubar"]= 1/s * PartonLuminosityFunction["b_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->d[3]};
-			\[Sigma]["b_cbar"]= 1/s * PartonLuminosityFunction["b_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->d[3]};
+			\[Sigma]["d_ubar"]= 1/s * PartonLuminosity["d_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->d[1]};
+			\[Sigma]["d_cbar"]= 1/s * PartonLuminosity["d_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->d[1]};
+			\[Sigma]["s_ubar"]= 1/s * PartonLuminosity["s_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->d[2]};
+			\[Sigma]["s_cbar"]= 1/s * PartonLuminosity["s_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->d[2]};
+			\[Sigma]["b_ubar"]= 1/s * PartonLuminosity["b_ubar"][Sqrt[s]] * \[Sigma]General/.{i->u[1], j->d[3]};
+			\[Sigma]["b_cbar"]= 1/s * PartonLuminosity["b_cbar"][Sqrt[s]] * \[Sigma]General/.{i->u[2], j->d[3]};
 			\[Sigma]HadronDifferential= Plus[
 				\[Sigma]["d_ubar"], \[Sigma]["d_cbar"], \[Sigma]["s_ubar"], \[Sigma]["s_cbar"], \[Sigma]["b_ubar"], \[Sigma]["b_cbar"]
 			]
 		,
 		{\[Nu],e},(* CC *)
-			\[Sigma]["u_dbar"]= 1/s * PartonLuminosityFunction["u_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->u[1]};
-			\[Sigma]["u_sbar"]= 1/s * PartonLuminosityFunction["u_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->u[1]};
-			\[Sigma]["u_bbar"]= 1/s * PartonLuminosityFunction["u_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->u[1]};
-			\[Sigma]["c_dbar"]= 1/s * PartonLuminosityFunction["c_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->u[2]};
-			\[Sigma]["c_sbar"]= 1/s * PartonLuminosityFunction["c_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->u[2]};
-			\[Sigma]["c_bbar"]= 1/s * PartonLuminosityFunction["c_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->u[2]};
+			\[Sigma]["u_dbar"]= 1/s * PartonLuminosity["u_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->u[1]};
+			\[Sigma]["u_sbar"]= 1/s * PartonLuminosity["u_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->u[1]};
+			\[Sigma]["u_bbar"]= 1/s * PartonLuminosity["u_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->u[1]};
+			\[Sigma]["c_dbar"]= 1/s * PartonLuminosity["c_dbar"][Sqrt[s]] * \[Sigma]General/.{i->d[1], j->u[2]};
+			\[Sigma]["c_sbar"]= 1/s * PartonLuminosity["c_sbar"][Sqrt[s]] * \[Sigma]General/.{i->d[2], j->u[2]};
+			\[Sigma]["c_bbar"]= 1/s * PartonLuminosity["c_bbar"][Sqrt[s]] * \[Sigma]General/.{i->d[3], j->u[2]};
 			\[Sigma]HadronDifferential= Plus[
 				\[Sigma]["u_dbar"], \[Sigma]["u_sbar"], \[Sigma]["u_bbar"], \[Sigma]["c_dbar"], \[Sigma]["c_sbar"], \[Sigma]["c_bbar"]
 			]
@@ -681,6 +686,12 @@ Module[
 	\[Sigma]HadronDifferential= RotateMassToWeakBasis[\[Sigma]HadronDifferential];
 	(* change units from GeV^-2 to pb *)
 	\[Sigma]HadronDifferential= GeV2toPB * \[Sigma]HadronDifferential;
+	
+	(* substitute in interpolated functions for PartonLuminosity *)
+	If[OptionValue["PartonLuminosity"],
+		\[Sigma]HadronDifferential= \[Sigma]HadronDifferential /. PartonLuminosity -> PartonLuminosityFunction
+	];
+	
 	(*MyEcho[\[Sigma]HadronDifferential, "\[Sigma]", TraditionalForm];*)
 	Return@ Expand[\[Sigma]HadronDifferential] (* in pb *)
 ]
@@ -757,7 +768,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton luminosity functions*)
 
 
@@ -799,7 +810,7 @@ $DirectoryPartonLuminosityFiles= FileNameJoin[
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Initialize parton luminosities*)
 
 

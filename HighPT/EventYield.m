@@ -30,6 +30,9 @@ PackageExport["Yield"]
 (*Private:*)
 
 
+PackageScope["NIntegrand"]
+
+
 (* ::Section:: *)
 (*Yield*)
 
@@ -63,7 +66,7 @@ Options[Yield]= {
 };
 
 
-Yield::binning2d= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[ScriptL]\)]\) and \!\(\*SubscriptBox[\(p\), \(T\)]\) detected. Currently 2d binning is not supported.";
+Yield::binning= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[ScriptL]\)]\) and \!\(\*SubscriptBox[\(p\), \(T\)]\) detected. Currently 2d binning is not supported.";
 
 
 Yield::undefinedsearch= "The LHC search `1` is not defined; defined searches are `2`.";
@@ -72,9 +75,11 @@ Yield::undefinedsearch= "The LHC search `1` is not defined; defined searches are
 Yield[proc_String, OptionsPattern[]]:= Module[
 	{
 		coeff,
-		finalstate, ptBins, sBins,
-		\[Sigma], pTmin, pTmax, s, aux,
-		temp
+		finalstate, \[Nu]flav, ptBins, sBins,
+		\[Sigma]full=0, \[Sigma]temp, \[Sigma]Binned, pTmin, pTmax, s, aux,
+		temp,
+		efficiencies,
+		MyMin, MyMax
 	}
 	,
 	(*** CHECKS ***)
@@ -90,74 +95,130 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	];
 	
 	(*** extract and print process info ***)
-	{finalstate, ptBins, sBins} = Echo@ExtractProcessInfo[proc];
+	{finalstate, ptBins, sBins} = ExtractProcessInfo[proc];
 	(* for mll bining fix pTmin/pTmax*)
 	If[Length[ptBins]==1, 
 		pTmin= ptBins[[1,1]];
 		pTmax= ptBins[[1,2]];
 	];
 	
-	(*** loop over all final states of the search ***)
+	(*** loop over all final states of the search do prepare the respective differential cross section ***)
 	Do[
-		(* compute differential hadronic cross-section *)
-		\[Sigma] = HadronicDifferentialCrossSection[s, fstate/.\[Nu]->\[Nu][i], 
-			(*PTcuts            -> {pTmin,pTmax},*)
-			Efficiency        -> True,
-			OperatorDimension -> OptionValue[OperatorDimension]
+		(* compute differential hadronic cross-section - give neutrinos a flavor index*)
+		\[Sigma]temp = HadronicDifferentialCrossSection[s, fstate/.\[Nu]->\[Nu][\[Nu]flav], 
+			PTcuts             -> {pTmin,pTmax},
+			Efficiency         -> True,
+			OperatorDimension  -> OptionValue[OperatorDimension],
+			"PartonLuminosity" -> False
 		];
 		
 		(* remove pure SM contribution if required *)
 		If[!OptionValue[SM],
-			\[Sigma] = DropSMFF[\[Sigma]]
+			\[Sigma]temp = DropSMFF[\[Sigma]temp]
+		];
+		
+		(* if final state contains \[Nu] w/o specified flavor index, then sum over all flavors *)
+		If[MatchQ[fstate, {OrderlessPatternSequence[e[_],\[Nu]]}],
+			\[Sigma]temp = (\[Sigma]temp/.\[Nu]flav->1) + (\[Sigma]temp/.\[Nu]flav->2) + (\[Sigma]temp/.\[Nu]flav->3)
 		];
 		
 		(* remove FF *)
 		If[!FreeQ[coeff, _FF],
-			\[Sigma] = SelectTerms[\[Sigma], Cases[coeff, _FF, All]]
+			\[Sigma]temp = SelectTerms[\[Sigma]temp, Cases[coeff, _FF, All]]
 		];
 		
 		(* Substitute FF by WC and/or Coupling *)
 		If[!OptionValue[FF],
-			(*aux=Table[
-				pol -> Unique[]
-				,
-				{pol, DeleteDuplicates@Cases[\[Sigma], _InterpolatingFunction, All]}
-			];
-			\[Sigma] = \[Sigma] /. aux;*)
-			\[Sigma] = SubstituteFF[\[Sigma],
+			\[Sigma]temp = SubstituteFF[\[Sigma]temp,
 				OperatorDimension -> OptionValue[OperatorDimension],
 				EFTorder          -> OptionValue[EFTorder],
 				Scale             -> OptionValue[Scale]
-			];
-			(*aux = aux/.(Rule[a_,b_] :> Rule[b,a]);
-			\[Sigma] = \[Sigma] /. aux*)
+			]
 		];
 		
 		(* remove WC and/or Coupling *)
 		If[!FreeQ[coeff, _WC],
-			\[Sigma] = SelectTerms[\[Sigma], Cases[coeff, _WC, All]]
+			\[Sigma]temp = SelectTerms[\[Sigma]temp, Cases[coeff, _WC, All]]
 		];
 		If[!FreeQ[coeff, _Coupling],
-			\[Sigma] = SelectTerms[\[Sigma], Cases[coeff, _Coupling, All]]
+			\[Sigma]temp = SelectTerms[\[Sigma]temp, Cases[coeff, _Coupling, All]]
 		];
 		
 		(* collect integrands *)
-		\[Sigma] = CollectIntegrals[\[Sigma],s];
+		\[Sigma]temp = CollectIntegrals[\[Sigma]temp,s];
 		
+		(* add the cross section to the full cross section *)
+		\[Sigma]full = \[Sigma]full + \[Sigma]temp;
 		,
 		{fstate,finalstate}
 	];
 	
-(*******************************************************************)	
+	(* hold the expression to avoid constant checking of up/down-values *)
+	With[{\[Sigma]Aux=\[Sigma]full},
+		\[Sigma]full= Hold[\[Sigma]Aux]
+	];
 	
+	(*** bin the cross section ***)
+	MyTiming[
+	Switch[{Length[ptBins],Length[sBins]},
+		(* mll binning *)
+		{1,n_/;n>1}, 
+			\[Sigma]Binned = Table[
+				With[{sMin=First[bin],sMax=Last[bin]},
+					\[Sigma]full /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,sMin,sMax}])
+				]
+				,
+				{bin,sBins}
+			];
+		,
+		(* pT binning *)
+		{n_/;n>1,1}, 
+			\[Sigma]Binned = Table[
+				With[{PTmin=First[bin],PTmax=Last[bin]},
+					\[Sigma]full /. {pTmin->PTmin,pTmax->PTmax}
+				]
+				,
+				{bin,ptBins}
+			];
+			\[Sigma]Binned = \[Sigma]Binned /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,sBins[[1,1]],sBins[[1,2]]}]);
+		,
+		(* throw error for 2d binning *)
+		_,
+			Message[Yield::binning];
+			Abort[]
+	];
+	,
+	"binning the cross section"
+	];
+	
+	(* release the hold *)
+	\[Sigma]Binned = ReleaseHold[\[Sigma]Binned];
+	
+	
+(*******************************************************************)	
+	(* S-integration by identifying complex conjugated integrals *)
+	\[Sigma]Binned= MyTiming[SIntegrate[\[Sigma]Binned], "NIntegrate"];
+	
+	
+	(*******************************************************************)
+	
+	
+	(*
 	(* load efficiencies *)
+	efficiencies= LoadEfficiencies[proc];
+	
+	(* group bins and efficiencies *)
+	temp= Transpose[{\[Sigma]Binned,Dispatch[efficiencies]}];
+	*)
+	
+	
 	
 	(* parallelization *)
 		(* perform  numerical integration *)
 		(* substitute efficiencies *)
 	
 	(* sum all computed bins to obtain experimental bins *)
-	Return[\[Sigma]]
+	Return[\[Sigma]Binned]
 ]
 
 
@@ -260,13 +321,13 @@ Module[
 	\[Sigma] = Integrand[\[Sigma],s];
 	
 	(* partial fraction identities *)
-	\[Sigma]= \[Sigma]/.PartialFractioning[s];
+	\[Sigma] = \[Sigma]/.PartialFractioning[s];
 	
 	(* integral reduction identities *)
-	\[Sigma]= \[Sigma]//.ReduceIntegrands[s];
+	\[Sigma] = \[Sigma]//.ReduceIntegrands[s];
 	
 	(* special partial fractioning for s-integration *)
-	\[Sigma]= \[Sigma]//.PartialFractioningSIntegrals[s];
+	\[Sigma] = \[Sigma]//.PartialFractioningSIntegrals[s];
 	
 	Return[\[Sigma]]
 ]
@@ -292,4 +353,102 @@ Module[
 ]
 ,
 "DropSM"
+]
+
+
+(* ::Subsection:: *)
+(*perform the s-integrate*)
+
+
+Yield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
+
+
+(* ::Text:: *)
+(*Perform all s-integrals given in the argument, by identifying complex conjugated integrals*)
+
+
+SIntegrate[expr_] := Module[
+	{
+		\[Sigma]= expr,
+		MyMin, MyMax,
+		dummyIntegral,
+		sIntegralList, sIntegralListMinimal= {},
+		integralAssoc, integralAssocReverse
+	}
+	,
+	(* Min and Max are OneIdentity which breaks pattern matching below *)
+	\[Sigma]= \[Sigma] /. {Min->MyMin, Max->MyMax};
+	
+	(* find list of all non-equivalent integrals *)
+	sIntegralList= DeleteDuplicates@Cases[\[Sigma], _NIntegrand, All];
+	
+	(* built association with unique symbols *)
+	integralAssoc= Association[(# -> dummyIntegral[Unique[]])& /@ sIntegralList];
+	
+	(* find self conjugate and complex conjugated integrals *)
+	(* loop over all integrals *)
+	Do[
+		If[!MemberQ[sIntegralListMinimal,int],
+			(* if integral (int) is not yet in the minimal list compute its conjugate *)
+			With[{conjInt=Conjugate[int]//.{Conjugate[Sqrt[arg_]]:>Sqrt[Conjugate@arg], Conjugate[x_MyMin]:>x, Conjugate[x_MyMax]:>x}},
+				If[MemberQ[sIntegralListMinimal,conjInt],
+					(* if Conjugate[int] is already in the list associate to this *)
+					AssociateTo[integralAssoc, int -> Conjugate[integralAssoc[conjInt]]],
+					(* if neither int nor Conjugate[int] is already in the list append int *)
+					AppendTo[sIntegralListMinimal, int]
+				]
+			]
+		]
+		,
+		{int, sIntegralList}
+	];
+	(*
+	sIntegralListMinimal is minimal set of all integrals to compute.
+	integralAssoc now only points to members of sIntegralListMinimal.
+	*)
+	
+	(* invert the integral association *)
+	integralAssocReverse= Table[
+		integralAssoc[int] -> int
+		,
+		{int, sIntegralListMinimal}
+	];
+	
+	(* replace all propagators and constants in the integals and reintroduce Min/Max *)
+	integralAssocReverse= integralAssocReverse/.ReplacePropagators;
+	integralAssocReverse= integralAssocReverse/.ReplaceConstants[];
+	integralAssocReverse= integralAssocReverse/.{MyMin->Min, MyMax->Max};
+	
+	(* This can be used to print all integrals: *)
+	MyEcho[Length[integralAssocReverse], "# Integrals"];
+	(*
+	Do[
+		Print[int]
+		,
+		{int, DeleteDuplicates@Cases[integralAssocReverse,ig_Integrand :> (ig/.{s->Global`s, _InterpolatingFunction->Global`IF}), All]}
+	];
+	*)
+	
+	(* substitute parton luminosity functions by interpolated functions*)
+	integralAssocReverse = MyTiming[integralAssocReverse /. PartonLuminosity -> PartonLuminosityFunction, "Substitute parton luminosities"];
+	
+	(* perform the numeric integrals *)
+	integralAssocReverse= integralAssocReverse/.NIntegrand[arg_,x_]:> NIntegrate[arg,x(*, AccuracyGoal\[Rule]4*)]; (* modify accuracy goal ? *)
+	integralAssocReverse= Association[integralAssocReverse];
+	
+	(* substitute in cross section *)
+	\[Sigma]= \[Sigma] /. integralAssoc;
+	\[Sigma]= \[Sigma] /. integralAssocReverse;
+	
+	(* warning if some integrals have not been computed *)
+	If[!FreeQ[\[Sigma], _dummyIntegral],
+		Message[CrossSection::inteval, Length@DeleteDuplicates@Cases[\[Sigma], _dummyIntegral, All]]
+	];
+
+	(* replace remaining propagators and constants outside integrands *)
+	\[Sigma]= \[Sigma]/.ReplacePropagators;
+	\[Sigma]= \[Sigma]/.ReplaceConstants[];
+	
+	(* return *)
+	Return[\[Sigma]]
 ]

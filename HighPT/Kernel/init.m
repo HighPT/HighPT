@@ -64,8 +64,9 @@ If[MemberQ[$Packages,"HighPT`"],
 	Print@ Style["HighPT",Bold, 20, RGBColor[0.04,0.22,0.52]];
 	Print@ Style["Authors: Lukas Allwicher, Darius A. Faroughy, Florentin Jaffredo, Olcyr Sumensari, and Felix Wilsch", Bold, 14];
 	Print[
-		Style["Reference: ", Bold, 14],
+		Style["References: ", Bold, 14],
 		Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14],
+		Style[", ", Bold, 14],
 		Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
 	];
 	Print[
