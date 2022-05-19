@@ -75,11 +75,12 @@ Yield::undefinedsearch= "The LHC search `1` is not defined; defined searches are
 Yield[proc_String, OptionsPattern[]]:= Module[
 	{
 		coeff,
-		finalstate, \[Nu]flav, ptBins, sBins,
+		finalstate, \[Nu]flav, ptBins, sBins, lumi,
 		\[Sigma]full=0, \[Sigma]temp, \[Sigma]Binned, pTmin, pTmax, s, aux,
 		temp,
 		efficiencies,
-		MyMin, MyMax
+		MyMin, MyMax,
+		NObserved
 	}
 	,
 	(*** CHECKS ***)
@@ -95,7 +96,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	];
 	
 	(*** extract and print process info ***)
-	{finalstate, ptBins, sBins} = ExtractProcessInfo[proc];
+	{finalstate, ptBins, sBins, lumi} = ExtractProcessInfo[proc];
 	(* for mll bining fix pTmin/pTmax*)
 	If[Length[ptBins]==1, 
 		pTmin= ptBins[[1,1]];
@@ -164,7 +165,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 		(* mll binning *)
 		{1,n_/;n>1}, 
 			\[Sigma]Binned = Table[
-				With[{sMin=First[bin],sMax=Last[bin]},
+				With[{sMin= (First[bin])^2, sMax= (Last[bin])^2},
 					\[Sigma]full /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,sMin,sMax}])
 				]
 				,
@@ -180,7 +181,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 				,
 				{bin,ptBins}
 			];
-			\[Sigma]Binned = \[Sigma]Binned /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,sBins[[1,1]],sBins[[1,2]]}]);
+			\[Sigma]Binned = \[Sigma]Binned /. (Integrand[arg_,s_] :> NIntegrand[arg,{s, (sBins[[1,1]])^2, (sBins[[1,2]])^2}]);
 		,
 		(* throw error for 2d binning *)
 		_,
@@ -191,34 +192,36 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	"binning the cross section"
 	];
 	
+	(* adapt efficienies to bins *)
+	\[Sigma]Binned= Table[
+		With[{count=counter},
+			\[Sigma]Binned[[count]] /. Efficiency[arg___] :> Efficiency[arg, count]
+		]
+		,
+		{counter, Length@\[Sigma]Binned}
+	 ];
+	
 	(* release the hold *)
 	\[Sigma]Binned = ReleaseHold[\[Sigma]Binned];
 	
-	
-(*******************************************************************)	
 	(* S-integration by identifying complex conjugated integrals *)
 	\[Sigma]Binned= MyTiming[SIntegrate[\[Sigma]Binned], "NIntegrate"];
 	
+	(* Substitute efficiency kernels *)
+	MyTiming[
+	NObserved= SubstituteEfficiencyKernels[\[Sigma]Binned, proc];
+	,
+	"Substituting efficiency kernels"
+	];
 	
-	(*******************************************************************)
+	(* multiply by luminosity [lumi]=fb^-1 *)
+	MyTiming[
+	NObserved= Expand[(1000 * lumi) * NObserved];
+	,
+	"Final Expand in Yield"
+	];
 	
-	
-	(*
-	(* load efficiencies *)
-	efficiencies= LoadEfficiencies[proc];
-	
-	(* group bins and efficiencies *)
-	temp= Transpose[{\[Sigma]Binned,Dispatch[efficiencies]}];
-	*)
-	
-	
-	
-	(* parallelization *)
-		(* perform  numerical integration *)
-		(* substitute efficiencies *)
-	
-	(* sum all computed bins to obtain experimental bins *)
-	Return[\[Sigma]Binned]
+	Return[NObserved/.{Complex[0.,0.]-> 0, 0.-> 0}]
 ]
 
 
@@ -283,7 +286,7 @@ ExtractProcessInfo[proc_]:= Module[
 	];
 	
 	(* return info required by Yield *)
-	Return[{finalstate, ptBins, sBins}]
+	Return[{finalstate, ptBins, sBins, lumi}]
 ]
 
 
@@ -356,7 +359,7 @@ Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*perform the s-integrate*)
 
 
@@ -425,7 +428,7 @@ SIntegrate[expr_] := Module[
 	Do[
 		Print[int]
 		,
-		{int, DeleteDuplicates@Cases[integralAssocReverse,ig_Integrand :> (ig/.{s->Global`s, _InterpolatingFunction->Global`IF}), All]}
+		{int, DeleteDuplicates@Cases[integralAssocReverse,ig_NIntegrand :> (ig/.{s->Global`s}), All]}
 	];
 	*)
 	
@@ -433,8 +436,20 @@ SIntegrate[expr_] := Module[
 	integralAssocReverse = MyTiming[integralAssocReverse /. PartonLuminosity -> PartonLuminosityFunction, "Substitute parton luminosities"];
 	
 	(* perform the numeric integrals *)
-	integralAssocReverse= integralAssocReverse/.NIntegrand[arg_,x_]:> NIntegrate[arg,x(*, AccuracyGoal\[Rule]4*)]; (* modify accuracy goal ? *)
+	(*integralAssocReverse= integralAssocReverse/.NIntegrand[arg_,x_]:> NIntegrate[arg,x(*, AccuracyGoal\[Rule]4*)]; (* modify accuracy goal ? *)*)
+	(* parallelize this step *)
+	(* ADD SOME CHECK FOR THE NUMBER OF INTEGRALS, FOR LESS THAN A FEW A SINGLE KERNEL MIGHT BE FASTER *)
+	If[$ParallelHighPT,
+		integralAssocReverse= ParallelMap[
+			(#/.NIntegrand->NIntegrate)&,
+			integralAssocReverse
+		];
+		,
+		integralAssocReverse= integralAssocReverse/.NIntegrand->NIntegrate;
+	];
 	integralAssocReverse= Association[integralAssocReverse];
+	
+	(*Print@Values@integralAssocReverse;*)
 	
 	(* substitute in cross section *)
 	\[Sigma]= \[Sigma] /. integralAssoc;
@@ -451,4 +466,76 @@ SIntegrate[expr_] := Module[
 	
 	(* return *)
 	Return[\[Sigma]]
+]
+
+
+(* ::Subsection:: *)
+(*substitute efficiency kernels*)
+
+
+SubstituteEfficiencyKernels[xSec_, proc_String]:= Module[
+	{
+		efficiencies,
+		\[Sigma]Binned= xSec,
+		temp,
+		NObserved
+	}
+	,
+	(* load efficiencies *)
+	efficiencies= LoadEfficiencies[proc];
+	
+	(* (* ? is this necessary ? *)
+	(* expand all bins *)
+	\[Sigma]Binned= MyTiming[MyExpand/@\[Sigma]Binned, "Expand in EventYield"];
+	*)
+	
+	(* inactivate all the weird Plus, Times, Power, ... behaviour of List *)
+	\[Sigma]Binned= Hold/@ \[Sigma]Binned;
+	
+	(* group bins and efficiencies *)
+	temp= Transpose[{\[Sigma]Binned, Dispatch[efficiencies]}];
+	
+	(* substitute efficiencies *)
+	(* The parallelized version is very slow ... *)
+	(*
+	MyTiming[
+	(* Make the parallelization depend on the number of bins? *)
+	If[$ParallelHighPT,
+		NObserved= ParallelMap[(First[#]/.Last[#])&, temp];
+		,
+		NObserved= Map[(First[#]/.Last[#])&, temp];
+	];
+	,
+	"Substituting Efficiencies"
+	];
+	*)
+	NObserved= Map[(First[#]/.Last[#])&, temp];
+	
+	(* check if there are efficiencies remaining and set them to zero *)
+	If[!FreeQ[NObserved,_Efficiency],
+		Print/@DeleteDuplicates@ Cases[NObserved, eff_Efficiency(*:> Drop[eff,-1]*), All]; (* explicit printing *)
+		Message[
+			Yield::missingeff,
+			DeleteDuplicates@ Cases[NObserved, eff_Efficiency:> Drop[eff,-1], All]
+		];
+		(* set remaining efficiencies to zero *)
+		NObserved= NObserved/. Efficiency[___] -> Table[0, Length[efficiencies[[1,1,2]]]] (* must be set to zero vector *)
+	];
+	
+	(* activate Plus, Times, Power, ... behaviour of List again *)
+	MyTiming[
+	NObserved= ReleaseHold[NObserved];
+	,
+	"ReleaseHold for Efficiencies"
+	];
+	
+	(* sum contribution to each bin *)
+	MyTiming[
+	NObserved= Plus@@ NObserved;
+	,
+	"Sum Efficiencies"
+	];
+	
+	(* Return *)
+	Return[NObserved]
 ]
