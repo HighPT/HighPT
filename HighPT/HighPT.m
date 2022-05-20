@@ -708,7 +708,7 @@ OptionCheck[opt_, optVal_]:= If[!MatchQ[optVal, $OptionValueAssociation[opt]],
 
 $OptionValueAssociation= <|
 	FF                -> True | False,
-	Coefficients      -> All | {} | {_FF..} | {_WC..} (*| {Rule[_WC,_]..} | {Rule[_FF,_]..}*),
+	Coefficients      -> All | {} | {_FF..} | {_WC..} | {_Coupling} (*| {Rule[_WC,_]..} | {Rule[_FF,_]..}*),
 	EFTorder          -> 0 | 2 | 4,
 	OperatorDimension -> 4 | 6 | 8,
 	Luminosity        -> Default | _?NumericQ,

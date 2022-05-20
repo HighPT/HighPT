@@ -97,7 +97,7 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	}
 	,	
 	(* compute event yield for all bins subtracting SM prediction*)
-	\[Sigma]Predicted= EventYield[
+	\[Sigma]Predicted= (*Event*)Yield[
 		proc,
 		FF                -> OptionValue[FF],
 		Coefficients      -> OptionValue[Coefficients],

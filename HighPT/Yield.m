@@ -221,7 +221,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	"Final Expand in Yield"
 	];
 	
-	Return[NObserved/.{Complex[0.,0.]-> 0, 0.-> 0}]
+	Return[Chop[NObserved, 10^-5](*/.{Complex[0.,0.]-> 0, 0.-> 0}*)]
 ]
 
 
@@ -469,7 +469,7 @@ SIntegrate[expr_] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*substitute efficiency kernels*)
 
 
