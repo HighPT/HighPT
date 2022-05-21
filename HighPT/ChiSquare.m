@@ -41,6 +41,9 @@ PackageScope["PlotConfidenceIntervals"]
 PackageExport["CombineBins"]
 
 
+PackageExport["RescaleError"]
+
+
 (* ::Text:: *)
 (*rm*)
 
@@ -86,14 +89,16 @@ Options[ChiSquareLHC]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	CombineBins       -> Default,
-	Scale             :> GetScale[]
+	Scale             :> GetScale[],
+	Luminosity        -> Default,
+	RescaleError      -> True
 };
 
 
 ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	{
-		\[CapitalDelta]Events, \[Delta]tot, chi2, expData, NObserved, NPredicted, \[Sigma]N,
-		\[Sigma]Predicted, mybins
+		\[CapitalDelta]Events, \[Delta]tot, chi2, expData, NObserved, NPredicted, \[Sigma]N, searchLumi, rescale=1,
+		\[Sigma]Predicted, mybins, poissonError
 	}
 	,	
 	(* compute event yield for all bins subtracting SM prediction*)
@@ -104,14 +109,30 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
 		SM                -> False,
-		Scale             -> OptionValue[Scale]
+		Scale             -> OptionValue[Scale],
+		Luminosity        -> OptionValue[Luminosity]
 	];
 	
 	(* prepare experimental data *)
 	expData    = LHCSearch[proc];
-	NObserved  = expData["Observed"];
-	NPredicted = expData["Expected"];
-	\[Sigma]N         = expData["Error"];
+	
+	(* resacling of luminosity for projections *)
+	searchLumi = expData["INFO"]["LUMINOSITY"];
+	If[!MatchQ[OptionValue[Luminosity],Default],
+		rescale = OptionValue[Luminosity]/searchLumi;
+	];
+	
+	NObserved  = rescale * expData["DATA"];
+	NPredicted = rescale * expData["BACKGROUND"];
+	
+	If[!MatchQ[OptionValue[Luminosity],Default],
+		If[MatchQ[OptionValue[RescaleError],True],
+			\[Sigma]N = Sqrt[rescale] * expData["ERROR-BKG"]
+			,
+			\[Sigma]N = NPredicted * expData["ERROR-BKG"]/expData["BACKGROUND"];
+		],
+		\[Sigma]N = expData["ERROR-BKG"];
+	];
 	
 	(* merging bins if requested *)
 	Switch[OptionValue[CombineBins],
@@ -121,14 +142,17 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	];
 	If[mybins=!={},
 		{\[Sigma]Predicted,NObserved,NPredicted}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, mybins];
-		{\[Sigma]N}= MergeBinsSquared[{\[Sigma]N}, mybins]
+		{\[Sigma]N}= MergeBinsSquared[{\[Sigma]N}, mybins];
+		Print["# Events per bin after merging: ",NObserved];
 	];
+	
+	(* add Poisson error for data *)
+	poissonError = NObserved /. (0 -> 1);
+	\[Sigma]N = Sqrt[\[Sigma]N^2 + poissonError]; (* if a bin contains 0 events the Poisson error is 1*)
 	
 	(* # events differences *)
 	\[CapitalDelta]Events= NObserved - NPredicted;
 	
-	(*Print["\[CapitalDelta]Events: ",Length[\[CapitalDelta]Events]];
-	Print["\[Sigma]Predicted: ",Length[\[Sigma]Predicted]];*)
 	(* chi^2 per bin *)
 	chi2= ((\[CapitalDelta]Events-\[Sigma]Predicted)/\[Sigma]N)^2;
 	

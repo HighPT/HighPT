@@ -202,7 +202,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	
 	(* Load all experimental data for this search *)	
 	searchData= LHCSearch[proc];
-	expInfo= searchData["Info"];
+	expInfo= searchData["INFO"];
 	finalstate= ToExpression[expInfo["FINALSTATE"]];
 	sBins= expInfo["BINS"]["MLL"];
 	ptBins= expInfo["BINS"]["PT"];
@@ -232,7 +232,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	{"SOURCE",            ":", expInfo["SOURCE"]},
 	{"OBSERVABLE",        ":", expInfo["OBSERVABLE"]},
 	{"BINNING " <> expInfo["OBSERVABLE"] <> " [GeV]", ":", TraditionalForm[expInfo["BINS"]["OBSERVABLE"]]},
-	{"EVENTS OBSERVED",   ":", ToString@searchData["Observed"]},
+	{"EVENTS OBSERVED",   ":", ToString@searchData["DATA"]},
 	{"LUMINOSITY [\!\(\*SuperscriptBox[\(fb\), \(-1\)]\)]", ":", lumi},
 	(* for internal computation *)
 	{"BINNING \!\(\*SqrtBox[OverscriptBox[\(s\), \(^\)]]\) [GeV]", ":", TraditionalForm[sBins]},

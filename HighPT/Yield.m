@@ -62,7 +62,8 @@ Options[Yield]= {
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	Scale             :> GetScale[]
+	Scale             :> GetScale[],
+	Luminosity        -> Default
 };
 
 
@@ -85,12 +86,10 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	,
 	(*** CHECKS ***)
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, Scale (*, Luminosity*)};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, Scale , Luminosity};
 	coeff = OptionValue[Coefficients];
 	(* Check that proc corresponds to a specified search *)
-	If[KeyExistsQ[LHCSearch[], proc],
-		Print["Computing observable for ", proc, " search: ", LHCSearch[][proc]]
-		,
+	If[!KeyExistsQ[LHCSearch[], proc],
 		Message[EventYield::undefinedsearch, proc, LHCSearch[]];
 		Abort[]
 	];
@@ -101,6 +100,10 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	If[Length[ptBins]==1, 
 		pTmin= ptBins[[1,1]];
 		pTmax= ptBins[[1,2]];
+	];
+	(* modify the luminosity if required *)
+	If[!MatchQ[OptionValue[Luminosity],Default],
+		lumi = OptionValue[Luminosity];
 	];
 	
 	(*** loop over all final states of the search do prepare the respective differential cross section ***)
@@ -225,7 +228,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Extracting search details*)
 
 
@@ -234,7 +237,7 @@ ExtractProcessInfo[proc_]:= Module[
 	,
 	(* Load all experimental data for this search *)	
 	searchData= LHCSearch[proc];
-	expInfo= searchData["Info"];
+	expInfo= searchData["INFO"];
 	finalstate= ToExpression[expInfo["FINALSTATE"]];
 	sBins= expInfo["BINS"]["MLL"];
 	ptBins= expInfo["BINS"]["PT"];
@@ -260,7 +263,7 @@ ExtractProcessInfo[proc_]:= Module[
 	{"SOURCE",            ":", expInfo["SOURCE"]},
 	{"OBSERVABLE",        ":", expInfo["OBSERVABLE"]},
 	{"BINNING " <> expInfo["OBSERVABLE"] <> " [GeV]", ":", TraditionalForm[expInfo["BINS"]["OBSERVABLE"]]},
-	{"EVENTS OBSERVED",   ":", ToString@searchData["Observed"]},
+	{"EVENTS OBSERVED",   ":", ToString@searchData["DATA"]},
 	{"LUMINOSITY [\!\(\*SuperscriptBox[\(fb\), \(-1\)]\)]", ":", lumi},
 	(* for internal computation *)
 	{"BINNING \!\(\*SqrtBox[OverscriptBox[\(s\), \(^\)]]\) [GeV]", ":", TraditionalForm[sBins]},

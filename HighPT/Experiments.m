@@ -33,13 +33,13 @@ PackageExport["LHCSearch"]
 (*Internal*)
 
 
+PackageExport["CompareData"]
+
+
 PackageScope["$SearchDirectories"]
 
 
 PackageScope["$DefaultCombinedBins"]
-
-
-(*PackageScope["GetExperimentData"]*)
 
 
 (* ::Chapter:: *)
@@ -68,77 +68,22 @@ LoadExperimentalResults::usage= "LoadExperimentalResults[] loads all experiemnta
 LoadExperimentalResults[str_String]:= Get@FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", str, str<>".dat"}];
 
 
-(*
-LoadExperimentalResults[str_String]:= Module[
-	{}
-	,
-	Get@FileNameJoin[{Global`$DirectoryHighPT, "experimental_data", str<>".dat"}];
-	$NEventsObserved[str]= $NEventsObserved[str]/.(a_/;Negative[a]->Nothing);
-	$NEventsSM[str]= $NEventsSM[str]/.{0.->Nothing, (a_/;Negative[a]->Nothing)};
-]
-*)
-
-
-(* ::Section:: *)
-(*Returning the experimental results*)
-
-
-(*GetExperimentData::usage= "GetExperimentData[\"proc\"]
-	Loads the experimental results and returns them as an association.";*)
-
-
-(*GetExperimentData[proc_String]:= Module[{},
-	(* load the proc.dat file *)
-	LoadExperimentalResults[proc];
-	GetExperimentData[proc]= <|
-		"Bins"     -> $Bins[proc],
-		"Observed" -> $NEventsObserved[proc],
-		"SM"       -> $NEventsSM[proc]
-	|>
-]*)
-
-
-(* ::Section:: *)
-(*Returning info about experiments*)
-
-
-(*ExperimentInfo::usage= "ExperimentInfo[\"proc\"]
-	Returns an Association containing all the experimental information for the given process.
-	The argument \"proc\" specifies the given process, e.g. \"proc\"=\"tata\" for the process pp \[Rule] \!\(\*SuperscriptBox[\(\[Tau]\), \(-\)]\)\!\(\*SuperscriptBox[\(\[Tau]\), \(+\)]\).";*)
-
-
-(*ExperimentInfo::procunknown= "No experimental data found for the specified process `1`.";*)
-
-
-(*ExperimentInfo[proc_String]:= Module[
-	{obs, collab, arxiv, obsBins, mllBins, ptBins, lumi, return}
-	,
-	Switch[proc,
-		"tata",
-			obs= "\!\(\*SubsuperscriptBox[m, T, tot]\)";
-			collab= "ATLAS";
-			arxiv= Hyperlink["2002.12223", "https://arxiv.org/abs/2002.12223"];
-			lumi = 139;
-			obsBins= GetExperimentData[proc]["Bins"];
-			mllBins= {150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1150, 1500}; (* check the last bin *)
-			ptBins= {0, \[Infinity]},
-		(* add more processes here *)
-		_,
-			Message[ExperimentInfo::procunknown, proc];
-			Abort[]
-	];
-	
-	return= <|
-		"PROCESS"    -> proc,
-		"EXPERIMENT" -> collab,
-		"ARXIV"      -> arxiv,
-		"OBSERVABLE" -> obs,
-		"BINNING"    -> obsBins,
-		"LUMINOSITY" -> lumi
-	|>;
-	
-	Return[return]
-]*)
+LoadExperimentalResultsCSV[str_String]:= Import[
+	FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", str, str<>".csv"}],
+	"CSV"
+]/.{
+	""       -> Nothing,
+	s_String :> StringReplace[s,{
+		"\\[Mu]"->"\[Mu]",
+		"\\[Tau]"->"\[Tau]",
+		"\\[Nu]"->"\[Nu]",
+		"\\("->"\(",
+		"\\)"->"\)",
+		"\\!"->"\!",
+		"\\*"->"\*"
+	}
+	]
+};
 
 
 (* ::Section:: *)
@@ -152,7 +97,7 @@ LHCSearch[\"proc\"]
 	Loads and returns all available date for the LHC search specified by the string \"proc\" as an association."
 
 
-LHCSearch[str_String]:= Module[{proc=str, temp},
+CompareData[str_String]:= Module[{proc=str, temp, aux},
 	(* use alias if available *)
 	If[KeyExistsQ[$Searches, str], proc= $SearchDirectories[str]];
 	(* Load experimental results *)
@@ -165,6 +110,64 @@ LHCSearch[str_String]:= Module[{proc=str, temp},
 		"Error"                 -> $NEventsUncertainty[proc],
 		"DefaultBinCombination" -> $DefaultCombinedBins[str]
 	|>;
+	
+	aux=LoadExperimentalResultsCSV[proc];
+	Print["DATA: ", Chop[(aux[[15;;,3]]-$NEventsObserved[proc])/($NEventsObserved[proc]+1),10^-2]];
+	Print["BKG:  ", Chop[(aux[[15;;,5]]-$NEventsPredicted[proc])/($NEventsPredicted[proc]+1),10^-2]];
+	Print["\[CapitalDelta]BKG: ", Chop[(aux[[15;;,7]]-$NEventsUncertainty[proc])/($NEventsUncertainty[proc]+1),10^-2]];
+	
+	Return[temp]
+]
+
+
+LHCSearch[str_String]:= Module[
+	{
+		proc=str,
+		temp,
+		csv,
+		info,
+		data,
+		bkg,
+		\[CapitalDelta]bkg
+	},
+	(* use alias if available *)
+	If[KeyExistsQ[$Searches, str], proc= $SearchDirectories[str]];
+	
+	(* Load experimental results *)
+	csv = LoadExperimentalResultsCSV[proc];
+	
+	(* extract info *)
+	info = <|
+		"ARXIV"       -> Hyperlink[ToString[csv[[1,2]]],csv[[1,3]]],
+		"SOURCE"      -> Hyperlink[ToString[csv[[2,2]]],csv[[2,3]]],
+		"DESCRIPTION" -> csv[[3,2]],
+		"EXPERIMENT"  -> csv[[4,2]],
+		"PROCESS"     -> csv[[5,2]],
+		"FINALSTATE"  -> csv[[6,2]],		
+		"OBSERVABLE"  -> csv[[7,2]],
+		"LUMINOSITY"  -> csv[[8,2]],
+		"CMENERGY"    -> csv[[9,2]],
+		"BINS"        -> <|
+			"OBSERVABLE" -> PrependTo[csv[[15;;,2]],csv[[15,1]]],
+			"MLL"        -> csv[[11,2;;]],
+			"PT"         -> csv[[12,2;;]]/."Infinity"->\[Infinity]
+		|>
+	|>;
+	
+	(* extract data, bkg and error *)
+	data = csv[[15;;,3]];
+	bkg = csv[[15;;,5]];
+	\[CapitalDelta]bkg = csv[[15;;,6]];
+	
+	(* set experimental data *)
+	temp = <|
+		"INFO"           -> info,
+		"DATA"           -> data,
+		"BACKGROUND"     -> bkg,
+		"ERROR-BKG"      -> \[CapitalDelta]bkg,
+		"DEFAULT-BINNING" -> $DefaultCombinedBins[str]
+	|>;
+	
 	Return[temp]
 ]
 
@@ -189,9 +192,9 @@ $Searches= <|
 	"mono-muon-ATLAS"     -> Hyperlink["arXiv:1906.05609", "https://arxiv.org/abs/1906.05609"],
 	"mono-electron-ATLAS" -> Hyperlink["arXiv:1906.05609", "https://arxiv.org/abs/1906.05609"],
 	
-	"muon-tau-CMS"        -> Hyperlink["CMS-PAS-EXO-19-014", "https://cds.cern.ch/record/2779023"],
-	"electron-tau-CMS"    -> Hyperlink["CMS-PAS-EXO-19-014", "https://cds.cern.ch/record/2779023"],
-	"electron-muon-CMS"   -> Hyperlink["CMS-PAS-EXO-19-014", "https://cds.cern.ch/record/2779023"]
+	"muon-tau-CMS"        -> Hyperlink["arXiv:2205.06709", "https://arxiv.org/abs/2205.06709"],
+	"electron-tau-CMS"    -> Hyperlink["arXiv:2205.06709", "https://arxiv.org/abs/2205.06709"],
+	"electron-muon-CMS"   -> Hyperlink["arXiv:2205.06709", "https://arxiv.org/abs/2205.06709"]
 |>
 
 
@@ -208,9 +211,9 @@ $SearchDirectories= <|
 	"mono-muon-ATLAS"     -> "mono-muon_ATLAS_1906_05609",
 	"mono-electron-ATLAS" -> "mono-electron_ATLAS_1906_05609",
 	
-	"muon-tau-CMS"        -> "muon-tau_CMS-PAS-EXO-19-014",
-	"electron-tau-CMS"    -> "electron-tau_CMS-PAS-EXO-19-014",
-	"electron-muon-CMS"   -> "electron-muon_CMS-PAS-EXO-19-014"
+	"muon-tau-CMS"        -> "muon-tau_CMS_2205_06709",
+	"electron-tau-CMS"    -> "electron-tau_CMS_2205_06709",
+	"electron-muon-CMS"   -> "electron-muon_CMS_2205_06709"
 |>
 
 

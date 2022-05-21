@@ -683,9 +683,16 @@ Coefficients::usage= "Coefficients -> X
 
 
 Luminosity::usage= "Luminosity
-	Option that determines the integrated Luminosity used for the event yield computation in units of \!\(\*SuperscriptBox[\(fb\), \(-1\)]\).
-	The default value is 139.
-	This option can be used with: EventYield.";
+	Option that determines the integrated Luminosity used for computing event yields.
+	The default value is Default corresponding to the actual luminosity of the specified search.
+	This option can be used with: EventYield, Yield, ChiSquareLHC.";
+
+
+RescaleError::usage= "RescaleError
+	Option that determines whether the background uncertainty should be rescaled when changing the default luminosity.
+	The default value is True, for which the error is scaled as \[CapitalDelta]BKG \[Rule] \!\(\*SqrtBox[\(\*SubscriptBox[\(L\), \(projection\)]/\*SubscriptBox[\(L\), \(search\)]\)]\) \[CapitalDelta]BKG.
+	If set to False, the relative error for the background, i.e. \[CapitalDelta]BKG/BKG is kept constant.
+	This option can be used with: ChiSquareLHC.";
 
 
 (* ::Subsection:: *)
@@ -712,6 +719,7 @@ $OptionValueAssociation= <|
 	EFTorder          -> 0 | 2 | 4,
 	OperatorDimension -> 4 | 6 | 8,
 	Luminosity        -> Default | _?NumericQ,
+	RescaleError      -> True | False,
 	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
 	MLLcuts           -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000),
 	Scale             -> _?NumericQ | _Symbol

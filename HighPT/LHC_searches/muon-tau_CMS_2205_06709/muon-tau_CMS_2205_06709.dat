@@ -2,7 +2,7 @@ Begin["HighPT`Experiments`PackagePrivate`"]
 
 (* Information on CMS search CMS-PAS-EXO-19-014 *)
 
-$Info["muon-tau_CMS-PAS-EXO-19-014"] = <|
+$Info["muon-tau_CMS_2205_06709"] = <|
 	"PROCESS"					->	"p p > \[Mu] \[Tau]",
 	"FINALSTATE"				->	"{e[2],e[3]} | {e[3],e[2]}",
 	"EXPERIMENT"				->	"CMS",
@@ -25,7 +25,7 @@ $Info["muon-tau_CMS-PAS-EXO-19-014"] = <|
 
 (* Observed number of events per bin *)
 
-$NEventsObserved["muon-tau_CMS-PAS-EXO-19-014"] = {
+$NEventsObserved["muon-tau_CMS_2205_06709"] = {
 5544.578328,
 3950.539342,
 2750.056669,
@@ -57,7 +57,7 @@ $NEventsObserved["muon-tau_CMS-PAS-EXO-19-014"] = {
 
 (* Predicted number of events per bin (background) *)
 
-$NEventsPredicted["muon-tau_CMS-PAS-EXO-19-014"] = {
+$NEventsPredicted["muon-tau_CMS_2205_06709"] = {
 5696.782439,
 4058.98552,
 2893.633925,
@@ -89,7 +89,7 @@ $NEventsPredicted["muon-tau_CMS-PAS-EXO-19-014"] = {
 
 (* Combined uncertainty (summed in quadrature) per bins *)
 
-$NEventsUncertainty["muon-tau_CMS-PAS-EXO-19-014"] = {
+$NEventsUncertainty["muon-tau_CMS_2205_06709"] = {
 1610.736939,
 1008.959856,
 554.7046261,

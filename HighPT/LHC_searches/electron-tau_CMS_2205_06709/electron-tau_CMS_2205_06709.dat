@@ -2,7 +2,7 @@ Begin["HighPT`Experiments`PackagePrivate`"]
 
 (* Information on CMS search CMS-PAS-EXO-19-014 *)
 
-$Info["electron-tau_CMS-PAS-EXO-19-014"] = <|
+$Info["electron-tau_CMS_2205_06709"] = <|
 	"PROCESS"					->	"p p > e \[Tau]",
 	"FINALSTATE"				->	"{e[1],e[3]} | {e[3],e[1]}",
 	"EXPERIMENT"				->	"CMS",
@@ -25,7 +25,7 @@ $Info["electron-tau_CMS-PAS-EXO-19-014"] = <|
 
 (* Observed number of events per bin *)
 
-$NEventsObserved["electron-tau_CMS-PAS-EXO-19-014"] = {
+$NEventsObserved["electron-tau_CMS_2205_06709"] = {
 5550.470731,
 3908.487352,
 2852.056437,
@@ -57,7 +57,7 @@ $NEventsObserved["electron-tau_CMS-PAS-EXO-19-014"] = {
 
 (* Predicted number of events per bin (background) *)
 
-$NEventsPredicted["electron-tau_CMS-PAS-EXO-19-014"] = {
+$NEventsPredicted["electron-tau_CMS_2205_06709"] = {
 5511.105691,
 4083.494248,
 3095.255048,
@@ -89,7 +89,7 @@ $NEventsPredicted["electron-tau_CMS-PAS-EXO-19-014"] = {
 
 (* Combined uncertainty (summed in quadrature) per bins *)
 
-$NEventsUncertainty["electron-tau_CMS-PAS-EXO-19-014"] = {
+$NEventsUncertainty["electron-tau_CMS_2205_06709"] = {
 2245.043818,
 1547.157886,
 1150.905877,
