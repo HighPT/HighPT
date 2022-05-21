@@ -96,6 +96,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	
 	(*** extract and print process info ***)
 	{finalstate, ptBins, sBins, lumi} = ExtractProcessInfo[proc];
+	Print[FullForm[finalstate]];
 	(* for mll bining fix pTmin/pTmax*)
 	If[Length[ptBins]==1, 
 		pTmin= ptBins[[1,1]];
