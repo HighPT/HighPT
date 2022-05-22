@@ -24,7 +24,7 @@ If[MemberQ[$Packages,"HighPT`"],
 	(* Set directory of XSection package *)
 	Clear[$DirectoryHighPT, $LogoHighPT];
 	$DirectoryHighPT= DirectoryName[$InputFileName, 2];
-	$LogoHighPT= First@ Import[FileNameJoin[{$DirectoryHighPT,"Kernel","logo.pdf"}]];
+	$LogoHighPT= First@ Import[FileNameJoin[{$DirectoryHighPT,"Kernel","logo.pdf"}],"PageGraphics"];
 
 	(* Loading *)
 	Check[
@@ -32,6 +32,8 @@ If[MemberQ[$Packages,"HighPT`"],
 		Print[Style["Loading failed!",RGBColor[.6,.0706,0.1373]]];
 		Abort[]
 	];
+	
+	CellPrint[ExpressionCell[Style[$LogoHighPT,Magnification->0.6],CellMargins->{{70,5},{5,5}}]];
 	
 	(* title *)
 	Print@ Style[
@@ -46,8 +48,6 @@ If[MemberQ[$Packages,"HighPT`"],
 		Magnification->3
 	];
 	
-	(*CellPrint[ExpressionCell[Style[$LogoHighPT,Magnification\[Rule]0.5],CellMargins->{{70,5},{5,5}}]];*)
-	
 	(*
 	Print@ TableForm[
 	{
@@ -61,7 +61,7 @@ If[MemberQ[$Packages,"HighPT`"],
 	];
 	*)
 	
-	Print@ Style["HighPT",Bold, 20, RGBColor[0.04,0.22,0.52]];
+	(*Print@ Style["HighPT",Bold, 20, RGBColor[0.04,0.22,0.52]];*)
 	Print@ Style["Authors: Lukas Allwicher, Darius A. Faroughy, Florentin Jaffredo, Olcyr Sumensari, and Felix Wilsch", Bold, 14];
 	Print[
 		Style["References: ", Bold, 14],
@@ -75,9 +75,11 @@ If[MemberQ[$Packages,"HighPT`"],
 	];
 	
 	(* licensing *)
-	Print@ Style["HighPT is free software under the terms of the MIT License.", 12];
+	Print@ Style["HighPT is free software released under the terms of the MIT License.", 12];
+	(*
 	Print@ Style["Please submit bugs and feature requests using GitHub's issue system at:", 12];
 	Print@ Style[Hyperlink["https://github.com/HighPT/HighPT/issues","https://github.com/HighPT/HighPT/issues", BaseStyle->RGBColor[0.04,0.22,0.52]], 12];
+	*)
 	Print@ Style[
 		Graphics[
 			{
