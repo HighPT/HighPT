@@ -440,10 +440,12 @@ SIntegrate[expr_, proc_] := Module[
 	*)
 	
 	(* Cache integrals *)
+	(*
 	EchoTiming[CacheIntegrals[Values@integralAssocReverse,proc],"CacheIntegrals"];
+	*)
 	
 	(* substitute cashed integrals *)
-	integralAssocReverse = integralAssocReverse /. Dispatch@(*Import*)Get[FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".m"}](*,"WL"*)];
+	integralAssocReverse = integralAssocReverse /. Dispatch@Import[FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".dat"}],"WL"];
 	
 	(* substitute parton luminosity functions by interpolated functions*)
 	integralAssocReverse = MyTiming[integralAssocReverse /. PartonLuminosity -> PartonLuminosityFunction, "Substitute parton luminosities"];
@@ -461,10 +463,8 @@ SIntegrate[expr_, proc_] := Module[
 	integralAssocReverse= Association[integralAssocReverse];
 
 	(* substitute in cross section *)
-	EchoTiming[
 	\[Sigma]= \[Sigma] /. Dispatch@integralAssoc;
 	\[Sigma]= \[Sigma] /. Dispatch@integralAssocReverse;
-	,"xxx"];
 
 	(* warning if some integrals have not been computed *)
 	If[!FreeQ[\[Sigma], _dummyIntegral],
@@ -560,11 +560,20 @@ CacheIntegrals[integralList_, proc_] := Module[
 	{
 		integrals = integralList,
 		integralReplacements = {},
-		fileName = FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".m"}]
+		fileName = FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".dat"}],
+		knownIntegrals
 	}
 	,
+	(* load known integrals *)
+	knownIntegrals = Quiet@Check[Import[fileName,"WL"],{}];
+	
+	integrals = integrals /. Cases[knownIntegrals, (Rule[a_,_]):>(a->Nothing), All];
+	Echo@Length[integrals];
+	
+	(*
 	(* replace already known integrals *)
-	integrals = Quiet[integrals /. Dispatch@Check[Get[fileName](*Import[fileName,"WL"]*),{}]];
+	integrals = Quiet[integrals /. Dispatch@Check[Import[fileName,"WL"],{}]];
+	*)
 	
 	(* stop if all integrals are known *)
 	If[FreeQ[integrals, _NIntegrand, All],
@@ -589,5 +598,8 @@ CacheIntegrals[integralList_, proc_] := Module[
 		DistributedContexts->{"Global`","HighPT`"}
 	];
 	
-	Export[fileName,integralReplacements(*,"WL"*)] (* export as Wolfram Language *)
+	(* combine with previous integrals *)
+	integralReplacements = Join[knownIntegrals,integralReplacements];
+	
+	Export[fileName,integralReplacements,"WL"] (* export as Wolfram Language *)
 ];
