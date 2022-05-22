@@ -44,10 +44,6 @@ PackageExport["SM"]
 (*Everything below needs to get usage messages when it is finalized*)
 
 
-PackageExport["SetMode"]
-PackageExport["GetMode"]
-
-
 PackageExport["InitializeModel"]
 
 

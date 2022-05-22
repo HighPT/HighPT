@@ -96,7 +96,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	
 	(*** extract and print process info ***)
 	{finalstate, ptBins, sBins, lumi} = ExtractProcessInfo[proc];
-	Print[FullForm[finalstate]];
+	
 	(* for mll bining fix pTmin/pTmax*)
 	If[Length[ptBins]==1, 
 		pTmin= ptBins[[1,1]];
@@ -209,7 +209,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 	\[Sigma]Binned = ReleaseHold[\[Sigma]Binned];
 	
 	(* S-integration by identifying complex conjugated integrals *)
-	\[Sigma]Binned= MyTiming[SIntegrate[\[Sigma]Binned], "NIntegrate"];
+	\[Sigma]Binned= MyTiming[SIntegrate[\[Sigma]Binned, proc], "NIntegrate"];
 	
 	(* Substitute efficiency kernels *)
 	MyTiming[
@@ -229,7 +229,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Extracting search details*)
 
 
@@ -363,7 +363,7 @@ Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*perform the s-integrate*)
 
 
@@ -374,7 +374,7 @@ Yield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
 (*Perform all s-integrals given in the argument, by identifying complex conjugated integrals*)
 
 
-SIntegrate[expr_] := Module[
+SIntegrate[expr_, proc_] := Module[
 	{
 		\[Sigma]= expr,
 		MyMin, MyMax,
@@ -388,6 +388,9 @@ SIntegrate[expr_] := Module[
 	
 	(* find list of all non-equivalent integrals *)
 	sIntegralList= DeleteDuplicates@Cases[\[Sigma], _NIntegrand, All];
+	
+	(* remove unnecessary digits *)
+	sIntegralList = Chop[sIntegralList, 10^-4];
 	
 	(* built association with unique symbols *)
 	integralAssoc= Association[(# -> dummyIntegral[Unique[]])& /@ sIntegralList];
@@ -436,14 +439,18 @@ SIntegrate[expr_] := Module[
 	];
 	*)
 	
+	(* Cache integrals *)
+	EchoTiming[CacheIntegrals[Values@integralAssocReverse,proc],"CacheIntegrals"];
+	
+	(* substitute cashed integrals *)
+	integralAssocReverse = integralAssocReverse /. Dispatch@(*Import*)Get[FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".m"}](*,"WL"*)];
+	
 	(* substitute parton luminosity functions by interpolated functions*)
 	integralAssocReverse = MyTiming[integralAssocReverse /. PartonLuminosity -> PartonLuminosityFunction, "Substitute parton luminosities"];
 	
-	(* perform the numeric integrals *)
-	(*integralAssocReverse= integralAssocReverse/.NIntegrand[arg_,x_]:> NIntegrate[arg,x(*, AccuracyGoal\[Rule]4*)]; (* modify accuracy goal ? *)*)
 	(* parallelize this step *)
-	(* ADD SOME CHECK FOR THE NUMBER OF INTEGRALS, FOR LESS THAN A FEW A SINGLE KERNEL MIGHT BE FASTER *)
-	If[$ParallelHighPT,
+	(* for a small number of integrals a single core evaluation might be faster *)
+	If[$ParallelHighPT && (Echo@Count[integralAssocReverse, _NIntegrand, All] > 100),
 		integralAssocReverse= ParallelMap[
 			(#/.NIntegrand->NIntegrate)&,
 			integralAssocReverse
@@ -452,18 +459,18 @@ SIntegrate[expr_] := Module[
 		integralAssocReverse= integralAssocReverse/.NIntegrand->NIntegrate;
 	];
 	integralAssocReverse= Association[integralAssocReverse];
-	
-	(*Print@Values@integralAssocReverse;*)
-	
+
 	(* substitute in cross section *)
-	\[Sigma]= \[Sigma] /. integralAssoc;
-	\[Sigma]= \[Sigma] /. integralAssocReverse;
-	
+	EchoTiming[
+	\[Sigma]= \[Sigma] /. Dispatch@integralAssoc;
+	\[Sigma]= \[Sigma] /. Dispatch@integralAssocReverse;
+	,"xxx"];
+
 	(* warning if some integrals have not been computed *)
 	If[!FreeQ[\[Sigma], _dummyIntegral],
 		Message[CrossSection::inteval, Length@DeleteDuplicates@Cases[\[Sigma], _dummyIntegral, All]]
 	];
-
+	
 	(* replace remaining propagators and constants outside integrands *)
 	\[Sigma]= \[Sigma]/.ReplacePropagators;
 	\[Sigma]= \[Sigma]/.ReplaceConstants[];
@@ -543,3 +550,44 @@ SubstituteEfficiencyKernels[xSec_, proc_String]:= Module[
 	(* Return *)
 	Return[NObserved]
 ]
+
+
+(* ::Subsection:: *)
+(*caching integrals*)
+
+
+CacheIntegrals[integralList_, proc_] := Module[
+	{
+		integrals = integralList,
+		integralReplacements = {},
+		fileName = FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".m"}]
+	}
+	,
+	(* replace already known integrals *)
+	integrals = Quiet[integrals /. Dispatch@Check[Get[fileName](*Import[fileName,"WL"]*),{}]];
+	
+	(* stop if all integrals are known *)
+	If[FreeQ[integrals, _NIntegrand, All],
+		Return[],
+		Print["caching integrals..."]
+	];
+	
+	(* compute all unknown integrals *)
+	integralReplacements = ParallelMap[
+		Module[
+			{pattern,temp}
+			,
+			(* create pattern *)
+			pattern = # /. NIntegrand[arg_,{var_,min_,max_}] :> (NIntegrand[arg,{var,min,max}]/.var->Pattern[Global`s,_]);
+			temp = # /. PartonLuminosity -> PartonLuminosityFunction;
+			temp = temp /.NIntegrand -> NIntegrate;
+			pattern -> temp
+			
+		]&
+		,
+		integrals,
+		DistributedContexts->{"Global`","HighPT`"}
+	];
+	
+	Export[fileName,integralReplacements(*,"WL"*)] (* export as Wolfram Language *)
+];
