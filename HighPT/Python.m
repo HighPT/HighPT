@@ -90,7 +90,7 @@ Options[PythonExport]= {Directory:>NotebookDirectory[]};
 
 PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
 	{
-		pyproc = StringReplace[proc,"-"->"_"];
+		pyproc = StringReplace[proc,"-"->"_"],
 		file,
 		counter= 1,
 		dir,
@@ -107,17 +107,14 @@ PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
 	WriteString[file, "import numpy as np" <> "\n\n"];
 	
 	(* list all coefficients and couplings in this file *)
-	WriteString[file, "# Wilson coefficients: " <> ToString@Cases[exprWCxf, WCxf[name_]:>name, All] <> "\n"];
-	WriteString[file, "# Coupling constants:  " <> ToString@Cases[exprWCxf, Cxf[name_]:>name, All] <> "\n"];
+	WriteString[file, "# Wilson coefficients: " <> ToString@DeleteDuplicates@Cases[exprWCxf, WCxf[name_]:>name, All] <> "\n"];
+	WriteString[file, "# Coupling constants:  " <> ToString@DeleteDuplicates@Cases[exprWCxf, Cxf[name_]:>name, All] <> "\n\n"];
 	
 	(* write experimental data *)
+	WriteSearchInfo[file, proc];
 	
-	(* write one function for each element of expr *)
-	Do[
-		WriteBin[file, bin, pyproc, counter++]
-		,
-		{bin, expr}
-	];
+	(* write results *)
+	WriteNEvents[file, expr, pyproc];
 	
 	(* close the output stream *)
 	Close[file];
@@ -129,11 +126,24 @@ PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
 (*Write the python function for a single bin*)
 
 
-WriteBin[file_, expr_, label_, bin_]:=Module[{},
+WriteNEvents[file_, expr_, label_] := Module[
+	{
+		pyStr = ToPythonString/@expr
+	},
 	(* define new function *)
-	WriteString[file, "def "<>label<>"_"<>ToString[bin]<>"(C):\n"];
+	WriteString[file, "def " <> label <> "(C):\n"];
+	
+	WriteString[file, "\t" <> "result = [" <> "\n"];
+	Do[
+		WriteString[file, "\t\t" <> str <> ", \n"]
+		,
+		{str,pyStr}
+	];
+	
+	WriteString[file, "\t" <> "]" <> "\n"];
+	
 	(* write return value *)
-	WriteString[file, "\t"<>"return "<>ToPythonString[expr]<>"\n\n"];
+	WriteString[file, "\t" <> "return result" <> "\n\n"];
 ]
 
 
@@ -141,7 +151,7 @@ WriteBin[file_, expr_, label_, bin_]:=Module[{},
 (*Write experimental data*)
 
 
-WriteSearchInfo[file_ ,proc_String]:=Module[
+WriteSearchInfo[file_, proc_String]:=Module[
 	{
 		search = LHCSearch[proc]
 	}
@@ -150,10 +160,17 @@ WriteSearchInfo[file_ ,proc_String]:=Module[
 	WriteString[file, "def " <> StringReplace[proc,"-"->"_"] <> "_data():" <> "\n"];
 	WriteString[file, "\t" <> "source = {" <> "\n"];
 	
-	
+	(* write bins *)
+	WriteString[file, "\t\t" <> "\"binning\":          " <> StringReplace[ToString[LHCSearch[proc]["INFO"]["BINS"]["OBSERVABLE"]],{"{"->"[","}"->"]"}] <> ", \n\n"];
+	(* write data *)
+	WriteString[file, "\t\t" <> "\"data\":             " <> StringReplace[ToString[LHCSearch[proc]["DATA"]],{"{"->"[","}"->"]"}] <> ", \n\n"];
+	(* write background *)
+	WriteString[file, "\t\t" <> "\"background\":       " <> StringReplace[ToString[LHCSearch[proc]["BACKGROUND"]],{"{"->"[","}"->"]"}] <> ", \n\n"];
+	(* write background-error *)
+	WriteString[file, "\t\t" <> "\"background_error\": " <> StringReplace[ToString[LHCSearch[proc]["ERROR-BKG"]],{"{"->"[","}"->"]"}] <> "\n"];
 	
 	WriteString[file, "\t" <> "}" <> "\n"];
-	WriteString[file, "\t" <> "return source" <> "\n"];
+	WriteString[file, "\t" <> "return source" <> "\n\n"];
 ]
 
 
