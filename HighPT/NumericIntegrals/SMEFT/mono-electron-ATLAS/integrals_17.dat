@@ -1,0 +1,598 @@
+(* Created with the Wolfram Language : www.wolfram.com *)
+{HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 8.73689199842352*^-9 - 
+   4.00638013980159*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.32370058207737273 - 
+   1.4543693324113653*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 7.280453831612199*^-9 - 
+   3.396429157054766*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.26429098295231146 - 
+   1.2119299922899808*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "b_cbar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 2.41548856098482*^-9 - 
+   9.472556308304648*^-15*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.10423749915955008 - 
+   4.020792745280663*^-7*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.048622972942365*^-9 - 
+   8.148364725545656*^-15*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.0869575881954535 - 
+   3.4101202709896733*^-7*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "b_ubar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 3.099880541929614*^-8 - 
+   1.388114767214751*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["b_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.1849945231795673 - 5.16013317039341*^-6*I, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["b_ubar"][
+      Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.5225111615554925*^-8 - 
+   1.1554424987907235*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["b_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.9377138639337084 - 
+   4.199047170824624*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "b_ubar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 1.0074313364189638*^-8 - 
+   3.837867229945164*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["b_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.4509423056185626 - 
+   1.6769507017155408*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["b_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 8.300157440144462*^-9 - 
+   3.2257398277197166*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["b_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.362675281110827 - 1.381632202780258*^-6*I, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 8.728144679078521*^-9 + 
+   4.0022478935816994*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 7.272944685078279*^-9 + 
+   3.392839986607871*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "c_bbar"][Sqrt[s_]])/((-6371.9284088904105 - 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 2.4136712967106356*^-9 + 
+   9.465182073000997*^-15*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.0470281593464613*^-9 + 
+   8.141839469023441*^-15*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "c_dbar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> -1.4682181215853764*^-8 + 
+   6.246734456384362*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -0.5870324391356384 + 
+   2.4440091037086336*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -1.135180004183291*^-8 + 
+   4.9289312079959504*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -0.4441359817795764 + 
+   1.8896371730562694*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "c_dbar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> -6.636731825625162*^-9 + 
+   2.542519732999679*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -0.2922498014743574 + 
+   1.1047384389596139*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -5.498709761563015*^-9 + 
+   2.134326608779566*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -0.23892234572250579 + 
+   9.153071038798845*^-7*I, HighPT`PackageScope`NIntegrand[
+   Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+      "c_sbar"][Sqrt[s_]], {s_, 30250000, 100000000}] -> 1.2081956059110328, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["c_sbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.9323531314859453, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["c_sbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 0.5169501199595729, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["c_sbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.4073424921185915, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 3.0826767623336936*^-8 - 
+   1.3523271335477918*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.208392031844899 - 5.131477464352525*^-6*I, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["c_sbar"][
+      Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.4574842712046348*^-8 - 
+   1.1069898727706422*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.9325097206059423 - 
+   4.090789578982072*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "c_sbar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 1.1316690126725537*^-8 - 
+   4.23438963947662*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.5170222290918385 - 
+   1.8837494411243696*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 9.157737754597898*^-9 - 
+   3.503919455210984*^-14*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.4074008445621194 - 
+   1.5243802702115833*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "d_cbar"][Sqrt[s_]])/((-6371.9284088904105 - 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 1.515116034659808*^-6 + 
+   6.7821596651995924*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.2324685667781655*^-6 + 
+   5.636466378513179*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "d_cbar"][Sqrt[s_]])/((-6371.9284088904105 - 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 4.984444093493739*^-7 + 
+   1.912238141226709*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 4.135595480989796*^-7 + 
+   1.6149073579360513*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "d_ubar"][Sqrt[s_]])/((-6371.9284088904105 - 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 4.540684760662377*^-6 + 
+   1.995966624955524*^-11*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 3.627121627590898*^-6 + 
+   1.6369380593926622*^-11*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "d_ubar"][Sqrt[s_]])/((-6371.9284088904105 - 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 1.6426196553038561*^-6 + 
+   6.1534781366633305*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.330815675463743*^-6 + 
+   5.103033917025323*^-12*I, HighPT`PackageScope`NIntegrand[
+   Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+      "s_cbar"][Sqrt[s_]], {s_, 30250000, 100000000}] -> 5.456596693361749, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["s_cbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 4.222217224488537, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 2.327588227036494, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["s_cbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 1.8502361722537113, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.3960088873319577*^-7 - 
+   6.128726975126397*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 5.457486220128571 - 
+   0.00002323821019007327*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.113728417124752*^-7 - 
+   5.014090534740918*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 4.222926884179174 - 
+   0.00001853939909975735*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "s_cbar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 5.140286229841943*^-8 - 
+   1.936567595772433*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.3279157623628404 - 
+   8.556407159822462*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 4.1882221374091815*^-8 - 
+   1.6109799727396603*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.8505030427431002 - 
+   6.9716433447807585*^-6*I, HighPT`PackageScope`NIntegrand[
+   Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+      "s_ubar"][Sqrt[s_]], {s_, 30250000, 100000000}] -> 15.84367534821815, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["s_ubar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 12.043934683197973, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 7.152384664027196, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["s_ubar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 5.556240005177235, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 3.982127188453842*^-7 - 
+   1.7272807950257936*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 15.846212730866666 - 
+   0.0000662870581614121*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 3.1388646886544724*^-7 - 
+   1.4013629365602932*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 12.045934745072872 - 
+   0.000052250244049530255*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "s_ubar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 1.5436189655174144*^-7 - 
+   5.720140826344238*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 7.153368246885884 - 
+   0.000025694680318409983*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 1.237099215690265*^-7 - 
+   4.701651603314473*^-13*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["s_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 5.557028275862694 - 
+   0.000020592506974839255*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "u_bbar"][Sqrt[s_]])/((-6371.9284088904105 - 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 2.575040415981696*^-6 + 
+   1.1591580565612517*^-11*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.1064452351471277*^-6 + 
+   9.674943543179025*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "u_bbar"][Sqrt[s_]])/((-6371.9284088904105 - 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> 8.184814890269332*^-7 + 
+   3.161649564434721*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 - 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 6.83769067719794*^-7 + 
+   2.6847203474277584*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "u_dbar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> -1.2648208541893963*^-6 + 
+   3.339773146040129*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -71.04597244124038 + 
+   0.00021053020931874488*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -6.069739942377849*^-7 + 
+   1.1243175115832583*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -38.26083083922923 + 
+   0.00010102813766771391*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+       "u_dbar"][Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + 
+     (s_)), {s_, 30250000, 100000000}] -> -1.5660119655904432*^-6 + 
+   5.540338175810335*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -75.02843243959234 + 
+   0.00026067262091256327*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -1.1982223218973416*^-6 + 
+   4.314541308720782*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> -56.37643076125595 + 
+   0.00019945217432917206*I, HighPT`PackageScope`NIntegrand[
+   Sqrt[1 - Min[1, 30250000/(s_)]]*HighPT`PackageScope`PartonLuminosity[
+      "u_sbar"][Sqrt[s_]], {s_, 30250000, 100000000}] -> 265.45402840403693, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["u_sbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 199.49805914497034, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 123.39568004412546, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["u_sbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 94.06596912550629, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 6.596064484850334*^-6 - 
+   2.8405549137563847*^-11*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 265.4960580499872 - 0.001097989009890708*I, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 30250000/(s_)]]*
+     Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["u_sbar"][
+      Sqrt[s_]])/((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 5.161942109537651*^-6 - 
+   2.2955687100046984*^-11*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 199.5309506667226 - 0.0008592678614113064*I, 
+ HighPT`PackageScope`NIntegrand[(Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.6133083334819623*^-6 - 
+   9.528495526264688*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 123.41233185615091 - 
+   0.00043500352545640565*I, HighPT`PackageScope`NIntegrand[
+   (Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 2.0607389612597886*^-6 - 
+   7.728159089726062*^-12*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_sbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 94.07910000535063 - 0.0003430258389455287*I, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 0.32364491123371053, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["b_cbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.2642445924254655, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["b_cbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 0.10422210784094355, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["b_cbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.08694453451710496, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["b_ubar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 1.1847970010337774, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["b_ubar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.9375531313476181, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["b_ubar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 0.45087811282142465, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["b_ubar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.36262239310720457, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> -0.5869388853384413, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["c_dbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> -0.44406364893060113, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["c_dbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> -0.29220751269852707, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["c_dbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> -0.23888730834111607, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> -71.03791309386324, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["u_dbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> -38.25696324491349, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["u_dbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> -75.0184539239403, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["u_dbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> -56.36879577512098, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 0.3233326251702584, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["c_bbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.26398003386301994, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 0.10414690475248478, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["c_bbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 0.08687912316527215, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 57.80566389347069, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["d_cbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 45.82440684792357, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 22.080976286368553, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["d_cbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 17.94136356501294, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 177.6843993113384, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["d_ubar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 137.33260225342, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 75.09604423396092, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["d_ubar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 59.12582772957864, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 97.51897807714863, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 30250000/(s_)]]*
+    Min[1, 30250000/(s_)]*HighPT`PackageScope`PartonLuminosity["u_bbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 77.88155046682095, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]], 
+   {s_, 30250000, 100000000}] -> 35.945620998425134, 
+ HighPT`PackageScope`NIntegrand[Sqrt[1 - Min[1, 36000000/(s_)]]*
+    Min[1, 36000000/(s_)]*HighPT`PackageScope`PartonLuminosity["u_bbar"][
+     Sqrt[s_]], {s_, 30250000, 100000000}] -> 29.460976677868697, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 57.81531810324592 - 0.0002522097194813518*I, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 45.8322600484592 - 0.00020516032987228768*I, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 22.084152338142477 - 
+   0.00008297017683216547*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_cbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 17.94399873657746 - 
+   0.00006884057308416153*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 177.71333222623872 - 
+   0.0007558505557982724*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 137.3557140100369 - 0.0006037799040490459*I, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 75.10651088778339 - 0.0002734266243992013*I, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["d_ubar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 59.13430759093882 - 
+   0.00022152521291987984*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.3233882402766348 - 
+   1.4529132195960462*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.2640263765421253 - 
+   1.2106799878084642*^-6*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.1041622844916147 - 
+   4.0177677335925424*^-7*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["c_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 0.0868921666815829 - 
+   3.4074655462803594*^-7*I, HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 97.53538604840007 - 0.0004286475967388912*I, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 30250000/(s_)]]*Min[1, 30250000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 77.89497258344632 - 0.0003506453121097786*I, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*
+     HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 35.95083630335101 - 0.0001362431221262414*I, 
+ HighPT`PackageScope`NIntegrand[
+   (Conjugate[s_]*Sqrt[1 - Min[1, 36000000/(s_)]]*Min[1, 36000000/(s_)]*
+     HighPT`PackageScope`PartonLuminosity["u_bbar"][Sqrt[s_]])/
+    ((-6371.9284088904105 + 166.4337900708225*I) + (s_)), 
+   {s_, 30250000, 100000000}] -> 29.46533360496959 - 0.00011381938431964992*I}
