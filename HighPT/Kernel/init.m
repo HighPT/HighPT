@@ -36,7 +36,7 @@ If[MemberQ[$Packages,"HighPT`"],
 	CellPrint[ExpressionCell[Style[$LogoHighPT,Magnification->0.6],CellMargins->{{70,5},{5,5}}]];
 	
 	(* title *)
-	Print@ Style[
+	(*Print@ Style[
 		Graphics[
 			{
 				Thickness[0.0025],
@@ -46,21 +46,7 @@ If[MemberQ[$Packages,"HighPT`"],
 			PlotRange->{{0,4.5},{-0.01,+0.01}}
 		],
 		Magnification->3
-	];
-	
-	(*
-	Print@ TableForm[
-	{
-		{Style["HighPT",Bold, 18, RGBColor[0.04,0.22,0.52]], Style[":",Bold, 18, RGBColor[0.04,0.22,0.52]], Style["High-\!\(\*SubscriptBox[\(p\), \(T\)]\) Tails", Bold, 16, RGBColor[0.04,0.22,0.52]]},
-		{},
-		{Style["Authors", Bold, 14], Style[":", Bold, 14], Style["Lukas Allwicher, Darius A. Faroughy, Florentin Jaffredo,", Bold, 14]},
-		{"", "", Style["Olcyr Sumensari, and Felix Wilsch", Bold, 14]},
-		{Style["Reference", Bold, 14], Style[":", Bold, 14], Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]},
-		{Style["Website", Bold, 14], Style[":", Bold, 14], Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]}
-	}
-	];
-	*)
-	
+	];*)
 	(*Print@ Style["HighPT",Bold, 20, RGBColor[0.04,0.22,0.52]];*)
 	Print@ Style["Authors: Lukas Allwicher, Darius A. Faroughy, Florentin Jaffredo, Olcyr Sumensari, and Felix Wilsch", Bold, 14];
 	Print[
@@ -80,7 +66,7 @@ If[MemberQ[$Packages,"HighPT`"],
 	Print@ Style["Please submit bugs and feature requests using GitHub's issue system at:", 12];
 	Print@ Style[Hyperlink["https://github.com/HighPT/HighPT/issues","https://github.com/HighPT/HighPT/issues", BaseStyle->RGBColor[0.04,0.22,0.52]], 12];
 	*)
-	Print@ Style[
+	(*Print@ Style[
 		Graphics[
 			{
 				Thickness[0.0025],
@@ -90,7 +76,7 @@ If[MemberQ[$Packages,"HighPT`"],
 			PlotRange->{{0,4.5},{-0.01,+0.01}}
 		],
 		Magnification->3
-	];
+	];*)
 	
 	(* initialization *)
 	(* when loading the package initialize with SMEFT at d=6 with NP^2 contributions *)

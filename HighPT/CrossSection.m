@@ -127,7 +127,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Phase-space integration*)
 
 
@@ -307,11 +307,11 @@ PartialFractioningSIntegrals[s_]:={
 }
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Integrated CrossSection*)
 
 
@@ -599,7 +599,7 @@ CachedIntegrals[integrand_,{s_,sMin_,sMax_}] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Differential cross-section in s (for internal use)*)
 
 
@@ -768,7 +768,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton luminosity functions*)
 
 

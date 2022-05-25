@@ -26,11 +26,14 @@ Package["HighPT`"]
 PackageExport["Yield"]
 
 
+PackageExport["NIntegrand"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
 
-PackageScope["NIntegrand"]
+PackageScope["$\[Sigma]Parallel"]
 
 
 (* ::Section:: *)
@@ -73,15 +76,21 @@ Yield::binning= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[ScriptL
 Yield::undefinedsearch= "The LHC search `1` is not defined; defined searches are `2`.";
 
 
+(* ::Text:: *)
+(*Variables in this file:*)
+(*$sMax, $sMin, $ptMax, $ptMin*)
+
+
+(* ::Section:: *)
+(*Routine to compute cross section for one bin*)
+
+
 Yield[proc_String, OptionsPattern[]]:= Module[
 	{
 		coeff,
 		finalstate, \[Nu]flav, ptBins, sBins, lumi,
-		\[Sigma]full=0, \[Sigma]temp, \[Sigma]Binned, pTmin, pTmax, s, aux,
-		temp,
-		efficiencies,
-		MyMin, MyMax,
-		NObserved
+		\[Sigma]full=0, \[Sigma]temp, \[Sigma]Binned, pTmin, pTmax, s, binType, MyBins, NObserved,
+		$ptMin, $ptMax, $sMin, $sMax
 	}
 	,
 	(*** CHECKS ***)
@@ -150,6 +159,7 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 		];
 		
 		(* collect integrands *)
+		s/:Conjugate[s]:=s;
 		\[Sigma]temp = CollectIntegrals[\[Sigma]temp,s];
 		
 		(* add the cross section to the full cross section *)
@@ -157,75 +167,85 @@ Yield[proc_String, OptionsPattern[]]:= Module[
 		,
 		{fstate,finalstate}
 	];
-	
-	(* hold the expression to avoid constant checking of up/down-values *)
-	With[{\[Sigma]Aux=\[Sigma]full},
-		\[Sigma]full= Hold[\[Sigma]Aux]
-	];
-	
-	(*** bin the cross section ***)
-	MyTiming[
-	Switch[{Length[ptBins],Length[sBins]},
-		(* mll binning *)
-		{1,n_/;n>1}, 
-			\[Sigma]Binned = Table[
-				With[{sMin= (First[bin])^2, sMax= (Last[bin])^2},
-					\[Sigma]full /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,sMin,sMax}])
-				]
-				,
-				{bin,sBins}
-			];
+
+	(* prepare \[Sigma] for parallel evaluation of bins *)
+	(* prepare different types of binning *)
+	If[Length[ptBins]!=1,
+		binType = "PT";
+		\[Sigma]temp = \[Sigma]temp /. {pTmin -> $ptMin, pTmax -> $ptMax};
+		sBins = Table[First[sBins],{n,Length[ptBins]}]; (* make ptBins and sBins of same length *)
 		,
-		(* pT binning *)
-		{n_/;n>1,1}, 
-			\[Sigma]Binned = Table[
-				With[{PTmin=First[bin],PTmax=Last[bin]},
-					\[Sigma]full /. {pTmin->PTmin,pTmax->PTmax}
-				]
-				,
-				{bin,ptBins}
-			];
-			\[Sigma]Binned = \[Sigma]Binned /. (Integrand[arg_,s_] :> NIntegrand[arg,{s, (sBins[[1,1]])^2, (sBins[[1,2]])^2}]);
+		binType = "MLL";
+		ptBins = Table[First[ptBins],{n,Length[sBins]}]; (* make ptBins and sBins of same length *)
+	];
+	(* replace integrals *)
+	\[Sigma]temp = \[Sigma]temp /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,$sMin,$sMax}]);
+	
+	(* create all bins to compute *)
+	MyBins = Table[
+		{(*\[Sigma]temp,*) i, binType, {{$sMin,$sMax},sBins[[i]]}, {{$ptMin,$ptMax},ptBins[[i]]}, proc}
 		,
-		(* throw error for 2d binning *)
-		_,
-			Message[Yield::binning];
-			Abort[]
-	];
-	,
-	"binning the cross section"
+		{i, Length[sBins]}
 	];
 	
-	(* adapt efficienies to bins *)
-	\[Sigma]Binned= Table[
-		With[{count=counter},
-			\[Sigma]Binned[[count]] /. Efficiency[arg___] :> Efficiency[arg, count]
-		]
+	(* Launch parallel Kernels *)
+	$\[Sigma]Parallel=\[Sigma]temp;
+	LaunchKernels[];
+	SetSharedVariable[$\[Sigma]Parallel]; (* it is much faster if \[Sigma] is not copied to each Kernel *)
+	
+	(* parallel evaluation of bins *)
+	\[Sigma]Binned = ParallelMap[
+		NEventsBin[#]&
 		,
-		{counter, Length@\[Sigma]Binned}
-	 ];
-	
-	(* release the hold *)
-	\[Sigma]Binned = ReleaseHold[\[Sigma]Binned];
-	
-	(* S-integration by identifying complex conjugated integrals *)
-	\[Sigma]Binned= MyTiming[SIntegrate[\[Sigma]Binned, proc], "NIntegrate"];
-	
-	(* Substitute efficiency kernels *)
-	MyTiming[
-	NObserved= SubstituteEfficiencyKernels[\[Sigma]Binned, proc];
-	,
-	"Substituting efficiency kernels"
+		MyBins
+		,
+		DistributedContexts->{
+			"Global`",
+			"HighPT`"
+		}
 	];
+	CloseKernels[];
+	
+	(* sum contributions of all bins *)
+	NObserved = Plus@@\[Sigma]Binned;
 	
 	(* multiply by luminosity [lumi]=fb^-1 *)
-	MyTiming[
 	NObserved= Expand[(1000 * lumi) * NObserved];
+	
+	Return[NObserved(*Chop[NObserved, 10^-7]*)]
+]
+
+
+NEventsBin[{(*\[Sigma]Bin_,*) binNumber_Integer, binType:("MLL"|"PT"), {{$sMin_,$sMax_},{mllLOW_,mllHIGH_}}, {{$ptMin_,$ptMax_},{ptLOW_,ptHIGH_}}, proc_}] := Module[
+	{
+		\[Sigma]temp (*= \[Sigma]Bin*),
+		NObserved
+	}
 	,
-	"Final Expand in Yield"
+	(* substitute correct bin boundaries *)
+	Switch[binType,
+		"MLL", \[Sigma]temp = $\[Sigma]Parallel (*\[Sigma]temp*) /. {$sMin -> mllLOW^2, $sMax -> mllHIGH^2},
+		"PT",  \[Sigma]temp = $\[Sigma]Parallel (*\[Sigma]temp*) /. {$ptMin -> ptLOW, $ptMax -> ptHIGH, $sMin -> Max[(2*ptLOW)^2,mllLOW^2], $sMax -> mllHIGH^2}
 	];
 	
-	Return[Chop[NObserved, 10^-5](*/.{Complex[0.,0.]-> 0, 0.-> 0}*)]
+	(* adapt efficienies to bin *)
+	\[Sigma]temp = \[Sigma]temp /. Efficiency[arg___] :> Efficiency[arg, binNumber];
+	
+	(* s-integration by identifying complex conjugated integrals *)
+	\[Sigma]temp= MyTiming[
+		SIntegrate[\[Sigma]temp, {proc, binNumber}]
+		,
+		"Integrate bin " <> ToString[binNumber]
+	];
+	
+	(* Substitute efficiency kernels *)
+	NObserved= MyTiming[
+		SubstituteEfficiencyKernels[\[Sigma]temp, {proc, binNumber}]
+		,
+		"Efficiency subtitution bin " <> ToString[binNumber]
+	];
+	
+	Return[NObserved]
 ]
 
 
@@ -374,92 +394,52 @@ Yield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
 (*Perform all s-integrals given in the argument, by identifying complex conjugated integrals*)
 
 
-SIntegrate[expr_, proc_] := Module[
+SIntegrate[expr_, {proc_,bin_}] := Module[
 	{
 		\[Sigma]= expr,
 		MyMin, MyMax,
 		dummyIntegral,
 		sIntegralList, sIntegralListMinimal= {},
-		integralAssoc, integralAssocReverse
+		integralAssoc, integralAssocReverse,
+		temp
 	}
 	,
 	(* Min and Max are OneIdentity which breaks pattern matching below *)
 	\[Sigma]= \[Sigma] /. {Min->MyMin, Max->MyMax};
 	
-	(* find list of all non-equivalent integrals *)
-	sIntegralList= DeleteDuplicates@Cases[\[Sigma], _NIntegrand, All];
-	
-	(* remove unnecessary digits *)
-	sIntegralList = Chop[sIntegralList, 10^-4];
-	
-	(* built association with unique symbols *)
-	integralAssoc= Association[(# -> dummyIntegral[Unique[]])& /@ sIntegralList];
-	
-	(* find self conjugate and complex conjugated integrals *)
-	(* loop over all integrals *)
-	Do[
-		If[!MemberQ[sIntegralListMinimal,int],
-			(* if integral (int) is not yet in the minimal list compute its conjugate *)
-			With[{conjInt=Conjugate[int]//.{Conjugate[Sqrt[arg_]]:>Sqrt[Conjugate@arg], Conjugate[x_MyMin]:>x, Conjugate[x_MyMax]:>x}},
-				If[MemberQ[sIntegralListMinimal,conjInt],
-					(* if Conjugate[int] is already in the list associate to this *)
-					AssociateTo[integralAssoc, int -> Conjugate[integralAssoc[conjInt]]],
-					(* if neither int nor Conjugate[int] is already in the list append int *)
-					AppendTo[sIntegralListMinimal, int]
-				]
-			]
-		]
-		,
-		{int, sIntegralList}
-	];
-	(*
-	sIntegralListMinimal is minimal set of all integrals to compute.
-	integralAssoc now only points to members of sIntegralListMinimal.
-	*)
-	
-	(* invert the integral association *)
-	integralAssocReverse= Table[
-		integralAssoc[int] -> int
-		,
-		{int, sIntegralListMinimal}
-	];
+	(* substitution rules for all integrals *)
+	{integralAssoc,integralAssocReverse} = MinimalIntegralList[\[Sigma], dummyIntegral];
 	
 	(* replace all propagators and constants in the integals and reintroduce Min/Max *)
 	integralAssocReverse= integralAssocReverse/.ReplacePropagators;
 	integralAssocReverse= integralAssocReverse/.ReplaceConstants[];
 	integralAssocReverse= integralAssocReverse/.{MyMin->Min, MyMax->Max};
 	
-	(* This can be used to print all integrals: *)
-	MyEcho[Length[integralAssocReverse], "# Integrals"];
-	(*
-	Do[
-		Print[int]
-		,
-		{int, DeleteDuplicates@Cases[integralAssocReverse,ig_NIntegrand :> (ig/.{s->Global`s}), All]}
-	];
-	*)
-	
 	(* Cache integrals *)
-	(*
-	EchoTiming[CacheIntegrals[Values@integralAssocReverse,proc],"CacheIntegrals"];
-	*)
+	(*CacheIntegrals[Values@integralAssocReverse, {proc, bin}];*)
 	
-	(* substitute cashed integrals *)
-	integralAssocReverse = integralAssocReverse /. Dispatch@Import[FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".dat"}],"WL"];
+	(* substitute cashed integrals if available *)
+	integralAssocReverse = integralAssocReverse /. Dispatch@Quiet@Check[
+		Import[
+			FileNameJoin[{
+				Global`$DirectoryHighPT,
+				"NumericIntegrals",
+				$RunMode,
+				proc<>"_"<>ToString[bin]<>".dat"
+			}],
+			"WL"
+		]
+		,
+		{}
+	];
 	
 	(* substitute parton luminosity functions by interpolated functions*)
-	integralAssocReverse = MyTiming[integralAssocReverse /. PartonLuminosity -> PartonLuminosityFunction, "Substitute parton luminosities"];
+	integralAssocReverse = integralAssocReverse /. PartonLuminosity -> PartonLuminosityFunction;
 	
-	(* parallelize this step *)
-	(* for a small number of integrals a single core evaluation might be faster *)
-	If[$ParallelHighPT && (Echo@Count[integralAssocReverse, _NIntegrand, All] > 100),
-		integralAssocReverse= ParallelMap[
-			(#/.NIntegrand->NIntegrate)&,
-			integralAssocReverse
-		];
-		,
-		integralAssocReverse= integralAssocReverse/.NIntegrand->NIntegrate;
-	];
+	(* perform remaining integrals if necessary *)
+	integralAssocReverse= integralAssocReverse/.NIntegrand->NIntegrate;
+	
+	(* built association *)
 	integralAssocReverse= Association[integralAssocReverse];
 
 	(* substitute in cross section *)
@@ -480,47 +460,125 @@ SIntegrate[expr_, proc_] := Module[
 ]
 
 
+(* ::Subsubsection:: *)
+(*Find minimal list of integrals*)
+
+
+MinimalIntegralList[arg_, dummyIntegral_] := Module[
+	{
+		intList,
+		intListMin = {},
+		intAssoc,
+		intAssocInverse
+	}
+	,
+	(* find all integrals *)
+	intList = DeleteDuplicates@Cases[arg, _NIntegrand, All];
+	
+	(* remove unnecessary digits *)
+	intList = Chop[intList, 10^-4];
+	
+	(* built association with unique symbols *)
+	intAssoc= Association[(# -> dummyIntegral[Unique[]])& /@ intList];
+	
+	(* find complex conjugated integrals *)
+	Do[
+		If[!MemberQ[intListMin,int],
+			(* if integral (int) is not yet in the minimal list compute its conjugate *)
+			With[{conjInt=(int /. prop_Propagator :> Conjugate[prop])},
+				If[MemberQ[intListMin,conjInt],
+					(* if Conjugate[int] is already in the list associate to this *)
+					AssociateTo[intAssoc, int -> Conjugate[intAssoc[conjInt]]],
+					(* if neither int nor Conjugate[int] is already in the list append int *)
+					AppendTo[intListMin, int]
+				]
+			]
+		]
+		,
+		{int, intList}
+	];
+	
+	(* invert the integral association *)
+	intAssocInverse= Table[
+		intAssoc[int] -> int
+		,
+		{int, intListMin}
+	];
+	
+	Return[{intAssoc,intAssocInverse}]
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*caching integrals*)
+
+
+CacheIntegrals[integralList_, {proc_,bin_}] := Module[
+	{
+		integrals = integralList,
+		integralReplacements = {},
+		fileName = FileNameJoin[{
+			Global`$DirectoryHighPT,
+			"NumericIntegrals",
+			$RunMode,
+			proc<>"_"<>ToString[bin]<>".dat"
+		}],
+		knownIntegrals
+	}
+	,
+	(* load known integrals if available *)
+	knownIntegrals = Quiet@Check[Import[fileName,"WL"], {}];
+	
+	(* remove all known integrals from the list of integrals *)
+	integrals = integrals /. Cases[knownIntegrals, (Rule[a_,_]):>(a->Nothing), All];
+	
+	(* stop if all integrals are known *)
+	If[FreeQ[integrals, _NIntegrand, All],
+		Return[],
+		Print["caching integrals..."]
+	];
+	
+	(* compute all unknown integrals *)
+	integralReplacements = Map[
+		Module[
+			{pattern,temp}
+			,
+			(* create pattern *)
+			pattern = # /. NIntegrand[arg_,{var_,min_,max_}] :> (NIntegrand[arg,{var,min,max}]/.var->Pattern[Global`s,_]);
+			(* compute integrals *)
+			temp = # /. PartonLuminosity -> PartonLuminosityFunction;
+			temp = temp /. NIntegrand -> NIntegrate;
+			(* return solution as rule *)
+			pattern -> temp
+			
+		]&
+		,
+		integrals
+	];
+	
+	(* combine with previous integrals *)
+	integralReplacements = Join[knownIntegrals,integralReplacements];
+	
+	Export[fileName,integralReplacements,"WL"] (* export as Wolfram Language *)
+];
+
+
 (* ::Subsection::Closed:: *)
 (*substitute efficiency kernels*)
 
 
-SubstituteEfficiencyKernels[xSec_, proc_String]:= Module[
+SubstituteEfficiencyKernels[xSec_, {proc_String, bin_}]:= Module[
 	{
 		efficiencies,
-		\[Sigma]Binned= xSec,
-		temp,
+		\[Sigma]Bin= Hold[xSec], (* inactivate all the weird Plus, Times, Power, ... behaviour of List *)
 		NObserved
 	}
 	,
 	(* load efficiencies *)
-	efficiencies= LoadEfficiencies[proc];
-	
-	(* (* ? is this necessary ? *)
-	(* expand all bins *)
-	\[Sigma]Binned= MyTiming[MyExpand/@\[Sigma]Binned, "Expand in EventYield"];
-	*)
-	
-	(* inactivate all the weird Plus, Times, Power, ... behaviour of List *)
-	\[Sigma]Binned= Hold/@ \[Sigma]Binned;
-	
-	(* group bins and efficiencies *)
-	temp= Transpose[{\[Sigma]Binned, Dispatch[efficiencies]}];
+	efficiencies = (LoadEfficiencies[proc])[[bin]];
 	
 	(* substitute efficiencies *)
-	(* The parallelized version is very slow ... *)
-	(*
-	MyTiming[
-	(* Make the parallelization depend on the number of bins? *)
-	If[$ParallelHighPT,
-		NObserved= ParallelMap[(First[#]/.Last[#])&, temp];
-		,
-		NObserved= Map[(First[#]/.Last[#])&, temp];
-	];
-	,
-	"Substituting Efficiencies"
-	];
-	*)
-	NObserved= Map[(First[#]/.Last[#])&, temp];
+	NObserved=  \[Sigma]Bin /. efficiencies;
 	
 	(* check if there are efficiencies remaining and set them to zero *)
 	If[!FreeQ[NObserved,_Efficiency],
@@ -530,76 +588,11 @@ SubstituteEfficiencyKernels[xSec_, proc_String]:= Module[
 			DeleteDuplicates@ Cases[NObserved, eff_Efficiency:> Drop[eff,-1], All]
 		];
 		(* set remaining efficiencies to zero *)
-		NObserved= NObserved/. Efficiency[___] -> Table[0, Length[efficiencies[[1,1,2]]]] (* must be set to zero vector *)
+		NObserved= NObserved/. Efficiency[___] -> Table[0, Length[efficiencies[[1,2]]]] (* must be set to zero vector *)
 	];
 	
-	(* activate Plus, Times, Power, ... behaviour of List again *)
-	MyTiming[
 	NObserved= ReleaseHold[NObserved];
-	,
-	"ReleaseHold for Efficiencies"
-	];
-	
-	(* sum contribution to each bin *)
-	MyTiming[
-	NObserved= Plus@@ NObserved;
-	,
-	"Sum Efficiencies"
-	];
 	
 	(* Return *)
 	Return[NObserved]
 ]
-
-
-(* ::Subsection:: *)
-(*caching integrals*)
-
-
-CacheIntegrals[integralList_, proc_] := Module[
-	{
-		integrals = integralList,
-		integralReplacements = {},
-		fileName = FileNameJoin[{Global`$DirectoryHighPT, "NumericIntegrals", $RunMode, proc<>".dat"}],
-		knownIntegrals
-	}
-	,
-	(* load known integrals *)
-	knownIntegrals = Quiet@Check[Import[fileName,"WL"],{}];
-	
-	integrals = integrals /. Cases[knownIntegrals, (Rule[a_,_]):>(a->Nothing), All];
-	Echo@Length[integrals];
-	
-	(*
-	(* replace already known integrals *)
-	integrals = Quiet[integrals /. Dispatch@Check[Import[fileName,"WL"],{}]];
-	*)
-	
-	(* stop if all integrals are known *)
-	If[FreeQ[integrals, _NIntegrand, All],
-		Return[],
-		Print["caching integrals..."]
-	];
-	
-	(* compute all unknown integrals *)
-	integralReplacements = ParallelMap[
-		Module[
-			{pattern,temp}
-			,
-			(* create pattern *)
-			pattern = # /. NIntegrand[arg_,{var_,min_,max_}] :> (NIntegrand[arg,{var,min,max}]/.var->Pattern[Global`s,_]);
-			temp = # /. PartonLuminosity -> PartonLuminosityFunction;
-			temp = temp /.NIntegrand -> NIntegrate;
-			pattern -> temp
-			
-		]&
-		,
-		integrals,
-		DistributedContexts->{"Global`","HighPT`"}
-	];
-	
-	(* combine with previous integrals *)
-	integralReplacements = Join[knownIntegrals,integralReplacements];
-	
-	Export[fileName,integralReplacements,"WL"] (* export as Wolfram Language *)
-];
