@@ -524,7 +524,7 @@ MinimalIntegralList[arg_, dummyIntegral_] := Module[
 		,
 		{int, intList}
 	];
-	Echo[Length@intListMin, "min. # of integrals"];
+	(*Echo[Length@intListMin, "min. # of integrals"];*)
 	
 	(* invert the integral association *)
 	intAssocInverse= Table[

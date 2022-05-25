@@ -230,7 +230,7 @@ PartialFractioning[t_]:= {
 }
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*ReduceIntegrands*)
 
 
@@ -271,7 +271,7 @@ ReduceIntegrands[t_]:= {
 *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*ReplaceIntegrals*)
 
 
@@ -317,7 +317,7 @@ PartialFractioningSIntegrals[s_]:={
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Integrated CrossSection*)
 
 
@@ -514,7 +514,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 		{int,sIntegralList}
 	];
 	
-	Echo[Length@nonRedundantIntegarlList, "min. # of integrals"];
+	(*Echo[Length@nonRedundantIntegarlList, "min. # of integrals"];*)
 	
 	(* compute necessary integrals and store them as an association*)
 	integralAssocReverse= Table[

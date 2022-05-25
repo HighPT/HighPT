@@ -88,22 +88,33 @@ PythonExport::usage= "PythonExport[\"label\", list]
 Options[PythonExport]= {Directory:>NotebookDirectory[]};
 
 
-PythonExport[label_String, expr_List, OptionsPattern[]]:= Module[
+PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
 	{
+		pyproc = StringReplace[proc,"-"->"_"];
 		file,
 		counter= 1,
-		dir= FileNameJoin[{OptionValue[Directory],label<>".py"}]
+		dir,
+		exprWCxf = expr/.MapToWCxf
 	}
 	,
+	(* set directory *)
+	dir= FileNameJoin[{OptionValue[Directory], pyproc<>".py"}];
+	
 	(* open an new python file *)
 	file= OpenWrite[dir];
 	
 	(* import numpy *)
 	WriteString[file, "import numpy as np" <> "\n\n"];
 	
+	(* list all coefficients and couplings in this file *)
+	WriteString[file, "# Wilson coefficients: " <> ToString@Cases[exprWCxf, WCxf[name_]:>name, All] <> "\n"];
+	WriteString[file, "# Coupling constants:  " <> ToString@Cases[exprWCxf, Cxf[name_]:>name, All] <> "\n"];
+	
+	(* write experimental data *)
+	
 	(* write one function for each element of expr *)
 	Do[
-		WriteBin[file, bin, label, counter++]
+		WriteBin[file, bin, pyproc, counter++]
 		,
 		{bin, expr}
 	];
@@ -123,6 +134,26 @@ WriteBin[file_, expr_, label_, bin_]:=Module[{},
 	WriteString[file, "def "<>label<>"_"<>ToString[bin]<>"(C):\n"];
 	(* write return value *)
 	WriteString[file, "\t"<>"return "<>ToPythonString[expr]<>"\n\n"];
+]
+
+
+(* ::Subsection:: *)
+(*Write experimental data*)
+
+
+WriteSearchInfo[file_ ,proc_String]:=Module[
+	{
+		search = LHCSearch[proc]
+	}
+	,
+	(* function header *)
+	WriteString[file, "def " <> StringReplace[proc,"-"->"_"] <> "_data():" <> "\n"];
+	WriteString[file, "\t" <> "source = {" <> "\n"];
+	
+	
+	
+	WriteString[file, "\t" <> "}" <> "\n"];
+	WriteString[file, "\t" <> "return source" <> "\n"];
 ]
 
 
