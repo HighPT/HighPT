@@ -138,7 +138,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 IntegrateT::usage= "IntegrateT[arg, t] performs the integraion over the partonic Mandelstam variable t, which is equivalent to the angular phase-space integration, or the pT integration.";
 
 
-IntegrateT::failed= "The phase-space integration failed.";
+IntegrateT::failed= "The phase-space integration failed. The remaining integrals are: `1`";
 
 
 IntegrateT[arg_, t_]:= Module[
@@ -166,7 +166,7 @@ IntegrateT[arg_, t_]:= Module[
 	temp= temp/.ReplaceIntegrals[t];
 	
 	(* Throw an error if not all integrands were removed *)
-	If[!FreeQ[temp,_Integrand], Message[IntegrateT::failed]; Abort[]];
+	If[!FreeQ[temp,_Integrand], Message[IntegrateT::failed, Cases[temp,_Integrand,All]]; Abort[]];
 	
 	Return[MyExpand[temp]]
 ]
@@ -230,7 +230,7 @@ PartialFractioning[t_]:= {
 }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ReduceIntegrands*)
 
 
@@ -242,9 +242,13 @@ ReduceIntegrands[t_]:= {
 	(* t-channel *)
 	(t * Propagator[t, mediator_]):> 1 - Propagator[t,mediator]/Propagator[0,mediator],
 	(Power[t, pow_/;(IntegerQ[pow] && pow>0)] * Propagator[t, mediator_]):> t^(pow-1)*(1-Propagator[t,mediator]/Propagator[0,mediator]),
+	(t * Propagator[t, mediator_]^2):> (1 - Propagator[t,mediator]/Propagator[0,mediator])*Propagator[t,mediator],
+	(Power[t, pow_/;(IntegerQ[pow] && pow>0)] * Propagator[t, mediator_]^2):> t^(pow-1)*(1-Propagator[t,mediator]/Propagator[0,mediator])*Propagator[t,mediator],
 	(* u-channel *)
 	(t * Propagator[-t-s_, mediator_]):> -1 + Propagator[-t-s, mediator]/Propagator[-s,mediator],
-	(Power[t, pow_/;(IntegerQ[pow] && pow>0)] * Propagator[-t-s_, mediator_]):> t^(pow-1)*(-1 + Propagator[-t-s, mediator]/Propagator[-s,mediator])
+	(Power[t, pow_/;(IntegerQ[pow] && pow>0)] * Propagator[-t-s_, mediator_]):> t^(pow-1)*(-1 + Propagator[-t-s, mediator]/Propagator[-s,mediator]),
+	(t * Propagator[-t-s_, mediator_]^2):> (-1 + Propagator[-t-s, mediator]/Propagator[-s,mediator])*Propagator[-t-s, mediator],
+	(Power[t, pow_/;(IntegerQ[pow] && pow>0)] * Propagator[-t-s_, mediator_]^2):> t^(pow-1)*(-1 + Propagator[-t-s, mediator]/Propagator[-s,mediator])*Propagator[-t-s, mediator]
 }
 
 (*
@@ -267,7 +271,7 @@ ReduceIntegrands[t_]:= {
 *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ReplaceIntegrals*)
 
 
@@ -287,13 +291,15 @@ ReplaceIntegrals[t_]:= {
 		(*(ArcTan[(t-Mass[m1]^2)/(Mass[m1]*Width[m1])]/(Mass[m1]*Width[m1]))*) (* for no-zero width particles *)
 		(Log[1/Propagator[t,m1]]-Log[1/Propagator[t,Conjugate[m1]]])/((-1/Propagator[0,m1])+(1/Propagator[0,Conjugate[m1]]))
 	],
+	Integrand[Propagator[t, m1_]^2,t]:> -Propagator[t, m1],
 	(* u-channels *)
 	Integrand[Propagator[-t-s_, m1_],t]:> - Log[-1/Propagator[-t-s, m1]],
 	Integrand[Propagator[-t-s_, m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m1_]],t]:> If[GetMediators[][m1][[2]] == 0,
 		Propagator[-t-s, m1], (* for zero width particles *)
 		(*-(ArcTan[(Mass[m1]*Width[m1])/(t+s+Mass[m1]^2)]/(Mass[m1]*Width[m1]))*) (* for no-zero width particles *)
 		(-Log[-1/Propagator[-t-s,m1]]+Log[-1/Propagator[-t-s,Conjugate[m1]]])/((-1/Propagator[0,m1])+(1/Propagator[0,Conjugate[m1]]))
-	]	
+	],
+	Integrand[Propagator[-t-s_, m1_]^2,t]:> Propagator[-t-s, m1]
 }
 
 
@@ -307,7 +313,7 @@ PartialFractioningSIntegrals[s_]:={
 }
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Hadron-level cross-section*)
 
 
@@ -507,6 +513,8 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 		,
 		{int,sIntegralList}
 	];
+	
+	Echo[Length@nonRedundantIntegarlList, "min. # of integrals"];
 	
 	(* compute necessary integrals and store them as an association*)
 	integralAssocReverse= Table[

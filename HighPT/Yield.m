@@ -401,7 +401,7 @@ Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*perform the s-integrate*)
 
 
@@ -481,7 +481,7 @@ SIntegrate[expr_, {proc_,bin_}] := Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Find minimal list of integrals*)
 
 
@@ -496,17 +496,23 @@ MinimalIntegralList[arg_, dummyIntegral_] := Module[
 	(* find all integrals *)
 	intList = DeleteDuplicates@Cases[arg, _NIntegrand, All];
 	
+	(*
 	(* remove unnecessary digits *)
-	intList = Chop[intList, 10^-4];
+	intList = Chop[intList];
+	*)
 	
 	(* built association with unique symbols *)
 	intAssoc= Association[(# -> dummyIntegral[Unique[]])& /@ intList];
 	
 	(* find complex conjugated integrals *)
+	
 	Do[
 		If[!MemberQ[intListMin,int],
 			(* if integral (int) is not yet in the minimal list compute its conjugate *)
-			With[{conjInt=(int /. prop_Propagator :> Conjugate[prop])},
+			With[
+				{
+					conjInt=(int /. prop_Propagator :> Conjugate[prop])
+				},
 				If[MemberQ[intListMin,conjInt],
 					(* if Conjugate[int] is already in the list associate to this *)
 					AssociateTo[intAssoc, int -> Conjugate[intAssoc[conjInt]]],
@@ -518,12 +524,13 @@ MinimalIntegralList[arg_, dummyIntegral_] := Module[
 		,
 		{int, intList}
 	];
+	Echo[Length@intListMin, "min. # of integrals"];
 	
 	(* invert the integral association *)
 	intAssocInverse= Table[
 		intAssoc[int] -> int
 		,
-		{int, intListMin}
+		{int, intList(*intListMin*)}
 	];
 	
 	Return[{intAssoc,intAssocInverse}]

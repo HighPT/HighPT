@@ -379,6 +379,7 @@ ResetMediators[]:= Module[{med= Keys[$Mediators]},
 		Quiet[FF[_,{m,_},_,{OrderlessPatternSequence[_u,_d,___]}]=.];
 		Quiet[FF[_,{m,_},_,{OrderlessPatternSequence[_u,_u,___]}]=.];
 		Quiet[FF[_,{m,_},_,{OrderlessPatternSequence[_d,_d,___]}]=.];
+		Quiet[Propagator[_,Conjugate[m]]=.];
 		,
 		{m,med}
 	];
@@ -422,18 +423,10 @@ AddMediator[l_, m_, w_, c:{("s"|"t"|"u")..}, current:{("NC"|"CC")..}, lorentz:{(
 		MakeNC[l]
 	];
 	
-	(*Switch[c,
-		{"s"}, AppendTo[$Channels["s"], l->{m,w,c,current,lorentz}],
-		{"t"}, AppendTo[$Channels["t"], l->{m,w,c,current,lorentz}],
-		{"u"}, AppendTo[$Channels["u"], l->{m,w,c,current,lorentz}],
-		{"tu"},AppendTo[$Channels["t"], l->{m,w,c,current,lorentz}]; AppendTo[$Channels["u"], l->{m,w,c,current,lorentz}]
+	(* Make propagators of mediators with zero width mediators real *)
+	If[w==0,
+		Propagator[x_,Conjugate[l]] := Propagator[x,l]
 	];
-	
-	Switch[current,
-		"NC", MakeNC[l];,
-		"CC", MakeCC[l];
-	];
-	*)
 ];
 
 
