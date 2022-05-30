@@ -107,8 +107,8 @@ PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
 	WriteString[file, "import numpy as np" <> "\n\n"];
 	
 	(* list all coefficients and couplings in this file *)
-	WriteString[file, "# Wilson coefficients: " <> ToString@DeleteDuplicates@Cases[exprWCxf, WCxf[name_]:>name, All] <> "\n"];
-	WriteString[file, "# Coupling constants:  " <> ToString@DeleteDuplicates@Cases[exprWCxf, Cxf[name_]:>name, All] <> "\n\n"];
+	WriteString[file, "parameters = " <> StringReplace[ToString@DeleteDuplicates@Cases[exprWCxf, (WCxf[name_] | Cxf[name_]) :> name, All], {"{"->"[", "}"->"]"}] <> "\n\n"];
+	(*WriteString[file, "# Coupling constants:  " <> ToString@DeleteDuplicates@Cases[exprWCxf, Cxf[name_]:>name, All] <> "\n\n"];*)
 	
 	(* write experimental data *)
 	WriteSearchInfo[file, proc];
