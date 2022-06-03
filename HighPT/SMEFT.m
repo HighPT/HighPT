@@ -111,7 +111,7 @@ GetEFTorder::usage= "GetEFTorder[]
 SetEFTorder::invalidEFTorder= "The given argument n=`1` is not a valid EFT order. The allowed values are n \[Element] {0, 2, 4}.";
 
 
-SetEFTorder[n:(0|2|4)]:= (
+SetEFTorder[n:(0|2|4(*|8*))]:= (
 	$EFTorder= n;
 	(*
 	Print["Default for EFT series truncation set to ", HoldForm[("(\!\(\*SubscriptBox[\(\[CapitalLambda]\), \(NP\)]\))")^-n], "."]
@@ -119,7 +119,7 @@ SetEFTorder[n:(0|2|4)]:= (
 );
 
 
-SetEFTorder[n:Except[0|2|4]]:= (Message[SetEFTorder::invalidEFTorder,n];Abort[])
+SetEFTorder[n:Except[0|2|4(*|8*)]]:= (Message[SetEFTorder::invalidEFTorder,n];Abort[])
 
 
 GetEFTorder[]:= $EFTorder
