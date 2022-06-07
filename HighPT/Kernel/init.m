@@ -24,7 +24,11 @@ If[MemberQ[$Packages,"HighPT`"],
 	(* Set directory of XSection package *)
 	Clear[$DirectoryHighPT, $LogoHighPT];
 	$DirectoryHighPT= DirectoryName[$InputFileName, 2];
-	$LogoHighPT= First@ Import[FileNameJoin[{$DirectoryHighPT,"Kernel","logo.pdf"}],"PageGraphics"];
+	If[$VersionNumber < 13.0,
+		$LogoHighPT= First@ Import[FileNameJoin[{$DirectoryHighPT,"Kernel","logo.pdf"}]];
+		,
+		$LogoHighPT= First@ Import[FileNameJoin[{$DirectoryHighPT,"Kernel","logo.pdf"}],"PageGraphics"];
+	];
 
 	(* Loading *)
 	Check[
