@@ -59,6 +59,9 @@ PackageExport["Propagator"]
 PackageExport["$ParallelHighPT"]
 
 
+PackageExport["HighPTLogo"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -762,4 +765,15 @@ MyEcho[arg_, aux_, f_]:= If[$Verbose<=1,
 	,
 	Echo[f[arg], aux];
 	Return[arg]
+]
+
+
+(* ::Section:: *)
+(*HighPT logo for Plotting*)
+
+
+HighPTLogo[] := If[$VersionNumber < 13.0,
+	First@ Import[FileNameJoin[{Global`$DirectoryHighPT,"HighPT_plot_logo.pdf"}]]
+	,
+	First@ Import[FileNameJoin[{Global`$DirectoryHighPT,"HighPT_plot_logo.pdf"}],"PageGraphics"]
 ]
