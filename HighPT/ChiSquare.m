@@ -102,7 +102,7 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	}
 	,	
 	(* compute event yield for all bins subtracting SM prediction*)
-	\[Sigma]Predicted= (*Event*)Yield[
+	\[Sigma]Predicted= EventYield[
 		proc,
 		FF                -> OptionValue[FF],
 		Coefficients      -> OptionValue[Coefficients],
@@ -143,7 +143,7 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	If[mybins=!={},
 		{\[Sigma]Predicted,NObserved,NPredicted}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, mybins];
 		{\[Sigma]N}= MergeBinsSquared[{\[Sigma]N}, mybins];
-		Print["# Events per bin after merging: ",NObserved];
+		ConditionalPrint["# Events per bin after merging: ",NObserved];
 	];
 	
 	(* add Poisson error for data *)
@@ -184,7 +184,7 @@ MergeBins[lists_List, merge_List]:= Module[
 		First
 	];
 	
-	Print["Merging bins as: ", combinedBins];
+	ConditionalPrint["Merging bins as: ", combinedBins];
 	
 	Table[
 		(* sum the bins *)

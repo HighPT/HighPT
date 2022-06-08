@@ -23,7 +23,13 @@ Package["HighPT`"]
 (*Exported*)
 
 
-PackageExport["Yield"]
+PackageExport["EventYield"]
+
+
+PackageExport["$PrintingProcessInfo"]
+
+
+PackageScope["ConditionalPrint"]
 
 
 (* ::Chapter:: *)
@@ -55,11 +61,21 @@ $IntegralCaching::usage = "$IntegralCaching
 $IntegralCaching=False
 
 
+$PrintingProcessInfo::usage= "$PrintingProcessInfo is a boolean value that specifies whether information about the specified process should be printed by EventYield and ChiSquarLHC, or not (default: $PrintingProcessInfo=True)."
+
+
+$PrintingProcessInfo = True
+
+
+(* function that only prints if $PrintingProcessInfo is turned on *)
+ConditionalPrint[arg_] := If[$PrintingProcessInfo, Print[arg]]
+
+
 (* ::Section:: *)
 (*Yield*)
 
 
-Yield::usage= "EventYield[\"proc\"]
+EventYield::usage= "EventYield[\"proc\"]
 	Computes the expected number of events for all bins of the observables in the search specified by the argument \"proc\".
 	The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}.
 	For neutrinos no flavor index can be specified in which case a summation of all \[Nu] flavors is implicit.
@@ -72,13 +88,13 @@ Yield::usage= "EventYield[\"proc\"]
 		Luminosity \[Rule] Default.";
 
 
-Yield::missingeff= "Not all required efficincies have been given. The missing efficiencies are set to zero, these include: `1`.";
+EventYield::missingeff= "Not all required efficincies have been given. The missing efficiencies are set to zero, these include: `1`.";
 
 
-Yield::invalidfinalstate= "The argument `1` is not a valid final state particle. Allowed values are e[1|2|3] and \[Nu]. Asummation over \[Nu] flavors is always implicite."
+EventYield::invalidfinalstate= "The argument `1` is not a valid final state particle. Allowed values are e[1|2|3] and \[Nu]. Asummation over \[Nu] flavors is always implicite."
 
 
-Options[Yield]= {
+Options[EventYield]= {
 	SM                -> True,
 	FF                -> False,
 	Coefficients      -> All,
@@ -89,17 +105,17 @@ Options[Yield]= {
 };
 
 
-Yield::binning= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[ScriptL]\)]\) and \!\(\*SubscriptBox[\(p\), \(T\)]\) detected. Currently 2d binning is not supported.";
+EventYield::binning= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[ScriptL]\)]\) and \!\(\*SubscriptBox[\(p\), \(T\)]\) detected. Currently 2d binning is not supported.";
 
 
-Yield::undefinedsearch= "The LHC search `1` is not defined; defined searches are `2`.";
+EventYield::undefinedsearch= "The LHC search `1` is not defined; defined searches are `2`.";
 
 
 (* ::Section:: *)
 (*Routine to compute cross section for one bin*)
 
 
-Yield[proc_String, OptionsPattern[]]:= Module[
+EventYield[proc_String, OptionsPattern[]]:= Module[
 	{
 		coeff,
 		finalstate, \[Nu]flav, ptBins, sBins, lumi,
@@ -267,7 +283,7 @@ NEventsBin[{binNumber_Integer, binType:("MLL"|"PT"), {{$sMin_,$sMax_},{mllLOW_,m
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Extracting search details*)
 
 
@@ -295,7 +311,7 @@ ExtractProcessInfo[proc_]:= Module[
 	];
 	
 	(* print info *)
-	Print@TableForm[{
+	ConditionalPrint@TableForm[{
 	{"PROCESS",           ":", printState },
 	{"EXPERIMENT",        ":", expInfo["EXPERIMENT"]},
 	{"ARXIV",             ":", expInfo["ARXIV"]},
@@ -401,11 +417,11 @@ Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*perform the s-integrate*)
 
 
-Yield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
+EventYield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
 
 
 (* ::Text:: *)
@@ -481,7 +497,7 @@ SIntegrate[expr_, {proc_,bin_}] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Find minimal list of integrals*)
 
 
