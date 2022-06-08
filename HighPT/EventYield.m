@@ -608,7 +608,7 @@ CacheIntegrals[integralList_, {proc_,bin_}] := Module[
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*substitute efficiency kernels*)
 
 
@@ -627,7 +627,7 @@ SubstituteEfficiencyKernels[xSec_, {proc_String, bin_}]:= Module[
 	
 	(* check if there are efficiencies remaining and set them to zero *)
 	If[!FreeQ[NObserved,_Efficiency],
-		Print/@DeleteDuplicates@ Cases[NObserved, eff_Efficiency(*:> Drop[eff,-1]*), All]; (* explicit printing *)
+		(*Print/@DeleteDuplicates@ Cases[NObserved, eff_Efficiency(*:> Drop[eff,-1]*), All];*) (* explicit printing *)
 		Message[
 			Yield::missingeff,
 			DeleteDuplicates@ Cases[NObserved, eff_Efficiency:> Drop[eff,-1], All]
