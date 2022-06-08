@@ -666,54 +666,7 @@ DiagonalizeWBosonSM= {
 }
 
 
-(*
-(* superseeded by RotateMassToWeakBasis *)
-RotateFFtoWeakEigenbasis= {
-	FF[
-		type:(Scalar|Vector|Tensor|DipoleL|DipoleQ),
-		x_,
-		{\[Chi]L_, Left},
-		{a_\[Nu], b_e, d[i_], u[j_]}
-	]:> (Sum[
-		CKM[[j,k]] * FF[type, x, {\[Chi]L, Left}, {a, b, d[i], u[k]}],
-		{k,1,3}
-	]/.DiagonalizeWBosonSM)
-	,
-	FF[
-		Vector,
-		x_,
-		{\[Chi]L_, Left},
-		{a_e, b_\[Nu], u[i_], d[j_]}
-	]:> (Sum[
-		(CKM[[i,k]])\[Conjugate] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], d[j]}],
-		{k,1,3}
-	]/.DiagonalizeWBosonSM)
-	,
-	FF[
-		type:(Scalar|Tensor|DipoleL|DipoleQ),
-		x_,
-		{\[Chi]L_, Right},
-		{a_e, b_\[Nu], u[i_], d[j_]}
-	]:> Sum[
-		(CKM[[i,k]])\[Conjugate] * FF[type, x, {\[Chi]L, Right}, {a, b, u[k], d[j]}],
-		{k,1,3}
-	]
-};
-*)
-
-
-(* preliminary definitions of Subscript[V, u] and Subscript[V, d] *)
-(* add a function that allows to specify Vd *)
-Vu = ConjugateTranspose[CKM]
-
-Vd= {
-	{1,0,0},
-	{0,1,0},
-	{0,0,1}
-}
-
-
-(* WORK IN PROGRES *)
+(* For definitions of Vu and Vd see Parameters.m *)
 RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 	ccRules= {
 		(* ud *)

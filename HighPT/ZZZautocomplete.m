@@ -54,3 +54,6 @@ AddAutoCompletion["Yield"][Keys@LHCSearch[]];
 AddAutoCompletion["ChiSquareLHC"][Keys@LHCSearch[]];
 AddAutoCompletion["LHCSearch"][Keys@LHCSearch[]];
 AddAutoCompletion["PythonExport"][Keys@LHCSearch[]];
+
+
+AddAutoCompletion["DefineBasisAlignment"][{"down","up"}]

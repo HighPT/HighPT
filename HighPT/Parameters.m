@@ -36,6 +36,9 @@ PackageExport["GetParameters"]
 PackageExport["ConstantInput"]
 
 
+PackageExport["DefineBasisAlignment"]
+
+
 (* ::Text:: *)
 (*Everything below should be combined in one head, e.g. Parameter["..."]*)
 (*OR: PackageScope everything*)
@@ -67,6 +70,10 @@ PackageScope["ReplaceConstants"]
 
 PackageScope["Charge"]
 PackageScope["WeakIsospin3"]
+
+
+PackageScope["Vu"]
+PackageScope["Vd"]
 
 
 (* ::Chapter:: *)
@@ -259,6 +266,81 @@ CKM= {
 	{Vckm[2,1], Vckm[2,2], Vckm[2,3]},
 	{Vckm[3,1], Vckm[3,2], Vckm[3,3]}
 };
+
+
+(* Rotation matrices for left-handed up- and down-type quarks *)
+(* By default down alignment is assumed *)
+Vu = ConjugateTranspose[CKM]
+
+Vd= {
+	{1,0,0},
+	{0,1,0},
+	{0,0,1}
+}
+
+
+Identity
+
+
+(* ::Subsection:: *)
+(*Define up- / down-alignment*)
+
+
+DefineBasisAlignment::usage="DefineBasisAlignment[\"down\"]
+	Specifies to work in the down-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\)\[ConjugateTranspose]. The left-handed rotation matrices are defined by \!\(\*SuperscriptBox[SubscriptBox[\(d\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(d\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(d\), \(j\)], \(weak\)]\) and \!\(\*SuperscriptBox[SubscriptBox[\(u\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(u\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(u\), \(j\)], \(weak\)]\), respectively. Down-alignment is the default choice.
+DefineBasisAlignment[\"up\"]
+	Specifies to work in the up-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\).
+DefineBasisAlignment[matrix]
+	Sets the rotation matrix for left-handed down-type quarks \!\(\*SubscriptBox[\(V\), \(d\)]\) equal to the argument matrix, which must be a unitary 3x3 matrix. Consequently the up-rotation matrix is defined by \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(d\)]\).\!\(\*SubscriptBox[\(V\), \(CKM\)]\).
+"
+
+
+DefineBasisAlignment[] := DefineBasisAlignment["down"]
+DefineBasisAlignment["down"] := Module[{},
+	(* set the new Vd matrix*)
+	Vd = DiagonalMatrix[{1,1,1}];
+	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
+	Vu = ConjugateTranspose[CKM];
+	(* Print *)
+	Print["Defined new mass basis alignment:"];
+	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
+	Print["\!\(\*SubscriptBox[\(V\), \(d\)]\) = ", MatrixForm[Vd/.GetParameters[]]];
+];
+
+
+DefineBasisAlignment["up"] := Module[{},
+	(* set the new Vd matrix*)
+	Vu = DiagonalMatrix[{1,1,1}];
+	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
+	Vd = CKM;
+	(* Print *)
+	Print["Defined new mass basis alignment:"];
+	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
+	Print["\!\(\*SubscriptBox[\(V\), \(d\)]\) = ", MatrixForm[Vd/.GetParameters[]]];
+];
+
+
+(* function that defines a down aligned basis  *)
+DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3} && UnitaryMatrixQ[matrix/.GetParameters[], Tolerance->10^-2])] := Module[{},
+	(* set the new Vd matrix*)
+	Vd = matrix;
+	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
+	Vu = Vd . ConjugateTranspose[CKM];
+	(* Print *)
+	Print["Defined new mass basis alignment:"];
+	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
+	Print["\!\(\*SubscriptBox[\(V\), \(d\)]\) = ", MatrixForm[Vd/.GetParameters[]]];
+];
+
+
+(* initialize down aligned *)
+(*DefineBasisAlignment["down"]*) (* does not work since GetParameters[] is not yet defined *)
+
+
+DefineBasisAlignment::invalidarg="The argument `1` is not a unitary 3x3 matrix."
+
+
+DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3} || !UnitaryMatrixQ[arg/.GetParameters[], Tolerance->10^-2])] := (Message[DefineBasisAlignment::invalidarg,arg/.GetParameters[]];Abort[])
 
 
 (* ::Subsection:: *)
