@@ -223,12 +223,12 @@ $SearchDirectories= <|
 
 $DefaultCombinedBins= <|
 	"di-tau-ATLAS"        -> {},
-	"di-muon-CMS"         -> {Range[26,28], Range[27,41]},
-	"di-electron-CMS"     -> {Range[43,43], Range[45,46], Range[47,48], Range[49,51], Range[52,94]},
+	"di-muon-CMS"         -> {Range[29,30],Range[31,41]},
+	"di-electron-CMS"     -> {Range[43,44], Range[45,46], Range[47,48], Range[49,51], Range[52,94]},
 	
 	"mono-tau-ATLAS"      -> {Range[12,16]},
 	"mono-muon-ATLAS"     -> {Range[27,28], Range[29,46]},
-	"mono-electron-ATLAS" -> {Range[34,58]},
+	"mono-electron-ATLAS" -> {Range[33,34],Range[35,58]},
 	
 	"muon-tau-CMS"        -> {Range[16,17], Range[18,25]},
 	"electron-tau-CMS"    -> {Range[19,25]},

@@ -50,7 +50,7 @@ AddAutoCompletion[function_String][args___]:=Module[{processed},
 (*Auto-completions*)
 
 
-AddAutoCompletion["Yield"][Keys@LHCSearch[]];
+AddAutoCompletion["EventYield"][Keys@LHCSearch[]];
 AddAutoCompletion["ChiSquareLHC"][Keys@LHCSearch[]];
 AddAutoCompletion["LHCSearch"][Keys@LHCSearch[]];
 AddAutoCompletion["PythonExport"][Keys@LHCSearch[]];
