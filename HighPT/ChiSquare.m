@@ -120,10 +120,13 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	searchLumi = expData["INFO"]["LUMINOSITY"];
 	If[!MatchQ[OptionValue[Luminosity],Default],
 		rescale = OptionValue[Luminosity]/searchLumi;
+		(* for projections, use bkg instead of data *)
+		NObserved  = rescale * expData["BACKGROUND"];
+		NPredicted = rescale * expData["BACKGROUND"];
+		,
+		NObserved  = expData["DATA"];
+		NPredicted = expData["BACKGROUND"];
 	];
-	
-	NObserved  = rescale * expData["DATA"];
-	NPredicted = rescale * expData["BACKGROUND"];
 	
 	If[!MatchQ[OptionValue[Luminosity],Default],
 		If[MatchQ[OptionValue[RescaleError],True],
