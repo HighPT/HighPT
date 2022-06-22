@@ -283,7 +283,7 @@ NEventsBin[{binNumber_Integer, binType:("MLL"|"PT"), {{$sMin_,$sMax_},{mllLOW_,m
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Extracting search details*)
 
 
@@ -397,7 +397,7 @@ Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Remove SM*)
 
 
@@ -407,7 +407,9 @@ Module[
 	,
 	\[Epsilon]sm/:Conjugate[\[Epsilon]sm]:= \[Epsilon]sm;
 	temp= temp/.(a:FF[_,{_,SM},___]:>\[Epsilon]sm*a);
-	temp= MyExpand/@temp;
+	(*temp= MyExpand/@temp;*)
+	temp= Expand@ExpandConjugate[temp];
+	(*Print[temp/.FF[_,{_,Except[SM]},___]->0];*)
 	temp= temp/.\[Epsilon]sm^2->0;
 	temp= temp/.\[Epsilon]sm->1;
 	Return[temp]
@@ -608,7 +610,7 @@ CacheIntegrals[integralList_, {proc_,bin_}] := Module[
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*substitute efficiency kernels*)
 
 
