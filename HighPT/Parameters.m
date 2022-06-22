@@ -317,8 +317,15 @@ DefineBasisAlignment["up"] := Module[{},
 ];
 
 
+DefineBasisAlignment::notunitary="Cound not verify that the given matrix is unitary."
+
+
 (* function that defines a down aligned basis  *)
-DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3} && UnitaryMatrixQ[matrix/.GetParameters[], Tolerance->10^-2])] := Module[{},
+DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
+	(* check unitarity *)
+	If[!UnitaryMatrixQ[matrix/.GetParameters[], Tolerance->10^-2],
+		Message[DefineBasisAlignment::notunitary]
+	];
 	(* set the new Vd matrix*)
 	Vd = matrix;
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
@@ -334,10 +341,10 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3} && UnitaryMatrixQ[ma
 (*DefineBasisAlignment["down"]*) (* does not work since GetParameters[] is not yet defined *)
 
 
-DefineBasisAlignment::invalidarg="The argument `1` is not a unitary 3x3 matrix."
+DefineBasisAlignment::invalidarg="The argument `1` is not a 3x3 matrix."
 
 
-DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3} || !UnitaryMatrixQ[arg/.GetParameters[], Tolerance->10^-2])] := (Message[DefineBasisAlignment::invalidarg,arg/.GetParameters[]];Abort[])
+DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3})] := (Message[DefineBasisAlignment::invalidarg,arg/.GetParameters[]];Abort[])
 
 
 (* ::Subsection:: *)
