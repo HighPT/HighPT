@@ -68,7 +68,7 @@ PackageScope["PartonLuminosity"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton-level cross-section*)
 
 
@@ -101,8 +101,20 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 	(* Expand the FormFactors *)
 	temp= ExpandFormFactors[temp, OperatorDimension -> OptionValue[OperatorDimension]];
 	
+(*	Print@TraditionalForm[
+		temp/.ReplaceConstants[]/.FF[Vector|DipoleL|DipoleQ,___]->0
+	];*)
+	
 	(* Perform phase-space integration over t *)
 	temp= IntegrateT[temp, t];
+	
+	(*\[Lambda]S/:Conjugate[\[Lambda]S]:=\[Lambda]S;
+	\[Lambda]T/:Conjugate[\[Lambda]T]:=\[Lambda]T;
+	\[Lambda]S/:Power[\[Lambda]S,2]:=0;
+	\[Lambda]T/:Power[\[Lambda]T,2]:=0;
+	Print@TraditionalForm[
+		temp/.ReplaceConstants[]/.FF[Vector|DipoleL|DipoleQ,___]->0/.{a:FF[Scalar,___]:>\[Lambda]S*a, b:FF[Tensor,___]:>\[Lambda]T*b}/.{\[Lambda]S->1,\[Lambda]T->1}
+	];*)
 	
 	(* Integration boundaries *)
 	{pTmin, pTmax} = OptionValue[PTcuts];
@@ -122,12 +134,16 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 		\[Sigma]= (temp/.t->t4) - (temp/.t->t3) + (temp/.t->t2) - (temp/.t->t1)
 	];
 	
+	(*Print@TraditionalForm[
+		Expand[\[Sigma]/.ReplaceConstants[]/.FF[Vector|DipoleL|DipoleQ,___]->0/.{a:FF[Scalar,___]:>\[Lambda]S*a, b:FF[Tensor,___]:>\[Lambda]T*b}/.{\[Lambda]S->1,\[Lambda]T->1}]
+	];*)
+	
 	(* rescale the result *)
 	Return@ Expand[factor * \[Sigma]] (* in GeV^-2 *)
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Phase-space integration*)
 
 
@@ -313,7 +329,7 @@ PartialFractioningSIntegrals[s_]:={
 }
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Hadron-level cross-section*)
 
 

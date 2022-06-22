@@ -53,6 +53,9 @@ PackageExport["AddMediator"]
 PackageExport["GetMediators"]
 
 
+PackageScope["ModifyMediator"]
+
+
 PackageExport["Propagator"]
 
 
@@ -274,7 +277,7 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*old*)
 
 
@@ -434,6 +437,39 @@ AddMediator[l_, m_, w_, c:{("s"|"t"|"u")..}, current:{("NC"|"CC")..}, lorentz:{(
 
 
 AddMediator[a___]:= Message[InitializeModel::invalidmediator, Flatten[{a}]]
+
+
+Options[ModifyMediator]={
+	Mass  -> Default,
+	Width -> Default
+}
+
+
+ModifyMediator[med_, OptionsPattern[]]:=Module[
+	{temp  =$Mediators[med], mass, width},
+	(* fix new mass *)
+	If[OptionValue[Mass] === Default,
+		mass = temp[[1]]
+		,
+		mass = OptionValue[Mass]
+	];
+	(* fix new width *)
+	If[OptionValue[Width] === Default,
+		width = temp[[2]]
+		,
+		width = OptionValue[Width]
+	];
+	temp = {mass,width,temp[[3]],temp[[4]],temp[[5]]};
+	
+	(* modify mediator in the list of currently used mediators *)
+	AssociateTo[$Mediators, med->temp];
+	(* modify mediator in all channels it contributes to *)
+	Do[
+		AssociateTo[$Channels[chan], med->temp]
+		,
+		{chan,temp[[3]]}
+	];
+]
 
 
 (* ::Subsubsection:: *)

@@ -286,13 +286,10 @@ Identity
 (*Define up- / down-alignment*)
 
 
-DefineBasisAlignment::usage="DefineBasisAlignment[\"down\"]
-	Specifies to work in the down-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\)\[ConjugateTranspose]. The left-handed rotation matrices are defined by \!\(\*SuperscriptBox[SubscriptBox[\(d\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(d\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(d\), \(j\)], \(weak\)]\) and \!\(\*SuperscriptBox[SubscriptBox[\(u\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(u\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(u\), \(j\)], \(weak\)]\), respectively. Down-alignment is the default choice.
-DefineBasisAlignment[\"up\"]
-	Specifies to work in the up-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\).
-DefineBasisAlignment[matrix]
-	Sets the rotation matrix for left-handed down-type quarks \!\(\*SubscriptBox[\(V\), \(d\)]\) equal to the argument matrix, which must be a unitary 3x3 matrix. Consequently the up-rotation matrix is defined by \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(d\)]\).\!\(\*SubscriptBox[\(V\), \(CKM\)]\).
-"
+DefineBasisAlignment::usage=
+"DefineBasisAlignment[\"down\"] specifies to work in the down-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\)\[ConjugateTranspose]. The left-handed rotation matrices are defined by \!\(\*SuperscriptBox[SubscriptBox[\(d\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(d\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(d\), \(j\)], \(weak\)]\) and \!\(\*SuperscriptBox[SubscriptBox[\(u\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(u\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(u\), \(j\)], \(weak\)]\), respectively. Down-alignment is the default choice.
+DefineBasisAlignment[\"up\"] specifies to work in the up-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\).
+DefineBasisAlignment[matrix] sets the rotation matrix for left-handed down-type quarks \!\(\*SubscriptBox[\(V\), \(d\)]\) equal to the argument matrix, which must be a unitary 3x3 matrix. Consequently the up-rotation matrix is defined by \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(d\)]\).\!\(\*SubscriptBox[\(V\), \(CKM\)]\)."
 
 
 DefineBasisAlignment[] := DefineBasisAlignment["down"]
@@ -347,8 +344,9 @@ DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3} || !Unita
 (*Function to modify experimental values*)
 
 
-DefineParameters::usage= "DefineParameters[]
-	Defines all SM parameters: ConstantInput[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[ZBoson | WBoson | Photon], Width[ZBoson | WBoson | Photon], and the CKM.
+DefineParameters::usage= "DefineParameters[] 
+	defines all SM parameters such as ConstantInput[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[ZBoson | WBoson | Photon], Width[ZBoson | WBoson | Photon], and the CKM.
+	Furthermore NP parameters, i.e. the Mass and Width of BSM mediators can be changed.
 	The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options.
 	Each option value must be a number, except for the optionvalue of \"Wolfenstein\" which msut be a list of the Wolfenstein parameters {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}.
 	To obtain the current values of the parameters the routine GetParameters[] can be used.
@@ -364,8 +362,13 @@ Options[DefineParameters]= {
 	"mZ"          -> mZ$default,
 	"\[CapitalGamma]Z"          -> \[CapitalGamma]Z$default,
 	"\[CapitalGamma]W"          -> \[CapitalGamma]W$default,
-	"Wolfenstein" -> Wolfenstein$default
+	"Wolfenstein" -> Wolfenstein$default,
+	Mass          -> {},
+	Width         -> {}
 };
+
+
+DefineParameters::unknownmass= "The mass `1` is undefined."
 
 
 DefineParameters[OptionsPattern[]] := Module[
@@ -378,8 +381,11 @@ DefineParameters[OptionsPattern[]] := Module[
 		$mW,
 		$sW,
 		$vev,
-		$Wolfenstein = OptionValue[Wolfenstein], 
-		$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar, $\[Rho], $\[Eta]
+		$Wolfenstein = OptionValue["Wolfenstein"], 
+		$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar, $\[Rho], $\[Eta],
+		masses = OptionValue[Mass],
+		widths = OptionValue[Width],
+		mediators = GetMediators[]
 	}
 	,
 	(* set the Wolfentein parameters *)
@@ -392,20 +398,26 @@ DefineParameters[OptionsPattern[]] := Module[
 	$sW = Sqrt[1. - $mW^2/$mZ^2];
 	$vev = ($mW*$sW)/Sqrt[\[Pi]*$\[Alpha]EM];
 	
+	(* modify the masses of mediators *)
+	If[masses=!={},
+		Do[
+			If[MatchQ[mass,Alternatives@@Keys[mediators]->_],
+				ModifyMediator[First[mass], Mass->Last[mass]]
+				,
+				Message[DefineParameters::unknownmass,mass]
+			]
+			,
+			{mass, masses}
+		]
+	];
+	
 	(* Create the appropriate supstitution rule *)
 	ExperimentalParameters = <|
 		ConstantInput["\[Alpha]EM"] -> $\[Alpha]EM,
 		ConstantInput["vev"] -> $vev,
 		ConstantInput["sW"]  -> $sW,
 		ConstantInput["cW"]  -> Sqrt[1. - $sW^2],
-		(* masses & widths *)
-		Mass[ZBoson]         -> $mZ,
-		Width[ZBoson]        -> $\[CapitalGamma]Z,
-		Mass[WBoson]         -> $mW,
-		Width[WBoson]        -> $\[CapitalGamma]W,
-		Mass[Photon]         -> 0,
-		Width[Photon]        -> 0,
-		
+		(* CKM *)
 		Vckm[1,1] -> 1-$\[Lambda]^2/2,
 		Vckm[1,2] -> $\[Lambda],
 		Vckm[1,3] -> $A * $\[Lambda]^3 * ($\[Rho] - I*$\[Eta]),
@@ -416,7 +428,14 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
-		Vckm[3,3] -> 1
+		Vckm[3,3] -> 1,
+		(* masses & widths *)
+		Mass[ZBoson]         -> $mZ,
+		Width[ZBoson]        -> $\[CapitalGamma]Z,
+		Mass[WBoson]         -> $mW,
+		Width[WBoson]        -> $\[CapitalGamma]W,
+		Mass[Photon]         -> 0,
+		Width[Photon]        -> 0
 	|>;
 ]
 
@@ -433,8 +452,8 @@ GetParameters::usage= "GetParameters[]
 	To modify the values use DefineParameters.";
 
 
-(* returns the current value of the SM parameters *)
-GetParameters[]:= ExperimentalParameters
+(* returns the current value of the (B)SM parameters *)
+GetParameters[]:= Join[ExperimentalParameters, ReplaceMassWidth[]]
 
 
 (* ::Section:: *)

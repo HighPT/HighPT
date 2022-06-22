@@ -161,8 +161,27 @@ WC[\"label\",{r,s}]
 Format[WC[label_,{indices__}],TraditionalForm]:= Module[
 	{num=StringTake[ToString[label],-1]},
 	If[NumericQ[ToExpression[num]],
-		Subsuperscript["\[ScriptCapitalC]",Underscript[StringDrop[ToString[label],-1],StringJoin[ToString/@{indices}]],StringJoin["(",num,")"]],
-		Subscript["\[ScriptCapitalC]",Underscript[ToString[label],StringJoin[ToString/@{indices}]]]
+		(* w/ exponents *)
+		DisplayForm@SubscriptBox[
+			RowBox[{"[", 
+				Subsuperscript[
+					"\[ScriptCapitalC]",
+					StringReplace[StringDrop[ToString[label],-1],{\[Psi]_~~"2":>Superscript[\[Psi],"2"],\[Psi]_~~"3":>Superscript[\[Psi],"3"],\[Psi]_~~"4":>Superscript[\[Psi],"4"],\[Psi]_~~"5":>Superscript[\[Psi],"5"],\[Psi]_~~"6":>Superscript[\[Psi],"6"]}]/.StringExpression[a___]:>RowBox[{a}],
+					StringJoin["(",num,")"]
+				],
+			"]"}],
+			StringJoin[ToString/@{indices}]]
+		,
+		(* w/o exponents*)
+		DisplayForm@SubscriptBox[
+			RowBox[{"[", 
+				Subscript[
+					"\[ScriptCapitalC]",
+					StringReplace[ToString[label],{\[Psi]_~~"2":>Superscript[\[Psi],"2"],\[Psi]_~~"3":>Superscript[\[Psi],"3"],\[Psi]_~~"4":>Superscript[\[Psi],"4"],\[Psi]_~~"5":>Superscript[\[Psi],"5"],\[Psi]_~~"6":>Superscript[\[Psi],"6"]}]/.StringExpression[a___]:>RowBox[{a}]
+				], 
+			"]"}], 
+			StringJoin[ToString/@{indices}]
+		]	
 	]
 ]
 

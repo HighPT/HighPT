@@ -57,3 +57,6 @@ AddAutoCompletion["PythonExport"][Keys@LHCSearch[]];
 
 
 AddAutoCompletion["DefineBasisAlignment"][{"down","up"}]
+
+
+AddAutoCompletion["InitializeModel"][{"SMEFT"}]
