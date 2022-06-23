@@ -671,38 +671,38 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 	ccRules= {
 		(* ud *)
 		FF[Vector, x_, {\[Chi]L_, Left}, {a_e, b_\[Nu], u[i_], d[j_]}]:> (Sum[
-			Vu[[k,i]]\[Conjugate] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], d[n]}] * Vd[[j,n]]
+			Vu[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], d[n]}] * Vd\[ConjugateTranspose][[n,j]]
 			,
 			{k,1,3},{n,1,3}
 		]/.DiagonalizeWBosonSM)
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_e, b_\[Nu], u[i_], d[j_]}]:> (Sum[
-			FF[type, x, {\[Chi]L, Left}, {a, b, u[i], d[k]}] * Vd[[j,k]]
+			FF[type, x, {\[Chi]L, Left}, {a, b, u[i], d[k]}] * Vd\[ConjugateTranspose][[k,j]]
 			,
 			{k,1,3}
 		]/.DiagonalizeWBosonSM)
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_e, b_\[Nu], u[i_], d[j_]}]:> (Sum[
-			Vu[[k,i]]\[Conjugate] * FF[type, x, {\[Chi]L, Right}, {a, b, u[k], d[j]}]
+			Vu[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, u[k], d[j]}]
 			,
 			{k,1,3}
 		]/.DiagonalizeWBosonSM)
 		,
 		(* du *)
 		FF[Vector, x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, d[i_], u[j_]}]:> (Sum[
-			Vd[[k,i]]\[Conjugate] * FF[Vector, x, {\[Chi]L, Left}, {a, b, d[k], u[n]}] * Vu[[j,n]]
+			Vd[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, d[k], u[n]}] * Vu\[ConjugateTranspose][[n,j]]
 			,
 			{k,1,3},{n,1,3}
 		]/.DiagonalizeWBosonSM)
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_\[Nu], b_e, d[i_], u[j_]}]:> (Sum[
-			FF[type, x, {\[Chi]L, Left}, {a, b, d[i], u[k]}] * Vu[[j,k]]
+			FF[type, x, {\[Chi]L, Left}, {a, b, d[i], u[k]}] * Vu\[ConjugateTranspose][[k,j]]
 			,
 			{k,1,3}
 		]/.DiagonalizeWBosonSM)
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_\[Nu], b_e, d[i_], u[j_]}]:> (Sum[
-			Vd[[k,i]]\[Conjugate] * FF[type, x, {\[Chi]L, Right}, {a, b, d[k], u[j]}]
+			Vd[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, d[k], u[j]}]
 			,
 			{k,1,3}
 		]/.DiagonalizeWBosonSM)
@@ -711,38 +711,38 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 	ncRules= {
 		(* uu *)
 		FF[Vector, x_, {\[Chi]L_, Left}, {a_, b_, u[i_], u[j_]}]:> Sum[
-			Vu[[k,i]]\[Conjugate] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], u[n]}] * Vu[[j,n]]
+			Vu[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, u[k], u[n]}] * Vu\[ConjugateTranspose][[n,j]]
 			,
 			{k,1,3},{n,1,3}
 		]
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_, b_, u[i_], u[j_]}]:> Sum[
-			FF[type, x, {\[Chi]L, Left}, {a, b, u[i], u[n]}] * Vu[[j,n]]
+			FF[type, x, {\[Chi]L, Left}, {a, b, u[i], u[n]}] * Vu\[ConjugateTranspose][[n,j]]
 			,
 			{n,1,3}
 		]
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_, b_, u[i_], u[j_]}]:> Sum[
-			Vu[[k,i]]\[Conjugate] * FF[type, x, {\[Chi]L, Right}, {a, b, u[k], u[j]}]
+			Vu[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, u[k], u[j]}]
 			,
 			{k,1,3}
 		]
 		,
 		(* dd *)
 		FF[Vector, x_, {\[Chi]L_, Left}, {a_, b_, d[i_], d[j_]}]:> Sum[
-			Vd[[k,i]]\[Conjugate] * FF[Vector, x, {\[Chi]L, Left}, {a, b, d[k], d[n]}] * Vd[[j,n]]
+			Vd[[i,k]] * FF[Vector, x, {\[Chi]L, Left}, {a, b, d[k], d[n]}] * Vd\[ConjugateTranspose][[n,j]]
 			,
 			{k,1,3},{n,1,3}
 		]
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Left}, {a_, b_, d[i_], d[j_]}]:> Sum[
-			FF[type, x, {\[Chi]L, Left}, {a, b, d[i], d[n]}] * Vd[[j,n]]
+			FF[type, x, {\[Chi]L, Left}, {a, b, d[i], d[n]}] * Vd\[ConjugateTranspose][[n,j]]
 			,
 			{n,1,3}
 		]
 		,
 		FF[type:Except[Vector], x_, {\[Chi]L_, Right}, {a_, b_, d[i_], d[j_]}]:> Sum[
-			Vd[[k,i]]\[Conjugate] * FF[type, x, {\[Chi]L, Right}, {a, b, d[k], d[j]}]
+			Vd[[i,k]] * FF[type, x, {\[Chi]L, Right}, {a, b, d[k], d[j]}]
 			,
 			{k,1,3}
 		]
