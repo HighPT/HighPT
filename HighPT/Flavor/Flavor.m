@@ -174,7 +174,8 @@ ReplaceYukawas = <|
 ReplaceGaugeCouplings = <|
 	GaugeCoupling["g1"]->Sqrt[4\[Pi] ConstantInput["\[Alpha]EM"]]/Sqrt[1/2 (1+(1-(4\[Pi] ConstantInput["\[Alpha]EM"])/(Sqrt[2]GF Mass[ZBoson]^2))^(1/2))]/.{GF->1/(Sqrt[2]ConstantInput["vev"]^2)},
 	GaugeCoupling["g2"]->2 Sqrt[Sqrt[2]GF] Mass[ZBoson] Sqrt[1/2 (1+(1-(4\[Pi] ConstantInput["\[Alpha]EM"])/(Sqrt[2]GF Mass[ZBoson]^2))^(1/2))]/.{GF->1/(Sqrt[2]ConstantInput["vev"]^2)},
-	GaugeCoupling["g3"]->Sqrt[4\[Pi] \[Alpha]sMz]/.\[Alpha]sMz->0.1179
+	GaugeCoupling["g3"]->Sqrt[4\[Pi] \[Alpha]sMz]/.\[Alpha]sMz->0.1179,
+	Coupling["\[Lambda]"]->Mass["h"]^2/(2ConstantInput["vev"]^2)
 	|>
 
 
