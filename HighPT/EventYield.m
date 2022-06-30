@@ -111,6 +111,9 @@ EventYield::binning= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[Sc
 EventYield::undefinedsearch= "The LHC search `1` is not defined; defined searches are `2`.";
 
 
+EventYield::zerocrosssection= "Zero cross section obtained for search `1`. Possible issue: non of the form-factors, Wilson coefficients, or Couplings that are turned on contribute to the given process.";
+
+
 (* ::Section:: *)
 (*Routine to compute cross section for one bin*)
 
@@ -208,6 +211,13 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 		binType = "MLL";
 		ptBins = Table[First[ptBins],{n,Length[sBins]}]; (* make ptBins and sBins of same length *)
 	];
+	
+	(* if zero cross section is found return a warning and return zero *)
+	If[\[Sigma]full===0,
+		Message[EventYield::zerocrosssection, proc];
+		Return[Table[0,{i,Length[LHCSearch[proc]["DATA"]]}]]
+	];
+	
 	(* replace integrals *)
 	\[Sigma]full = \[Sigma]full /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,$sMin,$sMax}]);
 	
