@@ -59,14 +59,26 @@ Coupling[label_,{x_[p_],y_[r_]}] := Coupling[label,{p,r}]
 Format[Coupling[label_,{indices__}],TraditionalForm]:= Module[
 	{last=StringTake[ToString[label],-1],name},
 	Switch[last,
-	"t",
-	name=OverTilde[StringTake[ToString[label],1]];,
-	"b",
-	name=OverBar[StringTake[ToString[label],1]];,
-	_,
-	name=StringTake[ToString[label],1]
+		"t",
+			name=OverTilde[StringTake[ToString[label],1]];,
+		"b",
+			name=OverBar[StringTake[ToString[label],1]];,
+		_,
+			name=StringTake[ToString[label],1]
 	];
-Subsuperscript[name,Underscript[StringTake[label,2;;2],StringJoin[ToString/@{indices}]],StringTake[label,3;;3]]
+	(*Subsuperscript[
+		name,
+		Underscript[StringTake[label,2;;2],StringJoin[ToString/@{indices}]],
+		StringTake[label,3;;3]
+	]*)
+	DisplayForm@SubscriptBox[
+		RowBox[{"[",Subsuperscript[
+			name,
+			StringTake[label,2;;2],
+			StringTake[label,3;;3]
+		],"]"}],
+		StringJoin[ToString/@{indices}]
+	]
 ]
 
 

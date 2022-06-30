@@ -221,14 +221,17 @@ $SearchDirectories= <|
 (*Default combined bins*)
 
 
+(*
+If bins are added/removed for a search, the reading of efficiency matrices must also be changed!
+*)
 $DefaultCombinedBins= <|
 	"di-tau-ATLAS"        -> {},
 	"di-muon-CMS"         -> {Range[29,30],Range[31,41]},
 	"di-electron-CMS"     -> {Range[43,44], Range[45,46], Range[47,48], Range[49,51], Range[52,94]},
 	
-	"mono-tau-ATLAS"      -> {Range[12,16]},
-	"mono-muon-ATLAS"     -> {Range[27,28], Range[29,46]},
-	"mono-electron-ATLAS" -> {Range[33,34],Range[35,58]},
+	"mono-tau-ATLAS"      -> {Range[10,14]}(*{Range[12,16]}*),
+	"mono-muon-ATLAS"     -> {Range[19,20], Range[21,38]}(*{Range[27,28], Range[29,46]}*),
+	"mono-electron-ATLAS" -> {Range[23,24],Range[25,48]}(*{Range[33,34],Range[35,58]}*),
 	
 	"muon-tau-CMS"        -> {Range[16,17], Range[18,25]},
 	"electron-tau-CMS"    -> {Range[19,25]},
