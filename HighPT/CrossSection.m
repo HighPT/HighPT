@@ -29,6 +29,9 @@ PackageExport["CrossSection"]
 PackageExport["DifferentialCrossSection"]
 
 
+PackageExport["ChoosePDF"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -62,6 +65,9 @@ PackageScope["PartialFractioningSIntegrals"]
 
 PackageScope["PartonLuminosityFunction"]
 PackageScope["PartonLuminosity"]
+
+
+PackageScope["$PDFsets"]
 
 
 (* ::Chapter:: *)
@@ -792,7 +798,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton luminosity functions*)
 
 
@@ -830,7 +836,7 @@ $PartonLuminosityFiles= {
 
 (* relative path to the directory of the parton luminosity functions *)
 $DirectoryPartonLuminosityFiles= FileNameJoin[
-	{Global`$DirectoryHighPT, "PartonLuminosities", "PDF4LHC15_nnlo_mc_average"}
+	{Global`$DirectoryHighPT, "PartonLuminosities", "PDF4LHC15"}
 ];
 
 
@@ -854,8 +860,51 @@ LoadLuminosityFunction[fname_String]:= Module[
 ]
 
 
-Do[
+(* available PDF names *)
+$PDFsets  = {
+	"PDF4LHC15",
+	"PDF4LHC21",
+	"NNPDF40",
+	"NNPDF31",
+	"CT18NNLO"
+};
+
+
+(* function to laod a new set of PDFs *)
+ChoosePDF[pdf_:Alternatives@@$PDFsets]:=Module[
+	{}
+	,
+	(* set directory for pdfs *)
+	$DirectoryPartonLuminosityFiles = FileNameJoin[{
+		Global`$DirectoryHighPT,
+		"PartonLuminosities",
+		pdf
+	}];
+	
+	(* load all luminosities in that directory *)
+	Do[
+		LoadLuminosityFunction[file];
+		,
+		{file, $PartonLuminosityFiles}
+	];
+];
+
+
+(* list all available PDF sets *)
+ChoosePDF[]:=$PDFsets
+
+
+(* throw a warning if PDF is unknown *)
+ChoosePDF::unknownpdf="The PDF label `1` is not known. You can use ChoosePDF[] to list all available PDFs.";
+ChoosePDF[arg:Except[Alternatives@@$PDFsets]]:=Message[ChoosePDF::unknownpdf,arg]
+
+
+(* initialization *)
+ChoosePDF["PDF4LHC15"];
+
+
+(*Do[
 	LoadLuminosityFunction[file];
 	,
 	{file, $PartonLuminosityFiles}
-];
+];*)
