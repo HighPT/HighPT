@@ -29,7 +29,7 @@ PackageExport["CrossSection"]
 PackageExport["DifferentialCrossSection"]
 
 
-PackageExport["ChoosePDF"]
+PackageExport["SetPDF"]
 
 
 (* ::Subsection:: *)
@@ -74,7 +74,7 @@ PackageScope["$PDFsets"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section*)
 
 
@@ -335,7 +335,7 @@ PartialFractioningSIntegrals[s_]:={
 }
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Hadron-level cross-section*)
 
 
@@ -582,6 +582,11 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	*)
 	(* - - - - - - - - - - - - - - *)
 	
+	(* select specified FF if required *)
+	If[!FreeQ[OptionValue[Coefficients],_FF],
+		\[Sigma]= SelectTerms[\[Sigma], Cases[OptionValue[Coefficients], _FF, All]]
+	];
+	
 	(* Substitute in WC if recuired *)
 	If[!OptionValue[FF],
 		\[Sigma]= SubstituteFF[
@@ -775,6 +780,11 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	
 	\[Sigma]= MyExpand[\[Sigma]];
 	
+	(* select specified FF if required *)
+	If[!FreeQ[OptionValue[Coefficients],_FF],
+		\[Sigma]= SelectTerms[\[Sigma], Cases[OptionValue[Coefficients], _FF, All]]
+	];
+	
 	(* Substitute in WC *)
 	If[!OptionValue[FF],
 		\[Sigma]= SubstituteFF[
@@ -798,7 +808,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton luminosity functions*)
 
 
@@ -871,7 +881,7 @@ $PDFsets  = {
 
 
 (* function to laod a new set of PDFs *)
-ChoosePDF[pdf_:Alternatives@@$PDFsets]:=Module[
+SetPDF[pdf_:Alternatives@@$PDFsets]:=Module[
 	{}
 	,
 	(* set directory for pdfs *)
@@ -891,16 +901,16 @@ ChoosePDF[pdf_:Alternatives@@$PDFsets]:=Module[
 
 
 (* list all available PDF sets *)
-ChoosePDF[]:=$PDFsets
+SetPDF[]:=($PDFsets)
 
 
 (* throw a warning if PDF is unknown *)
-ChoosePDF::unknownpdf="The PDF label `1` is not known. You can use ChoosePDF[] to list all available PDFs.";
-ChoosePDF[arg:Except[Alternatives@@$PDFsets]]:=Message[ChoosePDF::unknownpdf,arg]
+SetPDF::unknownpdf="The PDF label `1` is not known. You can use ChoosePDF[] to list all available PDFs.";
+SetPDF[arg:Except[Alternatives@@$PDFsets]]:=Message[SetPDF::unknownpdf,arg]
 
 
 (* initialization *)
-ChoosePDF["PDF4LHC15"];
+SetPDF["PDF4LHC15"];
 
 
 (*Do[

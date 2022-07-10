@@ -62,4 +62,4 @@ AddAutoCompletion["DefineBasisAlignment"][{"down","up"}]
 AddAutoCompletion["InitializeModel"][{"SMEFT"}]
 
 
-AddAutoCompletion["ChoosePDF"][$PDFsets]
+AddAutoCompletion["SetPDF"][$PDFsets]
