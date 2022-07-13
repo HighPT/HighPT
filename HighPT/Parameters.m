@@ -33,7 +33,7 @@ PackageExport["DefineParameters"]
 PackageExport["GetParameters"]
 
 
-PackageExport["ConstantInput"]
+PackageExport["Param"]
 
 
 PackageExport["DefineBasisAlignment"]
@@ -84,7 +84,7 @@ PackageScope["Vd"]
 (*Constants*)
 
 
-ConstantInput::usage="ConstantInput[\"label\"]
+Param::usage="Param[\"label\"]
 	Denotes the constant parameter \"label\". The defined parameters are: 
 		\"\[Alpha]EM\" : electromagnetic fine structure constant,
 		\"GF\" : Fermi's constant,
@@ -153,7 +153,7 @@ $realParameters = Alternatives[
 ]
 
 
-ConstantInput/:Conjugate[ConstantInput[x:$realParameters]] := ConstantInput[x]
+Param/:Conjugate[Param[x:$realParameters]] := Param[x]
 
 
 Mass/:Conjugate[Mass[a_]]:= Mass[a]
@@ -172,11 +172,11 @@ Format[Mass[f_], TraditionalForm]:= Subscript["M",f]
 Format[Width[f_], TraditionalForm]:= Subscript["\[CapitalGamma]",f]
 
 
-Format[ConstantInput["vev"], TraditionalForm]:= "\[ScriptV]"
-Format[ConstantInput["\[Alpha]EM"], TraditionalForm]:= Subscript["\[Alpha]","EM"]
-Format[ConstantInput["sW"], TraditionalForm]:= Subscript["s","W"]
-Format[ConstantInput["cW"], TraditionalForm]:= Subscript["c","W"]
-Format[ConstantInput["GF"], TraditionalForm]:= Subscript["G","F"]
+Format[Param["vev"], TraditionalForm]:= "\[ScriptV]"
+Format[Param["\[Alpha]EM"], TraditionalForm]:= Subscript["\[Alpha]","EM"]
+Format[Param["sW"], TraditionalForm]:= Subscript["s","W"]
+Format[Param["cW"], TraditionalForm]:= Subscript["c","W"]
+Format[Param["GF"], TraditionalForm]:= Subscript["G","F"]
 
 
 Format[CKM, TraditionalForm]:= Subscript["V","CKM"]
@@ -338,7 +338,7 @@ DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3})] := (Mes
 
 
 DefineParameters::usage= "DefineParameters[] 
-	defines all SM parameters such as ConstantInput[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[ZBoson | WBoson | Photon], Width[ZBoson | WBoson | Photon], and the CKM.
+	defines all SM parameters such as Param[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[ZBoson | WBoson | Photon], Width[ZBoson | WBoson | Photon], and the CKM.
 	Furthermore NP parameters, i.e. the Mass and Width of BSM mediators can be changed.
 	The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options.
 	Each option value must be a number, except for the optionvalue of \"Wolfenstein\" which msut be a list of the Wolfenstein parameters {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}.
@@ -453,10 +453,10 @@ DefineParameters[OptionsPattern[]] := Module[
 	
 	(* Create the appropriate supstitution rule *)
 	ExperimentalParameters = <|
-		ConstantInput["\[Alpha]EM"] -> $\[Alpha]EM,
-		ConstantInput["vev"] -> $vev,
-		ConstantInput["sW"]  -> $sW,
-		ConstantInput["cW"]  -> Sqrt[1. - $sW^2],
+		Param["\[Alpha]EM"] -> $\[Alpha]EM,
+		Param["vev"] -> $vev,
+		Param["sW"]  -> $sW,
+		Param["cW"]  -> Sqrt[1. - $sW^2],
 		(* CKM *)
 		Vckm[1,1] -> 1-$\[Lambda]^2/2,
 		Vckm[1,2] -> $\[Lambda],

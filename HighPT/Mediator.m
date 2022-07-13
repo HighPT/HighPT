@@ -190,7 +190,7 @@ SubstitutionRulesMediators[WBoson]={
 }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM gauge couplings*)
 
 
@@ -199,7 +199,7 @@ SubstitutionRulesMediators[WBoson]={
 
 
 (* SM coupling of the photon *)
-gA[particle_, {p_,r_}]:= Sqrt[4*\[Pi]*ConstantInput["\[Alpha]EM"]] * Charge[particle] * KroneckerDelta[p,r]
+gA[particle_, {p_,r_}]:= Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] * Charge[particle] * KroneckerDelta[p,r]
 
 
 (* ::Text:: *)
@@ -207,7 +207,7 @@ gA[particle_, {p_,r_}]:= Sqrt[4*\[Pi]*ConstantInput["\[Alpha]EM"]] * Charge[part
 
 
 (* SM coupling of the Z boson *)
-gZ[particle_, chirality_,{p_,r_}]:= Sqrt[4*\[Pi]*ConstantInput["\[Alpha]EM"]]/(ConstantInput["sW"]*ConstantInput["cW"])*(WeakIsospin3[particle, chirality] - ConstantInput["sW"]^2*Charge[particle])*KroneckerDelta[p,r]
+gZ[particle_, chirality_,{p_,r_}]:= Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["sW"]*Param["cW"])*(WeakIsospin3[particle, chirality] - Param["sW"]^2*Charge[particle])*KroneckerDelta[p,r]
 
 
 (* ::Text:: *)
@@ -215,7 +215,7 @@ gZ[particle_, chirality_,{p_,r_}]:= Sqrt[4*\[Pi]*ConstantInput["\[Alpha]EM"]]/(C
 
 
 (* SM coupling of the W boson in weak eigenbasis -> flavor diagonal *)
-gW[{p_,r_}]:= Sqrt[4*\[Pi]*ConstantInput["\[Alpha]EM"]]/(Sqrt[2]*ConstantInput["sW"]) * KroneckerDelta[p,r]
+gW[{p_,r_}]:= Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Sqrt[2]*Param["sW"]) * KroneckerDelta[p,r]
 
 
 (* ::Subsection:: *)
@@ -573,7 +573,7 @@ SubstituteFF[arg_, OptionsPattern[]]:= Module[
 		*)
 		temp= MyTiming[Expand[temp],"Expand"];
 		(* substitute in the power counting parameter *)
-		temp= temp/.\[Epsilon] -> (ConstantInput["vev"]/OptionValue[EFTscale])^2;
+		temp= temp/.\[Epsilon] -> (Param["vev"]/OptionValue[EFTscale])^2;
 		(* substitute vev *)
 		temp= temp/.ReplaceConstants[];
 	];

@@ -255,8 +255,8 @@ InterferenceMatrix[s_, t_, {X_, Y_}]:=
 	{MSS[], 0, MST[t/s, X, Y], 0, 0},
 	{0, MVV[t/s, X, Y], 0, 0, 0},
 	{MTS[t/s, X, Y], 0, MTT[t/s, X, Y], 0, 0},
-	{0, 0, 0, s/ConstantInput["vev"]^2*MDD[t/s, X, Y], 0},
-	{0, 0, 0, 0, s/ConstantInput["vev"]^2*MDD[t/s, X, Y]}
+	{0, 0, 0, s/Param["vev"]^2*MDD[t/s, X, Y], 0},
+	{0, 0, 0, 0, s/Param["vev"]^2*MDD[t/s, X, Y]}
 }
 
 
@@ -313,7 +313,7 @@ SpinSummedAmplitude2[s_, t_, {\[Alpha]_,\[Beta]_,i_,j_}]:= Module[
 	(* Set KroneckerDelta[L,R]=0 *)
 	result= result/.(KroneckerDelta[OrderlessPatternSequence[Left,Right]]->0);
 	(* rescale result *)
-	Return[1/12*(4*s^2)/ConstantInput["vev"]^4*result]
+	Return[1/12*(4*s^2)/Param["vev"]^4*result]
 ]
 
 
@@ -410,7 +410,7 @@ ExpandRegularFF[OptionsPattern[]]:= Module[
 	
 	If[$RunMode==="SMEFT",
 		rule= {
-			RegularFF[Vector,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[Vector,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + d8 * $d8 * (s/(ConstantInput["vev"]^2)*FF[Vector,{"regular",{1,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + t/(ConstantInput["vev"]^2)*FF[Vector,{"regular",{0,1}},{X,Y},{\[Alpha],\[Beta],i,j}]),
+			RegularFF[Vector,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[Vector,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + d8 * $d8 * (s/(Param["vev"]^2)*FF[Vector,{"regular",{1,0}},{X,Y},{\[Alpha],\[Beta],i,j}] + t/(Param["vev"]^2)*FF[Vector,{"regular",{0,1}},{X,Y},{\[Alpha],\[Beta],i,j}]),
 			RegularFF[type:Except[Vector],s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> FF[type,{"regular",{0,0}},{X,Y},{\[Alpha],\[Beta],i,j}]
 		}
 		,

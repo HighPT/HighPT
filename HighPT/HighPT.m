@@ -516,7 +516,7 @@ ReplaceChannelSums::usage= "ReplaceChannelSums[]
 (* returns the replacement rule to substitute all channel sums with the appropriate sums of propagators *)
 ReplaceChannelSums[]:= {
 	SChannelSum[s_,FF[type_,{"s",ord_},chirality_,indices_]]:> Sum[
-		ConstantInput["vev"]^2 * 
+		Param["vev"]^2 * 
 		FlavorDiagonalSM[mediator, type, ord, indices] * 
 		LeftHandedWSM[mediator, type, ord, chirality] * 
 		FF[type,{mediator,ord},chirality,indices] * 
@@ -525,14 +525,14 @@ ReplaceChannelSums[]:= {
 	]
 	,
 	TChannelSum[t_,FF[type_,{"t",0},chirality_,indices_]]:> Sum[
-		ConstantInput["vev"]^2 * 
+		Param["vev"]^2 * 
 		FF[type, {mediator,0}, chirality, indices] * 
 		Propagator[t,mediator],
 		{mediator, Keys[GetMediators["t", type]]}
 	]
 	,
 	UChannelSum[u_,FF[type_,{"u",0},chirality_,indices_]]:> Sum[
-		ConstantInput["vev"]^2 * 
+		Param["vev"]^2 * 
 		FF[type, {mediator,0}, chirality, indices] * 
 		Propagator[u,mediator],
 		{mediator, Keys[GetMediators["u", type]]}
