@@ -29,9 +29,9 @@ PackageExport["u"]
 PackageExport["d"]
 
 
-PackageExport["Photon"]
-PackageExport["ZBoson"]
-PackageExport["WBoson"]
+(*PackageExport[""Photon""]*)
+(*PackageExport[""ZBoson""]*)
+(*PackageExport[""WBoson""]*)
 
 
 PackageExport["SelectTerms"]
@@ -111,16 +111,16 @@ u::usage= "u[i]
 	Represents an up-type quark and i is the generation index: u[1] \[Rule] u, u[2] \[Rule] c, u[3] \[Rule] t.";
 
 
-Photon::usage= "Photon
-	Denotes the SM photon.";
+(*"Photon"::usage= ""Photon"
+	Denotes the SM photon.";*)
 
 
-ZBoson::usage= "ZBoson
-	Denotes the SM Z-boson.";
+(*"ZBoson"::usage= ""ZBoson"
+	Denotes the SM Z-boson.";*)
 
 
-WBoson::usage= "WBoson
-	Denotes the SM W-boson.";
+(*"WBoson"::usage= ""WBoson"
+	Denotes the SM W-boson.";*)
 
 
 SM::usage= "SM
@@ -253,9 +253,9 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 	SetOperatorDimension[4];
 	
 	(* set EFT contributions to SM mediators to zero *)
-	FF[_,{Photon,0},___]=0;
-	FF[_,{ZBoson,0},___]=0;
-	FF[_,{WBoson,0},___]=0;
+	FF[_,{"Photon",0},___]=0;
+	FF[_,{"ZBoson",0},___]=0;
+	FF[_,{"WBoson",0},___]=0;
 	
 	(* set Model run mode *)
 	$RunMode= "Model";
@@ -327,19 +327,19 @@ DefineSM[eft_]:= Module[
 	];
 	
 	(* add SM mediators *)
-	AddMediator[Photon, 0, 0, {"s"}, {"NC"}, lorentz];
-	AddMediator[ZBoson, param[Mass[ZBoson]], param[Width[ZBoson]], {"s"}, {"NC"}, lorentz];
-	AddMediator[WBoson, param[Mass[WBoson]], param[Width[WBoson]], {"s"}, {"CC"}, lorentz];
+	AddMediator["Photon", 0, 0, {"s"}, {"NC"}, lorentz];
+	AddMediator["ZBoson", param[Mass["ZBoson"]], param[Width["ZBoson"]], {"s"}, {"NC"}, lorentz];
+	AddMediator["WBoson", param[Mass["WBoson"]], param[Width["WBoson"]], {"s"}, {"CC"}, lorentz];
 	
 	(* photons do not couple to neutrinos *)
-	FF[_,{Photon,_},_,{OrderlessPatternSequence[_\[Nu],___]}]:= 0;
-	(*Photon/:Conjugate[Photon]= Photon;*) (* This might screw up IbP *)
+	FF[_,{"Photon",_},_,{OrderlessPatternSequence[_\[Nu],___]}]:= 0;
+	(*"Photon"/:Conjugate["Photon"]= "Photon";*) (* This might screw up IbP *)
 ];
 
 
-Format[Photon,TraditionalForm]:= "\[Gamma]"
-Format[ZBoson,TraditionalForm]:= "Z"
-Format[WBoson,TraditionalForm]:= "W"
+Format["Photon",TraditionalForm]:= "\[Gamma]"
+Format["ZBoson",TraditionalForm]:= "Z"
+Format["WBoson",TraditionalForm]:= "W"
 
 
 (* ::Subsubsection:: *)
@@ -389,11 +389,11 @@ ResetMediators[]:= Module[{med= Keys[$Mediators]},
 		,
 		{m,med}
 	];
-	Quiet[FF[_,{Photon,_},_,{OrderlessPatternSequence[_\[Nu],___]}]=.];
+	Quiet[FF[_,{"Photon",_},_,{OrderlessPatternSequence[_\[Nu],___]}]=.];
 	
-	Quiet[FF[_,{Photon,0},___]=.];
-	Quiet[FF[_,{ZBoson,0},___]=.];
-	Quiet[FF[_,{WBoson,0},___]=.];
+	Quiet[FF[_,{"Photon",0},___]=.];
+	Quiet[FF[_,{"ZBoson",0},___]=.];
+	Quiet[FF[_,{"WBoson",0},___]=.];
 ]
 
 
@@ -546,14 +546,14 @@ FlavorDiagonalSM[mediator_, type_, ord_, {a_,b_,i_,j_}]:= Module[
 	,
 	If[ord===SM,
 		Switch[{mediator, type},
-			{Photon, Vector}, temp= KroneckerDelta[a,b] * KroneckerDelta[i,j],
-			{ZBoson, Vector}, temp= KroneckerDelta[a,b] * KroneckerDelta[i,j],
+			{"Photon", Vector}, temp= KroneckerDelta[a,b] * KroneckerDelta[i,j],
+			{"ZBoson", Vector}, temp= KroneckerDelta[a,b] * KroneckerDelta[i,j],
 			
-			{Photon, DipoleL}, temp= KroneckerDelta[i,j],
-			{ZBoson, DipoleL}, temp= KroneckerDelta[i,j],
+			{"Photon", DipoleL}, temp= KroneckerDelta[i,j],
+			{"ZBoson", DipoleL}, temp= KroneckerDelta[i,j],
 			
-			{Photon, DipoleQ}, temp= KroneckerDelta[a,b],
-			{ZBoson, DipoleQ}, temp= KroneckerDelta[a,b]
+			{"Photon", DipoleQ}, temp= KroneckerDelta[a,b],
+			{"ZBoson", DipoleQ}, temp= KroneckerDelta[a,b]
 			
 			(* Whats with the W boson? It should be here as well. *)
 		]
@@ -576,10 +576,10 @@ LeftHandedWSM[mediator_, type_, ord_, {X_,Y_}]:= Module[
 	,
 	If[ord===SM,
 		Switch[{mediator, type},
-			{WBoson, Vector}, temp= KroneckerDelta[X, Left]*KroneckerDelta[Y, Left],
+			{"WBoson", Vector}, temp= KroneckerDelta[X, Left]*KroneckerDelta[Y, Left],
 			
-			{WBoson, DipoleL}, temp= KroneckerDelta[Y, Left],
-			{WBoson, DipoleQ}, temp= KroneckerDelta[X, Left]
+			{"WBoson", DipoleL}, temp= KroneckerDelta[Y, Left],
+			{"WBoson", DipoleQ}, temp= KroneckerDelta[X, Left]
 		]
 	];
 	

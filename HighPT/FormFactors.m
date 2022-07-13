@@ -96,7 +96,7 @@ FF::usage= "FF[lorentz, type, {\!\(\*SubscriptBox[\(\[Chi]\), \(\[ScriptL]\)]\),
 	The field contant of the corresponding operator is (\!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(1\)], \(_\)]\)\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\))(\!\(\*OverscriptBox[SubscriptBox[\(q\), \(1\)], \(_\)]\)\!\(\*SubscriptBox[\(q\), \(2\)]\)) with \!\(\*SubscriptBox[\(\[ScriptL]\), \(1, 2\)]\)\[Element]{e,\[Nu]}, \!\(\*SubscriptBox[\(q\), \(1, 2\)]\)\[Element]{u,d} and \[Alpha],\[Beta],i,j\[Element]{1,2,3} are the corresponding flavor indices.
 	The types of form factors are divided into regular and singular contributions:
 		{\"regular\",{\!\(\*SubscriptBox[\(n\), \(s\)]\),\!\(\*SubscriptBox[\(n\), \(t\)]\)}} : form factor for an EFT contact interaction with the scaling \!\(\*SuperscriptBox[OverscriptBox[\(s\), \(^\)], SubscriptBox[\(n\), \(s\)]]\)\!\(\*SuperscriptBox[OverscriptBox[\(t\), \(^\)], SubscriptBox[\(n\), \(t\)]]\) in the partonic Mandelstam variables
-		{mediator, 0 | SM}: form factor for a non-contact interaction through the specified mediator \[Element] {Photon, ZBoson, WBoson, ...}
+		{mediator, 0 | SM}: form factor for a non-contact interaction through the specified mediator \[Element] {\"Photon\", \"ZBoson\", \"WBoson\", ...}
 			Form factors are divided into Standard Model contributions (SM) and NP contributions (0).";
 
 
@@ -584,53 +584,53 @@ FF[Scalar,_,{Left,Right},{_,_,_,_u}]:= 0
 
 
 FF[Vector, {_,SM}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]:= 0 /; (\[Alpha]!=\[Beta])
-FF[Vector, {Except[WBoson],SM}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
+FF[Vector, {Except["WBoson"],SM}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
 
 
 (* ::Text:: *)
 (*Quark dipoles must be diagonal in leptons*)
 
 
-FF[DipoleQ, {Photon|ZBoson|WBoson,0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]:= 0 /; (\[Alpha]!=\[Beta])
+FF[DipoleQ, {"Photon"|"ZBoson"|"WBoson",0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]:= 0 /; (\[Alpha]!=\[Beta])
 
 
 (* ::Text:: *)
 (*Lepton dipoles must be diagonal in quarks for Photon and ZBosons*)
 
 
-FF[DipoleL, {Photon|ZBoson,0}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
+FF[DipoleL, {"Photon"|"ZBoson",0}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
 
 
 (* ::Subsubsection:: *)
 (*Remove SM FF for other s-channel mediators*)
 
 
-FF[Vector, {field:Except["s"], SM}, ___] := 0 /; !MatchQ[field,Photon|ZBoson|WBoson]
+FF[Vector, {field:Except["s"], SM}, ___] := 0 /; !MatchQ[field,"Photon"|"ZBoson"|"WBoson"]
 
 
 (* ::Subsubsection:: *)
 (*Z-coupling modifications cannot be both LFV and QFV at the same time*)
 
 
-FF[Vector, {ZBoson,0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; ((\[Alpha]!=\[Beta])&&(i!=j))
+FF[Vector, {"ZBoson",0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; ((\[Alpha]!=\[Beta])&&(i!=j))
 
 
 (* ::Subsubsection:: *)
 (*W-boson only couples to left handed fermions in SM*)
 
 
-FF[Vector, {WBoson,SM}, {OrderlessPatternSequence[Right,_]},___]:= 0
+FF[Vector, {"WBoson",SM}, {OrderlessPatternSequence[Right,_]},___]:= 0
 
 
 (* ::Text:: *)
 (*In the SMEFT a right-handed coupling to quarks is possible*)
 
 
-FF[Vector, {WBoson,0}, {Right,_},___]:= 0
+FF[Vector, {"WBoson",0}, {Right,_},___]:= 0
 
 
-FF[DipoleL, {WBoson,0}, {_,Right},___]:= 0
-FF[DipoleQ, {WBoson,0}, {Right,_},___]:= 0
+FF[DipoleL, {"WBoson",0}, {_,Right},___]:= 0
+FF[DipoleQ, {"WBoson",0}, {Right,_},___]:= 0
 
 
 (* ::Subsubsection:: *)
@@ -651,7 +651,7 @@ FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
 (*The photon vertex does not receive corrections in the SMEFT at d=6*)
 
 
-FF[Vector, {Photon,Except[SM]},___]:= 0
+FF[Vector, {"Photon",Except[SM]},___]:= 0
 
 
 (* ::Section:: *)
@@ -661,8 +661,8 @@ FF[Vector, {Photon,Except[SM]},___]:= 0
 (* After rotating the FF to the weak basis the SM contibution by the W should be diagonalized in quark generation space *)
 DiagonalizeWBosonSM= {
 	(* W-boson *)
-	FF[Vector, {WBoson,SM}, {Left,Left},{l1_,l2_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]/;i!=j-> 0,
-	FF[DipoleL, {WBoson,0}, {_,Left},{l1_,l2_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]/;i!=j-> 0
+	FF[Vector, {"WBoson",SM}, {Left,Left},{l1_,l2_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]/;i!=j-> 0,
+	FF[DipoleL, {"WBoson",0}, {_,Left},{l1_,l2_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]/;i!=j-> 0
 }
 
 

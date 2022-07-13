@@ -161,10 +161,10 @@ Coupling[herm:HermitianCouplings,{p_Integer,r_Integer}]:= Coupling[herm,{r,p}]\[
 (*\[Gamma]*)
 
 
-SubstitutionRulesMediators[Photon]={
+SubstitutionRulesMediators["Photon"]={
 	(* Vector *)
 	(* NC *)
-	FF[Vector, {Photon,SM}, {_,_}, {l_[a_],l_[b_],q_[i_],q_[j_]}] :> gA[l,{a,b}] * gA[q,{i,j}]
+	FF[Vector, {"Photon",SM}, {_,_}, {l_[a_],l_[b_],q_[i_],q_[j_]}] :> gA[l,{a,b}] * gA[q,{i,j}]
 }
 
 
@@ -172,10 +172,10 @@ SubstitutionRulesMediators[Photon]={
 (*Z*)
 
 
-SubstitutionRulesMediators[ZBoson]={
+SubstitutionRulesMediators["ZBoson"]={
 	(* Vector *)
 	(* NC *)
-	FF[Vector, {ZBoson,SM}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],q_[i_],q_[j_]}] :> gZ[l,\[Chi]l,{a,b}] * gZ[q,\[Chi]q,{i,j}]
+	FF[Vector, {"ZBoson",SM}, {\[Chi]l_,\[Chi]q_}, {l_[a_],l_[b_],q_[i_],q_[j_]}] :> gZ[l,\[Chi]l,{a,b}] * gZ[q,\[Chi]q,{i,j}]
 }
 
 
@@ -183,10 +183,10 @@ SubstitutionRulesMediators[ZBoson]={
 (*W*)
 
 
-SubstitutionRulesMediators[WBoson]={
+SubstitutionRulesMediators["WBoson"]={
 	(* Vector *)
 	(* NC *)
-	FF[Vector, {WBoson,SM}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> gW[{a,b}] * gW[{i,j}]
+	FF[Vector, {"WBoson",SM}, {Left,Left}, {l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:> gW[{a,b}] * gW[{i,j}]
 }
 
 

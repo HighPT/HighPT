@@ -338,7 +338,7 @@ DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3})] := (Mes
 
 
 DefineParameters::usage= "DefineParameters[] 
-	defines all SM parameters such as Param[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[ZBoson | WBoson | Photon], Width[ZBoson | WBoson | Photon], and the CKM.
+	defines all SM parameters such as Param[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[\"ZBoson\" | \"WBoson\" | \"Photon\"], Width[\"ZBoson\" | \"WBoson\" | \"Photon\"], and the CKM.
 	Furthermore NP parameters, i.e. the Mass and Width of BSM mediators can be changed.
 	The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options.
 	Each option value must be a number, except for the optionvalue of \"Wolfenstein\" which msut be a list of the Wolfenstein parameters {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}.
@@ -470,12 +470,12 @@ DefineParameters[OptionsPattern[]] := Module[
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
 		Vckm[3,3] -> 1,
 		(* masses & widths *)
-		Mass[ZBoson]         -> $mZ,
-		Width[ZBoson]        -> $\[CapitalGamma]Z,
-		Mass[WBoson]         -> $mW,
-		Width[WBoson]        -> $\[CapitalGamma]W,
-		Mass[Photon]         -> 0,
-		Width[Photon]        -> 0
+		Mass["ZBoson"]         -> $mZ,
+		Width["ZBoson"]        -> $\[CapitalGamma]Z,
+		Mass["WBoson"]         -> $mW,
+		Width["WBoson"]        -> $\[CapitalGamma]W,
+		Mass["Photon"]         -> 0,
+		Width["Photon"]        -> 0
 	|>;
 ]
 

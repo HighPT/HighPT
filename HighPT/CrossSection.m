@@ -391,7 +391,7 @@ CrossSection[{e[a_],\[Nu]}, OptionsPattern[]]:= Module[
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
 		Efficiency        -> OptionValue[Efficiency],
-		EFTscale             -> OptionValue[EFTscale]
+		EFTscale          -> OptionValue[EFTscale]
 	];
 	(* sum over \[Nu] flavors *)
 	\[Sigma]= (\[Sigma]/.b->1) + (\[Sigma]/.b->2) + (\[Sigma]/.b->3);
@@ -414,7 +414,7 @@ CrossSection[{\[Nu],e[b_]}, OptionsPattern[]]:= Module[
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
 		Efficiency        -> OptionValue[Efficiency],
-		EFTscale             -> OptionValue[EFTscale]
+		EFTscale          -> OptionValue[EFTscale]
 	];
 	(* sum over \[Nu] flavors *)
 	\[Sigma]= (\[Sigma]/.a->1) + (\[Sigma]/.a->2) + (\[Sigma]/.a->3);
@@ -424,7 +424,7 @@ CrossSection[{\[Nu],e[b_]}, OptionsPattern[]]:= Module[
 
 
 (* This could potentially simplify the computation, but for it to work the partial fractioning identities need a rework *)
-(*Photon/:Conjugate[Photon]:=Photon*)
+(*"Photon"/:Conjugate["Photon"]:="Photon"*)
 
 
 (* for NC and CC with specific \[Nu] flavor *)

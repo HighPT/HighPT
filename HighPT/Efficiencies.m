@@ -97,8 +97,8 @@ Efficiency[{{Tensor,a1_}, {Scalar,a2_}}, rest___]:= Efficiency["scalar-tensor", 
 
 
 (* fix (s,t) powers for singular terms *)
-Efficiency[str_String, {OrderlessPatternSequence[{type:Photon|ZBoson|WBoson,SM},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
-Efficiency[str_String, {OrderlessPatternSequence[{type:Photon|ZBoson|WBoson,a1_?IntegerQ},x_]}, rest___]:= Efficiency[str, {{type,{0,a1}},x}, rest]
+Efficiency[str_String, {OrderlessPatternSequence[{type:"Photon"|"ZBoson"|"WBoson",SM},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
+Efficiency[str_String, {OrderlessPatternSequence[{type:"Photon"|"ZBoson"|"WBoson",a1_?IntegerQ},x_]}, rest___]:= Efficiency[str, {{type,{0,a1}},x}, rest]
 Efficiency[str_String, {OrderlessPatternSequence[{type_,0},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
 
 
@@ -375,13 +375,13 @@ EfficiencyFromHeader[info_]:= Module[
 	(*
 	Switch[info[[6,1]],
 		"Reg*Reg",       type= {"regular","regular"},
-		"A*Reg"|"Reg*A", type= {"regular",Photon},
-		"Z*Reg"|"Reg*Z", type= {"regular",ZBoson},
-		"W*Reg"|"Reg*W", type= {"regular",WBoson},
-		"A*A",           type= {Photon,Photon},
-		"Z*Z",           type= {ZBoson,ZBoson},
-		"A*Z"|"Z*A",     type= {Photon,ZBoson},
-		"W*W",           type= {WBoson,WBoson},
+		"A*Reg"|"Reg*A", type= {"regular","Photon"},
+		"Z*Reg"|"Reg*Z", type= {"regular","ZBoson"},
+		"W*Reg"|"Reg*W", type= {"regular","WBoson"},
+		"A*A",           type= {"Photon","Photon"},
+		"Z*Z",           type= {"ZBoson","ZBoson"},
+		"A*Z"|"Z*A",     type= {"Photon","ZBoson"},
+		"W*W",           type= {"WBoson","WBoson"},
 		"S1*S1",         type= {"S1","S1"},
 		"S3*S3",         type= {"S3","S3"},
 		"U1*U1",         type= {"U1","U1"},
@@ -397,9 +397,9 @@ EfficiencyFromHeader[info_]:= Module[
 		type = type /. str_String:> StringReplace[str,"~"->"t"];
 		type = type /. {
 			"Reg" -> "regular",
-			"A"   -> Photon,
-			"Z"   -> ZBoson,
-			"W"   -> WBoson
+			"A"   -> "Photon",
+			"Z"   -> "ZBoson",
+			"W"   -> "WBoson"
 		};
 		type = Sort[type];
 		,
@@ -408,9 +408,9 @@ EfficiencyFromHeader[info_]:= Module[
 		type = type /. str_String:> StringReplace[str,"~"->"t"];
 		type = type /. {
 			"Reg"    -> "regular",
-			"A"      -> Photon,
-			"Z"      -> ZBoson,
-			"W"      -> WBoson
+			"A"      -> "Photon",
+			"Z"      -> "ZBoson",
+			"W"      -> "WBoson"
 		};
 		type = Sort/@type;
 	];
