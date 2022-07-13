@@ -29,6 +29,9 @@ PackageExport["MatchToSMEFT"]
 PackageExport["WC"]
 
 
+PackageExport["EFTscale"] (* write usage message? *)
+
+
 PackageScope["SetEFTorder"]
 PackageScope["GetEFTorder"]
 
@@ -37,8 +40,8 @@ PackageScope["SetOperatorDimension"]
 PackageScope["GetOperatorDimension"]
 
 
-PackageScope["SetScale"]
-PackageScope["GetScale"]
+PackageScope["SetEFTscale"]
+PackageScope["GetEFTscale"]
 
 
 PackageScope["CanonizeFF"]
@@ -126,16 +129,16 @@ GetEFTorder[]:= $EFTorder
 
 
 (* ::Subsection:: *)
-(*Scale*)
+(*EFTscale*)
 
 
-$Scale= 2000;
+$EFTscale= 2000;
 
 
-SetScale[\[CapitalLambda]_]:= ($Scale=\[CapitalLambda]);
+SetEFTscale[\[CapitalLambda]_]:= ($EFTscale=\[CapitalLambda]);
 
 
-GetScale[]:= $Scale
+GetEFTscale[]:= $EFTscale
 
 
 (* ::Section:: *)

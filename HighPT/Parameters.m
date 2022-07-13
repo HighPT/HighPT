@@ -97,22 +97,6 @@ ConstantInput::usage="ConstantInput[\"label\"]
 (*Vacuum expectation value*)
 
 
-(*VEV::usage="VEV
-	Denotes the electroweak vacuum expectation value and is formated as \[ScriptV] in TraditionalForm.";*)
-
-
-(*\[Alpha]EM::usage="\[Alpha]EM
-	Denotes the electromagnetic fine structure constant and is formated as \!\(\*SubscriptBox[\(\[Alpha]\), \(EM\)]\) in TraditionalForm.";*)
-
-
-(*sW::usage= "sW
-	Denotes the sine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(s\), \(W\)]\) in TraditionalForm."*)
-
-
-(*cW::usage= "cW
-	Denotes the cosine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(c\), \(W\)]\) in TraditionalForm."*)
-
-
 Mass::usage= "Mass[\[Phi]]
 	Denotes the mass of the particle \[Phi] and is formated as \!\(\*SubscriptBox[\(M\), \(\[Phi]\)]\) in TraditionalForm.";
 
@@ -172,18 +156,6 @@ $realParameters = Alternatives[
 ConstantInput/:Conjugate[ConstantInput[x:$realParameters]] := ConstantInput[x]
 
 
-(*VEV/:Conjugate[VEV]:= VEV*)
-
-
-(*\[Alpha]EM/:Conjugate[\[Alpha]EM]:= \[Alpha]EM*)
-
-
-(*sW/:Conjugate[sW]:= sW*)
-
-
-(*cW/:Conjugate[cW]:= cW*)
-
-
 Mass/:Conjugate[Mass[a_]]:= Mass[a]
 
 
@@ -198,16 +170,6 @@ Format[Mass[f_], TraditionalForm]:= Subscript["M",f]
 
 
 Format[Width[f_], TraditionalForm]:= Subscript["\[CapitalGamma]",f]
-
-
-(*Format[VEV, TraditionalForm]:= "\[ScriptV]"*)
-
-
-(*Format[sW, TraditionalForm]:= Subscript["s","W"]
-Format[cW, TraditionalForm]:= Subscript["c","W"]*)
-
-
-(*Format[\[Alpha]EM, TraditionalForm]:= Subscript["\[Alpha]","EM"]*)
 
 
 Format[ConstantInput["vev"], TraditionalForm]:= "\[ScriptV]"
@@ -231,6 +193,10 @@ Format[Vckm[x_,y_], TraditionalForm]:= Subscript["V",ToString[x]<>ToString[y]]
 
 (* ::Subsubsection:: *)
 (*couplings, masses, widths*)
+
+
+(* ::Text:: *)
+(*List of default parameter values*)
 
 
 (* values used by MadGraph5 *)
@@ -279,10 +245,30 @@ Vd= {
 }
 
 
-Identity
+(* ::Subsubsection:: *)
+(*Save current values of all parameters*)
 
 
-(* ::Subsection:: *)
+\[Alpha]EM$current = \[Alpha]EM$default;
+GF$current = GF$default;
+mZ$current = mZ$default;
+\[CapitalGamma]Z$current = \[CapitalGamma]Z$default;
+\[CapitalGamma]W$current = \[CapitalGamma]W$default;
+
+\[Lambda]Wolfenstein$current    = \[Lambda]Wolfenstein$default;
+AWolfenstein$current    = AWolfenstein$default;
+\[Rho]BarWolfenstein$current = \[Rho]BarWolfenstein$default;
+\[Eta]BarWolfenstein$current = \[Eta]BarWolfenstein$default;
+
+Wolfenstein$current = {
+	\[Lambda]Wolfenstein$current,
+	AWolfenstein$current,
+	\[Rho]BarWolfenstein$current,
+	\[Eta]BarWolfenstein$current
+}
+
+
+(* ::Subsection::Closed:: *)
 (*Define up- / down-alignment*)
 
 
@@ -363,7 +349,21 @@ DefineParameters::usage= "DefineParameters[]
 ";
 
 
+(* keep current values if not specified *)
 Options[DefineParameters]= {
+	"\[Alpha]EM"         :> \[Alpha]EM$current,
+	"GF"          :> GF$current,
+	"mZ"          :> mZ$current,
+	"\[CapitalGamma]Z"          :> \[CapitalGamma]Z$current,
+	"\[CapitalGamma]W"          :> \[CapitalGamma]W$current,
+	"Wolfenstein" :> Wolfenstein$current,
+	Mass          :> {},
+	Width         :> {}
+};
+
+
+(* reset all parameters to their default values *)
+DefineParameters[Default] := DefineParameters[
 	"\[Alpha]EM"         -> \[Alpha]EM$default,
 	"GF"          -> GF$default,
 	"mZ"          -> mZ$default,
@@ -372,10 +372,11 @@ Options[DefineParameters]= {
 	"Wolfenstein" -> Wolfenstein$default,
 	Mass          -> {},
 	Width         -> {}
-};
+]
 
 
 DefineParameters::unknownmass= "The mass `1` is undefined."
+DefineParameters::unknownwidth= "The width `1` is undefined."
 
 
 DefineParameters[OptionsPattern[]] := Module[
@@ -395,6 +396,25 @@ DefineParameters[OptionsPattern[]] := Module[
 		mediators = GetMediators[]
 	}
 	,
+	(* save current values of parameters or change to default value if required *)
+	\[Alpha]EM$current = If[MatchQ[$\[Alpha]EM,Default], \[Alpha]EM$default, $\[Alpha]EM];
+	GF$current = If[MatchQ[$GF,Default], GF$default, $GF];
+	mZ$current = If[MatchQ[$mZ,Default], mZ$default, $mZ];
+	\[CapitalGamma]Z$current = If[MatchQ[$\[CapitalGamma]Z,Default], \[CapitalGamma]Z$default, $\[CapitalGamma]Z];
+	\[CapitalGamma]W$current = If[MatchQ[$\[CapitalGamma]W,Default], \[CapitalGamma]W$default, $\[CapitalGamma]W];
+	
+	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
+	\[Lambda]Wolfenstein$current = If[MatchQ[$\[Lambda],Default], \[Lambda]Wolfenstein$default, $\[Lambda]];
+	AWolfenstein$current = If[MatchQ[$A,Default], AWolfenstein$default, $A];
+	\[Rho]BarWolfenstein$current = If[MatchQ[$\[Rho]Bar,Default], \[Rho]BarWolfenstein$default, $\[Rho]Bar];
+	\[Eta]BarWolfenstein$current = If[MatchQ[$\[Eta]Bar,Default], \[Eta]BarWolfenstein$default, $\[Eta]Bar];
+	Wolfenstein$current = {
+		\[Lambda]Wolfenstein$current,
+		AWolfenstein$current,
+		\[Rho]BarWolfenstein$current,
+		\[Eta]BarWolfenstein$current
+	};
+	
 	(* set the Wolfentein parameters *)
 	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
 	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
@@ -415,6 +435,19 @@ DefineParameters[OptionsPattern[]] := Module[
 			]
 			,
 			{mass, masses}
+		]
+	];
+	
+	(* modify the widths of mediators *)
+	If[widths=!={},
+		Do[
+			If[MatchQ[width,Alternatives@@Keys[mediators]->_],
+				ModifyMediator[First[width], Width->Last[width]]
+				,
+				Message[DefineParameters::unknownwidth,width]
+			]
+			,
+			{width, widths}
 		]
 	];
 	
@@ -451,7 +484,7 @@ ExperimentalParameters= <||>;
 
 
 (* initialize the parameters with default values *)
-DefineParameters[]
+DefineParameters[Default]
 
 
 GetParameters::usage= "GetParameters[]
@@ -463,7 +496,7 @@ GetParameters::usage= "GetParameters[]
 GetParameters[]:= Join[ExperimentalParameters, ReplaceMassWidth[]]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Charge definitions*)
 
 

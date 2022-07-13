@@ -504,7 +504,7 @@ SubstituteFF::usage= "SubstituteFF[expr]
 			Specifies that the result is expanded up to and including terms of order \!\(\*SuperscriptBox[\(\[CapitalLambda]\), \(-n\)]\). The default is n=GetEFTorder[].
 		OperatorDimension \[Rule] d,
 			Specifies that EFT operators up to mass dimension d should be included. The default is d=GetOperatorDimension[].
-		Scale -> \[CapitalLambda],
+		EFTscale -> \[CapitalLambda],
 			Specifies the EFT cutoff scale used for the substitutions. The default is \[CapitalLambda]=1000 (GeV).
 	In the mediator mode these Options are ignored."
 
@@ -515,7 +515,7 @@ SubstituteFF::remainingFF= "Not all form-factors have been replaced. The remaini
 Options[SubstituteFF]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	Scale             -> 1000
+	EFTscale             -> 1000
 };
 
 
@@ -573,7 +573,7 @@ SubstituteFF[arg_, OptionsPattern[]]:= Module[
 		*)
 		temp= MyTiming[Expand[temp],"Expand"];
 		(* substitute in the power counting parameter *)
-		temp= temp/.\[Epsilon] -> (ConstantInput["vev"]/OptionValue[Scale])^2;
+		temp= temp/.\[Epsilon] -> (ConstantInput["vev"]/OptionValue[EFTscale])^2;
 		(* substitute vev *)
 		temp= temp/.ReplaceConstants[];
 	];

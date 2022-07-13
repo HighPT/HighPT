@@ -100,7 +100,7 @@ Options[EventYield]= {
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	Scale             :> GetScale[],
+	EFTscale             :> GetEFTscale[],
 	Luminosity        -> Default
 };
 
@@ -128,7 +128,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	,
 	(*** CHECKS ***)
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, Scale , Luminosity};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, EFTscale , Luminosity};
 	coeff = OptionValue[Coefficients];
 	(* Check that proc corresponds to a specified search *)
 	If[!KeyExistsQ[LHCSearch[], proc],
@@ -179,7 +179,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 			\[Sigma]temp = SubstituteFF[\[Sigma]temp,
 				OperatorDimension -> OptionValue[OperatorDimension],
 				EFTorder          -> OptionValue[EFTorder],
-				Scale             -> OptionValue[Scale]
+				EFTscale             -> OptionValue[EFTscale]
 			]
 		];
 		

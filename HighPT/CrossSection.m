@@ -74,7 +74,7 @@ PackageScope["$PDFsets"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton-level cross-section*)
 
 
@@ -373,7 +373,7 @@ Options[CrossSection]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	Efficiency        -> False,
-	Scale             :> GetScale[]
+	EFTscale             :> GetEFTscale[]
 };
 
 
@@ -391,7 +391,7 @@ CrossSection[{e[a_],\[Nu]}, OptionsPattern[]]:= Module[
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
 		Efficiency        -> OptionValue[Efficiency],
-		Scale             -> OptionValue[Scale]
+		EFTscale             -> OptionValue[EFTscale]
 	];
 	(* sum over \[Nu] flavors *)
 	\[Sigma]= (\[Sigma]/.b->1) + (\[Sigma]/.b->2) + (\[Sigma]/.b->3);
@@ -414,7 +414,7 @@ CrossSection[{\[Nu],e[b_]}, OptionsPattern[]]:= Module[
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
 		Efficiency        -> OptionValue[Efficiency],
-		Scale             -> OptionValue[Scale]
+		EFTscale             -> OptionValue[EFTscale]
 	];
 	(* sum over \[Nu] flavors *)
 	\[Sigma]= (\[Sigma]/.a->1) + (\[Sigma]/.a->2) + (\[Sigma]/.a->3);
@@ -439,7 +439,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	}
 	,
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, MLLcuts, Scale};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, MLLcuts, EFTscale};
 	
 	(* make s real *)
 	(*
@@ -591,7 +591,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	If[!OptionValue[FF],
 		\[Sigma]= SubstituteFF[
 			\[Sigma],
-			Scale             -> OptionValue[Scale],
+			EFTscale             -> OptionValue[EFTscale],
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension]
 		]
@@ -735,7 +735,7 @@ Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Differential cross section (for external use)*)
 
 
@@ -758,7 +758,7 @@ Options[DifferentialCrossSection]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	PTcuts            -> {0,\[Infinity]},
-	Scale             :> GetScale[]
+	EFTscale             :> GetEFTscale[]
 };
 
 
@@ -766,7 +766,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	{\[Sigma],s}
 	,
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, Scale};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, EFTscale};
 	
 	(* compute d\[Sigma]/ds *)
 	\[Sigma]= HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, 
@@ -789,7 +789,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	If[!OptionValue[FF],
 		\[Sigma]= SubstituteFF[
 			\[Sigma],
-			Scale             -> OptionValue[Scale],
+			EFTscale             -> OptionValue[EFTscale],
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension]
 		]

@@ -89,7 +89,7 @@ Options[ChiSquareLHC]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	CombineBins       -> Default,
-	Scale             :> GetScale[],
+	EFTscale             :> GetEFTscale[],
 	Luminosity        -> Default,
 	RescaleError      -> True
 };
@@ -109,7 +109,7 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
 		SM                -> False,
-		Scale             -> OptionValue[Scale],
+		EFTscale             -> OptionValue[EFTscale],
 		Luminosity        -> OptionValue[Luminosity]
 	];
 	
@@ -350,7 +350,7 @@ ConfidenceRegion[\[Chi]_, parameters_List, relations:({(_WC->_)..} | {(_FF->_)..
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*PlotConfidenceRegion*)
 
 

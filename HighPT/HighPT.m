@@ -174,7 +174,7 @@ InitializeModel::invalidmediator= "The mediator `1` could not be defined."
 Options[InitializeModel]={
 	EFTorder          -> 4,
 	OperatorDimension -> 6,
-	Scale             -> 1000
+	EFTscale             -> 1000
 }
 
 
@@ -182,7 +182,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 	{
 		eftOrd= OptionValue[EFTorder],
 		opDim=  OptionValue[OperatorDimension],
-		\[CapitalLambda]NP=    OptionValue[Scale]
+		\[CapitalLambda]NP=    OptionValue[EFTscale]
 	}
 	,
 	(* reset all mediators *)
@@ -194,7 +194,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 	(* define EFT power counting *)
 	SetEFTorder[eftOrd];
 	SetOperatorDimension[opDim];
-	SetScale[\[CapitalLambda]NP];
+	SetEFTscale[\[CapitalLambda]NP];
 	
 	(* set SMEFT run mode *)
 	$RunMode= "SMEFT";
@@ -750,7 +750,7 @@ $OptionValueAssociation= <|
 	RescaleError      -> True | False,
 	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
 	MLLcuts           -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000),
-	Scale             -> _?NumericQ | _Symbol
+	EFTscale             -> _?NumericQ | _Symbol
 |>;
 
 
