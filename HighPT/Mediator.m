@@ -82,15 +82,6 @@ Format[Coupling[label_,{indices__}],TraditionalForm]:= Module[
 ]
 
 
-(* ::Subsection:: *)
-(*Flavor indices*)
-
-
-(*(* remove unwanted heads *)
-WC[x_,{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}]:= WC[x,{a,b,i,j}]
-WC[x_,{f1_[a_],f2_[b_]}]:= WC[x,{a,b}]*)
-
-
 (* ::Section:: *)
 (*Mediators*)
 
@@ -127,11 +118,6 @@ $MediatorCouplings= <|
 	"S3" -> {Coupling["y3L",{i,\[Alpha]}]},
 	"U3" -> {Coupling["x3L",{i,\[Alpha]}]}
 |>
-
-
-(*$MediatorLagrangians= <|
-	"U1" -> "L"
-|>*)
 
 
 (* ::Section:: *)

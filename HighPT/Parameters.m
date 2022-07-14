@@ -39,25 +39,7 @@ PackageExport["Param"]
 PackageExport["DefineBasisAlignment"]
 
 
-(* ::Text:: *)
-(*Everything below should be combined in one head, e.g. Parameter["..."]*)
-(*OR: PackageScope everything*)
-
-
-(*
-(*PackageExport["VEV"]*)
-PackageExport["\[Alpha]EM"]
-PackageExport["GF"]
-PackageExport["mZ"]
-PackageExport["\[CapitalGamma]Z"]
-PackageExport["\[CapitalGamma]W"]
-PackageExport["sW"]
-PackageExport["cW"]
-*)
-
-
 PackageExport["CKM"]
-(*PackageExport["Wolfenstein"]*)
 PackageExport["Vckm"]
 
 

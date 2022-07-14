@@ -29,11 +29,6 @@ PackageExport["u"]
 PackageExport["d"]
 
 
-(*PackageExport[""Photon""]*)
-(*PackageExport[""ZBoson""]*)
-(*PackageExport[""WBoson""]*)
-
-
 PackageExport["SelectTerms"]
 
 
@@ -111,18 +106,6 @@ u::usage= "u[i]
 	Represents an up-type quark and i is the generation index: u[1] \[Rule] u, u[2] \[Rule] c, u[3] \[Rule] t.";
 
 
-(*"Photon"::usage= ""Photon"
-	Denotes the SM photon.";*)
-
-
-(*"ZBoson"::usage= ""ZBoson"
-	Denotes the SM Z-boson.";*)
-
-
-(*"WBoson"::usage= ""WBoson"
-	Denotes the SM W-boson.";*)
-
-
 SM::usage= "SM
 	Denotes a Standard Model form factor.
 	Is an Option for EventYield specifying whether the pure Standard Model contribution should be included in the event count.";
@@ -132,21 +115,15 @@ SM::usage= "SM
 (*Parallelization*)
 
 
+(* ::Text:: *)
+(*By default parallelization is turned on*)
+
+
 $ParallelHighPT=True;
 
 
 (* ::Section:: *)
 (*Defining the run mode*)
-
-
-(* ::Text:: *)
-(*By default the SMEFT modes is chosen with:*)
-(*InitializeModel[*)
-(*	"SMEFT",*)
-(*	EFTorder :> 4*)
-(*	OperatorDimension :> 6*)
-(*]*)
-(*this is done in the init.m*)
 
 
 $RunMode= "SMEFT";
@@ -174,7 +151,7 @@ InitializeModel::invalidmediator= "The mediator `1` could not be defined."
 Options[InitializeModel]={
 	EFTorder          -> 4,
 	OperatorDimension -> 6,
-	EFTscale             -> 1000
+	EFTscale          -> 1000
 }
 
 
@@ -216,6 +193,7 @@ InitializeModel::undefmed= "The given mediator `1` is not in the list of predefi
 InitializeModel::undefmass= "In the current version only mediators with a fixed mass of 2000 GeV are supported."
 
 
+(* fix this number *)
 InitializeModel::undefwidth= "In the current version only mediators with a fixed width of ??? GeV are supported."
 
 
@@ -233,10 +211,11 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 	];
 	
 	(* check mass and width *)
-	If[mass=!=2000,
+	If[!MatchQ[mass, 1000|2000|3000(*|4000*)],
 		Message[InitializeModel::undefmass];
 		(*Abort[]*) (* uncommented for 5 TeV runs *)
 	];
+	(* fix this when we decided what to do with widths. *)
 	(*If[width=!=_,
 		Message[InitializeModel::undefwidth];
 		Abort[]
@@ -277,39 +256,6 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 ]
 
 
-(* ::Subsubsection:: *)
-(*old*)
-
-
-(*InitializeModel[list_List]:= Module[
-	{}
-	,
-	(* reset all mediators *)
-	ResetMediators[];
-	
-	(* define the SM mediators *)
-	DefineSM[];
-	
-	(* removes some unnecessary stuff *)
-	SetEFTorder[0];
-	
-	(* set Model run mode *)
-	$RunMode= "Model";
-	
-	(* define mediators of the given model *)
-	Do[
-		AddMediator[mediator];
-		,
-		{mediator,list}
-	];
-	
-	Print["Run mode set to: model with the mediators:"];
-	Print["  s-channel: ", GetMediators["s"]];
-	Print["  t-channel: ", GetMediators["t"]];
-	Print["  u-channel: ", GetMediators["u"]];
-]*)
-
-
 (* ::Subsection:: *)
 (*DefineSM*)
 
@@ -333,7 +279,6 @@ DefineSM[eft_]:= Module[
 	
 	(* photons do not couple to neutrinos *)
 	FF[_,{"Photon",_},_,{OrderlessPatternSequence[_\[Nu],___]}]:= 0;
-	(*"Photon"/:Conjugate["Photon"]= "Photon";*) (* This might screw up IbP *)
 ];
 
 
@@ -663,9 +608,6 @@ PackageScope["OptionCheck"]
 PackageExport["Coefficients"]
 
 
-(*PackageExport["OutputFormat"]*)
-
-
 PackageExport["EFTorder"]
 
 
@@ -760,7 +702,7 @@ $OptionValueAssociation= <|
 	RescaleError      -> True | False,
 	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
 	MLLcuts           -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000),
-	EFTscale             -> _?NumericQ | _Symbol
+	EFTscale          -> _?NumericQ | _Symbol
 |>;
 
 
