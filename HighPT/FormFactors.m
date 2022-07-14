@@ -165,7 +165,7 @@ FormFactor[_,_,_,_,x:Except[{_,_,_,_}]]:= (Message[FormFactor::unknownindices, x
 MakeBoxes[FormFactor[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}], TraditionalForm]:= SubsuperscriptBox[RowBox[{"[",SubsuperscriptBox["F", MakeBoxes[type,TraditionalForm], RowBox[{" ",MakeBoxes[X,TraditionalForm],MakeBoxes[Y,TraditionalForm]}]],"(",ToString[s],",",ToString[t],")","]"}], RowBox[{ToString[i],ToString[j]}], RowBox[{ToString[\[Alpha]],ToString[\[Beta]]}]]
 
 
-MakeBoxes[FF[type_,med_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}], TraditionalForm]:= SubsuperscriptBox[RowBox[{"[",SubsuperscriptBox["F", RowBox[{MakeBoxes[type,TraditionalForm], MakeBoxes[med,TraditionalForm]}], RowBox[{" ",MakeBoxes[X,TraditionalForm],MakeBoxes[Y,TraditionalForm]}]],"]"}], RowBox[{ToString[i],ToString[j]}], RowBox[{ToString[\[Alpha]],ToString[\[Beta]]}]]
+MakeBoxes[FF[type_,med_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}], TraditionalForm]:=SubsuperscriptBox[RowBox[{"[",SubsuperscriptBox["F", RowBox[{MakeBoxes[type,TraditionalForm], MakeBoxes[med,TraditionalForm]}], RowBox[{" ",MakeBoxes[X,TraditionalForm],MakeBoxes[Y,TraditionalForm]}]],"]"}], RowBox[{ToString[i],ToString[j]}], RowBox[{ToString[\[Alpha]],ToString[\[Beta]]}]]
 
 
 Format[Scalar, TraditionalForm]:= "S"
@@ -176,6 +176,11 @@ Format[DipoleQ, TraditionalForm]:= "Dq"
 
 
 MakeBoxes["regular", TraditionalForm]:= ToBoxes["reg"]
+
+
+MakeBoxes["Photon", TraditionalForm]:= ToBoxes["\[Gamma]"]
+MakeBoxes["ZBoson", TraditionalForm]:= ToBoxes["Z"]
+MakeBoxes["WBoson", TraditionalForm]:= ToBoxes["W"]
 
 
 MakeBoxes[Left, TraditionalForm]:= ToBoxes["L"]

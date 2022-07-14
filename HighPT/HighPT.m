@@ -337,11 +337,6 @@ DefineSM[eft_]:= Module[
 ];
 
 
-Format["Photon",TraditionalForm]:= "\[Gamma]"
-Format["ZBoson",TraditionalForm]:= "Z"
-Format["WBoson",TraditionalForm]:= "W"
-
-
 (* ::Subsubsection:: *)
 (*Distinguish CC and NC*)
 
@@ -630,15 +625,30 @@ SelectTerms::usage= "SelectTerms[arg, terms]
 	The argument terms should match {_FF..} or {_WC..}.";
 
 
-SelectTerms[arg_, terms:({_FF..} | {_WC..} | {___})]:= Module[
-	{rule}
+SelectTerms::conj="Conjugated coefficient given `1`. Probably the Hermitian conjugated version of `2` was specified. Keeping all instances of `2`.";
+
+
+SelectTerms[arg_, termsIN:{(_FF | _WC | _Coupling | Conjugate[_FF] | Conjugate[_WC] | Conjugate[_Coupling])..}]:= Module[
+	{rule, conj, terms=termsIN/.Conjugate[x_]:>x}
 	,
+	(* check for conjugated coeffs *)
+	conj = Cases[termsIN, _Conjugate, All];
+	Do[
+		Message[SelectTerms::conj,TraditionalForm[con],TraditionalForm[con/.Conjugate[x_]:>x]]
+		,
+		{con,conj}
+	];
+	
+	(* create replacement rule *)
+	rule = {Except[Alternatives@@terms, (_FF |\[NonBreakingSpace]_WC |\[NonBreakingSpace]_Coupling)] :> 0};
+	(*
 	Switch[terms,
 		{_FF..}, rule= {Except[Alternatives@@terms, _FF] :> 0},
 		{_WC..}, rule= {Except[Alternatives@@terms, _WC] :> 0},
 		{_Coupling..}, rule= {Except[Alternatives@@terms, _Coupling] :> 0},
 		{___}  , rule= {_WC -> 0, _FF -> 0, _Coupling ->0}
 	];
+	*)
 	Return[(arg/.rule)/.{0.->0,Complex[0.,0.]->0}]
 ]
 
