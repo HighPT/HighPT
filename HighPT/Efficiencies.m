@@ -130,7 +130,7 @@ LoadEfficiencies::duobledef= "Efficiencies defined multiple times: `1`.";
 
 
 LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
-	{(*directory,*) files, substitutions}
+	{(*directory,*) files, substitutions, npMediators, npMasses}
 	,	
 	(* load fiels in the required directory *)
 	Switch[$RunMode,
@@ -147,37 +147,58 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 			],
 		(* mediator mode *)
 		"Model",
-			files= Import[
-				FileNameJoin[{
-					Global`$DirectoryHighPT,
-					"LHC_searches",
-					$SearchDirectories[proc],
-					"Mediators",
-					"GeV_" <> ToString[$ModelMass],
-					"*",
-					"*.dat"
-				}],
-				"Table"
-			]/.{"scalar"->("scalar"|"tensor"|"scalar-tensor")};
+			npMediators = KeyDrop[GetMediators[],{"Photon","ZBoson","WBoson"}];
+			(* sum over all relevant mediators *)
+			files= Table[
+				Table[
+					(* remove files not containing the given mediators *)
+					If[FreeQ[input,str_String/;!StringFreeQ[str,med]],
+						Nothing,
+						input
+					]
+					,
+					(* run over all input files *)
+					{input, Import[
+						FileNameJoin[{
+							Global`$DirectoryHighPT,
+							"LHC_searches",
+							$SearchDirectories[proc],
+							"Mediators",
+							"GeV_" <> ToString[npMediators[med][Mass]],
+							"*",
+							"*.dat"
+						}],
+						"Table"
+					]/.{"scalar"->("scalar"|"tensor"|"scalar-tensor")}
+					}
+				]
+				,
+				{med,Keys[npMediators]}
+			];
+			files = Flatten[files,1];
+			
 			files = Join[
 				files,
-				Import[
-					FileNameJoin[{Global`$DirectoryHighPT,
-						"LHC_searches",
-						$SearchDirectories[proc],
-						"SMEFT",
-						"*.dat"
-					}],
-					"Table"
+				Table[
+					(* remove files not containing the given mediators *)
+					If[!FreeQ[file,str_String/;!StringFreeQ[str,"Reg"]],
+						Nothing,
+						file
+					]
+					,
+					{file, Import[
+						FileNameJoin[{Global`$DirectoryHighPT,
+							"LHC_searches",
+							$SearchDirectories[proc],
+							"SMEFT",
+							"*.dat"
+						}],
+						"Table"
+					]
+					}
 				]
 			]
 	];
-	(*
-	files= Import[
-		FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", $SearchDirectories[proc], "SMEFT", "*.dat"}],
-		"Table"
-	];
-	*)
 
 	(* Find substitutions for all files *)
 	substitutions= EfficiencyReplacements[files,proc];

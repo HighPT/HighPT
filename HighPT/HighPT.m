@@ -148,10 +148,18 @@ InitializeModel::invalidmediator= "The mediator `1` could not be defined."
 (*Initialize the SMEFT*)
 
 
+PackageExport["Mediator"]
+
+
 Options[InitializeModel]={
+	(* SMEFT *)
 	EFTorder          -> 4,
 	OperatorDimension -> 6,
-	EFTscale          -> 1000
+	EFTscale          -> 1000,
+	(* mediator *)
+	Mediator          -> {},
+	Mass              -> Default,
+	Width             -> Default
 }
 
 
@@ -197,10 +205,105 @@ InitializeModel::undefmass= "In the current version only mediators with a fixed 
 InitializeModel::undefwidth= "In the current version only mediators with a fixed width of ??? GeV are supported."
 
 
-(* ::Subsubsection:: *)
-(*new*)
+InitializeModel::multimediator= "Multiple BSM mediator specified. Currently interference terms can only be computed on cross section level, but not for event yields or likelihoods due too missing Monte Carlo simulations."
 
 
+InitializeModel::unequallength = "Number of mediators given does not match the number of masses and/or widths given."
+
+
+InitializeModel["Mediator", OptionsPattern[]]:= Module[
+	{
+		mediators = OptionValue[Mediator],
+		masses = OptionValue[Mass],
+		widths = OptionValue[Width]
+	}
+	,
+	(* Show warning regarding interference terms if multiple mediators have been specified. *)
+	If[Length[mediators]>1,
+		Message[InitializeModel::multimediator]
+	];
+	(* OPTION CHECK *)
+	(* TO DO *)
+	
+	(* default options *)
+	Switch[masses,
+		(* default mass 2 TeV if not specifid otherwise *)
+		Default       , masses = Table[2000,{i,mediators}],
+		Except[_List] , masses = Table[masses,{i,mediators}]
+	];
+	Switch[widths,
+		(* default width 0 GeV if not specifid otherwise *)
+		Default       , widths = Table[0,{i,mediators}],
+		Except[_List] , widths = Table[widths,{i,mediators}]
+	];
+	
+	(* check lengths *)
+	If[Length[mediators]=!=Length[masses] || Length[widths]=!=Length[masses],
+		Message[InitializeModel::unequallength];
+		Abort[]
+	];
+	
+	(* check that all mediator labels are known *)
+	Do[
+		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
+			Message[InitializeModel::undefmed, med, Keys@$MediatorList];
+			Abort[]
+		]
+		,
+		{med,mediators}
+	];
+	
+	(* check mass and width *)
+	Do[
+		If[!MatchQ[mass, 1000|2000|3000(*|4000*)],
+			Message[InitializeModel::undefmass];
+			(*Abort[]*) (* uncommented for 5 TeV runs *)
+		]
+		,
+		{mass,masses}
+	];
+	(* fix this when we decided what to do with widths. *)
+	(*
+	Do[If[width=!=_,
+		Message[InitializeModel::undefwidth];
+		Abort[]
+	]
+	,{width,widths}];*)
+	
+	(* reset all mediators *)
+	ResetMediators[];
+	
+	(* define the SM mediators *)
+	DefineSM[False];
+	
+	(* removes some unnecessary stuff *)
+	SetEFTorder[0];
+	SetOperatorDimension[4];
+	
+	(* set EFT contributions to SM mediators to zero *)
+	FF[_,{"Photon",0},___]=0;
+	FF[_,{"ZBoson",0},___]=0;
+	FF[_,{"WBoson",0},___]=0;
+	
+	(* set Model run mode *)
+	$RunMode= "Model";
+	(*$ModelMass= mass;*)
+	
+	(* add a mediators to the model *)
+	Do[
+		AddMediator[mediators[[n]], masses[[n]], widths[[n]], Sequence@@$MediatorList[mediators[[n]]]];
+		,
+		{n,Length[mediators]}
+	];
+	
+	Print["Initialized mediator mode:"];
+	Print["  s-channel: ", GetMediators["s"]];
+	Print["  t-channel: ", GetMediators["t"]];
+	Print["  u-channel: ", GetMediators["u"]];
+]
+
+
+(*
 InitializeModel[{med_String, mass_, width_}]:= Module[
 	{}
 	,
@@ -254,6 +357,7 @@ InitializeModel[{med_String, mass_, width_}]:= Module[
 	Print["  t-channel: ", GetMediators["t"]];
 	Print["  u-channel: ", GetMediators["u"]];
 ]
+*)
 
 
 (* ::Subsection:: *)
@@ -319,6 +423,8 @@ ResetMediators[]:= Module[{med= Keys[$Mediators]},
 	$Channels["s"]= <||>;
 	$Channels["t"]= <||>;
 	$Channels["u"]= <||>;
+	$defaultMasses = <||>;
+	$defaultWidths = <||>;
 	
 	(* remove NC|CC definitions of the previously used mediators *)
 	Do[
@@ -341,13 +447,59 @@ ResetMediators[]:= Module[{med= Keys[$Mediators]},
 (*AddMediator*)
 
 
+$defaultMasses = <||>
+$defaultWidths = <||>
+
+
 AddMediator::usage= "AddMediator[label, Mass, Width, channel, current, {type}]
 	Defines a new mediator denoted by label. The arguments are its Mass, its Width, the channel \[Element] {'s','t','u','tu'} in which it appears, whether it is colored (current=\"CC\") or not (current=\"NC\"), and the type of Lorentz structure it generates for the four-fermion operators.";
 
 
-AddMediator[{a___}]:= AddMediator[a]
+(*AddMediator[{a___}]:= AddMediator[a]*)
 
 
+AddMediator[l_, m_, w_, c:{("s"|"t"|"u")..}, current:{("NC"|"CC")..}, lorentz:{(Scalar|Vector|Tensor|DipoleL|DipoleQ)..}]:= Module[
+	{}
+	,
+	(* add mediator to list of currently used mediators *)
+	AssociateTo[
+		$Mediators,
+		l -> <|
+			Mass      -> m,
+			Width     -> w,
+			"channel" -> c,
+			"current" -> current,
+			"type"    -> lorentz
+		|>
+	];
+	
+	(* remember default mass and width *)
+	AssociateTo[$defaultMasses, l -> m];
+	AssociateTo[$defaultWidths, l -> w];
+	
+	(* append mediator to all channels it contributes to *)
+	Do[
+		AppendTo[$Channels[chan], l -> lorentz]
+		,
+		{chan,c}
+	];
+	
+	(* make the mediators NC or CC *)
+	If[FreeQ[current,"NC"],
+		MakeCC[l]
+	];
+	If[FreeQ[current,"CC"],
+		MakeNC[l]
+	];
+	
+	(* Make propagators of mediators with zero width mediators real *)
+	If[w==0,
+		Propagator[x_,Conjugate[l]] := Propagator[x,l]
+	];
+];
+
+
+(*
 AddMediator[l_, m_, w_, c:{("s"|"t"|"u")..}, current:{("NC"|"CC")..}, lorentz:{(Scalar|Vector|Tensor|DipoleL|DipoleQ)..}]:= Module[
 	{}
 	,
@@ -374,17 +526,68 @@ AddMediator[l_, m_, w_, c:{("s"|"t"|"u")..}, current:{("NC"|"CC")..}, lorentz:{(
 		Propagator[x_,Conjugate[l]] := Propagator[x,l]
 	];
 ];
+*)
 
 
 AddMediator[a___]:= Message[InitializeModel::invalidmediator, Flatten[{a}]]
 
 
+(* ::Subsubsection:: *)
+(*Modify mediator Mass and/or Width*)
+
+
 Options[ModifyMediator]={
-	Mass  -> Default,
-	Width -> Default
+	Mediator -> {},
+	Mass     -> None,
+	Width    -> None
 }
 
 
+ModifyMediator::unequallength = "Number of mediators given does not match the number of masses and/or widths given."
+
+
+ModifyMediator[OptionsPattern[]]:=Module[
+	{
+		mediators = OptionValue[Mediator],
+		masses    = OptionValue[Mass],
+		widths    = OptionValue[Width]
+	}
+	,
+	(* If only a single argument is given *)
+	Switch[masses,
+		None, masses = Table[None,{m,mediators}],
+		Default, masses = Table[Default,{m,mediators}]
+	];
+	Switch[widths,
+		None, widths = Table[None,{m,mediators}],
+		Default, widths = Table[Default,{m,mediators}]
+	];
+	
+	(* check lengths *)
+	If[Length[mediators]=!=Length[masses] || Length[widths]=!=Length[masses],
+		Message[ModifyMediator::unequallength];
+		Abort[]
+	];
+	
+	(* change masses and widths *)
+	Do[
+		Switch[masses[[n]],
+			None    , Null,
+			Default , $Mediators[mediators[[n]]][Mass] = $defaultMasses[mediators[[n]]],
+			_       , $Mediators[mediators[[n]]][Mass] = masses[[n]]
+		];
+		Switch[widths[[n]],
+			None    , Null,
+			Default , $Mediators[mediators[[n]]][Width] = $defaultWidths[mediators[[n]]],
+			_       , $Mediators[mediators[[n]]][Width] = widths[[n]]
+		]
+		,
+		{n,Length[mediators]}
+	];
+];
+
+
+(*
 ModifyMediator[med_, OptionsPattern[]]:=Module[
 	{temp  =$Mediators[med], mass, width},
 	(* fix new mass *)
@@ -410,6 +613,7 @@ ModifyMediator[med_, OptionsPattern[]]:=Module[
 		{chan,temp[[3]]}
 	];
 ]
+*)
 
 
 (* ::Subsubsection:: *)
@@ -435,7 +639,7 @@ GetMediators[c:Alternatives["s","t","u"], typ_]:= Module[
 	(* loop over all mediators in this channel *)
 	Do[
 		(* drop if mediator does not have the correct Lorentz structure *)
-		If[!MatchQ[Last[channel[key]], {OrderlessPatternSequence[typ,___]}],
+		If[FreeQ[channel[key], typ],
 			KeyDropFrom[channel,key]
 		]
 		,

@@ -59,7 +59,7 @@ AddAutoCompletion["PythonExport"][Keys@LHCSearch[]];
 AddAutoCompletion["DefineBasisAlignment"][{"down","up"}]
 
 
-AddAutoCompletion["InitializeModel"][{"SMEFT"}]
+AddAutoCompletion["InitializeModel"][{"SMEFT", "Mediator"}]
 
 
 AddAutoCompletion["SetPDF"][$PDFsets]
