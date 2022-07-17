@@ -88,7 +88,7 @@ EventYield::usage= "EventYield[\"proc\"]
 		Luminosity \[Rule] Default.";
 
 
-EventYield::missingeff= "Not all required efficincies have been given. The missing efficiencies are set to zero, these include: `1`.";
+EventYield::missingeff= "Not all required efficincies are known. The missing efficiencies are set to zero. This is possibly caused by using a madiator mass that is not supported, or if you compute the interference of two BSM mediators.";
 
 
 EventYield::invalidfinalstate= "The argument `1` is not a valid final state particle. Allowed values are e[1|2|3] and \[Nu]. Asummation over \[Nu] flavors is always implicite."
@@ -620,7 +620,7 @@ CacheIntegrals[integralList_, {proc_,bin_}] := Module[
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*substitute efficiency kernels*)
 
 
@@ -641,8 +641,8 @@ SubstituteEfficiencyKernels[xSec_, {proc_String, bin_}]:= Module[
 	If[!FreeQ[NObserved,_Efficiency],
 		(*Print/@DeleteDuplicates@ Cases[NObserved, eff_Efficiency(*:> Drop[eff,-1]*), All];*) (* explicit printing *)
 		Message[
-			Yield::missingeff,
-			DeleteDuplicates@ Cases[NObserved, eff_Efficiency:> Drop[eff,-1], All]
+			EventYield::missingeff
+			(*,DeleteDuplicates@ Cases[NObserved, eff_Efficiency:> Drop[eff,-1], All]*)
 		];
 		(* set remaining efficiencies to zero *)
 		NObserved= NObserved/. Efficiency[___] -> Table[0, Length[efficiencies[[1,2]]]] (* must be set to zero vector *)

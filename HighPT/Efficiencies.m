@@ -152,7 +152,7 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 			files= Table[
 				Table[
 					(* remove files not containing the given mediators *)
-					If[FreeQ[input,str_String/;!StringFreeQ[str,med]],
+					If[FreeQ[input,str_String/;!StringFreeQ[str,StringReplace[med,"t"->"~"]]],
 						Nothing,
 						input
 					]
@@ -201,9 +201,12 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 	];
 
 	(* Find substitutions for all files *)
-	substitutions= EfficiencyReplacements[files,proc];
+	substitutions = EfficiencyReplacements[files,proc];
 	
-	(* check for double definitions *)
+	(* this is required when considering multiple mediators with the same efficiencies *)
+	substitutions = DeleteDuplicates[substitutions];
+	
+	(* check for remaining double definitions *)
 	If[!DuplicateFreeQ[substitutions[[;;,1]]],
 		Message[
 			LoadEfficiencies::duobledef,

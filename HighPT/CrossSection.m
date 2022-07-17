@@ -74,7 +74,7 @@ PackageScope["$PDFsets"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section*)
 
 
@@ -149,11 +149,11 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Phase-space integration*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IntegrateT*)
 
 
@@ -231,7 +231,7 @@ Integrand/:Conjugate[Integrand[f_,x_]]:= Integrand[
 *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*PartialFractioning*)
 
 
@@ -240,16 +240,25 @@ PartialFractioning::usage= "PartialFractioning[t]
 ";
 
 
-PartialFractioning[t_]:= {
+PartialFractioning[t_]:= With[{mediators=GetMediators[]},{
 	(* t x t *)
-	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]-Propagator[t,Conjugate[m2]]) /; (m1=!=m2 || GetMediators[][m1][[2]]!=0),
+	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]-Propagator[t,Conjugate[m2]]) /; (mediators[m1][Mass]!=mediators[m2][Mass] || mediators[m1][Width]!=0 || mediators[m2][Width]!=0) (* (m1=!=m2 || GetMediators[][m1][[2]]!=0) *),
+	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, m2:Except[_Conjugate]]:> (1/Propagator[0,m2]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]-Propagator[t,m2]) /; (mediators[m1][Mass]!=mediators[m2][Mass]), (* only applies if m1 and m2 have width=0 *)
 	(* u x u *)
-	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]-Propagator[-t-s,Conjugate[m2]]) /; (m1=!=m2 || GetMediators[][m1][[2]]!=0),
-	(* t x u *) (* the conditions m1=!=m2 can be removed since we have s>0 *)
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]-Propagator[-t-s,Conjugate[m2]]) /; (mediators[m1][Mass]!=mediators[m2][Mass] || mediators[m1][Width]!=0 || mediators[m2][Width]!=0) (* (m1=!=m2 || GetMediators[][m1][[2]]!=0) *) ,
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, m2:Except[_Conjugate]]:> (1/Propagator[0,m2]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]-Propagator[-t-s,m2]) /; (mediators[m1][Mass]!=mediators[m2][Mass]) (* only applies if m1 and m2 have width=0 *) ,
+	(* t x u *) (* the conditions m1=!=m2 can be removed since we have s+mass1+mass2>0 *)
 	Propagator[t,m1:Except[_Conjugate]] * Propagator[-t-s_, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]+Propagator[-t-s,Conjugate[m2]]) (*/; m1=!=m2*),
+	Propagator[t,m1:Except[_Conjugate]] * Propagator[-t-s_, m2:Except[_Conjugate]]:> (s-1/Propagator[0,m2]-1/Propagator[0,m1])^(-1) * (Propagator[t,m1]+Propagator[-t-s,m2]) (* only applies if m1 and m2 have width=0 *),
 	(* u x t *)
-	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]+Propagator[t,Conjugate[m2]]) (*/; m1=!=m2*)
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[t, Conjugate[m2_]]:> (s-1/Propagator[0,Conjugate[m2]]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]+Propagator[t,Conjugate[m2]]) (*/; m1=!=m2*),
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[t, m2:Except[_Conjugate]]:> (s-1/Propagator[0,m2]-1/Propagator[0,m1])^(-1) * (Propagator[-t-s,m1]+Propagator[t,m2]) (* only applies if m1 and m2 have width=0 *),
+	
+	(* for propagators of two particles with identical mass and width *)
+	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, m2:Except[_Conjugate]]:> Propagator[t,m1]^2 /; (mediators[m1][Mass]==mediators[m2][Mass] && mediators[m1][Width]==mediators[m2][Width]),
+	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, m2:Except[_Conjugate]]:> Propagator[-t-s,m1] /; (mediators[m1][Mass]==mediators[m2][Mass] && mediators[m1][Width]==mediators[m2][Width])
 }
+]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -293,7 +302,7 @@ ReduceIntegrands[t_]:= {
 *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ReplaceIntegrals*)
 
 
@@ -335,11 +344,11 @@ PartialFractioningSIntegrals[s_]:={
 }
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Integrated CrossSection*)
 
 
@@ -735,7 +744,7 @@ Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Differential cross section (for external use)*)
 
 

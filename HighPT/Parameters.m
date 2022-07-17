@@ -331,6 +331,11 @@ DefineParameters::usage= "DefineParameters[]
 ";
 
 
+(* ::Text:: *)
+(*Maybe we should change to the options:*)
+(*\[Alpha]EM, GF, \[Lambda], A, \[Rho], \[Eta], Mediator -> {U1->{Mass -> New, Width -> New}}*)
+
+
 (* keep current values if not specified *)
 Options[DefineParameters]= {
 	"\[Alpha]EM"         :> \[Alpha]EM$current,
