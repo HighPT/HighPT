@@ -70,7 +70,7 @@ PackageScope["ReplaceChannelSums"]
 PackageScope["ReplacePropagators"]
 
 
-PackageScope["$RunMode"]
+PackageScope["$defaultMediatorProperties"]
 
 
 PackageScope["$ModelMass"]
@@ -79,6 +79,9 @@ PackageScope["$ModelMass"]
 PackageScope["$Verbose"]
 PackageScope["MyTiming"]
 PackageScope["MyEcho"]
+
+
+PackageScope["$AllowedMasses"]
 
 
 (* ::Chapter:: *)
@@ -148,18 +151,13 @@ InitializeModel::invalidmediator= "The mediator `1` could not be defined."
 (*Initialize the SMEFT*)
 
 
-PackageExport["Mediator"]
-
-
 Options[InitializeModel]={
 	(* SMEFT *)
 	EFTorder          -> 4,
 	OperatorDimension -> 6,
 	EFTscale          -> 1000,
 	(* mediator *)
-	Mediator          -> {},
-	Mass              -> Default,
-	Width             -> Default
+	Mediators         -> {}
 }
 
 
@@ -198,7 +196,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 InitializeModel::undefmed= "The given mediator `1` is not in the list of predefined mediators: `2`"
 
 
-InitializeModel::undefmass= "In the current version only mediators with a fixed mass of 2000 GeV are supported."
+InitializeModel::undefmass= "Mediator `1` of mass `2` GeV defined. Currently Monte Carlo data is only available for mediators of mass \!\(\*SubscriptBox[\(M\), \(BSM\)]\) \[Element] `3` GeV. For other masses you can only compute cross sections, but no event yields or likelihoods."
 
 
 (* fix this number *)
@@ -211,37 +209,24 @@ InitializeModel::multimediator= "Multiple BSM mediator specified. Currently inte
 InitializeModel::unequallength = "Number of mediators given does not match the number of masses and/or widths given."
 
 
+$AllowedMasses = Alternatives[(*1000, *)2000(*, 3000, 4000*)]
+
+
 InitializeModel["Mediator", OptionsPattern[]]:= Module[
 	{
-		mediators = OptionValue[Mediator],
-		masses = OptionValue[Mass],
-		widths = OptionValue[Width]
+		mediators = OptionValue[Mediators]
 	}
 	,
+	(* OPTION CHECK *)
+	OptionCheck[#,OptionValue[#]]& /@ {Mediators};
+	
 	(* Show warning regarding interference terms if multiple mediators have been specified. *)
 	If[Length[mediators]>1,
 		Message[InitializeModel::multimediator]
 	];
-	(* OPTION CHECK *)
-	(* TO DO *)
 	
-	(* default options *)
-	Switch[masses,
-		(* default mass 2 TeV if not specifid otherwise *)
-		Default       , masses = Table[2000,{i,mediators}],
-		Except[_List] , masses = Table[masses,{i,mediators}]
-	];
-	Switch[widths,
-		(* default width 0 GeV if not specifid otherwise *)
-		Default       , widths = Table[0,{i,mediators}],
-		Except[_List] , widths = Table[widths,{i,mediators}]
-	];
-	
-	(* check lengths *)
-	If[Length[mediators]=!=Length[masses] || Length[widths]=!=Length[masses],
-		Message[InitializeModel::unequallength];
-		Abort[]
-	];
+	(* make association *)
+	mediators = Association[mediators];
 	
 	(* check that all mediator labels are known *)
 	Do[
@@ -250,25 +235,21 @@ InitializeModel["Mediator", OptionsPattern[]]:= Module[
 			Abort[]
 		]
 		,
-		{med,mediators}
+		{med, Keys@mediators}
 	];
 	
 	(* check mass and width *)
 	Do[
-		If[!MatchQ[mass, 1000|2000|3000(*|4000*)],
-			Message[InitializeModel::undefmass];
-			(*Abort[]*) (* uncommented for 5 TeV runs *)
-		]
+		If[!MatchQ[First[mediators[mediator]], $AllowedMasses],
+			Message[InitializeModel::undefmass, mediator, First[mediators[mediator]], List@@$AllowedMasses];
+		];
+		(* allow for all widths *)
+		(*If[!MatchQ[Last[mediators[mediator]], 0],
+			Message[InitializeModel::undefwidth];
+		]*)
 		,
-		{mass,masses}
+		{mediator, Keys@KeyDrop[mediators,{"Photon","ZBoson","WBoson"}]}
 	];
-	(* fix this when we decided what to do with widths. *)
-	(*
-	Do[If[width=!=_,
-		Message[InitializeModel::undefwidth];
-		Abort[]
-	]
-	,{width,widths}];*)
 	
 	(* reset all mediators *)
 	ResetMediators[];
@@ -287,20 +268,26 @@ InitializeModel["Mediator", OptionsPattern[]]:= Module[
 	
 	(* set Model run mode *)
 	$RunMode= "Model";
-	(*$ModelMass= mass;*)
 	
-	(* add a mediators to the model *)
+	(* add all mediators to the model *)
 	Do[
-		AddMediator[mediators[[n]], masses[[n]], widths[[n]], Sequence@@$MediatorList[mediators[[n]]]];
+		AddMediator[med, First@mediators[med], Last@mediators[med], Sequence@@$MediatorList[med]];
 		,
-		{n,Length[mediators]}
+		{med, Keys[mediators]}
 	];
 	
+	(* save default masses and widths for BSM mediators *)
+	$defaultMediatorProperties = KeyDrop[mediators {"Photon","ZBoson","WBoson"}];
+	
+	(* print model info *)
 	Print["Initialized mediator mode:"];
 	Print["  s-channel: ", GetMediators["s"]];
 	Print["  t-channel: ", GetMediators["t"]];
 	Print["  u-channel: ", GetMediators["u"]];
 ]
+
+
+$defaultMediatorProperties = <||>
 
 
 (*
@@ -447,10 +434,6 @@ ResetMediators[]:= Module[{med= Keys[$Mediators]},
 (*AddMediator*)
 
 
-$defaultMasses = <||>
-$defaultWidths = <||>
-
-
 AddMediator::usage= "AddMediator[label, Mass, Width, channel, current, {type}]
 	Defines a new mediator denoted by label. The arguments are its Mass, its Width, the channel \[Element] {'s','t','u','tu'} in which it appears, whether it is colored (current=\"CC\") or not (current=\"NC\"), and the type of Lorentz structure it generates for the four-fermion operators.";
 
@@ -472,10 +455,6 @@ AddMediator[l_, m_, w_, c:{("s"|"t"|"u")..}, current:{("NC"|"CC")..}, lorentz:{(
 			"type"    -> lorentz
 		|>
 	];
-	
-	(* remember default mass and width *)
-	AssociateTo[$defaultMasses, l -> m];
-	AssociateTo[$defaultWidths, l -> w];
 	
 	(* append mediator to all channels it contributes to *)
 	Do[
@@ -537,9 +516,7 @@ AddMediator[a___]:= Message[InitializeModel::invalidmediator, Flatten[{a}]]
 
 
 Options[ModifyMediator]={
-	Mediator -> {},
-	Mass     -> None,
-	Width    -> None
+	Mediators -> <||>
 }
 
 
@@ -548,72 +525,19 @@ ModifyMediator::unequallength = "Number of mediators given does not match the nu
 
 ModifyMediator[OptionsPattern[]]:=Module[
 	{
-		mediators = OptionValue[Mediator],
-		masses    = OptionValue[Mass],
-		widths    = OptionValue[Width]
+		mediators = OptionValue[Mediators]
 	}
 	,
-	(* If only a single argument is given *)
-	Switch[masses,
-		None, masses = Table[None,{m,mediators}],
-		Default, masses = Table[Default,{m,mediators}]
-	];
-	Switch[widths,
-		None, widths = Table[None,{m,mediators}],
-		Default, widths = Table[Default,{m,mediators}]
-	];
-	
-	(* check lengths *)
-	If[Length[mediators]=!=Length[masses] || Length[widths]=!=Length[masses],
-		Message[ModifyMediator::unequallength];
-		Abort[]
-	];
-	
 	(* change masses and widths *)
 	Do[
-		Switch[masses[[n]],
-			None    , Null,
-			Default , $Mediators[mediators[[n]]][Mass] = $defaultMasses[mediators[[n]]],
-			_       , $Mediators[mediators[[n]]][Mass] = masses[[n]]
+		If[KeyExistsQ[$Mediators, med],
+			$Mediators[med][Mass]  = First[mediators[med]];
+			$Mediators[med][Width] = Last[ mediators[med]];
 		];
-		Switch[widths[[n]],
-			None    , Null,
-			Default , $Mediators[mediators[[n]]][Width] = $defaultWidths[mediators[[n]]],
-			_       , $Mediators[mediators[[n]]][Width] = widths[[n]]
-		]
 		,
-		{n,Length[mediators]}
+		{med,Keys[mediators]}
 	];
 ];
-
-
-(*
-ModifyMediator[med_, OptionsPattern[]]:=Module[
-	{temp  =$Mediators[med], mass, width},
-	(* fix new mass *)
-	If[OptionValue[Mass] === Default,
-		mass = temp[[1]]
-		,
-		mass = OptionValue[Mass]
-	];
-	(* fix new width *)
-	If[OptionValue[Width] === Default,
-		width = temp[[2]]
-		,
-		width = OptionValue[Width]
-	];
-	temp = {mass,width,temp[[3]],temp[[4]],temp[[5]]};
-	
-	(* modify mediator in the list of currently used mediators *)
-	AssociateTo[$Mediators, med->temp];
-	(* modify mediator in all channels it contributes to *)
-	Do[
-		AssociateTo[$Channels[chan], med->temp]
-		,
-		{chan,temp[[3]]}
-	];
-]
-*)
 
 
 (* ::Subsubsection:: *)
@@ -827,6 +751,9 @@ PackageExport["PTcuts"]
 PackageExport["MLLcuts"]
 
 
+PackageExport["Mediators"]
+
+
 PTcuts::usage= "PTcuts -> {\!\(\*SubsuperscriptBox[\(p\), \(T\), \(min\)]\),\!\(\*SubsuperscriptBox[\(p\), \(T\), \(max\)]\)}
 	Option that specifies the \!\(\*SubscriptBox[\(p\), \(T\)]\) cuts (in units of GeV) that should be used for the computation of cross sections.
 	The OptionValues must satisfy 0 \[LessEqual] \!\(\*SubsuperscriptBox[\(p\), \(T\), \(min\)]\) < \!\(\*SubsuperscriptBox[\(p\), \(T\), \(max\)]\) \[LessEqual] \[Infinity].
@@ -906,7 +833,14 @@ $OptionValueAssociation= <|
 	RescaleError      -> True | False,
 	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
 	MLLcuts           -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000),
-	EFTscale          -> _?NumericQ | _Symbol
+	EFTscale          -> _?NumericQ | _Symbol,
+	Mediators         -> {} | <||> | {Rule[_String,{_?NumericQ,_?NumericQ}]..} | <|Rule[_String,{_?NumericQ,_?NumericQ}]..|>,
+	"\[Alpha]EM"             -> _?NumericQ | Default,
+	"GF"              -> _?NumericQ | Default,
+	"mZ"              -> _?NumericQ | Default,
+	"\[CapitalGamma]Z"              -> _?NumericQ | Default,
+	"\[CapitalGamma]W"              -> _?NumericQ | Default,
+	"Wolfenstein"     -> {_?NumericQ | Default, _?NumericQ | Default, _?NumericQ | Default, _?NumericQ | Default}
 |>;
 
 

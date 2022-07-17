@@ -63,3 +63,6 @@ AddAutoCompletion["InitializeModel"][{"SMEFT", "Mediator"}]
 
 
 AddAutoCompletion["SetPDF"][$PDFsets]
+
+
+AddAutoCompletion["DefineParameters"][{"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W", "Wolfenstein"}]

@@ -331,11 +331,6 @@ DefineParameters::usage= "DefineParameters[]
 ";
 
 
-(* ::Text:: *)
-(*Maybe we should change to the options:*)
-(*\[Alpha]EM, GF, \[Lambda], A, \[Rho], \[Eta], Mediator -> {U1->{Mass -> New, Width -> New}}*)
-
-
 (* keep current values if not specified *)
 Options[DefineParameters]= {
 	"\[Alpha]EM"         :> \[Alpha]EM$current,
@@ -344,8 +339,8 @@ Options[DefineParameters]= {
 	"\[CapitalGamma]Z"          :> \[CapitalGamma]Z$current,
 	"\[CapitalGamma]W"          :> \[CapitalGamma]W$current,
 	"Wolfenstein" :> Wolfenstein$current,
-	Mass          :> {},
-	Width         :> {}
+	
+	Mediators     -> {}
 };
 
 
@@ -357,8 +352,8 @@ DefineParameters[Default] := DefineParameters[
 	"\[CapitalGamma]Z"          -> \[CapitalGamma]Z$default,
 	"\[CapitalGamma]W"          -> \[CapitalGamma]W$default,
 	"Wolfenstein" -> Wolfenstein$default,
-	Mass          -> {},
-	Width         -> {}
+	
+	Mediators     :> $defaultMediatorProperties
 ]
 
 
@@ -368,33 +363,46 @@ DefineParameters::unknownwidth= "The width `1` is undefined."
 
 DefineParameters[OptionsPattern[]] := Module[
 	{
-		$\[Alpha]EM = OptionValue["\[Alpha]EM"],
-		$GF  = OptionValue["GF"],
-		$mZ  = OptionValue["mZ"],
-		$\[CapitalGamma]Z  = OptionValue["\[CapitalGamma]Z"],
-		$\[CapitalGamma]W  = OptionValue["\[CapitalGamma]W"],
-		$mW,
-		$sW,
-		$vev,
-		$Wolfenstein = OptionValue["Wolfenstein"], 
+		(* input *)
+		$\[Alpha]EM         = OptionValue["\[Alpha]EM"],
+		$GF          = OptionValue["GF"],
+		$mZ          = OptionValue["mZ"],
+		$\[CapitalGamma]Z          = OptionValue["\[CapitalGamma]Z"],
+		$\[CapitalGamma]W          = OptionValue["\[CapitalGamma]W"],
+		$Wolfenstein = OptionValue["Wolfenstein"],
+		
+		(* output *)
+		$mW, $sW, $vev,
 		$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar, $\[Rho], $\[Eta],
-		masses = OptionValue[Mass],
-		widths = OptionValue[Width],
-		mediators = GetMediators[]
+		
+		$mediator         = OptionValue[Mediators]/.Association->List,
+		mediators$current = GetMediators[]
 	}
 	,
+	(* OPTION CHECKS *)
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W", "Wolfenstein", Mediators};
+	(* check that all mediator labels are known *)
+	Do[
+		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
+			Message[InitializeModel::undefmed, med, Keys[$MediatorList]];
+			Abort[]
+		]
+		,
+		{med, Keys@$mediator}
+	];
+	
 	(* save current values of parameters or change to default value if required *)
-	\[Alpha]EM$current = If[MatchQ[$\[Alpha]EM,Default], \[Alpha]EM$default, $\[Alpha]EM];
-	GF$current = If[MatchQ[$GF,Default], GF$default, $GF];
-	mZ$current = If[MatchQ[$mZ,Default], mZ$default, $mZ];
-	\[CapitalGamma]Z$current = If[MatchQ[$\[CapitalGamma]Z,Default], \[CapitalGamma]Z$default, $\[CapitalGamma]Z];
-	\[CapitalGamma]W$current = If[MatchQ[$\[CapitalGamma]W,Default], \[CapitalGamma]W$default, $\[CapitalGamma]W];
+	\[Alpha]EM$current = If[MatchQ[$\[Alpha]EM, Default], $\[Alpha]EM = \[Alpha]EM$default, $\[Alpha]EM];
+	GF$current  = If[MatchQ[$GF,  Default], $GF  = GF$default , $GF ];
+	mZ$current  = If[MatchQ[$mZ,  Default], $mZ  = mZ$default , $mZ ];
+	\[CapitalGamma]Z$current  = If[MatchQ[$\[CapitalGamma]Z,  Default], $\[CapitalGamma]Z  = \[CapitalGamma]Z$default , $\[CapitalGamma]Z ];
+	\[CapitalGamma]W$current  = If[MatchQ[$\[CapitalGamma]W,  Default], $\[CapitalGamma]W  = \[CapitalGamma]W$default , $\[CapitalGamma]W ];
 	
 	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
-	\[Lambda]Wolfenstein$current = If[MatchQ[$\[Lambda],Default], \[Lambda]Wolfenstein$default, $\[Lambda]];
-	AWolfenstein$current = If[MatchQ[$A,Default], AWolfenstein$default, $A];
-	\[Rho]BarWolfenstein$current = If[MatchQ[$\[Rho]Bar,Default], \[Rho]BarWolfenstein$default, $\[Rho]Bar];
-	\[Eta]BarWolfenstein$current = If[MatchQ[$\[Eta]Bar,Default], \[Eta]BarWolfenstein$default, $\[Eta]Bar];
+	\[Lambda]Wolfenstein$current    = If[MatchQ[$\[Lambda],    Default], $\[Lambda]    = \[Lambda]Wolfenstein$default   , $\[Lambda]   ];
+	AWolfenstein$current    = If[MatchQ[$A,    Default], $A    = AWolfenstein$default   , $A   ];
+	\[Rho]BarWolfenstein$current = If[MatchQ[$\[Rho]Bar, Default], $\[Rho]Bar = \[Rho]BarWolfenstein$default, $\[Rho]Bar];
+	\[Eta]BarWolfenstein$current = If[MatchQ[$\[Eta]Bar, Default], $\[Eta]Bar = \[Eta]BarWolfenstein$default, $\[Eta]Bar];
 	Wolfenstein$current = {
 		\[Lambda]Wolfenstein$current,
 		AWolfenstein$current,
@@ -402,8 +410,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		\[Eta]BarWolfenstein$current
 	};
 	
-	(* set the Wolfentein parameters *)
-	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
+	(* set the non-bared Wolfentein parameters *)
 	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
 	$\[Eta] = $\[Eta]Bar/(1-$\[Lambda]^2/2);
 	
@@ -412,31 +419,34 @@ DefineParameters[OptionsPattern[]] := Module[
 	$sW = Sqrt[1. - $mW^2/$mZ^2];
 	$vev = ($mW*$sW)/Sqrt[\[Pi]*$\[Alpha]EM];
 	
-	(* modify the masses of mediators *)
-	If[masses=!={},
-		Do[
-			If[MatchQ[mass,Alternatives@@Keys[mediators]->_],
-				ModifyMediator[First[mass], Mass->Last[mass]]
-				,
-				Message[DefineParameters::unknownmass,mass]
-			]
-			,
-			{mass, masses}
-		]
+	(* BSM mediators *)
+	If[$mediator===Default, $mediator=$defaultMediatorProperties];
+	(* built current BSM mediator assoc *)
+	mediators$current = Association@Table[
+		med -> {mediators$current[med][Mass],mediators$current[med][Width]}
+		,
+		{med, Keys@mediators$current}
 	];
 	
-	(* modify the widths of mediators *)
-	If[widths=!={},
-		Do[
-			If[MatchQ[width,Alternatives@@Keys[mediators]->_],
-				ModifyMediator[First[width], Width->Last[width]]
-				,
-				Message[DefineParameters::unknownwidth,width]
-			]
-			,
-			{width, widths}
-		]
-	];
+	(* overwrite with new definitions *)
+	AssociateTo[mediators$current, $mediator];
+	AssociateTo[mediators$current, {"ZBoson"->{$mZ,$\[CapitalGamma]Z}, "WBoson"->{$mW,$\[CapitalGamma]W}}];
+	
+	(* check mass and width *)
+	Do[
+		If[!MatchQ[First[mediators$current[mediator]], $AllowedMasses],
+			Message[InitializeModel::undefmass, mediator, First[mediators$current[mediator]], List@@$AllowedMasses];
+		];
+		(* allow for all widths *)
+		(*If[!MatchQ[Last[mediators$current[mediator]], 0],
+			Message[InitializeModel::undefwidth];
+		]*)
+		,
+		{mediator, Keys@KeyDrop[mediators$current,{"Photon","ZBoson","WBoson"}]}
+	];	
+	
+	(* Modify all masses and widths *)
+	ModifyMediator[Mediators->mediators$current];
 	
 	(* Create the appropriate supstitution rule *)
 	ExperimentalParameters = <|
@@ -455,7 +465,8 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
-		Vckm[3,3] -> 1,
+		Vckm[3,3] -> 1
+		,
 		(* masses & widths *)
 		Mass["ZBoson"]         -> $mZ,
 		Width["ZBoson"]        -> $\[CapitalGamma]Z,
