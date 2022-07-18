@@ -3,7 +3,7 @@
 HighPT is a Mathematica package for the analysis of high-energy data of semileptonic transitions at hadron colliders. It allows to compute high-pT tail observables for semileptonic processes, i.e. Drell-Yan cross sections, for dilepton and monolepton final states, at the LHC. 
 
 These observables can be calculated within:
-* The Standard Model Effective Field Theory at tree-level, including the relevant operators up to mass dimension eight to ensure a consistent description of cross section including terms of O(Λ^−4) in the cutoff scale Λ.
+* The Standard Model Effective Field Theory at tree-level, including the relevant operators up to mass dimension eight to ensure a consistent description of the cross section including terms of O(Λ^−4) in the EFT cutoff scale Λ.
 * BSM models with new tree-level mediators, that can be resolved at LHC energies, enabling the computation of the cross section including the full propagation effects of these new particles.
 
 The main routines of HighPT allow to compute:
@@ -12,19 +12,20 @@ The main routines of HighPT allow to compute:
 * event yields,
 * likelihoods.
 
-The experimental resonance searches, based on the full run-2 data by ATLAS or CMS, recastedd and implemented in HighPT are:
-* pp → ττ ATLAS [\[2002.12223\]](http://arxiv.org/abs/2002.12223)
-* pp → μμ CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
-* pp → ee CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
-* pp → τν ATLAS [\[ATLAS-CONF-2021-025\]](https://cds.cern.ch/record/2773301/)
-* pp → μν ATLAS [\[1906.05609\]](http://arxiv.org/abs/1906.05609)
-* pp → eν ATLAS [\[1906.05609\]](http://arxiv.org/abs/1906.05609)
-* pp → τμ CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
-* pp → τe CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
-* pp → μe CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
+The experimental searches for heavy resonances, based on the full run-2 data by ATLAS or CMS, recasted and implemented in HighPT are:
+* pp → ττ | ATLAS [\[2002.12223\]](http://arxiv.org/abs/2002.12223)
+* pp → μμ | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
+* pp → ee | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
+* pp → τν | ATLAS [\[ATLAS-CONF-2021-025\]](https://cds.cern.ch/record/2773301/)
+* pp → μν | ATLAS [\[1906.05609\]](http://arxiv.org/abs/1906.05609)
+* pp → eν | ATLAS [\[1906.05609\]](http://arxiv.org/abs/1906.05609)
+* pp → τμ | CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
+* pp → τe | CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
+* pp → μe | CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
 
-If you use HighPT please cite: [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx).
+## Reference
 
+If you use HighPT please cite: [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx), [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx).
 
 ## Installing and loading of the package
 
@@ -58,7 +59,7 @@ The complete set of routines and usage examples can be found in [\[2207.xxxxx\]]
 
 ## Bugs and feature requests
 
-Please submit bugs and feature requests using GitHub's issue system.
+Please submit bugs and feature requests using GitHub's [issue system](https://github.com/HighPT/HighPT/issues).
 
 ## License
 
