@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`FormFactors*)
+(*HighPT`FormFactors`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Form factor implementation.*)
 
 
 (* ::Chapter:: *)
@@ -33,31 +33,14 @@ PackageExport["DipoleL"]
 PackageExport["DipoleQ"]
 
 
+PackageExport["SubstituteFF"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
 
-PackageScope["FormFactor"]
-
-
-(*PackageScope["MyComplexExpand"]*)
-PackageScope["MyExpand"]
-PackageScope["ExpandConjugate"]
-
-
-PackageScope["RotateFFtoWeakEigenbasis"]
 PackageScope["RotateMassToWeakBasis"]
-PackageScope["DiagonalizeWBosonSM"]
-
-
-(* ::Text:: *)
-(*Form-factor types*)
-
-
-PackageScope["FormFactorVector"]
-
-
-PackageScope["InterferenceMatrix"]
 
 
 PackageScope["SpinSummedAmplitude2"]
@@ -79,48 +62,48 @@ PackageScope["UChannelSum"]
 (*FormFactor*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Usage*)
 
 
-FormFactor::usage="FormFactor[type, s,t, {X,Y}, {\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]],\!\(\*SubscriptBox[\(q\), \(1\)]\)[i],\!\(\*SubscriptBox[\(q\), \(2\)]\)[j]}]]
-	Denotes the form-factor for operators of the given type \[Element] {Scalar, Vector, Tensor, DipoleL, DipoleQ}. 
-	The form-factor depends on the partonic Mandelstam variables s and t.
-	The chirality in the lepton current is X \[Element] {Left, Right} and in the quark current it is Y \[Element] {Left, Right}.
-	The flavor indices are \[Alpha], \[Beta] for the leptons and i, j for the quarks.";
+FF::usage= "FF[lorentz, type, {\!\(\*SubscriptBox[\(\[Chi]\), \(\[ScriptL]\)]\),\!\(\*SubscriptBox[\(\[Chi]\), \(q\)]\)}, {\[Alpha],\[Beta],i,j}] represents a form factor with Lorentz structure lorentz \[Element] {Scalar, Vector, Tensor, DipoleL, DipoleQ}. The chirality of the lepton (quark) current is \!\(\*SubscriptBox[\(\[Chi]\), \(\[ScriptL]\)]\) (\!\(\*SubscriptBox[\(\[Chi]\), \(q\)]\)). The field content of the corresponding operator is (\!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(1\)], \(_\)]\)\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\))(\!\(\*OverscriptBox[SubscriptBox[\(q\), \(1\)], \(_\)]\)\!\(\*SubscriptBox[\(q\), \(2\)]\)) with \!\(\*SubscriptBox[\(\[ScriptL]\), \(1, 2\)]\)\[Element]{e,\[Nu]}, \!\(\*SubscriptBox[\(q\), \(1, 2\)]\)\[Element]{u,d} and \[Alpha],\[Beta],i,j\[Element]{1,2,3} are the corresponding flavor indices. The type of the form factors are divided into regular and singular: {\"regular\",{\!\(\*SubscriptBox[\(n\), \(s\)]\),\!\(\*SubscriptBox[\(n\), \(t\)]\)}} is the form factor for an EFT contact interaction with the scaling \!\(\*SuperscriptBox[OverscriptBox[\(s\), \(^\)], SubscriptBox[\(n\), \(s\)]]\)\!\(\*SuperscriptBox[OverscriptBox[\(t\), \(^\)], SubscriptBox[\(n\), \(t\)]]\) in the partonic Mandelstam variables, whereas {mediator, 0 | SM} is the form factor for a non-local interaction through the specified mediator \[Element] {\"Photon\", \"ZBoson\", \"WBoson\", ...}. The singular form factors are divided into Standard Model contributions (SM) and NP contributions (0).
+FF \[Rule] bool is an option that specifies whether the output should be given in terms of form factors (bool=True) or in terms of Wilson coefficients or coupling constants (bool=False), where the latter is the default. This option can be used with: DifferentialCrossSection, CrossSection, EventYield, ChiSquareLHC.";
 
 
-FF::usage= "FF[lorentz, type, {\!\(\*SubscriptBox[\(\[Chi]\), \(\[ScriptL]\)]\),\!\(\*SubscriptBox[\(\[Chi]\), \(q\)]\)}, {\[Alpha],\[Beta],i,j}]
-	Represents a form factor with Lorentz structure lorentz \[Element] {Scalar, Vector, Tensor, DipoleL, DipoleQ}.
-	The chirality of the lepton (quark) current is \!\(\*SubscriptBox[\(\[Chi]\), \(\[ScriptL]\)]\) (\!\(\*SubscriptBox[\(\[Chi]\), \(q\)]\)).
-	The field contant of the corresponding operator is (\!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(1\)], \(_\)]\)\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\))(\!\(\*OverscriptBox[SubscriptBox[\(q\), \(1\)], \(_\)]\)\!\(\*SubscriptBox[\(q\), \(2\)]\)) with \!\(\*SubscriptBox[\(\[ScriptL]\), \(1, 2\)]\)\[Element]{e,\[Nu]}, \!\(\*SubscriptBox[\(q\), \(1, 2\)]\)\[Element]{u,d} and \[Alpha],\[Beta],i,j\[Element]{1,2,3} are the corresponding flavor indices.
-	The types of form factors are divided into regular and singular contributions:
-		{\"regular\",{\!\(\*SubscriptBox[\(n\), \(s\)]\),\!\(\*SubscriptBox[\(n\), \(t\)]\)}} : form factor for an EFT contact interaction with the scaling \!\(\*SuperscriptBox[OverscriptBox[\(s\), \(^\)], SubscriptBox[\(n\), \(s\)]]\)\!\(\*SuperscriptBox[OverscriptBox[\(t\), \(^\)], SubscriptBox[\(n\), \(t\)]]\) in the partonic Mandelstam variables
-		{mediator, 0 | SM}: form factor for a non-contact interaction through the specified mediator \[Element] {\"Photon\", \"ZBoson\", \"WBoson\", ...}
-			Form factors are divided into Standard Model contributions (SM) and NP contributions (0).";
+Scalar::usage= "Scalar denotes a scalar form factor FF[Scalar,...]."
 
 
-Scalar::usage= "Scalar
-	Denotes a scalar form factor: FF[Scalar,...]."
+Vector::usage= "Vector denotes a vector form factor FF[Vector,...]."
 
 
-Vector::usage= "Vector
-	Denotes a vector form factor: FF[Vector,...]."
+Tensor::usage= "Tensor denotes a tensor form factor FF[Tensor,...]."
 
 
-Tensor::usage= "Tensor
-	Denotes a tensor form factor: FF[Tensor,...]."
+DipoleL::usage= "DipoleL denotes a lepton dipole form factor FF[DipoleL,...]."
 
 
-DipoleL::usage= "DipoleL
-	Denotes a lepton dipole form factor: FF[DipoleL,...]."
+DipoleQ::usage= "DipoleQ denotes a quark dipole form factor FF[DipoleQ,...]."
 
 
-DipoleQ::usage= "DipoleQ
-	Denotes a quark dipole form factor: FF[DipoleQ,...]."
+SpinSummedAmplitude2::usage= "SpinSummedAmplitude2[s, t, {\[Alpha],\[Beta],i,j}] computes the modulo square of the amplitude summed over all spin configurations and multiplies the result with the spin-color average factor \!\(\*FractionBox[\(1\), \(12\)]\).";
 
 
-(* ::Subsection:: *)
+ExpandFormFactors::usage= "ExpandFormFactors[arg] performs the form factor expansion for all appearances of FormFactor[...] inside arg.";
+
+
+FormFactor::usage="FormFactor[type, s,t, {X,Y}, {\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]],\!\(\*SubscriptBox[\(q\), \(1\)]\)[i],\!\(\*SubscriptBox[\(q\), \(2\)]\)[j]}]] denotes the form-factor for operators of the given type \[Element] {Scalar, Vector, Tensor, DipoleL, DipoleQ}. The form factor depends on the partonic Mandelstam variables s and t. The chirality in the lepton current is X \[Element] {Left, Right} and in the quark current it is Y \[Element] {Left, Right}. The flavor indices are \[Alpha], \[Beta] for the leptons and i, j for the quarks.";
+
+
+FormFactorVector::usage= "FormFactorVector[s,t,{X,Y},{\[Alpha],\[Beta],i,j}] returns the vector of all FormFactors with: the partonic Mandestam variables s and t; the chirality X in the lepton current, the chirality Y in the quark current; the lepton flavor indices \[Alpha], \[Beta] and the quark flavor indices i,j.";
+
+
+InterferenceMatrix::usage= "InterferenceMatrix[z, {X,Y}] gives the matrix determining the interference pattern of the different form factor Lorentz structures. The first argument z must be the ratio of the partonic Mandelstam variables t/s. The second argument {X,Y} specifies the chiralities of both lepton and quark current.";
+
+
+ComputeInterferencePattern::usage= "ComputeInterferencePattern[s, t, {X,Y}, {\[Alpha],\[Beta],i,j}] performs the matrix multiplication \!\(\*SuperscriptBox[\(F\), \(\[Dagger]\)]\)(s,t).M(t/s).F(s,t).";
+
+
+(* ::Subsection::Closed:: *)
 (*Errors*)
 
 
@@ -158,52 +141,37 @@ FormFactor::unknownindices= "The fifth argument of FormFactor `1` must be a list
 FormFactor[_,_,_,_,x:Except[{_,_,_,_}]]:= (Message[FormFactor::unknownindices, x]; Abort[])
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Formatting*)
 
 
-MakeBoxes[FormFactor[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}], TraditionalForm]:= SubsuperscriptBox[RowBox[{"[",SubsuperscriptBox["F", MakeBoxes[type,TraditionalForm], RowBox[{" ",MakeBoxes[X,TraditionalForm],MakeBoxes[Y,TraditionalForm]}]],"(",ToString[s],",",ToString[t],")","]"}], RowBox[{ToString[i],ToString[j]}], RowBox[{ToString[\[Alpha]],ToString[\[Beta]]}]]
+MakeBoxes[FormFactor[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}], TraditionalForm] := SubsuperscriptBox[RowBox[{"[",SubsuperscriptBox["F", MakeBoxes[type,TraditionalForm], RowBox[{" ",MakeBoxes[X,TraditionalForm],MakeBoxes[Y,TraditionalForm]}]],"(",ToString[s],",",ToString[t],")","]"}], RowBox[{ToString[i],ToString[j]}], RowBox[{ToString[\[Alpha]],ToString[\[Beta]]}]]
 
 
-MakeBoxes[FF[type_,med_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}], TraditionalForm]:=SubsuperscriptBox[RowBox[{"[",SubsuperscriptBox["F", RowBox[{MakeBoxes[type,TraditionalForm], MakeBoxes[med,TraditionalForm]}], RowBox[{" ",MakeBoxes[X,TraditionalForm],MakeBoxes[Y,TraditionalForm]}]],"]"}], RowBox[{ToString[i],ToString[j]}], RowBox[{ToString[\[Alpha]],ToString[\[Beta]]}]]
+MakeBoxes[FF[type_,med_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}], TraditionalForm] := SubsuperscriptBox[RowBox[{"[",SubsuperscriptBox["F", RowBox[{MakeBoxes[type,TraditionalForm], MakeBoxes[med,TraditionalForm]}], RowBox[{" ",MakeBoxes[X,TraditionalForm],MakeBoxes[Y,TraditionalForm]}]],"]"}], RowBox[{ToString[i],ToString[j]}], RowBox[{ToString[\[Alpha]],ToString[\[Beta]]}]]
 
 
-Format[Scalar, TraditionalForm]:= "S"
-Format[Vector, TraditionalForm]:= "V"
-Format[Tensor, TraditionalForm]:= "T"
-Format[DipoleL, TraditionalForm]:= "Dl"
-Format[DipoleQ, TraditionalForm]:= "Dq"
+Format[Scalar, TraditionalForm]  := "S"
+Format[Vector, TraditionalForm]  := "V"
+Format[Tensor, TraditionalForm]  := "T"
+Format[DipoleL, TraditionalForm] := "\!\(\*SubscriptBox[\(D\), \(l\)]\)"
+Format[DipoleQ, TraditionalForm] := "\!\(\*SubscriptBox[\(D\), \(q\)]\)"
 
 
-MakeBoxes["regular", TraditionalForm]:= ToBoxes["reg"]
+MakeBoxes["regular", TraditionalForm] := ToBoxes["reg"]
 
 
-MakeBoxes["Photon", TraditionalForm]:= ToBoxes["\[Gamma]"]
-MakeBoxes["ZBoson", TraditionalForm]:= ToBoxes["Z"]
-MakeBoxes["WBoson", TraditionalForm]:= ToBoxes["W"]
+MakeBoxes["Photon", TraditionalForm] := ToBoxes["\[Gamma]"]
+MakeBoxes["ZBoson", TraditionalForm] := ToBoxes["Z"]
+MakeBoxes["WBoson", TraditionalForm] := ToBoxes["W"]
 
 
-MakeBoxes[Left, TraditionalForm]:= ToBoxes["L"]
-MakeBoxes[Right, TraditionalForm]:= ToBoxes["R"]
+MakeBoxes[Left, TraditionalForm]  := ToBoxes["L"]
+MakeBoxes[Right, TraditionalForm] := ToBoxes["R"]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*FormFactorVector*)
-
-
-(* ::Subsection:: *)
-(*Usage*)
-
-
-FormFactorVector::usage= "FormFactorVector[s,t,{X,Y},{\[Alpha],\[Beta],i,j}]
-	Returns the vector of all FormFactors with:
-		the partonic Mandestam variables s and t;
-		the chirality X in the lepton current, the chirality Y in the quark current; 
-		the lepton flavor indices \[Alpha], \[Beta] and the quark flavor indices i,j.";
-
-
-(* ::Subsection:: *)
-(*Definition*)
 
 
 FormFactorVector[s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:= Transpose[
@@ -217,42 +185,14 @@ FormFactorVector[s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:= Transpose[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*InterferenceMatrix*)
-
-
-(* ::Subsection:: *)
-(*Usage*)
-
-
-InterferenceMatrix::usage= "InterferenceMatrix[z, {X,Y}]
-	Gives the matrix determining the interference pattern of the different form-factor Lorentz structures.
-	The first argument z must be the ratio of the partonic Mandelstam variables t/s.
-	The second argument {X,Y} specifies the chiralities of both lepton and quark current.";
-
-
-(* ::Subsection:: *)
-(*Errors*)
 
 
 InterferenceMatrix::unknownchirality= "The second argument of InterferenceMatrix `1` must be a list of two elements denoting the chirality of the projectos in the lepton and in the quark current {X,Y} where X,Y \[Element] {Left, Rigth}.";
 
 
 InterferenceMatrix[_,x:Except[{_,_}]]:= (Message[InterferenceMatrix::unknownchirality,x];Abort[])
-
-
-(* ::Subsection:: *)
-(*Definition*)
-
-
-(*InterferenceMatrix[z_, {X_, Y_}]:= 
-{
-	{MSS[], 0, MST[z, X, Y], 0, 0},
-	{0, MVV[z, X, Y], 0, 0, 0},
-	{MTS[z, X, Y], 0, MTT[z, X, Y], 0, 0},
-	{0, 0, 0, MDD[z, X, Y], 0},
-	{0, 0, 0, 0, MDD[z, X, Y]}
-}*)
 
 
 InterferenceMatrix[s_, t_, {X_, Y_}]:= 
@@ -265,7 +205,7 @@ InterferenceMatrix[s_, t_, {X_, Y_}]:=
 }
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Individual entries of the interference matrix*)
 
 
@@ -287,20 +227,8 @@ MST[z_, X_, Y_]:= -KroneckerDelta[X,Y] * (1+2*z)
 MTS[z_, X_, Y_]:= MST[z,X,Y]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Spin-summed amplitude square*)
-
-
-(* ::Subsection:: *)
-(*Usage*)
-
-
-SpinSummedAmplitude2::usage= "SpinSummedAmplitude2[s, t, {\[Alpha],\[Beta],i,j}]
-	Computes the modulo square of the amplitude summed over all spin configurations and multiplies the result with the spin-color average factor \!\(\*FractionBox[\(1\), \(12\)]\).";
-
-
-(* ::Subsection:: *)
-(*Definition*)
 
 
 SpinSummedAmplitude2[s_, t_, {\[Alpha]_,\[Beta]_,i_,j_}]:= Module[
@@ -322,18 +250,13 @@ SpinSummedAmplitude2[s_, t_, {\[Alpha]_,\[Beta]_,i_,j_}]:= Module[
 ]
 
 
-(* ::Subsection:: *)
-(*Auxiliary function to perform the matrix multiplication of the FormFactors with the InterferenceMatrix*)
-
-
-ComputeInterferencePattern::usage= "ComputeInterferencePattern[s, t, {X,Y}, {\[Alpha],\[Beta],i,j}]
-	Performs the matrix multiplication \!\(\*SuperscriptBox[\(F\), \(\[Dagger]\)]\)(s,t).M(t/s).F(s,t).";
+(* ::Subsection::Closed:: *)
+(*Perform matrix multiplication of FormFactors with the InterferenceMatrix*)
 
 
 ComputeInterferencePattern[s_, t_, {X_,Y_}, {a_,b_,i_,j_}]:= Module[
 	{res}
 	,
-	(*res= ConjugateTranspose@FormFactorVector[s,t,{X,Y},{a,b,i,j}] . InterferenceMatrix[t/s,{X,Y}] . FormFactorVector[s,t,{X,Y},{a,b,i,j}];*)
 	res= ConjugateTranspose@FormFactorVector[s,t,{X,Y},{a,b,i,j}] . InterferenceMatrix[s,t,{X,Y}] . FormFactorVector[s,t,{X,Y},{a,b,i,j}];
 	res= First@Flatten[res];
 	Return[res]
@@ -344,36 +267,32 @@ ComputeInterferencePattern[s_, t_, {X_,Y_}, {a_,b_,i_,j_}]:= Module[
 (*ExpandFormFactors*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Split FormFactor into regular and singular part*)
 
 
-RegularFF::usage= "RegularFF
-	Denotes the entire regular part of a form-factor.";
+RegularFF::usage= "RegularFF denotes the entire regular part of a form-factor.";
 
 
-SingularFF::usage= "SingularFF
-	Denotes the entire singular part of a form-factor.";
+SingularFF::usage= "SingularFF denotes the entire singular part of a form-factor.";
 
 
-SplitFF::usage= "SplitFF
-	Returns the rule that splits FormFactor into RegularFF and SingularFF.";
+SplitFF::usage= "SplitFF returns the rule that splits FormFactor into RegularFF and SingularFF.";
 
 
 (* Split FormFactor into regular and singular part *)
 SplitFF= FormFactor[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> RegularFF[type,s,t,{X,Y},{\[Alpha],\[Beta],i,j}] + SingularFF[type,s,t,{X,Y},{\[Alpha],\[Beta],i,j}];
 
 
-(* dipoles do not have a regular part *)
+(* dipoles do not have a regular part up to d=8 *)
 RegularFF[DipoleL|DipoleQ, ___]:= 0
 
 
-(* ::Subsection:: *)
-(*Expand the different parts of the form-factors*)
+(* ::Subsection::Closed:: *)
+(*d=8 treatment*)
 
 
-$d8::usage= "$d8
-	Is an ausiliary variable to count power of d=8 operators. With the property \!\(\*SuperscriptBox[\($d8\), \(2\)]\)=0.";
+$d8::usage= "$d8 is an auxiliary variable to count powers of d=8 operators. With the property \!\(\*SuperscriptBox[\($d8\), \(2\)]\)=0.";
 
 
 $d8/:Power[$d8,n_/;n>=2]:= 0
@@ -382,28 +301,17 @@ $d8/:Power[$d8,n_/;n>=2]:= 0
 $d8/:Conjugate[$d8]:= $d8
 
 
-(* ::Subsubsection:: *)
-(*Check if d=8 [delete?]*)
+(* ::Subsection::Closed:: *)
+(*Expand regular form factors*)
 
 
-D8Q[arg_]:= Switch[arg,
-	8, True,
-	6, False,
-	_, Abort[]
-]
-
-
-(* ::Subsubsection:: *)
-(*Expand regular form-factors*)
-
-
-Options[ExpandRegularFF] = {OperatorDimension:> GetOperatorDimension[]};
+Options[ExpandRegularFF] = {OperatorDimension :> GetOperatorDimension[]};
 
 
 (* expands the regular form-factor up to d=6 or d=8 terms as specified. *)
 ExpandRegularFF[OptionsPattern[]]:= Module[
 	{
-		d8(*= Boole@ D8Q[OptionValue[EFTorder]]*),
+		d8,
 		rule= {}
 	}
 	,
@@ -426,8 +334,8 @@ ExpandRegularFF[OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsubsection:: *)
-(*Expand singular form-factors*)
+(* ::Subsection::Closed:: *)
+(*Expand singular form factors*)
 
 
 Options[ExpandSingularFF] = {OperatorDimension:> GetOperatorDimension[]};
@@ -435,7 +343,7 @@ Options[ExpandSingularFF] = {OperatorDimension:> GetOperatorDimension[]};
 
 (* expands the regular form-factor up to d=6 or d=8 terms as specified. *)
 ExpandSingularFF[OptionsPattern[]]:= Module[
-	{d8(*= Boole@ D8Q[OptionValue[EFTorder]]*)}
+	{d8}
 	,
 	(* check whether to consider d=8 operators *)
 	If[OptionValue[OperatorDimension]===8,
@@ -444,13 +352,13 @@ ExpandSingularFF[OptionsPattern[]]:= Module[
 	];
 	
 	SingularFF[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> Plus[
-		(* Add SM contribution *)
+		(* SM contribution *)
 		If[MatchQ[type,Vector],
 			SChannelSum[s, FF[type,{"s",SM},{X,Y},{\[Alpha],\[Beta],i,j}]],
 			0
 		],
+		(* NP contribution *)
 		SChannelSum[s, FF[type,{"s",0},{X,Y},{\[Alpha],\[Beta],i,j}]],
-		(*d8 * $d8 * t * SChannelSum[s, FF[type,{"s",1},{X,Y},{\[Alpha],\[Beta],i,j}]],*) (* this probably does not exist anyway? *)
 		TChannelSum[t, FF[type,{"t",0},{X,Y},{\[Alpha],\[Beta],i,j}]],
 		UChannelSum[-s-t, FF[type,{"u",0},{X,Y},{\[Alpha],\[Beta],i,j}]]
 	]
@@ -461,19 +369,13 @@ ExpandSingularFF[OptionsPattern[]]:= Module[
 (*ChannelSum*)
 
 
-SChannelSum::usage= "SChannelSum[s,FF]
-	Denotes the sum of all propagator in the s-channel multiplied with the corresponding form-factor FF.
-	SChannelSum[s, FF]=\!\(\*UnderscriptBox[\(\[Sum]\), \(A\)]\)\!\(\*FractionBox[SuperscriptBox[\(\[ScriptV]\), \(2\)], \(s - \*SuperscriptBox[SubscriptBox[\(M\), \(A\)], \(2\)] + \*SubscriptBox[\(\[ImaginaryI]\[CapitalGamma]\), \(A\)] \*SubscriptBox[\(M\), \(A\)]\)]\)\!\(\*SubscriptBox[\(FF\), \(A\)]\)";
+SChannelSum::usage= "SChannelSum[s,FF] denotes the sum of all propagator in the s-channel multiplied with the corresponding form factor FF. SChannelSum[s, FF]=\!\(\*UnderscriptBox[\(\[Sum]\), \(A\)]\)\!\(\*FractionBox[SuperscriptBox[\(\[ScriptV]\), \(2\)], \(s - \*SuperscriptBox[SubscriptBox[\(M\), \(A\)], \(2\)] + \*SubscriptBox[\(\[ImaginaryI]\[CapitalGamma]\), \(A\)] \*SubscriptBox[\(M\), \(A\)]\)]\)\!\(\*SubscriptBox[\(FF\), \(A\)]\).";
 
 
-TChannelSum::usage= "TChannelSum[t,FF]
-	Denotes the sum of all propagator in the t-channel multiplied with the corresponding form-factor FF.
-	TChannelSum[t, FF]=\!\(\*UnderscriptBox[\(\[Sum]\), \(A\)]\)\!\(\*FractionBox[SuperscriptBox[\(\[ScriptV]\), \(2\)], \(t - \*SuperscriptBox[SubscriptBox[\(M\), \(A\)], \(2\)] + \*SubscriptBox[\(\[ImaginaryI]\[CapitalGamma]\), \(A\)] \*SubscriptBox[\(M\), \(A\)]\)]\)\!\(\*SubscriptBox[\(FF\), \(A\)]\)";
+TChannelSum::usage= "TChannelSum[t,FF] denotes the sum of all propagator in the t-channel multiplied with the corresponding form-factor FF. TChannelSum[t, FF]=\!\(\*UnderscriptBox[\(\[Sum]\), \(A\)]\)\!\(\*FractionBox[SuperscriptBox[\(\[ScriptV]\), \(2\)], \(t - \*SuperscriptBox[SubscriptBox[\(M\), \(A\)], \(2\)] + \*SubscriptBox[\(\[ImaginaryI]\[CapitalGamma]\), \(A\)] \*SubscriptBox[\(M\), \(A\)]\)]\)\!\(\*SubscriptBox[\(FF\), \(A\)]\).";
 
 
-UChannelSum::usage= "UChannelSum[u,FF]
-	Denotes the sum of all propagator in the u-channel (where u=-s-t) multiplied with the corresponding form-factor FF.
-	USChannelSum[-s-t, FF]=\!\(\*UnderscriptBox[\(\[Sum]\), \(A\)]\)\!\(\*FractionBox[SuperscriptBox[\(\[ScriptV]\), \(2\)], \(\(-s\) - t - \*SuperscriptBox[SubscriptBox[\(M\), \(A\)], \(2\)] + \*SubscriptBox[\(\[ImaginaryI]\[CapitalGamma]\), \(A\)] \*SubscriptBox[\(M\), \(A\)]\)]\)\!\(\*SubscriptBox[\(FF\), \(A\)]\)";
+UChannelSum::usage= "UChannelSum[u,FF] denotes the sum of all propagator in the u-channel (where u=-s-t) multiplied with the corresponding form-factor FF. USChannelSum[-s-t, FF]=\!\(\*UnderscriptBox[\(\[Sum]\), \(A\)]\)\!\(\*FractionBox[SuperscriptBox[\(\[ScriptV]\), \(2\)], \(\(-s\) - t - \*SuperscriptBox[SubscriptBox[\(M\), \(A\)], \(2\)] + \*SubscriptBox[\(\[ImaginaryI]\[CapitalGamma]\), \(A\)] \*SubscriptBox[\(M\), \(A\)]\)]\)\!\(\*SubscriptBox[\(FF\), \(A\)]\).";
 
 
 (* If form factors are set to zers also the corresponding channel sum vanishes *)
@@ -484,17 +386,6 @@ UChannelSum[_,0]:=0
 
 (* ::Subsection:: *)
 (*Expand the full FormFactors*)
-
-
-(* ::Subsubsection:: *)
-(*Usage*)
-
-
-ExpandFormFactors::usage= "ExpandFormFactors[arg] performs the form-factor expansion for all appearances of FormFactor[...] inside arg.";
-
-
-(* ::Subsubsection:: *)
-(*Definitions*)
 
 
 Options[ExpandFormFactors] = {OperatorDimension :> GetOperatorDimension[]};
@@ -525,7 +416,7 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 		FF[Vector,{"regular",{0,0}}, rest___]:> ($aux * FF[Vector,{"regular",{0,0}}, rest]),
 		SChannelSum[s_, FF[type_,{"s",0},rest___]]:> ($aux * SChannelSum[s, FF[type,{"s",0},rest]]),
 		TChannelSum[t_, FF[type_,{"t",0},rest___]]:> ($aux * TChannelSum[t, FF[type,{"t",0},rest]]),
-		UChannelSum[u_, FF[type_,{"u",0},rest___]]:> ($aux * UChannelSum[u, FF[type,{"u",0},rest]]),
+		UChannelSum[uu_, FF[type_,{"u",0},rest___]]:> ($aux * UChannelSum[uu, FF[type,{"u",0},rest]]), (* if u_ is used as pattern here a new variables are exported in the HighPT` context. *)
 		FF[Vector,{"regular",pow:({1,0}|{0,1})}, rest___]:> ($aux^2 * FF[Vector,{"regular",pow}, rest])
 	};
 	temp= (Expand@ExpandConjugate@Expand[temp])/.Power[$aux,n_/;n>=3]:>0;
@@ -540,8 +431,8 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 (*Basic form factor properties*)
 
 
-(* ::Text:: *)
-(*FF should be neutral*)
+(* ::Subsection::Closed:: *)
+(*Require neutral form factors*)
 
 
 FF[_,_,{_,_},{_e,_e,_d,_u}]:=0
@@ -554,73 +445,72 @@ FF[_,_,{_,_},{_\[Nu],_e,_u,_u}]:=0
 FF[_,_,{_,_},{_\[Nu],_e,_d,_d}]:=0
 
 
-(* ::Subsubsection:: *)
-(*Simplifications for Tensor and Scalar form-factors*)
+(* ::Subsection::Closed:: *)
+(*Simplifications for Tensor and Scalar form factors*)
 
 
-(* ::Text:: *)
-(*The following constraints follow from Hypercharge conservation similar to the scalar and tensor operators in the SMEFT*)
+(* The following constraints follow from Hypercharge conservation similar to the scalar and tensor operators in the SMEFT *)
+FF[Tensor,_,{Right,Right},{_,_,_,_d}] := 0
+FF[Tensor,_,{Left,Left},{_,_,_d,_}]   := 0
 
 
-FF[Tensor,_,{Right,Right},{_,_,_,_d}]:= 0
-FF[Tensor,_,{Left,Left},{_,_,_d,_}]:= 0
+FF[Scalar,_,{Right,Right},{_,_,_,_d}] := 0
+FF[Scalar,_,{Left,Left},{_,_,_d,_}]   := 0
+
+FF[Scalar,_,{Right,Left},{_,_,_u,_}] := 0
+FF[Scalar,_,{Left,Right},{_,_,_,_u}] := 0
+
 
 (* opposite chiralities are already removed for Tensors *)
-
-(*
-- still add this explicitely?
-- we might want to gneralize to theories w/o linearly realized SU(2)xU(1) and Hypercharge conservation (a la LEFT) where such operators are allowed.
-*)
-
-FF[Tensor,_,{Right,Left},{_,_,_,_}]:= 0
-FF[Tensor,_,{Left,Right},{_,_,_,_}]:= 0
+FF[Tensor,_,{Right,Left},{_,_,_,_}] := 0
+FF[Tensor,_,{Left,Right},{_,_,_,_}] := 0
 
 
-
-FF[Scalar,_,{Right,Right},{_,_,_,_d}]:= 0
-FF[Scalar,_,{Left,Left},{_,_,_d,_}]:= 0
-
-FF[Scalar,_,{Right,Left},{_,_,_u,_}]:= 0
-FF[Scalar,_,{Left,Right},{_,_,_,_u}]:= 0
+(* ::Subsection:: *)
+(*Singular form factor constraints*)
 
 
-(* ::Subsubsection:: *)
-(*SM form factors are flavor diagonal (except for the W coupling to quarks)*)
+(* ::Subsubsection::Closed:: *)
+(*SM form factors are flavor diagonal, except for the W coupling to quarks*)
 
 
-FF[Vector, {_,SM}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]:= 0 /; (\[Alpha]!=\[Beta])
-FF[Vector, {Except["WBoson"],SM}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
+FF[Vector, {_,SM}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]                := 0 /; (\[Alpha]!=\[Beta])
+FF[Vector, {Except["WBoson"],SM}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}] := 0 /; (i!=j)
 
 
 (* ::Text:: *)
 (*Quark dipoles must be diagonal in leptons*)
 
 
-FF[DipoleQ, {"Photon"|"ZBoson"|"WBoson",0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}]:= 0 /; (\[Alpha]!=\[Beta])
+FF[DipoleQ, {"Photon"|"ZBoson"|"WBoson",0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],_,_}] := 0 /; (\[Alpha]!=\[Beta])
 
 
 (* ::Text:: *)
 (*Lepton dipoles must be diagonal in quarks for Photon and ZBosons*)
 
 
-FF[DipoleL, {"Photon"|"ZBoson",0}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; (i!=j)
+FF[DipoleL, {"Photon"|"ZBoson",0}, {_,_}, {_,_,q1_[i_?IntegerQ],q2_[j_?IntegerQ]}] := 0 /; (i!=j)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Remove SM FF for other s-channel mediators*)
 
 
 FF[Vector, {field:Except["s"], SM}, ___] := 0 /; !MatchQ[field,"Photon"|"ZBoson"|"WBoson"]
 
 
-(* ::Subsubsection:: *)
-(*Z-coupling modifications cannot be both LFV and QFV at the same time*)
+(* ::Subsubsection::Closed:: *)
+(*Remove Z-coupling modifications that are both LFV and QFV at the same time*)
+
+
+(* ::Text:: *)
+(*This can also be removed at d=8, because the SM interference must be LF conserving*)
 
 
 FF[Vector, {"ZBoson",0}, {_,_}, {l1_[\[Alpha]_?IntegerQ],l2_[\[Beta]_?IntegerQ],q1_[i_?IntegerQ],q2_[j_?IntegerQ]}]:= 0 /; ((\[Alpha]!=\[Beta])&&(i!=j))
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*W-boson only couples to left handed fermions in SM*)
 
 
@@ -638,28 +528,28 @@ FF[DipoleL, {"WBoson",0}, {_,Right},___]:= 0
 FF[DipoleQ, {"WBoson",0}, {Right,_},___]:= 0
 
 
-(* ::Subsubsection:: *)
-(*For CC processes the regular vector FF only contribute to the LL chirality configuration*)
-
-
-FF[Vector, {"regular",_}, {OrderlessPatternSequence[Right,_]}, {_,_,_u,_d}|{_,_,_d,_u}]:= 0
-
-
-(* ::Subsubsection:: *)
-(*Consider only left-handed neutrinos*)
-
-
-FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
-
-
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*The photon vertex does not receive corrections in the SMEFT at d=6*)
 
 
 FF[Vector, {"Photon",Except[SM]},___]:= 0
 
 
-(* ::Section:: *)
+(* ::Subsection::Closed:: *)
+(*For CC processes the regular vector FF only contribute to the LL chirality configuration*)
+
+
+FF[Vector, {"regular",_}, {OrderlessPatternSequence[Right,_]}, {_,_,_u,_d}|{_,_,_d,_u}]:= 0
+
+
+(* ::Subsection::Closed:: *)
+(*Consider only left-handed neutrinos*)
+
+
+FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
+
+
+(* ::Section::Closed:: *)
 (*Weak basis rotation for form factors*)
 
 
@@ -757,30 +647,82 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 ]
 
 
-(* ::Section:: *)
-(*Auxiliary functions*)
+(* ::Section::Closed:: *)
+(*Substitute form factors*)
 
 
-(* ::Subsection:: *)
-(*ExpandConjugate*)
+SubstituteFF::usage= "SubstituteFF[\[ScriptE]\[ScriptX]\[ScriptP]\[ScriptR]] substitutes all form factors FF[...] in the given argument \[ScriptE]\[ScriptX]\[ScriptP]\[ScriptR] by the corresponding Wilson coefficients or coupling constants. If running in the SMEFT mode, SubstituteFF takes the following options: EFTorder \[RuleDelayed] \[ScriptN] specifies that the result is expanded up to and including terms of order \!\(\*SuperscriptBox[\(\[CapitalLambda]\), \(-\[ScriptN]\)]\). The default is \[ScriptN]=GetEFTorder[]. OperatorDimension \[Rule] \[ScriptD] specifies that EFT operators up to mass dimension \[ScriptD] should be included. The default is \[ScriptD]=GetOperatorDimension[]; EFTscale -> \[CapitalLambda] sdpecifies the EFT cutoff scale used for the substitutions. The default is \[CapitalLambda]=1000 (GeV). In the mediator mode these Options are ignored."
 
 
-ExpandConjugate::usage= "ExpandConjugate[arg]
-	Expands out all occurances of Conjugate[a+b] in arg.";
+SubstituteFF::remainingFF= "Not all form factors have been replaced. The remaining FF are: `1`"
 
 
-ExpandConjugate[arg_]:= (arg //. {Conjugate[x_Plus]:> Conjugate/@x, Conjugate[x_Times]:> Conjugate/@x})
+Options[SubstituteFF]= {
+	EFTorder          :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[],
+	EFTscale          -> 1000
+};
 
 
-(* ::Subsection:: *)
-(*MyExpand*)
-
-
-(*MyExpand::usage= "MyExpand[arg]
-	Does what Expand[arg] does, just much faster for large sums.";*)
-
-
-MyExpand[arg:(_Plus|_List)]:= Expand/@arg
-
-
-MyExpand[arg:Except[_Plus|_List]]:= Expand[arg]
+SubstituteFF[arg_, OptionsPattern[]]:= Module[
+	{
+		\[Epsilon], (* \[Epsilon] = \[Vee]^2/(\[CapitalLambda]^2) *)
+		subst,
+		temp= arg
+	}
+	,
+	If[$RunMode === "SMEFT",
+		(* make power counting parameter \[Epsilon] real *)
+		\[Epsilon]/:Conjugate[\[Epsilon]]:= \[Epsilon];
+		(* automatic truncation of EFT series *)
+		(* much faster than any other way of truncating the EFT series! *)
+		Switch[(OptionValue[EFTorder]/2),
+			0, \[Epsilon]=0,
+			_, \[Epsilon]/:Power[\[Epsilon],n_/;n>(OptionValue[EFTorder]/2)] = 0
+		];
+	];
+	
+	(* get mediator substitution rules *)
+	subst = Flatten@Table[
+		SubstitutionRulesMediators[med]
+		,
+		{med, Keys[GetMediators[]]}
+	];
+	
+	(* add SMEFT substitution rules *)
+	If[$RunMode === "SMEFT",
+		subst = Join[
+			subst,
+			SubstitutionRulesSMEFT[OptionValue[OperatorDimension], \[Epsilon]]
+		]
+	];
+	
+	subst= Dispatch[subst];
+	
+	(* apply substitution rules *)
+	temp= MyTiming[temp/.CanonizeFF, "FF canonization"];
+	temp= MyTiming[temp/.subst, "FF substitution"];
+	
+	(* check that no form-factors are left *)
+	If[!FreeQ[temp,_FF], Message[SubstituteFF::remainingFF, DeleteDuplicates@Cases[temp,_FF,All]]];
+	
+	(* substitute in constants *)
+	temp= temp/.ReplaceConstants[];
+	temp= ExpandConjugate[temp];
+	
+	(* truncate the EFT series at the desired order *)
+	If[$RunMode === "SMEFT",
+		(*
+		(* this is no longer necessary with automatic EFT series truncation *)
+		temp= MyTiming[Normal@Series[temp,{\[Epsilon],0,OptionValue[EFTorder]/2}], "EFT Series"];
+		*)
+		temp= MyTiming[Expand[temp],"Expand"];
+		(* substitute in the power counting parameter *)
+		temp= temp/.\[Epsilon] -> (Param["vev"]/OptionValue[EFTscale])^2;
+		(* substitute vev *)
+		temp= temp/.ReplaceConstants[];
+	];
+	
+	(* result *)
+	Return[temp/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}/.{0.->0}]
+]

@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`ChiSquare`*)
+(*HighPT`ChiSquare`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Computation of the \[Chi]^2 likelihood*)
 
 
 (* ::Chapter:: *)
@@ -26,61 +26,15 @@ Package["HighPT`"]
 PackageExport["ChiSquareLHC"]
 
 
-PackageExport["MinimizeChiSquare"]
-
-
-PackageScope["ConfidenceRegion"]
-
-
-PackageScope["PlotConfidenceRegion"]
-
-
-PackageScope["PlotConfidenceIntervals"]
-
-
-PackageExport["CombineBins"]
-
-
-PackageExport["RescaleError"]
-
-
-(* ::Text:: *)
-(*rm*)
-
-
-(*PackageExport["PlotTwoParameterFit"]*)
-
-
-(*PackageExport["PlotOneParameterFit"]*)
-
-
 (* ::Chapter:: *)
 (*Private:*)
-
-
-CombineBins::usage= "CombineBins
-	is an Option of ChiSquareLHC[...] that allows to combine several bins of the exerpimental search. 
-	The bins used in a given search \"xxx\" and the corresponding event count per bin can be displayed using LHCSearch[\"xxx\"].
-	Example: for combining the 2nd and 3rd bin as well as the bins 7 to 9 one should specify CombineBins->{{2,3},{7,8,9}}.
-	By default no bins are merged."
 
 
 (* ::Section:: *)
 (*\[Chi]^2 construction*)
 
 
-ChiSquareLHC::usage="ChiSquareLHC[\"proc\"]
-	Computes the \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) for the process specified by the string \"proc\".
-	The \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) is computed for each bin of the experimental search individually.
-	Returned is a list of the \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) for all the experimental bins.
-	To combine all bins into a single \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) one can use:  Plus@@ChiSquareLHC[\"proc\"]
-	The bins and all other relevant information is printed on the screen when running ChiSquareLHC.
-	The options and their default values are: 
-		OutputFormat \[Rule] FF,
-		Coefficients \[Rule] All,
-		EFTorder \[RuleDelayed] GetEFTorder[],
-		OperatorDimension \[RuleDelayed] GetOperatorDimension[],
-		CombineBins -> Default.";
+ChiSquareLHC::usage="ChiSquareLHC[\"proc\"] computes the \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) likelihood for the process specified by the string \"proc\". The \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) is computed for each bin of the experimental search individually. Returned is a list of the \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) for all the experimental bins. The combined \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) can be obtained by Total[ChiSquareLHC[\"proc\"]]. The binning and all other relevant information is printed on the screen when evaluating ChiSquareLHC[\"proc\"]. The options and their default values are: FF \[Rule] False; Coefficients \[Rule] All; EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] GetOperatorDimension[]; CombineBins \[Rule] Default; Luminosity \[Rule] Default; RescaleError \[Rule] True.";
 
 
 Options[ChiSquareLHC]= {
@@ -89,10 +43,13 @@ Options[ChiSquareLHC]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	CombineBins       -> Default,
-	EFTscale             :> GetEFTscale[],
+	EFTscale          :> GetEFTscale[],
 	Luminosity        -> Default,
 	RescaleError      -> True
 };
+
+
+ChiSquareLHC::undefinedsearch= "The LHC search `1` is not defined. The defined searches are `2`.";
 
 
 ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
@@ -100,21 +57,28 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 		\[CapitalDelta]Events, \[Delta]tot, chi2, expData, NObserved, NPredicted, \[Sigma]N, searchLumi, rescale=1,
 		\[Sigma]Predicted, mybins, poissonError
 	}
-	,	
+	,
+	(* OPTION CHECK *)
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, CombineBins, EFTscale, Luminosity, RescaleError};
+	(* Check that proc corresponds to a specified search *)
+	If[!KeyExistsQ[LHCSearch[], proc],
+		Message[ChiSquareLHC::undefinedsearch, proc, LHCSearch[]];
+		Abort[]
+	];
+	
 	(* compute event yield for all bins subtracting SM prediction*)
-	\[Sigma]Predicted= EventYield[
-		proc,
+	\[Sigma]Predicted= EventYield[proc,
 		FF                -> OptionValue[FF],
 		Coefficients      -> OptionValue[Coefficients],
 		EFTorder          -> OptionValue[EFTorder],
 		OperatorDimension -> OptionValue[OperatorDimension],
 		SM                -> False,
-		EFTscale             -> OptionValue[EFTscale],
+		EFTscale          -> OptionValue[EFTscale],
 		Luminosity        -> OptionValue[Luminosity]
 	];
 	
 	(* prepare experimental data *)
-	expData    = LHCSearch[proc];
+	expData = LHCSearch[proc];
 	
 	(* resacling of luminosity for projections *)
 	searchLumi = expData["INFO"]["LUMINOSITY"];
@@ -145,24 +109,28 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 	];
 	
 	If[mybins=!={},
-		{\[Sigma]Predicted,NObserved,NPredicted}= MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, mybins];
-		{\[Sigma]N}= MergeBinsSquared[{\[Sigma]N}, mybins];
-		ConditionalPrint["# Events per bin after merging: ",NObserved];
+		{\[Sigma]Predicted,NObserved,NPredicted} = MergeBins[{\[Sigma]Predicted,NObserved,NPredicted}, mybins];
+		{\[Sigma]N}                              = MergeBinsSquared[{\[Sigma]N}, mybins];
+		ConditionalPrint["# Events per bin after merging: ", NObserved];
 	];
 	
 	(* add Poisson error for data *)
-	poissonError = NObserved /. (0 -> 1);
-	\[Sigma]N = Sqrt[\[Sigma]N^2 + poissonError]; (* if a bin contains 0 events the Poisson error is 1*)
+	poissonError = NObserved /. (0 -> 1); (* if a bin contains 0 events the Poisson error is 1*)
+	\[Sigma]N = Sqrt[\[Sigma]N^2 + poissonError];
 	
 	(* # events differences *)
-	\[CapitalDelta]Events= NObserved - NPredicted;
+	\[CapitalDelta]Events = NObserved - NPredicted;
 	
 	(* chi^2 per bin *)
-	chi2= ((\[CapitalDelta]Events-\[Sigma]Predicted)/\[Sigma]N)^2;
+	chi2 = ((\[CapitalDelta]Events-\[Sigma]Predicted)/\[Sigma]N)^2;
 	
 	(* * *)
 	Return[chi2]
 ]
+
+
+(* ::Subsection::Closed:: *)
+(*Functions for merging bins*)
 
 
 (* combines the desired bins *)
@@ -203,7 +171,7 @@ MergeBins[lists_List, merge_List]:= Module[
 ]
 
 
-(* combines the desired bins by adding their squares and taking the sqrt of the result*)
+(* combines the desired bins in quadrature *)
 MergeBinsSquared[lists_List, merge_List]:= Module[
 	{
 		combinedBins,
@@ -239,6 +207,30 @@ MergeBinsSquared[lists_List, merge_List]:= Module[
 		{list,lists}
 	]
 ]
+
+
+(* ::Chapter:: *)
+(*Auxiliary functionalities not exported in v1*)
+
+
+(* ::Subtitle:: *)
+(*Preliminary versions for internal use only*)
+
+
+(* ::Subsection:: *)
+(*Internal*)
+
+
+PackageScope["MinimizeChiSquare"]
+
+
+PackageScope["ConfidenceRegion"]
+
+
+PackageScope["PlotConfidenceRegion"]
+
+
+PackageScope["PlotConfidenceIntervals"]
 
 
 (* ::Section::Closed:: *)
@@ -350,7 +342,7 @@ ConfidenceRegion[\[Chi]_, parameters_List, relations:({(_WC->_)..} | {(_FF->_)..
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*PlotConfidenceRegion*)
 
 
@@ -502,7 +494,7 @@ p: probability to contain true value
 
 
 (* ::Section::Closed:: *)
-(*Plotting [ ? remove ? ]*)
+(*Plotting*)
 
 
 (* ::Subsection::Closed:: *)

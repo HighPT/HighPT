@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`CrossSection`*)
+(*HighPT`CrossSection`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Cross-section computation for the semileptonic processes pp -> ll and pp -> l\[Nu] at tree level.*)
 
 
 (* ::Chapter:: *)
@@ -36,37 +36,18 @@ PackageExport["SetPDF"]
 (*Internal*)
 
 
-(* ? rm PackageScope for all of these below ? *)
-
-
 PackageScope["HadronicDifferentialCrossSection"]
-
-
 PackageScope["PartonCrossSection"]
 
 
-PackageScope["IntegrateT"]
-
-
 PackageScope["Integrand"]
-
-
-PackageScope["ReplaceIntegrals"]
-
-
 PackageScope["ReduceIntegrands"]
-
-
 PackageScope["PartialFractioning"]
-
-
 PackageScope["PartialFractioningSIntegrals"]
 
 
 PackageScope["PartonLuminosityFunction"]
 PackageScope["PartonLuminosity"]
-
-
 PackageScope["$PDFsets"]
 
 
@@ -107,20 +88,8 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 	(* Expand the FormFactors *)
 	temp= ExpandFormFactors[temp, OperatorDimension -> OptionValue[OperatorDimension]];
 	
-(*	Print@TraditionalForm[
-		temp/.ReplaceConstants[]/.FF[Vector|DipoleL|DipoleQ,___]->0
-	];*)
-	
 	(* Perform phase-space integration over t *)
 	temp= IntegrateT[temp, t];
-	
-	(*\[Lambda]S/:Conjugate[\[Lambda]S]:=\[Lambda]S;
-	\[Lambda]T/:Conjugate[\[Lambda]T]:=\[Lambda]T;
-	\[Lambda]S/:Power[\[Lambda]S,2]:=0;
-	\[Lambda]T/:Power[\[Lambda]T,2]:=0;
-	Print@TraditionalForm[
-		temp/.ReplaceConstants[]/.FF[Vector|DipoleL|DipoleQ,___]->0/.{a:FF[Scalar,___]:>\[Lambda]S*a, b:FF[Tensor,___]:>\[Lambda]T*b}/.{\[Lambda]S->1,\[Lambda]T->1}
-	];*)
 	
 	(* Integration boundaries *)
 	{pTmin, pTmax} = OptionValue[PTcuts];
@@ -140,20 +109,16 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 		\[Sigma]= (temp/.t->t4) - (temp/.t->t3) + (temp/.t->t2) - (temp/.t->t1)
 	];
 	
-	(*Print@TraditionalForm[
-		Expand[\[Sigma]/.ReplaceConstants[]/.FF[Vector|DipoleL|DipoleQ,___]->0/.{a:FF[Scalar,___]:>\[Lambda]S*a, b:FF[Tensor,___]:>\[Lambda]T*b}/.{\[Lambda]S->1,\[Lambda]T->1}]
-	];*)
-	
 	(* rescale the result *)
 	Return@ Expand[factor * \[Sigma]] (* in GeV^-2 *)
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Phase-space integration*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IntegrateT*)
 
 
@@ -176,7 +141,6 @@ IntegrateT[arg_, t_]:= Module[
 	temp= ExpandConjugate[
 		ExpandConjugate[temp]/.Conjugate[t]->t
 	]/.Conjugate[t]->t;
-	(* can the above be simplified? *)
 	
 	(* apply partial fractioning identities *)
 	temp= temp/.PartialFractioning[t];
@@ -198,8 +162,7 @@ IntegrateT[arg_, t_]:= Module[
 (*Integrand*)
 
 
-Integrand::usage= "Integrand[arg,t]
-	Threads over sums and collects in each term all dependence on the specified variable t.";
+Integrand::usage= "Integrand[arg,t] threads over sums and collects in each term all dependence on the specified variable t.";
 
 
 (* Thread Integrand over sums *)
@@ -217,27 +180,11 @@ Integrand[Times[a_,b___],t_]:= a*Integrand[Times[b],t]/;FreeQ[a,t]
 Integrand[a_,t_]:= a*Integrand[1,t]/;(FreeQ[a,t] && !MatchQ[a,1])
 
 
-(*Integrand[a:Except[_Times],t_]:= a/;FreeQ[a,t]*)
-
-
-(* This is forbidden *)
-(*
-Integrand/:Conjugate[Integrand[f_,x_]]:= Integrand[
-	(ExpandConjugate@Conjugate[f] //. {
-		Conjugate[InterpolatingFunction[pol___][y_]]:> InterpolatingFunction[pol][y]
-	}),
-	x
-]
-*)
-
-
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*PartialFractioning*)
 
 
-PartialFractioning::usage= "PartialFractioning[t]
-	Yields the replacement rule that can be used to apply the partial fractioning identities to two distinct t-channel propagators.
-";
+PartialFractioning::usage= "PartialFractioning[t] yields the replacement rule that can be used to apply the partial fractioning identities to two distinct t-channel propagators.";
 
 
 PartialFractioning[t_]:= With[{mediators=GetMediators[]},{
@@ -257,16 +204,14 @@ PartialFractioning[t_]:= With[{mediators=GetMediators[]},{
 	(* for propagators of two particles with identical mass and width *)
 	Propagator[t,m1:Except[_Conjugate]] * Propagator[t, m2:Except[_Conjugate]]:> Propagator[t,m1]^2 /; (mediators[m1][Mass]==mediators[m2][Mass] && mediators[m1][Width]==mediators[m2][Width]),
 	Propagator[-t-s_,m1:Except[_Conjugate]] * Propagator[-t-s_, m2:Except[_Conjugate]]:> Propagator[-t-s,m1] /; (mediators[m1][Mass]==mediators[m2][Mass] && mediators[m1][Width]==mediators[m2][Width])
-}
-]
+}]
 
 
 (* ::Subsubsection::Closed:: *)
 (*ReduceIntegrands*)
 
 
-ReduceIntegrands::usage= "ReduceIntegrands[t]
-	Returns the replacement rules that can be used to simpify integrands by using the trick \!\(\*FractionBox[\(t\), \(t - X\)]\) = 1 + \!\(\*FractionBox[\(X\), \(t - X\)]\).";
+ReduceIntegrands::usage= "ReduceIntegrands[t] returns the replacement rules that can be used to simpify integrands by using the trick \!\(\*FractionBox[\(t\), \(t - X\)]\) = 1 + \!\(\*FractionBox[\(X\), \(t - X\)]\).";
 
 
 ReduceIntegrands[t_]:= {
@@ -282,32 +227,12 @@ ReduceIntegrands[t_]:= {
 	(Power[t, pow_/;(IntegerQ[pow] && pow>0)] * Propagator[-t-s_, mediator_]^2):> t^(pow-1)*(-1 + Propagator[-t-s, mediator]/Propagator[-s,mediator])*Propagator[-t-s, mediator]
 }
 
-(*
-{
-	Integrand[t * Propagator[t, mediator_] * Propagator[t, Conjugate[mediator_]], t]:> Integrand[(1-Propagator[t, mediator]/Propagator[0, mediator]) * Propagator[t, Conjugate[mediator]], t],
-	Integrand[Power[t,pow_/;(IntegerQ[pow] && pow>0)] * Propagator[t, mediator_] * Propagator[t, Conjugate[mediator_]], t]:> Integrand[t^(pow-1) * (1-Propagator[t, mediator]/Propagator[0, mediator]) * Propagator[t, Conjugate[mediator]], t],
 
-	Integrand[t * Propagator[t, mediator_], t]:> Integrand[(1-Propagator[t, mediator]/Propagator[0, mediator]), t],
-	Integrand[Power[t,pow_/;(IntegerQ[pow] && pow>0)] * Propagator[t, mediator_], t]:> Integrand[t^(pow-1) * (1-Propagator[t, mediator]/Propagator[0, mediator]), t],
-	
-	(* for some reason the pattern matchign does not work for the lines below. *)	
-	Integrand[t * Propagator[t, mediator_] * rest___, t]:> Integrand[(1-Propagator[t, mediator]/Propagator[0, mediator]) * rest, t],
-	Integrand[Power[t,pow_/;(IntegerQ[pow] && pow>0)] * Propagator[t, mediator_] * rest___, t]:> Integrand[t^(pow-1) * (1-Propagator[t, mediator]/Propagator[0, mediator]) * rest, t]
-	(*
-	(* these two should never appear since one of the propagators is always conjugated *)
-	Integrand[t * Propagator[t, mediator_]^2 * rest___, t]:> Integrand[(1-Propagator[t, mediator]/Propagator[0, mediator]) * Propagator[t, mediator] * rest, t],
-	Integrand[Power[t,pow_/;(IntegerQ[pow] && pow>0)] * Propagator[t, mediator_]^2 * rest___, t]:> Integrand[t^(pow-1) * (1-Propagator[t, mediator]/Propagator[0, mediator]) * Propagator[t, mediator] * rest, t]
-	*)
-}
-*)
-
-
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*ReplaceIntegrals*)
 
 
-ReplaceIntegrals::usage= "ReplaceIntegrals[t, tMin, tMax]
-	Returns the replacement rules required for all master integrals in t with lower and uper bounds tMin and tMax respectively.";
+ReplaceIntegrals::usage= "ReplaceIntegrals[t, tMin, tMax] returns the replacement rules required for all master integrals in t with lower and uper bounds tMin and tMax respectively.";
 
 
 ReplaceIntegrals[t_]:= {
@@ -352,37 +277,23 @@ PartialFractioningSIntegrals[s_]:={
 (*Integrated CrossSection*)
 
 
-CrossSection::usage= "CrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}]
-	Computes the total hadronic cross section \[Sigma]=\[Integral]\!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\)\[DifferentialD]s for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\) in units of picobarn.
-	The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}.
-	The cross section is obtained by integrating over a specific bin in the dilepton invariant mass and in the transverse momentum.
-	The options and their default values are: 
-		MLLcuts \[Rule] {50,5000} [GeV],
-		PTcuts \[Rule] {0,\[Infinity]} [GeV],
-		OutputFormat \[Rule] FF,
-		Coefficients \[Rule] All,
-		EFTorder \[RuleDelayed] GetEFTorder[],
-		OperatorDimension \[RuleDelayed] GetOperatorDimension[].
-
-CrossSection[{e[\[Alpha]],\[Nu]}]
-	Computes the total hadronic cross section while summing the contributions of all anti-neutrino flavors.
-
-CrossSection[{\[Nu],e[\[Beta]]}]
-	Computes the total hadronic cross section while summing the contributions of all neutrino flavors.";
+CrossSection::usage= "CrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}] computes the total hadronic cross section \[Sigma]=\[Integral]\!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\)\[DifferentialD]s for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\) in units of picobarn. The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}. The cross section is obtained by integrating over a specific bin in the dilepton invariant mass and in the transverse momentum. The options and their default values are: MLLcuts \[Rule] {50,13000} [GeV]; PTcuts \[Rule] {0,\[Infinity]} [GeV]; FF \[Rule] False; Coefficients \[Rule] All; EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] GetOperatorDimension[], EFTscale \[RuleDelayed] GetEFTscale[], Efficiency \[Rule] False.
+CrossSection[{e[\[Alpha]],\[Nu]}] computes the total hadronic cross section while summing the contributions of all anti-neutrino flavors.
+CrossSection[{\[Nu],e[\[Beta]]}] computes the total hadronic cross section while summing the contributions of all neutrino flavors.";
 
 
 CrossSection::inteval= "Not all \!\(\*OverscriptBox[\(s\), \(^\)]\) integrals have been evaluated. Number of unevaluated integrals: `1`.";
 
 
 Options[CrossSection]= {
-	MLLcuts           -> {50,10000},
+	MLLcuts           -> {50,13000},
 	PTcuts            -> {0,\[Infinity]},
 	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	Efficiency        -> False,
-	EFTscale             :> GetEFTscale[]
+	EFTscale          :> GetEFTscale[]
 };
 
 
@@ -432,30 +343,25 @@ CrossSection[{\[Nu],e[b_]}, OptionsPattern[]]:= Module[
 ]
 
 
-(* This could potentially simplify the computation, but for it to work the partial fractioning identities need a rework *)
-(*"Photon"/:Conjugate["Photon"]:="Photon"*)
-
-
 (* for NC and CC with specific \[Nu] flavor *)
 CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern[]]:= Module[
 	{
-		\[Sigma],s,sMin,sMax,ptCuts, (*integrals*)
-		sIntegralList, (*sIntegralListConj,*) 
+		\[Sigma],s,sMin,sMax,ptCuts,
+		sIntegralList,
 		dummyIntegral, 
 		integralAssoc, integralAssocReverse, 
 		nonRedundantIntegarlList={},
-		MyMin, MyMax (* Min and Max are OneIdentity which breaks patternmatching below *)
+		MyMin, MyMax (* these are proxies for Min and Max are OneIdentity which breaks patternmatching below *)
 	}
 	,
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, MLLcuts, EFTscale};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, MLLcuts, Efficiency, EFTscale};
 	
-	(* make s real *)
 	(*
-	(* The line below slows down the final Expand in HadronicDifferentialCrossSection by a lot, for whatever reason...
-	However, the way the code works Conjugate[s] anyway no longer appears. *)
+	(* slows down computations and is unnecessary *)
 	s/:Conjugate[s]:= s;
 	*)
+	
 	MyMin/:Conjugate[MyMin]:= MyMin;
 	MyMax/:Conjugate[MyMax]:= MyMax;
 	
@@ -476,58 +382,20 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	, "Integrand (s)"
 	];
 	
+	(* simplify integrals *)
 	\[Sigma]= \[Sigma]/.PartialFractioning[s];
-
 	\[Sigma]= \[Sigma]//.ReduceIntegrands[s];
-	
 	\[Sigma]= \[Sigma]//.PartialFractioningSIntegrals[s];
 	
-	
-(*
-	(* - - - - - - - - - - - - - - *)
-	(* OLD INTEGRAL COMPUTATION *)
-	\[Sigma]= Collect[\[Sigma],_Integrand];
-	\[Sigma]= (\[Sigma]/.ReplacePropagators);
-	\[Sigma]= (\[Sigma]/.ReplaceConstants[]);
-	\[Sigma]= (\[Sigma]/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}]);
-*)	
-	
-	(* - - - - - - - - - - - - - - *)
-	(* NEW INTEGRAL COMPUTATION: identifying complex conjugated integrals *)
 	(* Min and Max are OneIdentity which breaks patternmatching below *)
 	\[Sigma]= \[Sigma] /. {Min->MyMin, Max->MyMax};
+	
 	(* find list of all non-equivalent integrals *)
 	sIntegralList= DeleteDuplicates@Cases[\[Sigma], _Integrand, All];
+	
 	(* built association with unique symbols *)
 	integralAssoc= Association[(# -> dummyIntegral[Unique[]])& /@ sIntegralList];
-	(* get complex conjugated integrals *)
-	(*sIntegralListConj= (Conjugate /@ sIntegralList)//.{Conjugate[Sqrt[arg_]]:>Sqrt[Conjugate@arg], Conjugate[x_MyMin]:>x, Conjugate[x_MyMax]:>x};*)
-	(* The below does not work, for what ever reason *)
-	(*Do[
-		If[MatchQ[sIntegralList[[n]], sIntegralListConj[[n]]],
-			(* for self-conjugate intergrals *)
-			(*Print["x"];*)
-			AppendTo[nonRedundantIntegarlList, sIntegralList[[n]]]
-			,
-			(* for complex integrals *)
-			*If[MemberQ[sIntegralListConj[[n;;]], sIntegralList[[n]]],
-				(* modify the association *)
-				(*Print["y"];*)
-				AssociateTo[integralAssoc, (Conjugate[sIntegralList[[n]]]//.{Conjugate[Sqrt[arg_]]:>Sqrt[Conjugate@arg], Conjugate[x_MyMin]:>x, Conjugate[x_MyMax]:>x}) -> Conjugate[integralAssoc[sIntegralList[[n]]]]];
-				AppendTo[nonRedundantIntegarlList, sIntegralList[[n]]]
-				,
-				Echo@MemberQ[sIntegralListConj[[;;n]], sIntegralList[[n]]];
-				(*
-				Print["z"];
-				
-				Echo[sIntegralList[[n]]];
-				Echo[sIntegralListConj[[n]]];
-				Print["- - - - - - - - - -"]*)
-			]
-		]
-		,
-		{n, Length[sIntegralList]}
-	];*)
+	
 	(* find self conjugate and complex conjugated integrals *)
 	Do[
 		(* check if int is already in list *)
@@ -545,33 +413,36 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 		{int,sIntegralList}
 	];
 	
-	(*Echo[Length@nonRedundantIntegarlList, "min. # of integrals"];*)
-	
 	(* compute necessary integrals and store them as an association*)
 	integralAssocReverse= Table[
 		integralAssoc[int] -> int
 		,
 		{int, nonRedundantIntegarlList}
 	];
+	
+	(* built the replacement rules *)
 	integralAssocReverse= integralAssocReverse/.ReplacePropagators;
 	integralAssocReverse= integralAssocReverse/.ReplaceConstants[];
 	integralAssocReverse= integralAssocReverse/.{MyMin->Min, MyMax->Max};
 	MyEcho[Length[integralAssocReverse], "# Integrals"];
+	
+	(* if required print all integrals *)
 	(*
-	(* Print all integrals *)
 	Do[
 		Print[int]
 		,
 		{int, DeleteDuplicates@Cases[integralAssocReverse,ig_Integrand :> (ig/.{s->Global`s, _InterpolatingFunction->Global`IF}), All]}
 	];
 	*)
-	integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}(*, AccuracyGoal\[Rule]4*)], "NIntegrate"]; (* modify accuracy goal ? *)
-	(*integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> CachedIntegrals[arg,{x,sMin,sMax}(*, AccuracyGoal\[Rule]4*)], "NIntegrate"]; (* modify accuracy goal ? *)*)
+	
+	integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}], "NIntegrate"];
+	(*integralAssocReverse= MyTiming[integralAssocReverse/.Integrand[arg_,x_]:> CachedIntegrals[arg,{x,sMin,sMax}], "NIntegrate"]; *)
 	integralAssocReverse= Association[integralAssocReverse];
 	
 	(* substitute in cross section *)
 	\[Sigma]= \[Sigma] /. integralAssoc;
 	\[Sigma]= \[Sigma] /. integralAssocReverse;
+	
 	(* warning if some integrals have not been computed *)
 	If[!FreeQ[\[Sigma], _dummyIntegral],
 		Message[CrossSection::inteval, Length@DeleteDuplicates@Cases[\[Sigma], _dummyIntegral, All]]
@@ -580,16 +451,6 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	(* replace remaining propagators and constants outside integrands *)
 	\[Sigma]= \[Sigma]/.ReplacePropagators;
 	\[Sigma]= \[Sigma]/.ReplaceConstants[];
-	
-	(* - - - - - - - - - - - - - - *)
-	(* old integral computation *)
-	(*
-	\[Sigma]= Collect[\[Sigma],_Integrand];
-	\[Sigma]= (\[Sigma]/.ReplacePropagators);
-	\[Sigma]= (\[Sigma]/.ReplaceConstants[]);
-	\[Sigma]= (\[Sigma]/.Integrand[arg_,x_]:> NIntegrate[arg,{x,sMin,sMax}]);
-	*)
-	(* - - - - - - - - - - - - - - *)
 	
 	(* select specified FF if required *)
 	If[!FreeQ[OptionValue[Coefficients],_FF],
@@ -600,7 +461,7 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 	If[!OptionValue[FF],
 		\[Sigma]= SubstituteFF[
 			\[Sigma],
-			EFTscale             -> OptionValue[EFTscale],
+			EFTscale          -> OptionValue[EFTscale],
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension]
 		]
@@ -617,8 +478,8 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 ]
 
 
-(* ::Subsubsection:: *)
-(*Cached numeric integrals*)
+(* ::Subsubsection::Closed:: *)
+(*Cached numeric integrals [not in use currently]*)
 
 
 $NumericIntegrals= FileNameJoin[{Global`$DirectoryHighPT,"NumericIntegrals"}];
@@ -647,8 +508,7 @@ CachedIntegrals[integrand_,{s_,sMin_,sMax_}] := Module[
 (*Differential cross-section in s (for internal use)*)
 
 
-HadronicDifferentialCrossSection::usage= "HadronicDifferentialCrossSection[]
-	Computes the differential hadronic cross-section.";
+HadronicDifferentialCrossSection::usage= "HadronicDifferentialCrossSection[] computes the differential hadronic cross-section.";
 
 
 Options[HadronicDifferentialCrossSection]= {
@@ -726,7 +586,6 @@ Module[
 	];
 	
 	(* rotate from mass to weak basis for quark flavor indices *)
-	(*\[Sigma]HadronDifferential= \[Sigma]HadronDifferential/. RotateFFtoWeakEigenbasis;*)
 	\[Sigma]HadronDifferential= RotateMassToWeakBasis[\[Sigma]HadronDifferential];
 	(* change units from GeV^-2 to pb *)
 	\[Sigma]HadronDifferential= GeV2toPB * \[Sigma]HadronDifferential;
@@ -748,17 +607,7 @@ Module[
 (*Differential cross section (for external use)*)
 
 
-DifferentialCrossSection::usage= "DifferentialCrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}]
-	Computes the differential hadronic cross section \!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\) for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\) in units of picobarn.
-	The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}.
-	The result is returned as a function of the partonic center of mass energy \!\(\*OverscriptBox[\(s\), \(^\)]\).
-	Usage: if \[Sigma]=DifferentialCrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}]; then \[Sigma][\!\(\*OverscriptBox[\(s\), \(^\)]\)] can be used to evaluate the cross section at any value \!\(\*OverscriptBox[\(s\), \(^\)]\).
-	The options and their default values are: 
-		PTcuts \[Rule] {0,\[Infinity]} [GeV],
-		OutputFormat \[Rule] FF,
-		Coefficients \[Rule] All,
-		EFTorder \[RuleDelayed] GetEFTorder[],
-		OperatorDimension \[RuleDelayed] GetOperatorDimension[].";
+DifferentialCrossSection::usage= "DifferentialCrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}] computes the differential hadronic cross section \!\(\*FractionBox[\(d\[Sigma]\), \(ds\)]\) for the process p p -> \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\) in units of picobarn. The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}. The result is returned as a function of the partonic center of mass energy \!\(\*OverscriptBox[\(s\), \(^\)]\). Usage: if \[Sigma]=DifferentialCrossSection[{\!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\)[\[Alpha]],\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)[\[Beta]]}], then \[Sigma][\!\(\*OverscriptBox[\(s\), \(^\)]\)] can be used to evaluate the differential cross section at any value of \!\(\*OverscriptBox[\(s\), \(^\)]\). The options and their default values are: PTcuts \[Rule] {0,\[Infinity]} [GeV]; FF \[Rule] False; Coefficients \[Rule] All; EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] GetOperatorDimension[]; EFTscale \[RuleDelayed] GetEFTscale[].";
 
 
 Options[DifferentialCrossSection]= {
@@ -767,11 +616,11 @@ Options[DifferentialCrossSection]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	PTcuts            -> {0,\[Infinity]},
-	EFTscale             :> GetEFTscale[]
+	EFTscale          :> GetEFTscale[]
 };
 
 
-DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
+DifferentialCrossSection[{\[Alpha]:(e[_]|\[Nu][_]),\[Beta]:(e[_]|\[Nu][_])}, OptionsPattern[]]:= Module[
 	{\[Sigma],s}
 	,
 	(* Check options *)
@@ -779,7 +628,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	
 	(* compute d\[Sigma]/ds *)
 	\[Sigma]= HadronicDifferentialCrossSection[s, {\[Alpha],\[Beta]}, 
-		PTcuts -> OptionValue[PTcuts],
+		PTcuts            -> OptionValue[PTcuts],
 		OperatorDimension -> OptionValue[OperatorDimension]
 	];
 	
@@ -798,7 +647,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 	If[!OptionValue[FF],
 		\[Sigma]= SubstituteFF[
 			\[Sigma],
-			EFTscale             -> OptionValue[EFTscale],
+			EFTscale          -> OptionValue[EFTscale],
 			EFTorder          -> OptionValue[EFTorder],
 			OperatorDimension -> OptionValue[OperatorDimension]
 		]
@@ -821,10 +670,7 @@ DifferentialCrossSection[{\[Alpha]_,\[Beta]_}, OptionsPattern[]]:= Module[
 (*Parton luminosity functions*)
 
 
-PartonLuminosityFunction::usage= "PartonLuminosityFunction['q_qbar'][\[Tau]]
-	Is the parton luminosity function for the quark flavor combination given by the string 'q_qbar'.
-	The u\!\(\*OverscriptBox[\(d\), \(_\)]\) parton luminosity is for example given by PartonLuminosityFunction['u_dbar'].
-	The parton luminosity functions can be evaluated at a given energy scale \!\(\*SqrtBox[\(s\)]\) by using: PartonLuminosityFunction['q_qbar'][\!\(\*SqrtBox[\(s\)]\)].";
+PartonLuminosityFunction::usage= "PartonLuminosityFunction['q_qbar'][\[Tau]] is the parton luminosity function for the quark flavor combination given by the string 'q_qbar'. The u\!\(\*OverscriptBox[\(d\), \(_\)]\) parton luminosity is for example given by PartonLuminosityFunction['u_dbar']. The parton luminosity functions can be evaluated at a given energy scale \!\(\*SqrtBox[\(s\)]\) by using: PartonLuminosityFunction['q_qbar'][\!\(\*SqrtBox[\(s\)]\)].";
 
 
 (* ::Subsection::Closed:: *)
@@ -859,7 +705,7 @@ $DirectoryPartonLuminosityFiles= FileNameJoin[
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Initialize parton luminosities*)
 
 
@@ -889,6 +735,10 @@ $PDFsets  = {
 };
 
 
+SetPDF::usage = "SetPDF[\"pdf\"] changes the PDF set used for cross section computations to the set labeled by \"pdf\".
+SetPDF[] list all available PDF sets.";
+
+
 (* function to laod a new set of PDFs *)
 SetPDF[pdf_:Alternatives@@$PDFsets]:=Module[
 	{}
@@ -910,20 +760,13 @@ SetPDF[pdf_:Alternatives@@$PDFsets]:=Module[
 
 
 (* list all available PDF sets *)
-SetPDF[]:=($PDFsets)
+SetPDF[] := ($PDFsets)
 
 
 (* throw a warning if PDF is unknown *)
-SetPDF::unknownpdf="The PDF label `1` is not known. You can use ChoosePDF[] to list all available PDFs.";
-SetPDF[arg:Except[Alternatives@@$PDFsets]]:=Message[SetPDF::unknownpdf,arg]
+SetPDF::unknownpdf = "The PDF label `1` is unknown. The available PDF sets are: `2`";
+SetPDF[arg:Except[Alternatives@@$PDFsets]] := Message[SetPDF::unknownpdf, arg, $PDFsets]
 
 
 (* initialization *)
 SetPDF["PDF4LHC15"];
-
-
-(*Do[
-	LoadLuminosityFunction[file];
-	,
-	{file, $PartonLuminosityFiles}
-];*)

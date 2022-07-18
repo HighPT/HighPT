@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`Experiments`*)
+(*HighPT`Experiments`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Provides the experimental information for the different LHC searches.*)
 
 
 (* ::Chapter:: *)
@@ -23,17 +23,11 @@ Package["HighPT`"]
 (*External*)
 
 
-(*PackageExport["ExperimentInfo"]*)
-
-
 PackageExport["LHCSearch"]
 
 
 (* ::Subsection:: *)
 (*Internal*)
-
-
-PackageExport["CompareData"]
 
 
 PackageScope["$SearchDirectories"]
@@ -46,9 +40,6 @@ PackageScope["$DefaultCombinedBins"]
 (*Private:*)
 
 
-$Bins::usage= "$Bins[\"xxx\"] gives the experimental bins for the \"xxx\" final state."
-
-
 $NEventsObserved::usage= "$NEventsObserved[\"xxx\"] gives the number of events observed by the experiment for the \"xxx\" final state."
 
 
@@ -58,11 +49,11 @@ $NEventsPredicted::usage= "$NEventsPredicted[\"xxx\"] gives SM expectation value
 $NEventsUncertainty::usage= "$NEventsUncertainty[\"xxx\"] ";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Loading the experimental results*)
 
 
-LoadExperimentalResults::usage= "LoadExperimentalResults[] loads all experiemntal measurements.";
+LoadExperimentalResults::usage= "LoadExperimentalResults[\"proc\"] loads all experiemntal measurements for the search \"proc\".";
 
 
 LoadExperimentalResults[str_String]:= Get@FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", str, str<>".dat"}];
@@ -90,34 +81,11 @@ LoadExperimentalResultsCSV[str_String]:= Import[
 (*LHCSearch*)
 
 
-LHCSearch::usage= "LHCSearch[]
-	Lists all LHC searches that are available for the analysis.
-
-LHCSearch[\"proc\"]
-	Loads and returns all available date for the LHC search specified by the string \"proc\" as an association."
+LHCSearch::usage= "LHCSearch[\"proc\"] loads and returns all available data for the LHC search specified by the string \"proc\" as an association.
+LHCSearch[] lists all LHC searches that are currently available in HighPT`."
 
 
-CompareData[str_String]:= Module[{proc=str, temp, aux},
-	(* use alias if available *)
-	If[KeyExistsQ[$Searches, str], proc= $SearchDirectories[str]];
-	(* Load experimental results *)
-	LoadExperimentalResults[proc];
-	(* set experimental data *)
-	(*LHCSearch[str]*)temp= <|
-		"Info"                  -> $Info[proc],
-		"Observed"              -> $NEventsObserved[proc],
-		"Expected"              -> $NEventsPredicted[proc],
-		"Error"                 -> $NEventsUncertainty[proc],
-		"DefaultBinCombination" -> $DefaultCombinedBins[str]
-	|>;
-	
-	aux=LoadExperimentalResultsCSV[proc];
-	Print["DATA: ", Chop[(aux[[15;;,3]]-$NEventsObserved[proc])/($NEventsObserved[proc]+1),10^-2]];
-	Print["BKG:  ", Chop[(aux[[15;;,5]]-$NEventsPredicted[proc])/($NEventsPredicted[proc]+1),10^-2]];
-	Print["\[CapitalDelta]BKG: ", Chop[(aux[[15;;,7]]-$NEventsUncertainty[proc])/($NEventsUncertainty[proc]+1),10^-2]];
-	
-	Return[temp]
-]
+LHCSearch::undefinedsearch= "The LHC search `1` is not defined. The defined searches are `2`.";
 
 
 LHCSearch[str_String]:= Module[
@@ -130,6 +98,12 @@ LHCSearch[str_String]:= Module[
 		bkg,
 		\[CapitalDelta]bkg
 	},
+	(* Check that proc corresponds to a specified search *)
+	If[!KeyExistsQ[LHCSearch[], str],
+		Message[LHCSearch::undefinedsearch, str, LHCSearch[]];
+		Abort[]
+	];
+	
 	(* use alias if available *)
 	If[KeyExistsQ[$Searches, str], proc= $SearchDirectories[str]];
 	
@@ -175,11 +149,41 @@ LHCSearch[str_String]:= Module[
 LHCSearch[]:= $Searches
 
 
+(* ::Subsubsection::Closed:: *)
+(*Internal module for comparisons [no used]*)
+
+
+(*PackageScope["CompareData"]*)
+
+
+CompareData[str_String]:= Module[{proc=str, temp, aux},
+	(* use alias if available *)
+	If[KeyExistsQ[$Searches, str], proc= $SearchDirectories[str]];
+	(* Load experimental results *)
+	LoadExperimentalResults[proc];
+	(* set experimental data *)
+	(*LHCSearch[str]*)temp= <|
+		"Info"                  -> $Info[proc],
+		"Observed"              -> $NEventsObserved[proc],
+		"Expected"              -> $NEventsPredicted[proc],
+		"Error"                 -> $NEventsUncertainty[proc],
+		"DefaultBinCombination" -> $DefaultCombinedBins[str]
+	|>;
+	
+	aux=LoadExperimentalResultsCSV[proc];
+	Print["DATA: ", Chop[(aux[[15;;,3]]-$NEventsObserved[proc])/($NEventsObserved[proc]+1),10^-2]];
+	Print["BKG:  ", Chop[(aux[[15;;,5]]-$NEventsPredicted[proc])/($NEventsPredicted[proc]+1),10^-2]];
+	Print["\[CapitalDelta]BKG: ", Chop[(aux[[15;;,7]]-$NEventsUncertainty[proc])/($NEventsUncertainty[proc]+1),10^-2]];
+	
+	Return[temp]
+]
+
+
 (* ::Section:: *)
 (*Searches*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*List of all available searches*)
 
 
@@ -198,8 +202,8 @@ $Searches= <|
 |>
 
 
-(* ::Subsection:: *)
-(*internal labeling of the searches*)
+(* ::Subsection::Closed:: *)
+(*Internal labeling of the searches*)
 
 
 $SearchDirectories= <|
@@ -217,12 +221,12 @@ $SearchDirectories= <|
 |>
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Default combined bins*)
 
 
 (*
-If bins are added/removed for a search, the reading of efficiency matrices must also be changed!
+If the default binning is changed, the reading of efficiency matrices must probably also be changed!
 *)
 $DefaultCombinedBins= <|
 	"di-tau-ATLAS"        -> {},

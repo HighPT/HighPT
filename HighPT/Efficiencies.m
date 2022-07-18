@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`Efficiencies`*)
+(*HighPT`Efficiencies`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Provides efficiency kernels relating computed cross section to experimental measurements.*)
 
 
 (* ::Chapter:: *)
@@ -129,7 +129,7 @@ LoadEfficiencies::unabletoreadfiles= "Error while interpreting efficiency files:
 LoadEfficiencies::duobledef= "Efficiencies defined multiple times: `1`.";
 
 
-LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
+LoadEfficiencies[proc_String]:= Module[
 	{(*directory,*) files, substitutions, npMediators, npMasses}
 	,	
 	(* load fiels in the required directory *)
@@ -144,7 +144,8 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 					"*.dat"
 				}],
 				"Table"
-			],
+			]
+		,
 		(* mediator mode *)
 		"Model",
 			npMediators = KeyDrop[GetMediators[],{"Photon","ZBoson","WBoson"}];
@@ -247,17 +248,12 @@ EfficiencyReplacements[files_List, proc_]:= Module[
 BuildEfficiencies[file_, proc_]:= Module[
 	{info, effTable, eff, replace={},c}
 	,
-	(*
-	(* file header *)
-	info= file[[2;;8,4;;]];
-	(* efficiency table *)
-	effTable= file[[13;;,4;;]];
-	*)
 	Switch[$RunMode,
 		"SMEFT", c=0,
 		"Model", c=1
 	];
 	
+	(* process specific reading configurations for efficiency files *)
 	Switch[proc,
 		"muon-tau-CMS" | "electron-tau-CMS" | "electron-muon-CMS",
 			info= file[[4;;10,4;;]];
@@ -396,26 +392,6 @@ EfficiencyFromHeader[info_]:= Module[
 	coeff= info[[5]]/.{0}->{0,0};
 	
 	(* type *)
-	(*
-	Switch[info[[6,1]],
-		"Reg*Reg",       type= {"regular","regular"},
-		"A*Reg"|"Reg*A", type= {"regular","Photon"},
-		"Z*Reg"|"Reg*Z", type= {"regular","ZBoson"},
-		"W*Reg"|"Reg*W", type= {"regular","WBoson"},
-		"A*A",           type= {"Photon","Photon"},
-		"Z*Z",           type= {"ZBoson","ZBoson"},
-		"A*Z"|"Z*A",     type= {"Photon","ZBoson"},
-		"W*W",           type= {"WBoson","WBoson"},
-		"S1*S1",         type= {"S1","S1"},
-		"S3*S3",         type= {"S3","S3"},
-		"U1*U1",         type= {"U1","U1"},
-		"U3*U3",         type= {"U3","U3"},
-		"R2*R2",         type= {"R2","R2"},
-		"V2*V2",         type= {"V2","V2"},
-		"A*S1",          type= {"S1","S1"},
-		_, Message[LoadEfficiencies::unabletoreadfiles, "type: "<>ToString[info[[6,1]]]]
-	];
-	*)
 	If[Length[info[[6]]]===1,
 		type = StringSplit[info[[6,1]],"*"];
 		type = type /. str_String:> StringReplace[str,"~"->"t"];

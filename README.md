@@ -1,23 +1,52 @@
 # HighPT
 
-HighPT is a code ...
+HighPT is a Mathematica package for the analysis of high-energy data of semileptonic transitions at hadron colliders. It allows to compute high-pT tail observables for semileptonic processes, i.e. Drell-Yan cross sections, for dilepton and monolepton final states, at the LHC. 
 
-If you use HighPT please cite: [arXiv:2203.xxxxx](https://arxiv.org/abs/2203.xxxxx).
+These observables can be calculated within:
+* The Standard Model Effective Field Theory at tree-level, including the relevant operators up to mass dimension eight to ensure a consistent description of cross section including terms of O(Λ^−4) in the cutoff scale Λ.
+* BSM models with new tree-level mediators, that can be resolved at LHC energies, enabling the computation of the cross section including the full propagation effects of these new particles.
 
-All below is just copied from matchete ...
+The main routines of HighPT allow to compute:
+* differntial cross sections,
+* integrated cross sections,
+* event yields,
+* likelihoods.
+
+The experimental resonance searches, based on the full run-2 data by ATLAS or CMS, recastedd and implemented in HighPT are:
+* pp → ττ ATLAS [\[2002.12223\]](http://arxiv.org/abs/2002.12223)
+* pp → μμ CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
+* pp → ee CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
+* pp → τν ATLAS [\[ATLAS-CONF-2021-025\]](https://cds.cern.ch/record/2773301/)
+* pp → μν ATLAS [\[1906.05609\]](http://arxiv.org/abs/1906.05609)
+* pp → eν ATLAS [\[1906.05609\]](http://arxiv.org/abs/1906.05609)
+* pp → τμ CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
+* pp → τe CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
+* pp → μe CMS [\[2205.06709\]](http://arxiv.org/abs/2205.06709)
+
+If you use HighPT please cite: [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx).
+
 
 ## Installing and loading of the package
 
 The simplest way to download and install HighPT is to run the following command in a Mathematica session:
 
-> Import["https://github.com/HighPT/HighPT/raw/master/install.m"]
-[This will only work when the repository is made public!]
+```
+Import["https://github.com/HighPT/HighPT/raw/master/install.m"]
+```
 
-This will download and install HighPT in the Applications folder of Mathematica's base directory. To load HighPT use the command:
+This will download and install HighPT in the Applications folder of Mathematica's base directory. 
+Alternatively you can also download the package manually from this website. In this case the path to the directory containing the HighPT code must be specified every time before lading the package by
+```
+PrependTo[$Path,"path/to/HighPT/directory"]
+```
 
-> <<HighPT`
+To load HighPT use the command:
 
-The complete set of routines and usage examples can be found in [arXiv:2203.xxxxx](https://arxiv.org/abs/2203.xxxxx). This repository also contains two notebook examples: ...
+```
+<< HighPT`
+```
+
+The complete set of routines and usage examples can be found in [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx). This repository also contains several example notebook that can serve as templates.
 
 ## Authors
 
@@ -33,7 +62,7 @@ Please submit bugs and feature requests using GitHub's issue system.
 
 ## License
 
-HighPT is free software under the terms of MIT License
+HighPT is released under the MIT License.
 
 
 ## Acknowledgments

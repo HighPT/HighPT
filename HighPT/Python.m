@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`Python`*)
+(*HighPT`Python`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Module for exporting results to python.*)
 
 
 (* ::Chapter:: *)
@@ -30,20 +30,17 @@ PackageExport["PythonExport"]
 (*Private:*)
 
 
-(* ::Section:: *)
-(*WCxf \[LongDash] Wilson coefficient exchange format*)
+(* ::Section::Closed:: *)
+(*WCxf \[LongDash] Wilson coefficient exchange format [also contains couplings]*)
 
 
-WCxf::usage= "WCxf[\"coef\"]
-	Denotes the Wilson coefficient that is labeld by coef in the Warsaw basis as specified by the WCxf format.";
+WCxf::usage= "WCxf[\"coef\"] denotes the Wilson coefficient that is labeld by \"coef\" in the Warsaw basis as specified by the WCxf format.";
 
 
-Cxf::usage "Cxf[\"coupling\"]
-	Denotes the NP coupling constant that is labeld by \"coupling\"."
+Cxf::usage "Cxf[\"coupling\"] cenotes the NP coupling constant that is labeld by \"coupling\"."
 
 
-MapToWCxf::usage= "MapToWCxf
-	List of replacement rules that maps the HighPTio Wilson coefficient notation to the WCxf conventions.";
+MapToWCxf::usage= "MapToWCxf list of replacement rules that maps the HighPT Wilson coefficient notation to the WCxf conventions.";
 
 
 MapToWCxf= {
@@ -58,10 +55,8 @@ MapToWCxf= {
 		];
 		ret
 	],
-	
 	(* four fermion operators except for C_qe *)
 	WC[a:Except["eq",_String], {\[Alpha]_,\[Beta]_,i_,j_}] :> WCxf["'" <> a <> "_" <> ToString[\[Alpha]] <> ToString[\[Beta]] <> ToString[i] <> ToString[j] <> "'"],
-	
 	(* two fermion operators *)
 	WC[a_String, {p_,r_}] :> WCxf["'" <> StringReplace[a, "H"->"phi"] <> "_" <> ToString[p] <> ToString[r] <> "'"],
 	
@@ -70,35 +65,40 @@ MapToWCxf= {
 };
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Export results to a python file*)
 
 
-PythonExport::usage= "PythonExport[\"label\", list]
-	Exports the expressions given in list to a python file \"label.py\" using the Wilson coefficient exchange format (WCxf).
-	Each element of list will be stored as a separate python function, where the function for the \!\(\*SuperscriptBox[\(n\), \(th\)]\) element is named label_n.
-	By default functions are stored in the directory given by NotebookDirectory[]. Alternative locations can be specified through the Option Directory.
-	Example:
-		PythonExport[\"tata\", {1711.9`\[VeryThinSpace]+0.15737` WC[\"lq1\",{3,3,3,3}]+0.043601` WC[\"lq1\",{3,3,3,3}\!\(\*SuperscriptBox[\(]\), \(2\)]\)}] will create the file \"tata.py\" with the content:
-		def tata_1(C):
-			return 1711.9\[VeryThinSpace]+0.15737*C['lq1_3333']+0.043601*C['lq1_3333']**2";
+PythonExport::usage= "PythonExport[\"file_name\", list] exports the expressions given in list to a python file \"file_name.py\" using the Wilson coefficient exchange format (WCxf). A similar convention is defined for new physics coupling constants. The created file inlcudes a variable \"parameters\" that contains a list of all Wilson coefficients or coupling constants that appear in the argument list. Furthermore a function named \"file_name(C)\" is included that returns a list corresponding to the argument list in WCxf conventions. The argument C of that function must be given as a python dictionary in WCxf conventions. By default functions are stored in the directory given by NotebookDirectory[]. Alternative locations can be specified through the Option Directory.
+PythonExport[\"file_name\", list, \"proc\"] includes a further function named \"proc_data()\" that returns all available data for the experimental search specified by \"proc\". Otherwise it works as PythonExport[\"file_name\", list]."
 
 
 (* by default files should always be saved in the directory for the current notebook *)
-Options[PythonExport]= {Directory:>NotebookDirectory[]};
+Options[PythonExport] = {Directory :> NotebookDirectory[]};
 
 
-PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
+PythonExport::ffdetected = "The given expression contains form factors, which can currently not be exported to python manually.";
+
+
+PythonExport::unknownsearch = "The given search is unknown. Allowed searche labels are: `1`.";
+
+
+PythonExport[name_String, expr_List, Optional[proc_,None], OptionsPattern[]]:= Module[
 	{
-		pyproc = StringReplace[proc,"-"->"_"],
+		pyname = StringReplace[name,"-"->"_"],
 		file,
 		counter= 1,
 		dir,
 		exprWCxf = expr/.MapToWCxf
 	}
 	,
+	(* check for FF which are not supported *)
+	If[!FreeQ[exprWCxf, _FF],
+		Message[PythonExport::ffdetected];
+	];
+	
 	(* set directory *)
-	dir= FileNameJoin[{OptionValue[Directory], pyproc<>".py"}];
+	dir= FileNameJoin[{OptionValue[Directory], pyname<>".py"}];
 	
 	(* open an new python file *)
 	file= OpenWrite[dir];
@@ -107,14 +107,18 @@ PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
 	WriteString[file, "import numpy as np" <> "\n\n"];
 	
 	(* list all coefficients and couplings in this file *)
-	WriteString[file, "parameters = " <> StringReplace[ToString@DeleteDuplicates@Cases[exprWCxf, (WCxf[name_] | Cxf[name_]) :> name, All], {"{"->"[", "}"->"]"}] <> "\n\n"];
-	(*WriteString[file, "# Coupling constants:  " <> ToString@DeleteDuplicates@Cases[exprWCxf, Cxf[name_]:>name, All] <> "\n\n"];*)
+	WriteString[file, "parameters = " <> StringReplace[ToString@DeleteDuplicates@Cases[exprWCxf, (WCxf[label_] | Cxf[label_]) :> label, All], {"{"->"[", "}"->"]"}] <> "\n\n"];
 	
 	(* write experimental data *)
-	WriteSearchInfo[file, proc];
+	If[proc=!=None,
+		If[KeyExistsQ[LHCSearch[], proc],
+			WriteSearchInfo[file, proc],
+			Message[PythonExport::unknownsearch, LHCSearch[]]
+		];
+	];	
 	
 	(* write results *)
-	WriteNEvents[file, expr, pyproc];
+	WriteNEvents[file, expr, pyname];
 	
 	(* close the output stream *)
 	Close[file];
@@ -122,7 +126,7 @@ PythonExport[proc_String, expr_List, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Write the python function for a single bin*)
 
 
@@ -147,7 +151,7 @@ WriteNEvents[file_, expr_, label_] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Write experimental data*)
 
 
@@ -174,7 +178,7 @@ WriteSearchInfo[file_, proc_String]:=Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Converts the MMA expression for a cross section or  (\[Chi]^2) to the corresponding python expression that is stored as a string*)
 
 
