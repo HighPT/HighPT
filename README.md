@@ -12,7 +12,7 @@ The main routines of HighPT allow to compute:
 * event yields,
 * likelihoods.
 
-The experimental searches for heavy resonances, based on the full run-II data by ATLAS or CMS, recasted and implemented in HighPT are:
+The experimental searches for heavy resonances, based on the full LHC run-II data gathered by ATLAS or CMS, recasted and implemented in HighPT are:
 * pp → ττ | ATLAS [\[2002.12223\]](http://arxiv.org/abs/2002.12223)
 * pp → μμ | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
 * pp → ee | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
@@ -38,7 +38,7 @@ Import["https://github.com/HighPT/HighPT/raw/master/install.m"]
 ```
 
 This will download and install HighPT in the Applications folder of Mathematica's base directory. 
-Alternatively you can also download the package manually from this website. In this case the path to the directory containing the HighPT code must be specified every time before lading the package by
+Alternatively you can also download the package manually from this website. In this case the path to the directory containing the HighPT code must be specified every time before loading the package by:
 ```
 PrependTo[$Path,"path/to/HighPT/directory"]
 ```

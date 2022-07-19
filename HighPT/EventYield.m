@@ -70,7 +70,7 @@ $IntegralCaching = False
 (*EventYield*)
 
 
-EventYield::usage= "EventYield[\"proc\"] computes the expected number of events for the search specified by the argument \"proc\" as a function of form factors, Wilson coefficients or NP coupling constants. Returned is a list where the elements correspond to the number of events in each bin of the experimental observable. The options and their default values are: SM \[Rule] True; FF \[Rule] False; Coefficients \[Rule] All; EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] GetOperatorDimension[]; EFTscale \[RuleDelayed] GetEFTscale[]; Luminosity \[Rule] Default.";
+EventYield::usage= "EventYield[\"proc\"] computes the expected number of events for the search specified by the argument \"proc\" as a function of form factors, Wilson coefficients or NP coupling constants. Returned is a list where the elements correspond to the number of events in each bin of the experimental observable. The options and their default values are: SM \[Rule] False; FF \[Rule] False; Coefficients \[Rule] All; EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] GetOperatorDimension[]; EFTscale \[RuleDelayed] GetEFTscale[]; Luminosity \[Rule] Default.";
 
 
 EventYield::missingeff= "Not all required efficincies are known. The missing efficiencies are set to zero. This is possibly caused by using a madiator mass that is not supported, or if you compute the interference of two BSM mediators.";
@@ -86,7 +86,7 @@ EventYield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
 
 
 Options[EventYield]= {
-	SM                -> True,
+	SM                -> False,
 	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
