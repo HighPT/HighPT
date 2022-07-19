@@ -130,7 +130,7 @@ $OptionValueAssociation= <|
 	Coefficients      -> All | {} | {(_FF|_WC|_Coupling)..} (*| {_WC..} | {_Coupling..}*) (*| {Rule[_WC,_]..} | {Rule[_FF,_]..}*),
 	EFTorder          -> 0 | 2 | 4 (*| 8*),
 	OperatorDimension -> 4 | 6 | 8,
-	CombineBins       -> Default | {{_?IntegerQ..}..},
+	CombineBins       -> Default | {{_?IntegerQ..}..} | {} | None ,
 	Luminosity        -> Default | _?((NumericQ[#]&&Positive[#])&),
 	RescaleError      -> True | False,
 	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
