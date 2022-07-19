@@ -12,7 +12,7 @@ These observables can be calculated within:
     * 5 TeV \[coming soon\]
 
 The main routines of HighPT allow to compute:
-* differntial cross sections,
+* differential cross sections,
 * integrated cross sections,
 * event yields,
 * likelihoods.
@@ -31,7 +31,7 @@ The experimental searches for heavy resonances, based on the full LHC run-II dat
 | $pp\to e^\pm\nu$ | \"mono-electron-ATLAS\" | ATLAS | [\[1906.05609\]](http://arxiv.org/abs/1906.05609) |
 | $pp\to\tau^\pm\mu^\mp$ | \"muon-tau-CMS\" | CMS | [\[2205.06709\]](http://arxiv.org/abs/2205.06709) |
 | $pp\to\tau^\pm e^\mp$ | \"electron-tau-CMS\" | CMS | [\[2205.06709\]](http://arxiv.org/abs/2205.06709) |
-| $pp\to e^pm\mu^\mp$ | \"electron-muon-CMS\" | CMS | [\[2205.06709\]](http://arxiv.org/abs/2205.06709) |
+| $pp\to e^\pm\mu^\mp$ | \"electron-muon-CMS\" | CMS | [\[2205.06709\]](http://arxiv.org/abs/2205.06709) |
 
 
 ## Reference
