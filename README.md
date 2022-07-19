@@ -3,8 +3,13 @@
 HighPT is a Mathematica package for the analysis of high-energy data of semileptonic transitions at hadron colliders. It allows to compute high-$p_T$ tail observables for semileptonic processes, i.e. Drell-Yan cross sections, for dilepton and monolepton final states, at the LHC. 
 
 These observables can be calculated within:
-* The Standard Model Effective Field Theory at tree-level, including the relevant operators up to mass dimension eight to ensure a consistent description of the cross section including terms of $\mathcal{O}(\Lambda^{−4})$ in the EFT cutoff scale $\Lambda$.
-* BSM models with new tree-level mediators, that can be resolved at LHC energies, enabling the computation of the cross section including the full propagation effects of these new particles.
+* The Standard Model Effective Field Theory at tree-level, including the relevant energy-enhanced operators up to dimension eight to ensure a consistent description of the cross section including terms of $\mathcal{O}(\Lambda^{−4})$ in the EFT cutoff scale $\Lambda$.
+* BSM models with new tree-level mediators, that can be resolved at LHC energies, enabling the computation of the cross section including the full propagation effects of these new particles. Currently only leptoquark mediators are implemented. The available mediator masses are:
+    * 1 TeV \[coming soon\]
+    * 2 TeV
+    * 3 TeV \[coming soon\]
+    * 4 TeV \[coming soon\]
+    * 5 TeV \[coming soon\]
 
 The main routines of HighPT allow to compute:
 * differntial cross sections,
@@ -13,6 +18,19 @@ The main routines of HighPT allow to compute:
 * likelihoods.
 
 The experimental searches for heavy resonances, based on the full LHC run-II data gathered by ATLAS or CMS, recasted and implemented in HighPT are:
+
+| process | label | experiment | reference |
+| ------- | ------| ---------- | --------- |
+| $pp\to\tau^+\tau^-$ | \"di-tau-ATLAS\" | ATLAS | [\[2002.12223\]](http://arxiv.org/abs/2002.12223) |
+| $pp\to\mu^+\mu^-$ | \"di-muon-CMS\" | CMS | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708) |
+| $pp\to e^+ e^-$ | \"di-electron-CMS\" | CMS | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708) |
+| $pp\to\tau^\pm\nu$ | \"mono-tau-ATLAS\" | ATLAS | [\[ATLAS-CONF-2021-025\]](https://cds.cern.ch/record/2773301/) |
+| $pp\to\mu^\pm\nu$ | \"mono-muon-ATLAS\" | ATLAS | [\[1906.05609\]](http://arxiv.org/abs/1906.05609) |
+| $pp\to e^\pm\nu$ | \"mono-electron-ATLAS\" | ATLAS | [\[1906.05609\]](http://arxiv.org/abs/1906.05609) |
+| $pp\to\tau^pm\mu^\mp$ | \"muon-tau-CMS\" | CMS | [\[2205.06709\]](http://arxiv.org/abs/2205.06709) |
+| $pp\to\tau^pm e^\mp$ | \"electron-tau-CMS\" | CMS | [\[2205.06709\]](http://arxiv.org/abs/2205.06709) |
+| $pp\to e^pm\mu^\mp$ | \"electron-muon-CMS\" | CMS | [\[2205.06709\]](http://arxiv.org/abs/2205.06709) |
+
 * pp → ττ | ATLAS [\[2002.12223\]](http://arxiv.org/abs/2002.12223)
 * pp → μμ | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
 * pp → ee | CMS [\[2103.02708\]](http://arxiv.org/abs/2103.02708)
