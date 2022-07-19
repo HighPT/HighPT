@@ -26,7 +26,7 @@ The experimental searches for heavy resonances, based on the full run-II data by
 ## Reference
 
 If you use HighPT please cite: 
-* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *HighPT: A Tool for high-$p_T$ Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx)
+* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *HighPT: A Tool for high-*$p_T$ *Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx)
 * L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx).
 
 ## Installing and loading of the package
