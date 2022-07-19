@@ -3,7 +3,7 @@
 HighPT is a Mathematica package for the analysis of high-energy data of semileptonic transitions at hadron colliders. It allows to compute high-$p_T$ tail observables for semileptonic processes, i.e. Drell-Yan cross sections, for dilepton and monolepton final states, at the LHC. 
 
 These observables can be calculated within:
-* The Standard Model Effective Field Theory at tree-level, including the relevant operators up to mass dimension eight to ensure a consistent description of the cross section including terms of $\mathcal{O}(\Lambda^{−4})$ in the EFT cutoff scale Λ.
+* The Standard Model Effective Field Theory at tree-level, including the relevant operators up to mass dimension eight to ensure a consistent description of the cross section including terms of $\mathcal{O}(\Lambda^{−4})$ in the EFT cutoff scale $\Lambda$.
 * BSM models with new tree-level mediators, that can be resolved at LHC energies, enabling the computation of the cross section including the full propagation effects of these new particles.
 
 The main routines of HighPT allow to compute:
@@ -26,7 +26,7 @@ The experimental searches for heavy resonances, based on the full run-II data by
 ## Reference
 
 If you use HighPT please cite: 
-* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *HighPT: A Tool for high-pT Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx)
+* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *HighPT: A Tool for high-$p_T$ Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx)
 * L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx).
 
 ## Installing and loading of the package
