@@ -101,7 +101,7 @@ HermitianCouplings = Alternatives[
 Coupling[herm:HermitianCouplings,{p_Integer,r_Integer}]:= Coupling[herm,{r,p}]\[Conjugate] /; p>r
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*List of defined BSM mediators and their couplings*)
 
 
@@ -114,7 +114,7 @@ $MediatorList= <|
 	"U1"  -> {{"t"}, {"NC","CC"}, {Scalar,Vector}},
 	"U1t" -> {{"t"}, {"NC"},      {Vector}},
 	"R2"  -> {{"t"}, {"NC","CC"}, {Scalar,Vector,Tensor}},
-	"R2t" -> {{"t"}, {"NC"},      {Vector}},
+	"R2t" -> {{"t"}, {"NC" . "CC"}, {Scalar,Vector,Tensor}},
 	"V2"  -> {{"u"}, {"NC","CC"}, {Scalar,Vector}},
 	"V2t" -> {{"u"}, {"NC"},      {Vector}},
 	"S3"  -> {{"u"}, {"NC","CC"}, {Vector}},
@@ -192,7 +192,7 @@ SubstitutionRulesMediators["WBoson"]={
 gW[{p_,r_}]:= Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Sqrt[2]*Param["sW"]) * KroneckerDelta[p,r]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*NP mediators*)
 
 
@@ -333,7 +333,7 @@ FF[_, {"U1t",0}, _, {_,_,_d,_d}] = 0
 FF[_, {"U1t",0}, {OrderlessPatternSequence[Left,_]}, _] = 0
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*R2*)
 
 
@@ -371,21 +371,34 @@ FF[Vector, {"R2",0}, {Left,Right}, {_,_,_d,_d}] = 0
 FF[Vector, {"R2",0}, _, {_,_,_u,_d}|{_,_,_d,_u}] = 0
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*R2~*)
 
 
 SubstitutionRulesMediators["R2t"]={
+	(* Scalar *)
+	(* CC *)
+	FF[Scalar, {"R2t",0}, {Right,Right}, {a_,b_,i_u,j_d}] :> 1/2 Coupling["y2Lt",{i,b}]Coupling["y2Lt",{j,a}]\[Conjugate],
+
 	(* Vector *)
 	(* NC *)
-	FF[Vector, {"R2t",0}, {Left,Right}, {a_,b_,i_d,j_d}] :> 1/2 Coupling["y2Lt",{i,b}]Coupling["y2Lt",{j,a}]\[Conjugate]
+	FF[Vector, {"R2t",0}, {Left,Right}, {a_,b_,i_d,j_d}] :> 1/2 Coupling["y2Lt",{i,b}]Coupling["y2Lt",{j,a}]\[Conjugate],
+	
+	(* Tensor *)
+	(* CC *)
+	FF[Tensor, {"R2t",0}, {Right,Right}, {a_,b_,i_u,j_d}] :> 1/8 Coupling["y2Lt",{i,b}]Coupling["y2Lt",{j,a}]\[Conjugate]
 }
 
 
 FF[_, {"R2t",0}, _, {_,_,_u,_u}]   = 0
-FF[_, {"R2t",0}, {Left,Left}, _]   = 0
+FF[Scalar|Tensor, {"R2t",0}, _, {_,_,_d,_d}] = 0
+FF[Vector, {"R2t",0}, _, {_,_,_u,_d}|{_,_,_d,_u}] = 0
 FF[_, {"R2t",0}, {Right,Left}, _]  = 0
-FF[_, {"R2t",0}, {Right,Right}, _] = 0
+FF[Scalar|Tensor, {"R2t",0}, {OrderlessPatternSequence[Left,Right]}, _] = 0
+FF[Scalar|Tensor, {"R2t",0}, {Left,_}, {_,_,_u,_d}] = 0
+FF[Scalar|Tensor, {"R2t",0}, {Right,_}, {_,_,_d,_u}] = 0
+FF[Vector, {"R2t",0}, {Left,Left}, _] = 0
+FF[Vector, {"R2t",0}, {Right,Right}, _] = 0
 
 
 (* ::Subsubsection::Closed:: *)
