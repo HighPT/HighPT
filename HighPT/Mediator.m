@@ -114,7 +114,7 @@ $MediatorList= <|
 	"U1"  -> {{"t"}, {"NC","CC"}, {Scalar,Vector}},
 	"U1t" -> {{"t"}, {"NC"},      {Vector}},
 	"R2"  -> {{"t"}, {"NC","CC"}, {Scalar,Vector,Tensor}},
-	"R2t" -> {{"t"}, {"NC" . "CC"}, {Scalar,Vector,Tensor}},
+	"R2t" -> {{"t"}, {"NC"},      {Vector}},
 	"V2"  -> {{"u"}, {"NC","CC"}, {Scalar,Vector}},
 	"V2t" -> {{"u"}, {"NC"},      {Vector}},
 	"S3"  -> {{"u"}, {"NC","CC"}, {Vector}},
@@ -143,7 +143,7 @@ $MediatorCouplings= <|
 (*Form factors to mediator couplings matching rules*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*SM mediators*)
 
 
@@ -333,7 +333,7 @@ FF[_, {"U1t",0}, _, {_,_,_d,_d}] = 0
 FF[_, {"U1t",0}, {OrderlessPatternSequence[Left,_]}, _] = 0
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*R2*)
 
 
@@ -371,7 +371,7 @@ FF[Vector, {"R2",0}, {Left,Right}, {_,_,_d,_d}] = 0
 FF[Vector, {"R2",0}, _, {_,_,_u,_d}|{_,_,_d,_u}] = 0
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*R2~*)
 
 
