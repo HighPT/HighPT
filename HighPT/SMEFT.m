@@ -175,7 +175,7 @@ WC[x_,{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}] := WC[x,{a,b,i,j}]
 WC[x_,{f1_[a_],f2_[b_]}] := WC[x,{a,b}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Hermitian WC*)
 
 
@@ -244,14 +244,14 @@ WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:=
 WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*WC argument check*)
 
 
 WC::unknownWClabel= "The label `1` is not an allowed label for Wilson coefficients (WC)."
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*\[Psi]^2*)
 
 
@@ -312,7 +312,7 @@ WC[l:Except[Alternatives@@Join[$WCList2, $WCList4, {_Pattern, _Blank, _Except, _
 GetAllWC = Join[$WCList2, $WCList4]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Matching the form factors to the SMEFT*)
 
 
@@ -351,7 +351,7 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_] := Module[{list,f6,f8,$DelayedRule},
 		\[Epsilon] * WC["lu", {a,b,i,j}] * f6+
 		f8 * 1/2 * \[Epsilon]^2 * (WC["l2u2H21", {a,b,i,j}]+WC["l2u2H22", {a,b,i,j}])+
 		f8 * 1/2 * \[Epsilon]^2 * Mass["ZBoson"]^2/Param["vev"]^2 * (gZ[e,Left,{a,b}]*(WC["u2H2D31", {i,j}]-WC["u2H2D32", {i,j}])+
-		                                gZ[u,Right,{i,j}]*(WC["l2H2D31", {a,b,i,j}]-WC["l2H2D32", {a,b}]+WC["l2H2D33", {a,b}]-WC["l2H2D34", {a,b}])),
+		                                gZ[u,Right,{i,j}]*(WC["l2H2D31", {a,b}]-WC["l2H2D32", {a,b}]+WC["l2H2D33", {a,b}]-WC["l2H2D34", {a,b}])),
 		                          
 		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> 
 		\[Epsilon] * WC["eq", {a,b,i,j}] * f6+

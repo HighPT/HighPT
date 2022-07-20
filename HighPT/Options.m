@@ -136,14 +136,14 @@ $OptionValueAssociation= <|
 	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
 	MLLcuts           -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000),
 	EFTscale          -> _?((NumericQ[#]&&Positive[#])&) | _Symbol,
-	Mediators         -> {} | <||> | {Rule[_String,{_?NumericQ,_?NumericQ}]..} | <|Rule[_String,{_?NumericQ,_?NumericQ}]..|>,
-	"\[Alpha]EM"             -> _?NumericQ | Default,
-	"GF"              -> _?NumericQ | Default,
-	"mZ"              -> _?NumericQ | Default,
-	"\[CapitalGamma]Z"              -> _?NumericQ | Default,
-	"\[CapitalGamma]W"              -> _?NumericQ | Default,
-	"Wolfenstein"     -> {_?NumericQ | Default, _?NumericQ | Default, _?NumericQ | Default, _?NumericQ | Default}
+	Mediators         -> {} | <||> | {Rule[_String,{_?((NumericQ[#]&&Positive[#])&),_?((NumericQ[#]&&Positive[#])&)}]..} | <|Rule[_String,{_?((NumericQ[#]&&Positive[#])&),_?((NumericQ[#]&&Positive[#])&)}]..|>,
+	"\[Alpha]EM"             -> _?((NumericQ[#]&&Positive[#])&) | Default,
+	"GF"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
+	"mZ"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
+	"\[CapitalGamma]Z"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
+	"\[CapitalGamma]W"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
+	"Wolfenstein"     -> {_?((NumericQ[#]&&Positive[#])&) | Default, _?((NumericQ[#]&&Positive[#])&) | Default, _?((NumericQ[#]&&Positive[#])&) | Default, _?((NumericQ[#]&&Positive[#])&) | Default}
 |>;
 
 
-OptionCheck::optionvalue= "Invalid OptionValue specified: `1`->`2`, the allowed values for `1` must match `3`.";
+OptionCheck::optionvalue= "Invalid OptionValue specified: `1`\[Rule]`2`, the allowed values for `1` must match `3`.";
