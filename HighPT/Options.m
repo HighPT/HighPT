@@ -136,13 +136,13 @@ $OptionValueAssociation= <|
 	PTcuts            -> ({min_?NumericQ, max_?NumericQ}/;(0<=min<max)) | ({min_?NumericQ,\[Infinity]}/;0<=min),
 	MLLcuts           -> {min_?NumericQ, max_?NumericQ}/;(16<=min<max<=13000),
 	EFTscale          -> _?((NumericQ[#]&&Positive[#])&) | _Symbol,
-	Mediators         -> {} | <||> | {Rule[_String,{_?((NumericQ[#]&&Positive[#])&),_?((NumericQ[#]&&Positive[#])&)}]..} | <|Rule[_String,{_?((NumericQ[#]&&Positive[#])&),_?((NumericQ[#]&&Positive[#])&)}]..|>,
+	Mediators         -> {} | <||> | {Rule[_String,{_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)}]..} | <|Rule[_String,{_?((NumericQ[#]&&Positive[#])&),_?((NumericQ[#]&&Positive[#])&)}]..|>,
 	"\[Alpha]EM"             -> _?((NumericQ[#]&&Positive[#])&) | Default,
 	"GF"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
 	"mZ"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
-	"\[CapitalGamma]Z"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
-	"\[CapitalGamma]W"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
-	"Wolfenstein"     -> {_?((NumericQ[#]&&Positive[#])&) | Default, _?((NumericQ[#]&&Positive[#])&) | Default, _?((NumericQ[#]&&Positive[#])&) | Default, _?((NumericQ[#]&&Positive[#])&) | Default}
+	"\[CapitalGamma]Z"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"\[CapitalGamma]W"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"Wolfenstein"     -> {_?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default}
 |>;
 
 

@@ -160,7 +160,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 	$RunMode= "SMEFT";
 	
 	Print["Initialized SMEFT mode:"];
-	Print["  Maximum operator mass dimension: ", opDim];
+	Print["  Maximum operator dimension: ", opDim];
 	Print["  EFT series truncation at: ", With[{x=ToString[-eftOrd]}, "\!\(\*SubsuperscriptBox[\(\[CapitalLambda]\), \(NP\), " <> x <> "]\)"]];
 	Print["  EFT cutoff scale \!\(\*SubscriptBox[\(\[CapitalLambda]\), \(NP\)]\): ", N[\[CapitalLambda]NP/1000], " TeV"];
 ]
@@ -688,7 +688,7 @@ MyExpand[arg:(_Plus|_List)]:= Expand/@arg
 MyExpand[arg:Except[_Plus|_List]]:= Expand[arg]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*HighPT logo for Plotting*)
 
 
