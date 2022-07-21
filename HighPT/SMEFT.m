@@ -185,13 +185,13 @@ HermitianWC4= Alternatives[
 	(* Psi^4 H^2 *)
 	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
 	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
-	"q2e2H21","q2e2H22",
+	"e2q2H21","e2q2H22",
 	"e2u2H2", "e2d2H2",
 	(* Psi^4 D^2 *)
 	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
 	"l2u2D21","l2u2D22",
 	"l2d2D21","l2d2D22",
-	"q2e2D21","q2e2D22",
+	"e2q2D21","e2q2D22",
 	"e2u2D21","e2u2D22",
 	"e2d2D21","e2d2D22"
 ];
@@ -244,14 +244,14 @@ WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:=
 WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*WC argument check*)
 
 
 WC::unknownWClabel= "The label `1` is not an allowed label for Wilson coefficients (WC)."
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*\[Psi]^2*)
 
 
@@ -284,13 +284,13 @@ $WCList4=List[
 	(* Psi^4 H^2 *)
 	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
 	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
-	"q2e2H21","q2e2H22",
+	"e2q2H21","e2q2H22",
 	"e2u2H2", "e2d2H2",
 	(* Psi^4 D^2 *)
 	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
 	"l2u2D21","l2u2D22",
 	"l2d2D21","l2d2D22",
-	"q2e2D21","q2e2D22",
+	"e2q2D21","e2q2D22",
 	"e2u2D21","e2u2D22",
 	"e2d2D21","e2d2D22",
 	
@@ -355,7 +355,7 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_] := Module[{list,f6,f8,$DelayedRule},
 		                          
 		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> 
 		\[Epsilon] * WC["eq", {a,b,i,j}] * f6+
-		f8 * 1/2 * \[Epsilon]^2 * (WC["q2e2H21", {a,b,i,j}]+WC["q2e2H22", {a,b,i,j}])+
+		f8 * 1/2 * \[Epsilon]^2 * (WC["e2q2H21", {a,b,i,j}]+WC["e2q2H22", {a,b,i,j}])+
 		f8 * 1/2 * \[Epsilon]^2 * Mass["ZBoson"]^2/Param["vev"]^2 * (gZ[e,Right,{a,b}]*(WC["q2H2D31", {i,j}]-WC["q2H2D32", {i,j}]-WC["q2H2D33", {i,j}]+WC["q2H2D34", {i,j}])+
 		                                gZ[u,Left,{i,j}]*(WC["e2H2D31", {a,b}]-WC["e2H2D32", {a,b}])),
 		
@@ -375,7 +375,7 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_] := Module[{list,f6,f8,$DelayedRule},
 		
 		FF[Vector, {"regular",{0,0}}, {Right,Left}, {a_,b_,i_d,j_d}]:> 
 		\[Epsilon] * WC["eq", {a,b,i,j}] * f6+
-		f8 * \[Epsilon]^2 * 1/2 * (WC["q2e2H21", {a,b,i,j}]+WC["q2e2H22", {a,b,i,j}])+
+		f8 * \[Epsilon]^2 * 1/2 * (WC["e2q2H21", {a,b,i,j}]+WC["e2q2H22", {a,b,i,j}])+
 		f8 * \[Epsilon]^2 * 1/2 * Mass["ZBoson"]^2/Param["vev"]^2 * (gZ[e,Right,{a,b}]*(WC["q2H2D31", {j,i}]\[Conjugate]-WC["q2H2D32", {j,i}]\[Conjugate]+WC["q2H2D33", {j,i}]\[Conjugate]-WC["q2H2D34", {j,i}]\[Conjugate])+
                                         gZ[d,Left,{i,j}]*(WC["e2H2D31", {a,b}]-WC["e2H2D32", {a,b}])),
 		
@@ -390,8 +390,8 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_] := Module[{list,f6,f8,$DelayedRule},
 		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * (WC["l2q2D22", {a,b,i,j}]-WC["l2q2D24", {a,b,i,j}]),
 		FF[Vector, {"regular",{1,0}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["l2u2D21", {a,b,i,j}]+WC["l2u2D22", {a,b,i,j}]),
 		FF[Vector, {"regular",{0,1}}, {Left,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["l2u2D22", {a,b,i,j}],
-		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["q2e2D21", {a,b,i,j}]+WC["q2e2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["q2e2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["e2q2D21", {a,b,i,j}]+WC["e2q2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["e2q2D22", {a,b,i,j}],
 		FF[Vector, {"regular",{1,0}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * (WC["e2u2D21", {a,b,i,j}]+WC["e2u2D22", {a,b,i,j}]),
 		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_u,j_u}]:> f8 * \[Epsilon]^2 * 2 * WC["e2u2D22", {a,b,i,j}],
 		
@@ -400,8 +400,8 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_] := Module[{list,f6,f8,$DelayedRule},
 		FF[Vector, {"regular",{0,1}}, {Left,Left}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * (WC["l2q2D22", {a,b,i,j}]+WC["l2q2D24", {a,b,i,j}]),
 		FF[Vector, {"regular",{1,0}}, {Left,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * (WC["l2d2D21", {a,b,i,j}]+WC["l2d2D22", {a,b,i,j}]),
 		FF[Vector, {"regular",{0,1}}, {Left,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * WC["l2d2D22", {a,b,i,j}],
-		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_d,j_d}]:> f8 *  \[Epsilon]^2 * (WC["q2e2D21", {a,b,i,j}]+WC["q2e2D22", {a,b,i,j}]),
-		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * WC["q2e2D22", {a,b,i,j}],
+		FF[Vector, {"regular",{1,0}}, {Right,Left}, {a_,b_,i_d,j_d}]:> f8 *  \[Epsilon]^2 * (WC["e2q2D21", {a,b,i,j}]+WC["e2q2D22", {a,b,i,j}]),
+		FF[Vector, {"regular",{0,1}}, {Right,Left}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * WC["e2q2D22", {a,b,i,j}],
 		FF[Vector, {"regular",{1,0}}, {Right,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * (WC["e2d2D21", {a,b,i,j}]+WC["e2d2D22", {a,b,i,j}]),
 		FF[Vector, {"regular",{0,1}}, {Right,Right}, {a_,b_,i_d,j_d}]:> f8 * \[Epsilon]^2 * 2 * WC["e2d2D22", {a,b,i,j}],
 		
