@@ -37,8 +37,8 @@ The experimental searches for heavy resonances, based on the full LHC run-II dat
 ## Reference
 
 If you use HighPT please cite: 
-* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *HighPT: A Tool for high-*$p_T$ *Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx)
-* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *Drell-Yan Tails Beyond the Standard Model*, [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx).
+* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *HighPT: A Tool for high-*$p_T$ *Drell-Yan Tails Beyond the Standard Model*, [\[2207.10756\]](http://arxiv.org/abs/2207.10756)
+* L. Allwicher, D. A. Faroughy, F. Jaffredo, O. Sumensari, and F. Wilsch, *Drell-Yan Tails Beyond the Standard Model*, [\[2207.10714\]](http://arxiv.org/abs/2207.10714).
 
 ## Installing and loading of the package
 
