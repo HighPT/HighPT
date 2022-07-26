@@ -21,7 +21,7 @@ The main routines of HighPT allow to compute:
 
 The experimental searches for heavy resonances, based on the full LHC run-II data gathered by ATLAS or CMS, recasted and implemented in HighPT are:
 
-| process | HighPT label | experiment | reference |
+| Process | HighPT label | Experiment | Reference |
 | ------- | ------------ | ---------- | --------- |
 | $pp\to\tau^+\tau^-$ | \"di-tau-ATLAS\" | ATLAS | [\[2002.12223\]](http://arxiv.org/abs/2002.12223) |
 | $pp\to\mu^+\mu^-$ | \"di-muon-CMS\" | CMS | [\[2103.02708\]](http://arxiv.org/abs/2103.02708) |
@@ -60,7 +60,7 @@ To load HighPT use the command:
 << HighPT`
 ```
 
-The complete set of routines and usage examples can be found in [\[2207.xxxxx\]](https://arxiv.org/abs/2207.xxxxx). This repository also contains several example notebook that can serve as templates.
+The complete set of routines and usage examples can be found in [\[2207.10756\]](http://arxiv.org/abs/2207.10756). This repository also contains several example notebook that can serve as templates.
 
 ## Authors
 
