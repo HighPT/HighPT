@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+$HighPTVersion="1.0.0";
+
+
 (* ::Title:: *)
 (*Initialization [HighPT`]*)
 
@@ -54,6 +57,8 @@ If[MemberQ[$Packages,"HighPT`"],
 	
 	(* licensing *)
 	Print@ Style["HighPT is free software released under the terms of the MIT License.", 12];
+	(* Version *)
+	Print@ Style["Version: "<>$HighPTVersion, 12];
 	
 	Print["____________________________________"];
 	
