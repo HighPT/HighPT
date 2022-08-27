@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-$HighPTVersion="1.0.0";
+$HighPTVersion="1.0.1";
 
 
 (* ::Title:: *)

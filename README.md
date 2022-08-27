@@ -3,7 +3,7 @@
 HighPT is a Mathematica package for the analysis of high-energy data of semileptonic transitions at hadron colliders. It allows to compute high-$p_T$ tail observables for semileptonic processes, i.e. Drell-Yan cross sections, for dilepton and monolepton final states, at the LHC. 
 
 These observables can be calculated within:
-* The Standard Model Effective Field Theory at tree-level, including the relevant energy-enhanced operators up to dimension eight to ensure a consistent description of the cross section including terms of $\mathcal{O}(\Lambda^{−4})$ in the EFT cutoff scale $\Lambda$.
+* The Standard Model Effective Field Theory at tree level, including the relevant energy-enhanced operators up to dimension eight to ensure a consistent description of the cross section including terms of $\mathcal{O}(\Lambda^{−4})$ in the EFT cutoff scale $\Lambda$.
 * BSM models with new tree-level mediators, that can be resolved at LHC energies, enabling the computation of the cross section including the full propagation effects of these new particles. Currently only leptoquark mediators are implemented. The available mediator masses are:
     * 1 TeV
     * 2 TeV
