@@ -166,7 +166,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Initialize a specific NP model*)
 
 
@@ -183,7 +183,7 @@ InitializeModel::undefwidth= "In the current version only mediators with a fixed
 InitializeModel::multimediator= "Multiple BSM mediator specified. Currently interference terms can only be computed on cross section level, but not for event yields or likelihoods due too missing Monte Carlo simulations."
 
 
-$AllowedMasses = Alternatives[(*1000, *)2000(*, 3000, 4000*)]
+$AllowedMasses = Alternatives[1000, 2000, 3000 (*, 4000, 5000*)]
 
 
 InitializeModel["Mediators", OptionsPattern[]]:= Module[

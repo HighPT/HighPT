@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+$HighPTVersion="1.0.1";
+
+
 (* ::Title:: *)
 (*Initialization [HighPT`]*)
 
@@ -49,11 +52,13 @@ If[MemberQ[$Packages,"HighPT`"],
 	];
 	Print[
 		Style["Website: ", Bold, 14], 
-		Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
+		Style[Hyperlink["https://highpt.github.io","https://highpt.github.io", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
 	];
 	
 	(* licensing *)
 	Print@ Style["HighPT is free software released under the terms of the MIT License.", 12];
+	(* Version *)
+	Print@ Style["Version: "<>$HighPTVersion, 12];
 	
 	Print["____________________________________"];
 	
