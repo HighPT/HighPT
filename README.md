@@ -1,4 +1,4 @@
-# `HighPT`
+# HighPT
 
 `HighPT` is a `Mathematica` package for the analysis of high-energy data of semileptonic transitions at hadron colliders. It allows to compute high-p<sub>T</sub> tail observables for semileptonic processes, i.e. Drell-Yan cross sections, for dilepton and monolepton final states, at the LHC. 
 
@@ -89,7 +89,7 @@ Please submit bugs and feature requests using GitHub's [issue system](https://gi
 
 ## License
 
-`HighPT` is released under the MIT License.
+`HighPT` is released under the [MIT License](https://github.com/HighPT/HighPT/blob/master/LICENSE).
 
 ---
 
