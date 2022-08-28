@@ -52,7 +52,7 @@ If[MemberQ[$Packages,"HighPT`"],
 	];
 	Print[
 		Style["Website: ", Bold, 14], 
-		Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
+		Style[Hyperlink["https://highpt.github.io","https://highpt.github.io", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
 	];
 	
 	(* licensing *)
