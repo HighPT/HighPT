@@ -6,7 +6,7 @@
 # FF  : scalar tensor scalar-tensor
 # XY  : LL LR RL RR
 # coef : 0 0
-# type : R2*R2
+# type : S1*S1 R2*R2
 # Nevs : 50000
 #===============
 #
