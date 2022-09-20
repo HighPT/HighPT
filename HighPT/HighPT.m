@@ -109,7 +109,7 @@ $ParallelHighPT::usage = "$ParallelHighPT is a boolean variable that indicates w
 $ParallelHighPT=True;
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*InitializeModel*)
 
 
@@ -166,7 +166,7 @@ InitializeModel["SMEFT", OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Initialize a specific NP model*)
 
 
@@ -264,7 +264,7 @@ InitializeModel["Mediators", OptionsPattern[]]:= Module[
 $defaultMediatorProperties = <||>
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Auxiliary functions for defining and using a model*)
 
 
@@ -580,7 +580,7 @@ ReplacePropagators= {
 };
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Selecting particular terms*)
 
 
@@ -591,7 +591,7 @@ SelectTerms::conj="Conjugated coefficient given `1`. Probably the Hermitian conj
 
 
 SelectTerms[arg_, termsIN:{(_FF | _WC | _Coupling | Conjugate[_FF] | Conjugate[_WC] | Conjugate[_Coupling])..}]:= Module[
-	{rule, conj, terms=termsIN/.Conjugate[x_]:>x}
+	{ruleWC, ruleFF, ruleC, conj, terms=termsIN/.Conjugate[x_]:>x}
 	,
 	(* check for conjugated coeffs *)
 	conj = Cases[termsIN, _Conjugate, All];
@@ -602,9 +602,11 @@ SelectTerms[arg_, termsIN:{(_FF | _WC | _Coupling | Conjugate[_FF] | Conjugate[_
 	];
 	
 	(* create replacement rule *)
-	rule = {Except[Alternatives@@terms, (_FF |\[NonBreakingSpace]_WC |\[NonBreakingSpace]_Coupling)] :> 0};
+	ruleFF = {Except[Alternatives@@Cases[terms, _FF, All], _FF] :> 0};
+	ruleWC = {Except[Alternatives@@Cases[terms, _WC, All], _WC] :> 0};
+	ruleC = {Except[Alternatives@@Cases[terms, _Coupling, All], _Coupling] :> 0};
 
-	Return[(arg/.rule)/.{0.->0,Complex[0.,0.]->0}]
+	Return[(arg/.ruleFF/.ruleWC/.ruleC)/.{0.->0,Complex[0.,0.]->0}]
 ]
 
 

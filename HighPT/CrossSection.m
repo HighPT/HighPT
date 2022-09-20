@@ -269,11 +269,11 @@ PartialFractioningSIntegrals[s_]:={
 }
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Integrated CrossSection*)
 
 
@@ -467,9 +467,19 @@ CrossSection[{\[Alpha]:(e[_]|\[Nu][_]), \[Beta]:(e[_]|\[Nu][_])}, OptionsPattern
 		]
 	];
 	
+	(*
 	(* Set coefficients to zero if required *)
 	If[!MatchQ[OptionValue[Coefficients], All],
 		\[Sigma]= SelectTerms[\[Sigma], OptionValue[Coefficients]]
+	];
+	*)
+	
+	(* remove WC and/or Coupling *)
+	If[!FreeQ[OptionValue[Coefficients], _WC],
+		\[Sigma] = SelectTerms[\[Sigma], Cases[OptionValue[Coefficients], _WC, All]]
+	];
+	If[!FreeQ[OptionValue[Coefficients], _Coupling],
+		\[Sigma] = SelectTerms[\[Sigma], Cases[OptionValue[Coefficients], _Coupling, All]]
 	];
 	
 	\[Sigma]= MyExpand[\[Sigma]];
