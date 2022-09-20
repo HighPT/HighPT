@@ -260,13 +260,13 @@ BuildEfficiencies[file_, proc_]:= Module[
 			effTable= file[[15;;30,4;;28]];,
 		"mono-tau-ATLAS",
 			info= file[[4;;10,4;;]];
-			effTable= file[[15;;,4+2;;]];,
+			effTable= file[[15;;,4(*+2*);;]];,
 		"mono-electron-ATLAS",
 			info= file[[4;;10,4;;]];
-			effTable= file[[15;;,4+7+10;;]];,
+			effTable= file[[15;;,4+7(*+10*);;]];,
 		"mono-muon-ATLAS",
 			info= file[[4;;10,4;;]];
-			effTable= file[[15;;,4+8+8;;]];,
+			effTable= file[[15;;,4+8(*+8*);;]];,
 		"di-electron-CMS",
 			info= file[[4;;10,4;;]];
 			effTable= file[[15;;,4+5;;]];,
