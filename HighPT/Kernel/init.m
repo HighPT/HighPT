@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+$HighPTVersion="1.0.2";
+
+
 (* ::Title:: *)
 (*Initialization [HighPT`]*)
 
@@ -40,58 +43,30 @@ If[MemberQ[$Packages,"HighPT`"],
 	CellPrint[ExpressionCell[Style[$LogoHighPT,Magnification->0.6],CellMargins->{{70,5},{5,5}}]];
 	
 	(* title *)
-	(*Print@ Style[
-		Graphics[
-			{
-				Thickness[0.0025],
-				RGBColor[0.04,0.22,0.52],
-				Line[{{0,0},{4.5,0}}]
-			},
-			PlotRange->{{0,4.5},{-0.01,+0.01}}
-		],
-		Magnification->3
-	];*)
-	(*Print@ Style["HighPT",Bold, 20, RGBColor[0.04,0.22,0.52]];*)
 	Print@ Style["Authors: Lukas Allwicher, Darius A. Faroughy, Florentin Jaffredo, Olcyr Sumensari, and Felix Wilsch", Bold, 14];
 	Print[
 		Style["References: ", Bold, 14],
-		Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14],
+		Style[Hyperlink["arXiv:2207.10756","http://arxiv.org/abs/2207.10756", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14],
 		Style[", ", Bold, 14],
-		Style[Hyperlink["arXiv:22xx.xxxxx","https://arxiv.org/", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
+		Style[Hyperlink["arXiv:2207.10714","http://arxiv.org/abs/2207.10714", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
 	];
 	Print[
 		Style["Website: ", Bold, 14], 
-		Style[Hyperlink["https://github.com/HighPT/HighPT","https://github.com/HighPT/HighPT", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
+		Style[Hyperlink["https://highpt.github.io","https://highpt.github.io", BaseStyle->RGBColor[0.04,0.22,0.52]], Bold, 14]
 	];
 	
 	(* licensing *)
 	Print@ Style["HighPT is free software released under the terms of the MIT License.", 12];
-	(*
-	Print@ Style["Please submit bugs and feature requests using GitHub's issue system at:", 12];
-	Print@ Style[Hyperlink["https://github.com/HighPT/HighPT/issues","https://github.com/HighPT/HighPT/issues", BaseStyle->RGBColor[0.04,0.22,0.52]], 12];
-	*)
-	(*Print@ Style[
-		Graphics[
-			{
-				Thickness[0.0025],
-				RGBColor[0.04,0.22,0.52],
-				Line[{{0,0},{4.5,0}}]
-			},
-			PlotRange->{{0,4.5},{-0.01,+0.01}}
-		],
-		Magnification->3
-	];*)
+	(* Version *)
+	Print@ Style["Version: "<>$HighPTVersion, 12];
+	
+	Print["____________________________________"];
 	
 	(* initialization *)
-	(* when loading the package initialize with SMEFT at d=6 with NP^2 contributions *)
-	HighPT`InitializeModel["SMEFT", HighPT`EFTorder-> 4, HighPT`OperatorDimension-> 6];
+	(* when loading the package initialize with SMEFT at d=6 with NP^2 contributions and \[CapitalLambda]=1TeV *)
+	HighPT`InitializeModel["SMEFT",
+		HighPT`EFTorder          -> 4,
+		HighPT`OperatorDimension -> 6,
+		HighPT`EFTscale          -> 1000
+	];
 ];
-
-
-(* Protect the symbols used in the package *)
-(*
-SetAttributes[
-  Evaluate @ Flatten[Names /@ {"HighPT`*"}],
-  {Protected, ReadProtected}
-]
-*)

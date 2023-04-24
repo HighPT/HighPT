@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`EventYield`*)
+(*HighPT`EventYield`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Computation of event yields*)
 
 
 (* ::Chapter:: *)
@@ -29,90 +29,71 @@ PackageExport["EventYield"]
 PackageExport["$PrintingProcessInfo"]
 
 
-PackageScope["ConditionalPrint"]
+(* ::Subsection:: *)
+(*Private*)
+
+
+PackageScope["$\[Sigma]Parallel"]
+
+
+PackageScope["NIntegrand"]
+
+
+PackageScope["$IntegralCaching"]
 
 
 (* ::Chapter:: *)
 (*Private:*)
 
 
-PackageScope["$\[Sigma]Parallel"]
+$PrintingProcessInfo::usage= "$PrintingProcessInfo is a boolean value that specifies whether information about the specified process should be printed by EventYield and ChiSquarLHC, or not. The default choice is $PrintingProcessInfo=True."
 
 
-$\[Sigma]Parallel::usage = "$\[Sigma]Parallel
-	Variable storing the expression for the cross section of a ganeric bin, that is shared between all subkernels.
-	Reduces the overload of the parallel evaluation."
-
-
-PackageScope["NIntegrand"]
-
-
-NIntegrand::usage = "NIntegrand[int,{x,xmin,xmax}]
-	Denotes an unevaluated numerical integral. Can be evaluated by thereplacement NIntegrand->NIntegrate."
-
-
-PackageScope["$IntegralCaching"]
-
-
-$IntegralCaching::usage = "$IntegralCaching
-	Boolean variable, that determines whether the result of numeric integrals should be saved (True) or not (False), where the latter is the dafault."
-
-
-$IntegralCaching=False
-
-
-$PrintingProcessInfo::usage= "$PrintingProcessInfo is a boolean value that specifies whether information about the specified process should be printed by EventYield and ChiSquarLHC, or not (default: $PrintingProcessInfo=True)."
-
-
+(* turn on printing of process information *)
 $PrintingProcessInfo = True
 
 
-(* function that only prints if $PrintingProcessInfo is turned on *)
-ConditionalPrint[arg_] := If[$PrintingProcessInfo, Print[arg]]
+$\[Sigma]Parallel::usage = "$\[Sigma]Parallel is a variable storing the expression for the cross section of a ganeric bin, that is shared between all subkernels. Reduces the overload of the parallel evaluation."
+
+
+NIntegrand::usage = "NIntegrand[int,{x,xmin,xmax}] denotes an unevaluated numerical integral. Can be evaluated by the replacement NIntegrand->NIntegrate."
+
+
+$IntegralCaching::usage = "$IntegralCaching boolean variable, that determines whether the result of numeric integrals should be saved (True) or not (False), where the latter is the dafault."
+
+
+(* turn off integral caching *)
+$IntegralCaching = False
 
 
 (* ::Section:: *)
-(*Yield*)
+(*EventYield*)
 
 
-EventYield::usage= "EventYield[\"proc\"]
-	Computes the expected number of events for all bins of the observables in the search specified by the argument \"proc\".
-	The final state consists of a lepton \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\) and an anti-lepton \!\(\*OverscriptBox[SubscriptBox[\(\[ScriptL]\), \(2\)], \(_\)]\), i.e. \!\(\*SubscriptBox[\(\[ScriptL]\), \(1\)]\),\!\(\*SubscriptBox[\(\[ScriptL]\), \(2\)]\)\[Element]{e,\[Nu]} with flavor indices \[Alpha],\[Beta]\[Element]{1,2,3}.
-	For neutrinos no flavor index can be specified in which case a summation of all \[Nu] flavors is implicit.
-	The options and their default values are: 
-		OutputFormat \[Rule] FF,
-		Coefficients \[Rule] All,
-		EFTorder \[RuleDelayed] GetEFTorder[],
-		OperatorDimension \[RuleDelayed] GetOperatorDimension[],
-		SM \[Rule] True, [include (True) or exclude (False) Standard Model contribution],
-		Luminosity \[Rule] Default.";
+EventYield::usage= "EventYield[\"proc\"] computes the expected number of events for the search specified by the argument \"proc\" as a function of form factors, Wilson coefficients or NP coupling constants. Returned is a list where the elements correspond to the number of events in each bin of the experimental observable. The options and their default values are: SM \[Rule] False; FF \[Rule] False; Coefficients \[Rule] All; EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] GetOperatorDimension[]; EFTscale \[RuleDelayed] GetEFTscale[]; Luminosity \[Rule] Default.";
 
 
-EventYield::missingeff= "Not all required efficincies have been given. The missing efficiencies are set to zero, these include: `1`.";
+EventYield::missingeff= "Not all required efficincies are known. The missing efficiencies are set to zero. This is possibly caused by using a madiator mass that is not supported, or if you compute the interference of two BSM mediators.";
 
 
-EventYield::invalidfinalstate= "The argument `1` is not a valid final state particle. Allowed values are e[1|2|3] and \[Nu]. Asummation over \[Nu] flavors is always implicite."
+EventYield::undefinedsearch= "The LHC search `1` is not defined. The defined searches are `2`.";
+
+
+EventYield::zerocrosssection= "Zero cross section obtained for search `1`. A possible issue might be that non of the form factors, Wilson coefficients, or couplings that are turned on contribute to the given process.";
+
+
+EventYield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
 
 
 Options[EventYield]= {
-	SM                -> True,
+	SM                -> False,
 	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	Scale             :> GetScale[],
+	EFTscale          :> GetEFTscale[],
 	Luminosity        -> Default
 };
-
-
-EventYield::binning= "Binning in both \!\(\*SubscriptBox[\(m\), \(\[ScriptL]\[ScriptL]\)]\) and \!\(\*SubscriptBox[\(p\), \(T\)]\) detected. Currently 2d binning is not supported.";
-
-
-EventYield::undefinedsearch= "The LHC search `1` is not defined; defined searches are `2`.";
-
-
-(* ::Section:: *)
-(*Routine to compute cross section for one bin*)
 
 
 EventYield[proc_String, OptionsPattern[]]:= Module[
@@ -125,7 +106,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	,
 	(*** CHECKS ***)
 	(* Check options *)
-	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, Scale , Luminosity};
+	OptionCheck[#,OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, EFTscale , Luminosity, SM};
 	coeff = OptionValue[Coefficients];
 	(* Check that proc corresponds to a specified search *)
 	If[!KeyExistsQ[LHCSearch[], proc],
@@ -176,7 +157,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 			\[Sigma]temp = SubstituteFF[\[Sigma]temp,
 				OperatorDimension -> OptionValue[OperatorDimension],
 				EFTorder          -> OptionValue[EFTorder],
-				Scale             -> OptionValue[Scale]
+				EFTscale             -> OptionValue[EFTscale]
 			]
 		];
 		
@@ -208,6 +189,13 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 		binType = "MLL";
 		ptBins = Table[First[ptBins],{n,Length[sBins]}]; (* make ptBins and sBins of same length *)
 	];
+	
+	(* if zero cross section is found return a warning and return zero *)
+	If[\[Sigma]full===0,
+		Message[EventYield::zerocrosssection, proc];
+		Return[Table[0,{i,Length[LHCSearch[proc]["DATA"]]}]]
+	];
+	
 	(* replace integrals *)
 	\[Sigma]full = \[Sigma]full /. (Integrand[arg_,s_] :> NIntegrand[arg,{s,$sMin,$sMax}]);
 	
@@ -246,7 +234,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Text:: *)
+(* ::Subsection::Closed:: *)
 (*Evaluation of a single bin*)
 
 
@@ -288,15 +276,15 @@ NEventsBin[{binNumber_Integer, binType:("MLL"|"PT"), {{$sMin_,$sMax_},{mllLOW_,m
 
 
 ExtractProcessInfo[proc_]:= Module[
-	{searchData,expInfo,finalstate,sBins,ptBins,lumi,printState}
+	{searchData, expInfo, finalstate, sBins, ptBins, lumi, printState}
 	,
 	(* Load all experimental data for this search *)	
-	searchData= LHCSearch[proc];
-	expInfo= searchData["INFO"];
-	finalstate= ToExpression[expInfo["FINALSTATE"]];
-	sBins= expInfo["BINS"]["MLL"];
-	ptBins= expInfo["BINS"]["PT"];
-	lumi= expInfo["LUMINOSITY"];
+	searchData = LHCSearch[proc];
+	expInfo    = searchData["INFO"];
+	finalstate = ToExpression[expInfo["FINALSTATE"]];
+	sBins      = expInfo["BINS"]["MLL"];
+	ptBins     = expInfo["BINS"]["PT"];
+	lumi       = expInfo["LUMINOSITY"];
 	
 	(* prepare printing labels *)
 	If[MatchQ[finalstate,_Alternatives],
@@ -397,7 +385,7 @@ Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Remove SM*)
 
 
@@ -421,9 +409,6 @@ Module[
 
 (* ::Subsection::Closed:: *)
 (*perform the s-integrate*)
-
-
-EventYield::unevaluatedIntegrals = "There are `1` unevaluated s-integrals.";
 
 
 (* ::Text:: *)
@@ -617,7 +602,7 @@ CacheIntegrals[integralList_, {proc_,bin_}] := Module[
 SubstituteEfficiencyKernels[xSec_, {proc_String, bin_}]:= Module[
 	{
 		efficiencies,
-		\[Sigma]Bin= Hold[xSec], (* inactivate all the weird Plus, Times, Power, ... behaviour of List *)
+		\[Sigma]Bin= Hold[xSec], (* inactivate all the Plus, Times, Power, ... behaviour of List *)
 		NObserved
 	}
 	,
@@ -631,8 +616,8 @@ SubstituteEfficiencyKernels[xSec_, {proc_String, bin_}]:= Module[
 	If[!FreeQ[NObserved,_Efficiency],
 		(*Print/@DeleteDuplicates@ Cases[NObserved, eff_Efficiency(*:> Drop[eff,-1]*), All];*) (* explicit printing *)
 		Message[
-			Yield::missingeff,
-			DeleteDuplicates@ Cases[NObserved, eff_Efficiency:> Drop[eff,-1], All]
+			EventYield::missingeff
+			(*,DeleteDuplicates@ Cases[NObserved, eff_Efficiency:> Drop[eff,-1], All]*)
 		];
 		(* set remaining efficiencies to zero *)
 		NObserved= NObserved/. Efficiency[___] -> Table[0, Length[efficiencies[[1,2]]]] (* must be set to zero vector *)

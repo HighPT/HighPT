@@ -4,11 +4,12 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`EventYield`*)
+(*HighPT`ZZZautocomplete`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Provides an autocomplete function.*)
+(*Notice that this file must be the last one loaded in the package!*)
 
 
 (* ::Chapter:: *)
@@ -20,7 +21,7 @@ Package["HighPT`"]
 
 
 (* ::Subsection:: *)
-(*Exported*)
+(*Internal*)
 
 
 PackageScope["AddAutoCompletion"]
@@ -53,10 +54,22 @@ AddAutoCompletion[function_String][args___]:=Module[{processed},
 AddAutoCompletion["EventYield"][Keys@LHCSearch[]];
 AddAutoCompletion["ChiSquareLHC"][Keys@LHCSearch[]];
 AddAutoCompletion["LHCSearch"][Keys@LHCSearch[]];
-AddAutoCompletion["PythonExport"][Keys@LHCSearch[]];
+(*AddAutoCompletion["PythonExport"][Keys@LHCSearch[]];*)
 
 
 AddAutoCompletion["DefineBasisAlignment"][{"down","up"}]
 
 
-AddAutoCompletion["InitializeModel"][{"SMEFT"}]
+AddAutoCompletion["InitializeModel"][{"SMEFT", "Mediators"}]
+
+
+AddAutoCompletion["SetPDF"][$PDFsets]
+
+
+AddAutoCompletion["DefineParameters"][{"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W", "Wolfenstein"}]
+
+
+AddAutoCompletion["WC"][GetAllWC]
+
+
+AddAutoCompletion["Coupling"][{"g1u","g1d","g1e","g1q","g1l","g3q","g3l","y1L","y1R","y1Rb","y1Rt","x1L","x1R","x1Rb","x1Rt","y2L","y2R","y2Lt","y2Rt","x2L","x2R","x2Lt","x2Rt","y3L","x3L"}]

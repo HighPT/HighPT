@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`Parameters`*)
+(*HighPT`Parameters`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Definition of all SM and BSM parameters.*)
 
 
 (* ::Chapter:: *)
@@ -33,31 +33,13 @@ PackageExport["DefineParameters"]
 PackageExport["GetParameters"]
 
 
-PackageExport["ConstantInput"]
+PackageExport["Param"]
 
 
 PackageExport["DefineBasisAlignment"]
 
 
-(* ::Text:: *)
-(*Everything below should be combined in one head, e.g. Parameter["..."]*)
-(*OR: PackageScope everything*)
-
-
-(*
-(*PackageExport["VEV"]*)
-PackageExport["\[Alpha]EM"]
-PackageExport["GF"]
-PackageExport["mZ"]
-PackageExport["\[CapitalGamma]Z"]
-PackageExport["\[CapitalGamma]W"]
-PackageExport["sW"]
-PackageExport["cW"]
-*)
-
-
 PackageExport["CKM"]
-(*PackageExport["Wolfenstein"]*)
 PackageExport["Vckm"]
 
 
@@ -80,57 +62,25 @@ PackageScope["Vd"]
 (*Private:*)
 
 
-(* ::Section:: *)
-(*Constants*)
+(* ::Section::Closed:: *)
+(*Usage messages*)
 
 
-ConstantInput::usage="ConstantInput[\"label\"]
-	Denotes the constant parameter \"label\". The defined parameters are: 
-		\"\[Alpha]EM\" : electromagnetic fine structure constant,
-		\"GF\" : Fermi's constant,
-		\"vev\" : electroweak vacuum expectation value,
-		\"sW\" : sine of the weak mixing angle,
-		\"cW\" : cosine of the weak mixing angle."
+Param::usage="Param[\"label\"] denotes the parameter specified by \"label\". The defined parameters are: the electromagnetic fine structure constant \"\[Alpha]EM\"; Fermi's constant\"GF\"; the electroweak vacuum expectation value \"vev\"; the sine of the weak mixing angle \"sW\"; the cosine of the weak mixing angle \"cW\"."
 
 
-(* ::Subsection:: *)
-(*Vacuum expectation value*)
+Mass::usage= "Mass[\[Phi]] denotes the mass of the particle \[Phi].";
 
 
-(*VEV::usage="VEV
-	Denotes the electroweak vacuum expectation value and is formated as \[ScriptV] in TraditionalForm.";*)
+Width::usage= "Width[\[Phi]] denotes the width of the particle \[Phi].";
 
 
-(*\[Alpha]EM::usage="\[Alpha]EM
-	Denotes the electromagnetic fine structure constant and is formated as \!\(\*SubscriptBox[\(\[Alpha]\), \(EM\)]\) in TraditionalForm.";*)
-
-
-(*sW::usage= "sW
-	Denotes the sine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(s\), \(W\)]\) in TraditionalForm."*)
-
-
-(*cW::usage= "cW
-	Denotes the cosine of the weak mixing angle and is formated as \!\(\*SubscriptBox[\(c\), \(W\)]\) in TraditionalForm."*)
-
-
-Mass::usage= "Mass[\[Phi]]
-	Denotes the mass of the particle \[Phi] and is formated as \!\(\*SubscriptBox[\(M\), \(\[Phi]\)]\) in TraditionalForm.";
-
-
-Width::usage= "Width[\[Phi]]
-	Denotes the width of the particle \[Phi] and is formated as \!\(\*SubscriptBox[\(\[CapitalGamma]\), \(\[Phi]\)]\) in TraditionalForm.";
-
-
-CKM::usage= "CKM
-	Denotes the CKM matrix, with CKM[[n,m]] given by Vckm[n,m].";
-
-
-Vckm::usage= "Vckm[n,m]
-	Denotes the element of the CKM matrix in the \!\(\*SuperscriptBox[\(n\), \(th\)]\) row and \!\(\*SuperscriptBox[\(m\), \(th\)]\) column.";
-
-
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Masses and Widths*)
+
+
+(* ::Text:: *)
+(*Returns an association containing all mediator masses and widths*)
 
 
 ReplaceMassWidth[]:= Module[
@@ -149,39 +99,24 @@ ReplaceMassWidth[]:= Module[
 ]
 
 
-(* ::Section:: *)
-(*Replacement*)
+(* ::Section::Closed:: *)
+(*ReplaceConstants*)
 
 
-ReplaceConstants::usage= "ReplaceConstants[]
-	Returns a list of replacement rules for all constants.";
+ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules for all constants.";
 
 
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Section:: *)
-(*Real constants*)
+(* ::Section::Closed:: *)
+(*Make constants real*)
 
 
-$realParameters = Alternatives[
-	"vev", "\[Alpha]EM", "sW", "cW", "GF"
-]
+$realParameters = Alternatives["vev", "\[Alpha]EM", "sW", "cW", "GF"]
 
 
-ConstantInput/:Conjugate[ConstantInput[x:$realParameters]] := ConstantInput[x]
-
-
-(*VEV/:Conjugate[VEV]:= VEV*)
-
-
-(*\[Alpha]EM/:Conjugate[\[Alpha]EM]:= \[Alpha]EM*)
-
-
-(*sW/:Conjugate[sW]:= sW*)
-
-
-(*cW/:Conjugate[cW]:= cW*)
+Param/:Conjugate[Param[x:$realParameters]] := Param[x]
 
 
 Mass/:Conjugate[Mass[a_]]:= Mass[a]
@@ -190,59 +125,46 @@ Mass/:Conjugate[Mass[a_]]:= Mass[a]
 Width/:Conjugate[Width[a_]]:= Width[a]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Formatting*)
 
 
-Format[Mass[f_], TraditionalForm]:= Subscript["M",f]
+Format[Mass[f_] , TraditionalForm] := Subscript["M",f]
+Format[Width[f_], TraditionalForm] := Subscript["\[CapitalGamma]",f]
 
 
-Format[Width[f_], TraditionalForm]:= Subscript["\[CapitalGamma]",f]
+Format[Param["vev"], TraditionalForm] := "\[ScriptV]"
+Format[Param["\[Alpha]EM"], TraditionalForm] := Subscript["\[Alpha]","EM"]
+Format[Param["sW"] , TraditionalForm] := Subscript["s","W"]
+Format[Param["cW"] , TraditionalForm] := Subscript["c","W"]
+Format[Param["GF"] , TraditionalForm] := Subscript["G","F"]
 
 
-(*Format[VEV, TraditionalForm]:= "\[ScriptV]"*)
+Format[CKM, TraditionalForm]         := Subscript["V","CKM"]
+Format[Vckm[x_,y_], TraditionalForm] := Subscript["V",ToString[x]<>ToString[y]]
 
 
-(*Format[sW, TraditionalForm]:= Subscript["s","W"]
-Format[cW, TraditionalForm]:= Subscript["c","W"]*)
-
-
-(*Format[\[Alpha]EM, TraditionalForm]:= Subscript["\[Alpha]","EM"]*)
-
-
-Format[ConstantInput["vev"], TraditionalForm]:= "\[ScriptV]"
-Format[ConstantInput["\[Alpha]EM"], TraditionalForm]:= Subscript["\[Alpha]","EM"]
-Format[ConstantInput["sW"], TraditionalForm]:= Subscript["s","W"]
-Format[ConstantInput["cW"], TraditionalForm]:= Subscript["c","W"]
-Format[ConstantInput["GF"], TraditionalForm]:= Subscript["G","F"]
-
-
-Format[CKM, TraditionalForm]:= Subscript["V","CKM"]
-Format[Vckm[x_,y_], TraditionalForm]:= Subscript["V",ToString[x]<>ToString[y]]
-
-
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Experimental Inputs*)
 
 
-(* ::Subsection:: *)
-(*The default values*)
+(* ::Subsection::Closed:: *)
+(*EW input*)
 
 
-(* ::Subsubsection:: *)
-(*couplings, masses, widths*)
+(* ::Text:: *)
+(*List of default parameter values*)
 
 
-(* values used by MadGraph5 *)
 \[Alpha]EM$default = 1/127.9;
 GF$default = 1.16637*10^(-5);
 mZ$default = 91.1876;
-\[CapitalGamma]Z$default = 2.4952; (*2.44140351;*)
-\[CapitalGamma]W$default = 2.085; (*2.04759951;*)
+\[CapitalGamma]Z$default = 2.4952;
+\[CapitalGamma]W$default = 2.085;
 
 
-(* ::Subsubsection:: *)
-(*CKM*)
+(* ::Subsection::Closed:: *)
+(*CKM input*)
 
 
 \[Lambda]Wolfenstein$default    = 0.2233;
@@ -257,8 +179,15 @@ Wolfenstein$default = {
 	\[Eta]BarWolfenstein$default
 }
 
-(*\[Rho]Wolfenstein= \[Rho]BarWolfenstein/(1-\[Lambda]Wolfenstein^2/2);
-\[Eta]Wolfenstein= \[Eta]BarWolfenstein/(1-\[Lambda]Wolfenstein^2/2);*)
+
+(* ::Subsubsection::Closed:: *)
+(*Define CKM matrix*)
+
+
+CKM::usage= "CKM denotes the CKM matrix, with CKM[[n,m]] given by Vckm[n,m].";
+
+
+Vckm::usage= "Vckm[n,m] denotes the element of the CKM matrix in the \!\(\*SuperscriptBox[\(n\), \(th\)]\) row and \!\(\*SuperscriptBox[\(m\), \(th\)]\) column.";
 
 
 CKM= {
@@ -268,7 +197,10 @@ CKM= {
 };
 
 
-(* Rotation matrices for left-handed up- and down-type quarks *)
+(* ::Subsubsection::Closed:: *)
+(*Define rotation matrices for left-handed up and down quarks*)
+
+
 (* By default down alignment is assumed *)
 Vu = ConjugateTranspose[CKM]
 
@@ -279,11 +211,31 @@ Vd= {
 }
 
 
-Identity
+(* ::Subsection::Closed:: *)
+(*Save current values of inputs [separate from default values]*)
 
 
-(* ::Subsection:: *)
-(*Define up- / down-alignment*)
+\[Alpha]EM$current = \[Alpha]EM$default;
+GF$current = GF$default;
+mZ$current = mZ$default;
+\[CapitalGamma]Z$current = \[CapitalGamma]Z$default;
+\[CapitalGamma]W$current = \[CapitalGamma]W$default;
+
+\[Lambda]Wolfenstein$current    = \[Lambda]Wolfenstein$default;
+AWolfenstein$current    = AWolfenstein$default;
+\[Rho]BarWolfenstein$current = \[Rho]BarWolfenstein$default;
+\[Eta]BarWolfenstein$current = \[Eta]BarWolfenstein$default;
+
+Wolfenstein$current = {
+	\[Lambda]Wolfenstein$current,
+	AWolfenstein$current,
+	\[Rho]BarWolfenstein$current,
+	\[Eta]BarWolfenstein$current
+}
+
+
+(* ::Section::Closed:: *)
+(*Define alignment of mass basis and flavor basis*)
 
 
 DefineBasisAlignment::usage=
@@ -292,7 +244,13 @@ DefineBasisAlignment[\"up\"] specifies to work in the up-aligned basis, where \!
 DefineBasisAlignment[matrix] sets the rotation matrix for left-handed down-type quarks \!\(\*SubscriptBox[\(V\), \(d\)]\) equal to the argument matrix, which must be a unitary 3x3 matrix. Consequently the up-rotation matrix is defined by \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(d\)]\).\!\(\*SubscriptBox[\(V\), \(CKM\)]\)."
 
 
+(* ::Subsection::Closed:: *)
+(*down*)
+
+
 DefineBasisAlignment[] := DefineBasisAlignment["down"]
+
+
 DefineBasisAlignment["down"] := Module[{},
 	(* set the new Vd matrix*)
 	Vd = DiagonalMatrix[{1,1,1}];
@@ -303,6 +261,10 @@ DefineBasisAlignment["down"] := Module[{},
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
 	Print["\!\(\*SubscriptBox[\(V\), \(d\)]\) = ", MatrixForm[Vd/.GetParameters[]]];
 ];
+
+
+(* ::Subsection::Closed:: *)
+(*up*)
 
 
 DefineBasisAlignment["up"] := Module[{},
@@ -317,7 +279,14 @@ DefineBasisAlignment["up"] := Module[{},
 ];
 
 
-DefineBasisAlignment::notunitary="Cound not verify that the given matrix is unitary."
+(* ::Subsection::Closed:: *)
+(*general*)
+
+
+DefineBasisAlignment::notunitary="Warning: Cound not verify that the given matrix is unitary. This might happen if the matrix elements are not numeric."
+
+
+DefineBasisAlignment::invalidarg="The argument `1` is not a 3x3 matrix."
 
 
 (* function that defines a down aligned basis  *)
@@ -337,66 +306,93 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 ];
 
 
-(* initialize down aligned *)
-(*DefineBasisAlignment["down"]*) (* does not work since GetParameters[] is not yet defined *)
-
-
-DefineBasisAlignment::invalidarg="The argument `1` is not a 3x3 matrix."
-
-
 DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3})] := (Message[DefineBasisAlignment::invalidarg,arg/.GetParameters[]];Abort[])
 
 
-(* ::Subsection:: *)
-(*Function to modify experimental values*)
+(* ::Section::Closed:: *)
+(*DefineParameters*)
 
 
-DefineParameters::usage= "DefineParameters[] 
-	defines all SM parameters such as ConstantInput[\"\[Alpha]EM\" | \"vev\" | \"sW\" | \"cW\" | \"GF\"], Mass[ZBoson | WBoson | Photon], Width[ZBoson | WBoson | Photon], and the CKM.
-	Furthermore NP parameters, i.e. the Mass and Width of BSM mediators can be changed.
-	The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options.
-	Each option value must be a number, except for the optionvalue of \"Wolfenstein\" which msut be a list of the Wolfenstein parameters {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}.
-	To obtain the current values of the parameters the routine GetParameters[] can be used.
-	Example:
-		To set the electromagnetic fine structure constant to \!\(\*SubscriptBox[\(\[Alpha]\), \(EM\)]\) = \!\(\*SuperscriptBox[\(137\), \(-1\)]\) use
-		DefineParameters[\"\[Alpha]EM\" \[Rule] 1/137].
-";
+DefineParameters::usage= "DefineParameters[] defines all SM parameters. The electroweak input scheme \"\[Alpha]EM\", \"GF\", \"mZ\" is used, whereas for the CKM the input is given by the Wolfentein parameters \[Lambda], A, \!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\), \!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\). The allowed Options are \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", and \"Wolfenstein\", where, e.g., the latter should be given as \"Wolfenstein\" \[Rule] {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}. All other OptionValues must be given as numbers. The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options. The masses and widths of BSM mediators can be modified via the Mediators Option. For example Mediator \[Rule] {\"U1\"\[Rule]{2000,20}} would change the mass of a \!\(\*SubscriptBox[\(U\), \(1\)]\) leptoquark to 2 TeV and its width to 20 GeV. If some parameters are not specified their current value is maintained. To obtain the current values of the parameters the routine GetParameters[] can be used.
+DefineParameters[Default] resets all parameters to the HighPT default values. For BSM mediator masses and widths this corresponds to the value given in the last call of InitializeModel.";
 
 
+(* keep current values if not specified *)
 Options[DefineParameters]= {
+	"\[Alpha]EM"         :> \[Alpha]EM$current,
+	"GF"          :> GF$current,
+	"mZ"          :> mZ$current,
+	"\[CapitalGamma]Z"          :> \[CapitalGamma]Z$current,
+	"\[CapitalGamma]W"          :> \[CapitalGamma]W$current,
+	"Wolfenstein" :> Wolfenstein$current,
+	
+	Mediators     -> {}
+};
+
+
+(* reset all parameters to their default values *)
+DefineParameters[Default] := DefineParameters[
 	"\[Alpha]EM"         -> \[Alpha]EM$default,
 	"GF"          -> GF$default,
 	"mZ"          -> mZ$default,
 	"\[CapitalGamma]Z"          -> \[CapitalGamma]Z$default,
 	"\[CapitalGamma]W"          -> \[CapitalGamma]W$default,
 	"Wolfenstein" -> Wolfenstein$default,
-	Mass          -> {},
-	Width         -> {}
-};
-
-
-DefineParameters::unknownmass= "The mass `1` is undefined."
+	
+	Mediators     :> $defaultMediatorProperties
+]
 
 
 DefineParameters[OptionsPattern[]] := Module[
 	{
-		$\[Alpha]EM = OptionValue["\[Alpha]EM"],
-		$GF  = OptionValue["GF"],
-		$mZ  = OptionValue["mZ"],
-		$\[CapitalGamma]Z  = OptionValue["\[CapitalGamma]Z"],
-		$\[CapitalGamma]W  = OptionValue["\[CapitalGamma]W"],
-		$mW,
-		$sW,
-		$vev,
-		$Wolfenstein = OptionValue["Wolfenstein"], 
+		(* input *)
+		$\[Alpha]EM         = OptionValue["\[Alpha]EM"],
+		$GF          = OptionValue["GF"],
+		$mZ          = OptionValue["mZ"],
+		$\[CapitalGamma]Z          = OptionValue["\[CapitalGamma]Z"],
+		$\[CapitalGamma]W          = OptionValue["\[CapitalGamma]W"],
+		$Wolfenstein = OptionValue["Wolfenstein"],
+		
+		(* output *)
+		$mW, $sW, $vev,
 		$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar, $\[Rho], $\[Eta],
-		masses = OptionValue[Mass],
-		widths = OptionValue[Width],
-		mediators = GetMediators[]
+		
+		$mediator         = OptionValue[Mediators]/.Association->List,
+		mediators$current = GetMediators[]
 	}
 	,
-	(* set the Wolfentein parameters *)
+	(* OPTION CHECKS *)
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W", "Wolfenstein", Mediators};
+	(* check that all mediator labels are known *)
+	Do[
+		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
+			Message[InitializeModel::undefmed, med, Keys[$MediatorList]];
+			Abort[]
+		]
+		,
+		{med, Keys@$mediator}
+	];
+	
+	(* save current values of parameters or change to default value if required *)
+	\[Alpha]EM$current = If[MatchQ[$\[Alpha]EM, Default], $\[Alpha]EM = \[Alpha]EM$default, $\[Alpha]EM];
+	GF$current  = If[MatchQ[$GF,  Default], $GF  = GF$default , $GF ];
+	mZ$current  = If[MatchQ[$mZ,  Default], $mZ  = mZ$default , $mZ ];
+	\[CapitalGamma]Z$current  = If[MatchQ[$\[CapitalGamma]Z,  Default], $\[CapitalGamma]Z  = \[CapitalGamma]Z$default , $\[CapitalGamma]Z ];
+	\[CapitalGamma]W$current  = If[MatchQ[$\[CapitalGamma]W,  Default], $\[CapitalGamma]W  = \[CapitalGamma]W$default , $\[CapitalGamma]W ];
+	
 	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
+	\[Lambda]Wolfenstein$current    = If[MatchQ[$\[Lambda],    Default], $\[Lambda]    = \[Lambda]Wolfenstein$default   , $\[Lambda]   ];
+	AWolfenstein$current    = If[MatchQ[$A,    Default], $A    = AWolfenstein$default   , $A   ];
+	\[Rho]BarWolfenstein$current = If[MatchQ[$\[Rho]Bar, Default], $\[Rho]Bar = \[Rho]BarWolfenstein$default, $\[Rho]Bar];
+	\[Eta]BarWolfenstein$current = If[MatchQ[$\[Eta]Bar, Default], $\[Eta]Bar = \[Eta]BarWolfenstein$default, $\[Eta]Bar];
+	Wolfenstein$current = {
+		\[Lambda]Wolfenstein$current,
+		AWolfenstein$current,
+		\[Rho]BarWolfenstein$current,
+		\[Eta]BarWolfenstein$current
+	};
+	
+	(* set the non-bared Wolfentein parameters *)
 	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
 	$\[Eta] = $\[Eta]Bar/(1-$\[Lambda]^2/2);
 	
@@ -405,25 +401,41 @@ DefineParameters[OptionsPattern[]] := Module[
 	$sW = Sqrt[1. - $mW^2/$mZ^2];
 	$vev = ($mW*$sW)/Sqrt[\[Pi]*$\[Alpha]EM];
 	
-	(* modify the masses of mediators *)
-	If[masses=!={},
-		Do[
-			If[MatchQ[mass,Alternatives@@Keys[mediators]->_],
-				ModifyMediator[First[mass], Mass->Last[mass]]
-				,
-				Message[DefineParameters::unknownmass,mass]
-			]
-			,
-			{mass, masses}
-		]
+	(* BSM mediators *)
+	If[$mediator===Default, $mediator=$defaultMediatorProperties];
+	(* built current BSM mediator assoc *)
+	mediators$current = Association@Table[
+		med -> {mediators$current[med][Mass],mediators$current[med][Width]}
+		,
+		{med, Keys@mediators$current}
 	];
+	
+	(* overwrite with new definitions *)
+	AssociateTo[mediators$current, $mediator];
+	AssociateTo[mediators$current, {"ZBoson"->{$mZ,$\[CapitalGamma]Z}, "WBoson"->{$mW,$\[CapitalGamma]W}}];
+	
+	(* check mass and width *)
+	Do[
+		If[!MatchQ[First[mediators$current[mediator]], $AllowedMasses],
+			Message[InitializeModel::undefmass, mediator, First[mediators$current[mediator]], List@@$AllowedMasses];
+		];
+		(* allow for all widths *)
+		(*If[!MatchQ[Last[mediators$current[mediator]], 0],
+			Message[InitializeModel::undefwidth];
+		]*)
+		,
+		{mediator, Keys@KeyDrop[mediators$current,{"Photon","ZBoson","WBoson"}]}
+	];	
+	
+	(* Modify all masses and widths *)
+	ModifyMediator[Mediators->mediators$current];
 	
 	(* Create the appropriate supstitution rule *)
 	ExperimentalParameters = <|
-		ConstantInput["\[Alpha]EM"] -> $\[Alpha]EM,
-		ConstantInput["vev"] -> $vev,
-		ConstantInput["sW"]  -> $sW,
-		ConstantInput["cW"]  -> Sqrt[1. - $sW^2],
+		Param["\[Alpha]EM"] -> $\[Alpha]EM,
+		Param["vev"] -> $vev,
+		Param["sW"]  -> $sW,
+		Param["cW"]  -> Sqrt[1. - $sW^2],
 		(* CKM *)
 		Vckm[1,1] -> 1-$\[Lambda]^2/2,
 		Vckm[1,2] -> $\[Lambda],
@@ -435,14 +447,15 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
-		Vckm[3,3] -> 1,
+		Vckm[3,3] -> 1
+		,
 		(* masses & widths *)
-		Mass[ZBoson]         -> $mZ,
-		Width[ZBoson]        -> $\[CapitalGamma]Z,
-		Mass[WBoson]         -> $mW,
-		Width[WBoson]        -> $\[CapitalGamma]W,
-		Mass[Photon]         -> 0,
-		Width[Photon]        -> 0
+		Mass["ZBoson"]         -> $mZ,
+		Width["ZBoson"]        -> $\[CapitalGamma]Z,
+		Mass["WBoson"]         -> $mW,
+		Width["WBoson"]        -> $\[CapitalGamma]W,
+		Mass["Photon"]         -> 0,
+		Width["Photon"]        -> 0
 	|>;
 ]
 
@@ -451,38 +464,40 @@ ExperimentalParameters= <||>;
 
 
 (* initialize the parameters with default values *)
-DefineParameters[]
+DefineParameters[Default]
 
 
-GetParameters::usage= "GetParameters[]
-	Returns an Association of all SM parameters and their values.
-	To modify the values use DefineParameters.";
+(* ::Section::Closed:: *)
+(*GetParameters*)
+
+
+GetParameters::usage= "GetParameters[] returns an Association of all (B)SM parameters and their values. To modify the values use the DefineParameters routine.";
 
 
 (* returns the current value of the (B)SM parameters *)
 GetParameters[]:= Join[ExperimentalParameters, ReplaceMassWidth[]]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Charge definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*electric charges*)
 
 
-Charge[e|_e]= -1;
-Charge[\[Nu]|_\[Nu]]= 0;
-Charge[u|_u]= +2/3;
-Charge[d|_d]= -1/3;
+Charge[e|_e] = -1;
+Charge[\[Nu]|_\[Nu]] = 0;
+Charge[u|_u] = +2/3;
+Charge[d|_d] = -1/3;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*weak isospin 3rd-component*)
 
 
-WeakIsospin3[_,Right]=0;
-WeakIsospin3[u|_u,Left]=+(1/2);
-WeakIsospin3[\[Nu]|_ \[Nu],Left]=+(1/2);
-WeakIsospin3[d|_d,Left]=-(1/2);
-WeakIsospin3[e|_e,Left]=-(1/2);
+WeakIsospin3[_,Right]    = 0;
+WeakIsospin3[u|_u,Left]  = +(1/2);
+WeakIsospin3[\[Nu]|_ \[Nu],Left] = +(1/2);
+WeakIsospin3[d|_d,Left]  = -(1/2);
+WeakIsospin3[e|_e,Left]  = -(1/2);

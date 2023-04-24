@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPTio`Efficiencies`*)
+(*HighPT`Efficiencies`*)
 
 
 (* ::Subtitle:: *)
-(*Cross-section computation for the semi-leptonic processes pp -> ll and pp -> l\[Nu] in the SMEFT up to order O(\[CapitalLambda]^-4)*)
+(*Provides efficiency kernels relating computed cross section to experimental measurements.*)
 
 
 (* ::Chapter:: *)
@@ -97,8 +97,8 @@ Efficiency[{{Tensor,a1_}, {Scalar,a2_}}, rest___]:= Efficiency["scalar-tensor", 
 
 
 (* fix (s,t) powers for singular terms *)
-Efficiency[str_String, {OrderlessPatternSequence[{type:Photon|ZBoson|WBoson,SM},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
-Efficiency[str_String, {OrderlessPatternSequence[{type:Photon|ZBoson|WBoson,a1_?IntegerQ},x_]}, rest___]:= Efficiency[str, {{type,{0,a1}},x}, rest]
+Efficiency[str_String, {OrderlessPatternSequence[{type:"Photon"|"ZBoson"|"WBoson",SM},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
+Efficiency[str_String, {OrderlessPatternSequence[{type:"Photon"|"ZBoson"|"WBoson",a1_?IntegerQ},x_]}, rest___]:= Efficiency[str, {{type,{0,a1}},x}, rest]
 Efficiency[str_String, {OrderlessPatternSequence[{type_,0},x_]}, rest___]:= Efficiency[str, {{type,{0,0}},x}, rest]
 
 
@@ -129,8 +129,8 @@ LoadEfficiencies::unabletoreadfiles= "Error while interpreting efficiency files:
 LoadEfficiencies::duobledef= "Efficiencies defined multiple times: `1`.";
 
 
-LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
-	{(*directory,*) files, substitutions}
+LoadEfficiencies[proc_String]:= Module[
+	{(*directory,*) files, substitutions, npMediators, npMasses}
 	,	
 	(* load fiels in the required directory *)
 	Switch[$RunMode,
@@ -144,45 +144,70 @@ LoadEfficiencies[proc_String(*{e[\[Alpha]_],e[\[Beta]_]}*)]:= Module[
 					"*.dat"
 				}],
 				"Table"
-			],
+			]
+		,
 		(* mediator mode *)
 		"Model",
-			files= Import[
-				FileNameJoin[{
-					Global`$DirectoryHighPT,
-					"LHC_searches",
-					$SearchDirectories[proc],
-					"Mediators",
-					"GeV_" <> ToString[$ModelMass],
-					"*",
-					"*.dat"
-				}],
-				"Table"
-			]/.{"scalar"->("scalar"|"tensor"|"scalar-tensor")};
+			npMediators = KeyDrop[GetMediators[],{"Photon","ZBoson","WBoson"}];
+			(* sum over all relevant mediators *)
+			files= Table[
+				Table[
+					(* remove files not containing the given mediators *)
+					If[FreeQ[input,str_String/;!StringFreeQ[str,StringReplace[med,"t"->"~"]]],
+						Nothing,
+						input
+					]
+					,
+					(* run over all input files *)
+					{input, Import[
+						FileNameJoin[{
+							Global`$DirectoryHighPT,
+							"LHC_searches",
+							$SearchDirectories[proc],
+							"Mediators",
+							"GeV_" <> ToString[npMediators[med][Mass]],
+							"*",
+							"*.dat"
+						}],
+						"Table"
+					]/.{"scalar"->("scalar"|"tensor"|"scalar-tensor")}
+					}
+				]
+				,
+				{med,Keys[npMediators]}
+			];
+			files = Flatten[files,1];
+			
 			files = Join[
 				files,
-				Import[
-					FileNameJoin[{Global`$DirectoryHighPT,
-						"LHC_searches",
-						$SearchDirectories[proc],
-						"SMEFT",
-						"*.dat"
-					}],
-					"Table"
+				Table[
+					(* remove files not containing the given mediators *)
+					If[!FreeQ[file,str_String/;!StringFreeQ[str,"Reg"]],
+						Nothing,
+						file
+					]
+					,
+					{file, Import[
+						FileNameJoin[{Global`$DirectoryHighPT,
+							"LHC_searches",
+							$SearchDirectories[proc],
+							"SMEFT",
+							"*.dat"
+						}],
+						"Table"
+					]
+					}
 				]
 			]
 	];
-	(*
-	files= Import[
-		FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", $SearchDirectories[proc], "SMEFT", "*.dat"}],
-		"Table"
-	];
-	*)
 
 	(* Find substitutions for all files *)
-	substitutions= EfficiencyReplacements[files,proc];
+	substitutions = EfficiencyReplacements[files,proc];
 	
-	(* check for double definitions *)
+	(* this is required when considering multiple mediators with the same efficiencies *)
+	substitutions = DeleteDuplicates[substitutions];
+	
+	(* check for remaining double definitions *)
 	If[!DuplicateFreeQ[substitutions[[;;,1]]],
 		Message[
 			LoadEfficiencies::duobledef,
@@ -223,30 +248,25 @@ EfficiencyReplacements[files_List, proc_]:= Module[
 BuildEfficiencies[file_, proc_]:= Module[
 	{info, effTable, eff, replace={},c}
 	,
-	(*
-	(* file header *)
-	info= file[[2;;8,4;;]];
-	(* efficiency table *)
-	effTable= file[[13;;,4;;]];
-	*)
 	Switch[$RunMode,
 		"SMEFT", c=0,
 		"Model", c=1
 	];
 	
+	(* process specific reading configurations for efficiency files *)
 	Switch[proc,
 		"muon-tau-CMS" | "electron-tau-CMS" | "electron-muon-CMS",
 			info= file[[4;;10,4;;]];
 			effTable= file[[15;;30,4;;28]];,
 		"mono-tau-ATLAS",
 			info= file[[4;;10,4;;]];
-			effTable= file[[15;;,4;;]];,
+			effTable= file[[15;;,4(*+2*);;]];,
 		"mono-electron-ATLAS",
 			info= file[[4;;10,4;;]];
-			effTable= file[[15;;,4+7;;]];,
+			effTable= file[[15;;,4+7(*+10*);;]];,
 		"mono-muon-ATLAS",
 			info= file[[4;;10,4;;]];
-			effTable= file[[15;;,4+8;;]];,
+			effTable= file[[15;;,4+8(*+8*);;]];,
 		"di-electron-CMS",
 			info= file[[4;;10,4;;]];
 			effTable= file[[15;;,4+5;;]];,
@@ -372,34 +392,14 @@ EfficiencyFromHeader[info_]:= Module[
 	coeff= info[[5]]/.{0}->{0,0};
 	
 	(* type *)
-	(*
-	Switch[info[[6,1]],
-		"Reg*Reg",       type= {"regular","regular"},
-		"A*Reg"|"Reg*A", type= {"regular",Photon},
-		"Z*Reg"|"Reg*Z", type= {"regular",ZBoson},
-		"W*Reg"|"Reg*W", type= {"regular",WBoson},
-		"A*A",           type= {Photon,Photon},
-		"Z*Z",           type= {ZBoson,ZBoson},
-		"A*Z"|"Z*A",     type= {Photon,ZBoson},
-		"W*W",           type= {WBoson,WBoson},
-		"S1*S1",         type= {"S1","S1"},
-		"S3*S3",         type= {"S3","S3"},
-		"U1*U1",         type= {"U1","U1"},
-		"U3*U3",         type= {"U3","U3"},
-		"R2*R2",         type= {"R2","R2"},
-		"V2*V2",         type= {"V2","V2"},
-		"A*S1",          type= {"S1","S1"},
-		_, Message[LoadEfficiencies::unabletoreadfiles, "type: "<>ToString[info[[6,1]]]]
-	];
-	*)
 	If[Length[info[[6]]]===1,
 		type = StringSplit[info[[6,1]],"*"];
 		type = type /. str_String:> StringReplace[str,"~"->"t"];
 		type = type /. {
 			"Reg" -> "regular",
-			"A"   -> Photon,
-			"Z"   -> ZBoson,
-			"W"   -> WBoson
+			"A"   -> "Photon",
+			"Z"   -> "ZBoson",
+			"W"   -> "WBoson"
 		};
 		type = Sort[type];
 		,
@@ -408,9 +408,9 @@ EfficiencyFromHeader[info_]:= Module[
 		type = type /. str_String:> StringReplace[str,"~"->"t"];
 		type = type /. {
 			"Reg"    -> "regular",
-			"A"      -> Photon,
-			"Z"      -> ZBoson,
-			"W"      -> WBoson
+			"A"      -> "Photon",
+			"Z"      -> "ZBoson",
+			"W"      -> "WBoson"
 		};
 		type = Sort/@type;
 	];
