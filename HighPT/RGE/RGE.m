@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPT`Template`*)
+(*HighPT`RGE`*)
 
 
 (* ::Subtitle:: *)
-(*Template .m file*)
+(*Generic things about RGEs in the EFT*)
 
 
 (* ::Chapter:: *)
@@ -23,9 +23,25 @@ Package["HighPT`"]
 (*Exported*)
 
 
+PackageExport["RunRGE"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
 
+PackageScope["RunningMode"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
+
+
+RunningMode="DsixTools"
+
+
+Needs["DsixTools`"]
+DsixTools`SetMatchingLoopOrder[0];
+
+
+RunRGE[expr_,lowscale_,highscale_]:=SMEFTRun[LEFTRun[expr,lowscale,DsixTools`EWSCALE],DsixTools`EWSCALE,highscale]

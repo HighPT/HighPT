@@ -128,7 +128,7 @@ $OptionValueAssociation= <|
 	SM                -> True | False,
 	Efficiency        -> True | False,
 	Coefficients      -> All | {} | {(_FF|_WC|_Coupling)..} (*| {_WC..} | {_Coupling..}*) (*| {Rule[_WC,_]..} | {Rule[_FF,_]..}*),
-	EFTorder          -> 0 | 2 | 4 (*| 8*),
+	EFTorder          -> 0 | 2 | 4 | 8,
 	OperatorDimension -> 4 | 6 | 8,
 	CombineBins       -> Default | {{_?IntegerQ..}..} | {} | None ,
 	Luminosity        -> Default | _?((NumericQ[#]&&Positive[#])&),
@@ -142,10 +142,7 @@ $OptionValueAssociation= <|
 	"mZ"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
 	"\[CapitalGamma]Z"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[CapitalGamma]W"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
-	"Wolfenstein"     -> {_,_,_,_}
-	(*,
 	"Wolfenstein"     -> {_?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default}
-	*)
 |>;
 
 

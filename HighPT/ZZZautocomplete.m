@@ -73,3 +73,6 @@ AddAutoCompletion["WC"][GetAllWC]
 
 
 AddAutoCompletion["Coupling"][{"g1u","g1d","g1e","g1q","g1l","g3q","g3l","y1L","y1R","y1Rb","y1Rt","x1L","x1R","x1Rb","x1Rt","y2L","y2R","y2Lt","y2Rt","x2L","x2R","x2Lt","x2Rt","y3L","x3L"}]
+
+
+AddAutoCompletion["WCL"][GetAllWCL]

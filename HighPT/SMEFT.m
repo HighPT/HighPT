@@ -48,12 +48,7 @@ PackageScope["CanonizeFF"]
 PackageScope["SubstitutionRulesSMEFT"]
 
 
-<<<<<<< HEAD
-PackageScope["$WCList2"]
-PackageScope["$WCList4"]
-=======
 PackageScope["GetAllWC"]
->>>>>>> development
 
 
 (* ::Chapter:: *)
@@ -107,10 +102,10 @@ GetEFTorder::usage= "GetEFTorder[] returns current the global value \[ScriptN] u
 SetEFTorder::invalidEFTorder= "The given argument n=`1` is not a valid EFT order. The allowed values are n \[Element] {0, 2, 4}.";
 
 
-SetEFTorder[n:(0|2|4(*|8*))] := ($EFTorder = n);
+SetEFTorder[n:(0|2|4|8)] := ($EFTorder = n);
 
 
-SetEFTorder[n:Except[0|2|4(*|8*)]] := (Message[SetEFTorder::invalidEFTorder,n];Abort[])
+SetEFTorder[n:Except[0|2|4|8]] := (Message[SetEFTorder::invalidEFTorder,n];Abort[])
 
 
 GetEFTorder[] := $EFTorder
@@ -139,7 +134,7 @@ WC::usage=
 WC[\"label\",{\[ScriptR],\[ScriptS]}] Wilson coefficient associated to the two-fermion operator denoted by label with flavor indices \[ScriptR],\[ScriptS] which can be either lepton or quark indices.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -171,7 +166,7 @@ Format[WC[label_,{indices__}],TraditionalForm]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Flavor indices*)
 
 
@@ -218,7 +213,7 @@ HermitianWC2= Alternatives[
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Index relabeling redundancies*)
 
 
@@ -239,7 +234,7 @@ WC[herm:HermitianWC4,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[herm,{b,a,j
 WC[herm:HermitianWC2,{p_Integer,r_Integer}]:= WC[herm,{r,p}]\[Conjugate] /; p>r
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Real coefficients on diagonal*)
 
 
@@ -249,14 +244,22 @@ WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:=
 WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*WC argument check*)
 
 
-WC::unknownWClabel= "The label `1` is not an allowed label for Wilson coefficients (WC)."
+(* ::Subsubsection:: *)
+(*\[Psi]^0*)
 
 
-(* ::Subsubsection::Closed:: *)
+$WCList0=List[
+	"H","HD","HBox",
+	"HG","HGt","HW","HWt","HB","HBt","HWB","HWtB",
+	"G","Gt","W","Wt"
+]
+
+
+(* ::Subsubsection:: *)
 (*\[Psi]^2*)
 
 
@@ -275,11 +278,33 @@ $WCList2=List[
 	"d2H2D31","d2H2D32",
 	
 	(* non-hermitain *)
-	"Hud", "eW", "eB", "uW", "uB", "dW", "dB"
+	"Hud", "eW", "eB", "uW", "uB", "dW", "dB","uG","dG",
+	
+	(* Psi^2 H^3 *)
+	"uH","dH","eH"
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(*$WCList2=List[
+	(* Psi^2 H^2 D *)
+	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
+	(* Psi^2 H^4 D *)
+	"l2H4D1","l2H4D2","l2H4D3","l2H4D4",
+	"q2H4D1","q2H4D2","q2H4D3","q2H4D4",
+	"e2H4D","u2H4D","d2H4D",
+	(* Psi^2 H^2 D^3 *)
+	"l2H2D31","l2H2D32","l2H2D33","l2H2D34",
+	"e2H2D31","e2H2D32",
+	"q2H2D31","q2H2D32","q2H2D33","q2H2D34",
+	"u2H2D31","u2H2D32",
+	"d2H2D31","d2H2D32",
+	
+	(* non-hermitain *)
+	"Hud", "eW", "eB", "uW", "uB", "dW", "dB"
+]*)
+
+
+(* ::Subsubsection:: *)
 (*\[Psi]^4*)
 
 
@@ -300,21 +325,50 @@ $WCList4=List[
 	"e2d2D21","e2d2D22",
 	
 	(* non-hermitian *)
-	"ledq", "lequ1", "lequ3"
+	"ledq", "lequ1", "lequ3",
+	
+	(* 4-quarks *)
+	"qq1","qq3",
+	"uu","dd","ud1","ud8",
+	"qu1","qu8","qd1","qd8",
+	"quqd1","quqd8",
+	(* 4-leptons *)
+	"ll","ee","le"
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+(*$WCList4=List[
+	(* Psi^4 *)
+	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
+	(* Psi^4 H^2 *)
+	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
+	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
+	"e2q2H21","e2q2H22",
+	"e2u2H2", "e2d2H2",
+	(* Psi^4 D^2 *)
+	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
+	"l2u2D21","l2u2D22",
+	"l2d2D21","l2d2D22",
+	"e2q2D21","e2q2D22",
+	"e2u2D21","e2u2D22",
+	"e2d2D21","e2d2D22",
+	
+	(* non-hermitian *)
+	"ledq", "lequ1", "lequ3"
+];*)
+
+
+(* ::Subsubsection:: *)
 (*Check WC label*)
 
 
-WC[l:Except[Alternatives@@Join[$WCList2, $WCList4, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+WC[l:Except[Alternatives@@Join[$WCList0, $WCList2, $WCList4, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WC::unknownWClabel,l];
 	Abort[]
 )
 
 
-GetAllWC = Join[$WCList2, $WCList4]
+GetAllWC = Join[$WCList0, $WCList2, $WCList4]
 
 
 (* ::Section:: *)
@@ -601,159 +655,3 @@ CanonizeFF = Dispatch[
 	FF[DipoleQ, type_, {X_,Right}, {a_,b_,i_d,j_d}]                     :> - FF[DipoleQ, type, {X,Left}, {b,a,j,i}]\[Conjugate]
 	}
 ];
-<<<<<<< HEAD
-
-
-(* ::Section:: *)
-(*Hermitian WC*)
-
-
-HermitianWC4= Alternatives[
-	(* Psi^4 *)
-	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
-	(* Psi^4 H^2 *)
-	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
-	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
-	"q2e2H21","q2e2H22",
-	"e2u2H2", "e2d2H2",
-	(* Psi^4 D^2 *)
-	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
-	"l2u2D21","l2u2D22",
-	"l2d2D21","l2d2D22",
-	"q2e2D21","q2e2D22",
-	"e2u2D21","e2u2D22",
-	"e2d2D21","e2d2D22"
-];
-
-
-HermitianWC2= Alternatives[
-	(* Psi^2 H^2 D *)
-	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
-	(* Psi^2 H^4 D *)
-	"l2H4D1","l2H4D2","l2H4D3","l2H4D4",
-	"q2H4D1","q2H4D2","q2H4D3","q2H4D4",
-	"e2H4D","u2H4D","d2H4D",
-	(* Psi^2 H^2 D^3 *)
-	"l2H2D31","l2H2D32","l2H2D33","l2H2D34",
-	"e2H2D31","e2H2D32",
-	"q2H2D31","q2H2D32","q2H2D33","q2H2D34",
-	"u2H2D31","u2H2D32",
-	"d2H2D31","d2H2D32"
-];
-
-
-(* ::Subsection:: *)
-(*Index relabeling redundancies*)
-
-
-(* ::Subsubsection:: *)
-(*4 fermion operators*)
-
-
-WC[herm:HermitianWC4,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[herm,{b,a,j,i}]\[Conjugate] /; a>b
-
-
-WC[herm:HermitianWC4,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[herm,{b,a,j,i}]\[Conjugate] /; (a==b && i>j)
-
-
-(* ::Subsubsection:: *)
-(*2 fermion operators*)
-
-
-WC[herm:HermitianWC2,{p_Integer,r_Integer}]:= WC[herm,{r,p}]\[Conjugate] /; p>r
-
-
-(* ::Subsection:: *)
-(*Real coefficients on diagonal*)
-
-
-WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[herm,{a,a,i,i}]
-
-
-WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
-
-
-(* ::Section:: *)
-(*WC argument check*)
-
-
-WC::unknownWClabel= "The label `1` is not an allowed label for Wilson coefficients (WC)."
-
-
-WC::wrongindexnumber= "The number of flavor indices specified for the Wilson coefficients is incorrect: `1`"
-
-
-(* ::Subsubsection:: *)
-(*psi^2*)
-
-
-$WCList2=List[
-	(* Psi^2 H^2 D *)
-	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
-	(* Psi^2 H^4 D *)
-	"l2H4D1","l2H4D2","l2H4D3","l2H4D4",
-	"q2H4D1","q2H4D2","q2H4D3","q2H4D4",
-	"e2H4D","u2H4D","d2H4D",
-	(* Psi^2 H^2 D^3 *)
-	"l2H2D31","l2H2D32","l2H2D33","l2H2D34",
-	"e2H2D31","e2H2D32",
-	"q2H2D31","q2H2D32","q2H2D33","q2H2D34",
-	"u2H2D31","u2H2D32",
-	"d2H2D31","d2H2D32",
-	
-	(* non-hermitain *)
-	"Hud", "eW", "eB", "uW", "uB", "dW", "dB"
-]
-
-
-(* ::Subsubsection:: *)
-(*psi^4*)
-
-
-$WCList4=List[
-	(* Psi^4 *)
-	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
-	(* Psi^4 H^2 *)
-	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
-	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
-	"q2e2H21","q2e2H22",
-	"e2u2H2", "e2d2H2",
-	(* Psi^4 D^2 *)
-	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
-	"l2u2D21","l2u2D22",
-	"l2d2D21","l2d2D22",
-	"q2e2D21","q2e2D22",
-	"e2u2D21","e2u2D22",
-	"e2d2D21","e2d2D22",
-	
-	(* non-hermitian *)
-	"ledq", "lequ1", "lequ3"
-];
-
-
-(* ::Subsection:: *)
-(*Check WC label*)
-
-
-(*WC[l:Except[Alternatives@@Join[$WCList2, $WCList4, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
-	Message[WC::unknownWClabel,l];
-	Abort[]
-)*)
-
-
-(* ::Subsection:: *)
-(*Check WC indices*)
-
-
-(*WC[l:Alternatives@@$WCList2, ind:Except[{_,_}]]:=(
-	Message[WC::wrongindexnumber, TraditionalForm[HoldForm[$wc[l,ind]]/.$wc->WC]];
-	Abort[]
-)*)
-
-
-(*WC[l:Alternatives@@$WCList4, ind:Except[{_,_,_,_}]]:=(
-	Message[WC::wrongindexnumber, TraditionalForm[HoldForm[$wc[l,ind]]/.$wc->WC]];
-	Abort[]
-)*)
-=======
->>>>>>> development
