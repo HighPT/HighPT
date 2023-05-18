@@ -28,6 +28,8 @@ Package["HighPT`"]
 
 
 PackageExport["DsixToolsToHighPTSMEFT"]
+PackageExport["DsixToolsToHighPTLEFT"]
+PackageExport["DsixToolsToHighPTSM"]
 
 
 PackageExport["HighPTToDsixToolsSMEFT"]
@@ -56,7 +58,7 @@ SMEFTMap = {
 	{"HB",DsixTools`CHB},
 	{"HBt",DsixTools`CHBtilde},
 	{"HWB",DsixTools`CHWB},
-	{"HWtB",DsixTools`CWtildeB},
+	{"HWtB",DsixTools`CHWtildeB},
 	(* X^3 *)
 	{"G",DsixTools`CG},
 	{"Gt",DsixTools`CGtilde},
@@ -190,10 +192,14 @@ LEFTMap = {
 (*DsixTools -> HighPT*)
 
 
+(* ::Subsection:: *)
+(*SMEFT*)
+
+
 DsixToolsToHighPTSMEFTAss = <| (#1[[2]]->#1[[1]])&/@SMEFTMap |>
 
 
-DsixToolsToHighPTSMEFT::missingcoefficient = "The mapping  of `1` to the HighPT notation is not known. The coefficient will be set to zero";
+DsixToolsToHighPTSMEFT::missingcoefficient = "The mapping  of `1` to the HighPT notation is not known"(*. The coefficient will be set to zero"*);
 
 
 DsixToolsToHighPTSMEFT::nocoefficients = "No SMEFT coefficients found.";
@@ -205,7 +211,7 @@ DsixToolsToHighPTSMEFT[expr_] := Module[
 	repl
 	}
 	,
-	var=Select[Variables[(expr//DsixTools`D6Simplify)/.Conjugate[a_]->a],MemberQ[DsixTools`SMEFTParameterList[],#] &];
+	var=Select[Variables[(expr//DsixTools`D6Simplify)/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`SMEFTParameterList[],#] &];
 	repl={};
 	Do[
 		If[
@@ -213,12 +219,12 @@ DsixToolsToHighPTSMEFT[expr_] := Module[
 			If[
 				DsixToolsToHighPTSMEFTAss[i] =!= Missing["KeyAbsent",i],
 				AppendTo[repl,i->WC[DsixToolsToHighPTSMEFTAss[i],{}]],
-				AppendTo[repl,i->0];Message[DsixToolsToHighPTSMEFT::missingcoefficient,i];
+				AppendTo[repl,i->i];Message[DsixToolsToHighPTSMEFT::missingcoefficient,i];
 			];,
 			If[
 				DsixToolsToHighPTSMEFTAss[Head[i]] =!= Missing["KeyAbsent",Head[i]],
 				AppendTo[repl,i->WC[DsixToolsToHighPTSMEFTAss[Head[i]],Delete[i,0]//List]],
-				AppendTo[repl,i->0];Message[DsixToolsToHighPTSMEFT::missingcoefficient,i];
+				AppendTo[repl,i->i];Message[DsixToolsToHighPTSMEFT::missingcoefficient,i];
 			];
 		],
 		{i,var}
@@ -226,6 +232,61 @@ DsixToolsToHighPTSMEFT[expr_] := Module[
 	If[Length[repl]==0,Message[DsixToolsToHighPTSMEFT::nocoefficients],0];
 	Return[(expr//DsixTools`D6Simplify)/.repl/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]]
 ];
+
+
+(* ::Subsection:: *)
+(*LEFT*)
+
+
+DsixToolsToHighPTLEFTAss = <| (#1[[2]]->#1[[1]])&/@LEFTMap |>
+
+
+DsixToolsToHighPTLEFT::missingcoefficient = "The mapping  of `1` to the HighPT notation is not known"(*. The coefficient will be set to zero"*);
+
+
+DsixToolsToHighPTLEFT::nocoefficients = "No LEFT coefficients found.";
+
+
+DsixToolsToHighPTLEFT[expr_] := Module[
+	{
+	var,
+	repl
+	}
+	,
+	var=Select[Variables[(expr//DsixTools`D6Simplify)/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`LEFTParameterList[],#] &];
+	repl={};
+	Do[
+		If[
+			Head[i]===Symbol,
+			If[
+				DsixToolsToHighPTLEFTAss[i] =!= Missing["KeyAbsent",i],
+				AppendTo[repl,i->WCL[DsixToolsToHighPTLEFTAss[i],{}]],
+				AppendTo[repl,i->i];Message[DsixToolsToHighPTLEFT::missingcoefficient,i];
+			];,
+			If[
+				DsixToolsToHighPTLEFTAss[Head[i]] =!= Missing["KeyAbsent",Head[i]],
+				AppendTo[repl,i->WCL[DsixToolsToHighPTLEFTAss[Head[i]],Delete[i,0]//List]],
+				AppendTo[repl,i->i];Message[DsixToolsToHighPTLEFT::missingcoefficient,i];
+			];
+		],
+		{i,var}
+	];
+	If[Length[repl]==0,Message[DsixToolsToHighPTLEFT::nocoefficients],0];
+	Return[(expr//DsixTools`D6Simplify)/.repl]
+];
+
+
+(* ::Subsection:: *)
+(*Other*)
+
+
+DsixToolsToHighPTSM[expr_]:=expr/.{
+	DsixTools`gs->Sqrt[4\[Pi] \[Alpha]sMz]/.\[Alpha]sMz->0.1179,
+	DsixTools`g->2 Sqrt[Sqrt[2]Param["GF"]] Mass["ZBoson"] Sqrt[1/2 (1+(1-(4\[Pi] Param["\[Alpha]EM"])/(Sqrt[2]Param["GF"] Mass["ZBoson"]^2))^(1/2))]/.{Param["GF"]->1/(Sqrt[2]Param["vev"]^2)},
+	DsixTools`gp->Sqrt[4\[Pi] Param["\[Alpha]EM"]]/Sqrt[1/2 (1+(1-(4\[Pi] Param["\[Alpha]EM"])/(Sqrt[2]Param["GF"] Mass["ZBoson"]^2))^(1/2))]/.{Param["GF"]->1/(Sqrt[2]Param["vev"]^2)},
+	DsixTools`m2->mH2/.mH2->8528,
+	DsixTools`\[Lambda]->\[Lambda]/.\[Lambda]->0.2813
+	}
 
 
 (* ::Section:: *)

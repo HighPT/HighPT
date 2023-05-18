@@ -43,6 +43,9 @@ PackageExport["CKM"]
 PackageExport["Vckm"]
 
 
+PackageExport["Yukawa"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -62,7 +65,7 @@ PackageScope["Vd"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Usage messages*)
 
 
@@ -73,6 +76,9 @@ Mass::usage= "Mass[\[Phi]] denotes the mass of the particle \[Phi].";
 
 
 Width::usage= "Width[\[Phi]] denotes the width of the particle \[Phi].";
+
+
+Yukawa::usage="Yukawa[\"label\",{i,j}] denotes the {i,j} entry of the Yukawa matrix. Allowed values for \"label\" are \"u\", \"d\", \"e\"";
 
 
 (* ::Section::Closed:: *)
@@ -109,7 +115,7 @@ ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Make constants real*)
 
 
@@ -125,7 +131,17 @@ Mass/:Conjugate[Mass[a_]]:= Mass[a]
 Width/:Conjugate[Width[a_]]:= Width[a]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
+(*Yukawas*)
+
+
+Yukawa[l:Except[Alternatives@@Join[{"u","d","e"}, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+	Message[Yukawa::unknownYukawa,l];
+	Abort[]
+)
+
+
+(* ::Section:: *)
 (*Formatting*)
 
 
@@ -138,13 +154,21 @@ Format[Param["\[Alpha]EM"], TraditionalForm] := Subscript["\[Alpha]","EM"]
 Format[Param["sW"] , TraditionalForm] := Subscript["s","W"]
 Format[Param["cW"] , TraditionalForm] := Subscript["c","W"]
 Format[Param["GF"] , TraditionalForm] := Subscript["G","F"]
+Format[Param["\[Alpha]S"] , TraditionalForm] := Subscript["\[Alpha]","s"]
+Format[Param["g3"] , TraditionalForm] := Subscript["g","3"]
+Format[Param["g2"] , TraditionalForm] := Subscript["g","2"]
+Format[Param["g1"] , TraditionalForm] := Subscript["g","1"]
+Format[Param["\[Lambda]"]  , TraditionalForm] := "\[Lambda]"
 
 
 Format[CKM, TraditionalForm]         := Subscript["V","CKM"]
 Format[Vckm[x_,y_], TraditionalForm] := Subscript["V",ToString[x]<>ToString[y]]
 
 
-(* ::Section::Closed:: *)
+Format[Yukawa[l_,{i_,j_}], TraditionalForm] := Subscript["[Y"<>l<>"]",ToString[i]<>ToString[j]]
+
+
+(* ::Section:: *)
 (*Experimental Inputs*)
 
 
@@ -197,7 +221,7 @@ CKM= {
 };
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Define rotation matrices for left-handed up and down quarks*)
 
 
@@ -209,6 +233,10 @@ Vd= {
 	{0,1,0},
 	{0,0,1}
 }
+
+
+(* ::Subsection:: *)
+(*Flavor input (to do)*)
 
 
 (* ::Subsection::Closed:: *)

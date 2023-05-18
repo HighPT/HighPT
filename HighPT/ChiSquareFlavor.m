@@ -113,7 +113,7 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 		"SMEFT",
 			Switch[OptionValue[Coefficients],
 				All,
-					wilson = Except[Alternatives@@(WC[#,_]&/@Join[$WCList2,$WCList4]),WC[___]]->0,
+					wilson = Except[Alternatives@@(WC[#,_]&/@Join[$WCList0,$WCList2,$WCList4]),WC[___]]->0,
 				{Rule[_,_]..},
 					wilson = Append[OptionValue[WC],WC[___]->0],
 				{WC[___]..},
@@ -140,7 +140,7 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 					observables=OptionValue[Observables],
 					Message[ChiSquareFlavor::invalidobs,Complement[OptionValue[Observables],Flatten[FlavorObservables[]]]];Abort[]
 				],
-				Message[Chi2Flavor::invalidinput];Abort[]
+				Message[ChiSquareFlavor::invalidinput];Abort[]
 			]
 	];
 	
@@ -158,13 +158,13 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 		invcovmatrix=Inverse[covmatrixsymm];
 		obsvector=Table[
 					If[NumberQ[SMPrediction[i][[1]]],
-						(ExpValue[i][[1]]-SMPrediction[i][[1]](1+NPContribution[i]))/.LEFTRun[LEFTSector[i],LowScale[i],"\[Mu]Z"],
-						(ExpValue[i][[1]]-NPContribution[i])/.LEFTRun[LEFTSector[i],LowScale[i],"\[Mu]Z"]
+						LEFTRun[(ExpValue[i][[1]]-SMPrediction[i][[1]](1+NPContribution[i])),LowScale[i],DsixTools`EWSCALE],
+						LEFTRun[(ExpValue[i][[1]]-NPContribution[i]),LowScale[i],DsixTools`EWSCALE]
 					],
 				  {i,observables}
 				  ];
-			chi2=(obsvector . invcovmatrix . obsvector)
-				/.SMEFTLEFTMatching["full"]
+			chi2=SMEFTRun[MatchToSMEFT[(obsvector . invcovmatrix . obsvector)],DsixTools`EWSCALE,OptionValue[Scale]]/.wilson/.GetParameters[]
+				(*/.SMEFTLEFTMatching["full"]
 				/.$NPScale->\[CapitalLambda]
 				/.SMEFTRun[mEW,\[CapitalLambda]]
 				/.wilson
@@ -172,10 +172,10 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 				/.\[CapitalLambda]->OptionValue[Scale]
 				/.ReplaceYukawas
 				/.ReplaceGaugeCouplings
-				/.GetParameters[]
+				/.GetParameters[]*)
 		,
 		chi2=0
 	];
 	
-	Return[Expand[chi2]]
+	Return[Expand[chi2/.a_WC->a/OptionValue[Scale]^2]]
 ]
