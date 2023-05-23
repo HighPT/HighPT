@@ -50,13 +50,13 @@ coeffPVlnu={Abs[1+gVL]^2+Abs[gVR]^2,Re[(1+gVL)Conjugate[gVR]],Abs[gT]^2,Re[(1+gV
 
 (* Semileptonic replacement *)
 RepSemilep={
-gVL:>WCL["\[Nu]eduVLL",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind3,ind4]\[Conjugate])),
-gVR:>WCL["\[Nu]eduVLR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind3,ind4]\[Conjugate])),
-gV:>(+WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind3,ind4]\[Conjugate])),
-gA:>(-WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind3,ind4]\[Conjugate])),
-gS:>(+WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind3,ind4]\[Conjugate])),
-gP:>(-WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind3,ind4]\[Conjugate])),
-gT:>WCL["\[Nu]eduTRR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind3,ind4]\[Conjugate]))};
+gVL:>WCL["\[Nu]eduVLL",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
+gVR:>WCL["\[Nu]eduVLR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
+gV:>(+WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
+gA:>(-WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
+gS:>(+WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
+gP:>(-WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
+gT:>WCL["\[Nu]eduTRR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))};
 
 
 (* ::Subsection:: *)

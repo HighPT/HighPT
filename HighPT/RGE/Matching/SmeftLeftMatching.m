@@ -41,7 +41,7 @@ PackageExport["MatchToSMEFT"]
 (*Tree - level matching conditions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Auxiliary definitions*)
 
 
@@ -228,7 +228,7 @@ ZCoupling["dR",{i_,j_}]:=(1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]
 TLMatching[WCL["\[Nu]\[Gamma]",{\[Alpha]_,\[Beta]_}]]:=0;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*(LR)X*)
 
 
@@ -265,7 +265,7 @@ TLMatching[WCL["G",{}]]:=WC["G",{}];
 TLMatching[WCL["Gt",{}]]:=WC["Gt",{}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*(LL) (LL)*)
 
 
@@ -280,7 +280,7 @@ TLMatching[WCL["eeVLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ll",{\[Al
 TLMatching[WCL["\[Nu]eVLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ll",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]+WC["ll",{\[Gamma],\[Delta],\[Alpha],\[Beta]}]-g22onmW2/2 WCoupling["l",{\[Alpha],\[Delta]}]WCoupling["l",{\[Beta],\[Gamma]}]\[Conjugate]-gZ2onmZ2 ZCoupling["\[Nu]L",{\[Alpha],\[Beta]}]ZCoupling["eL",{\[Gamma],\[Delta]}];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Semileptonic*)
 
 
@@ -429,7 +429,7 @@ TLMatching[WCL["udduV8LR",{i_,j_,k_,l_}]]:=0;
 (*(LR) (RL)*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Semileptonic*)
 
 
@@ -442,18 +442,18 @@ TLMatching[WCL["edSRL",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["ledq",{\[Alp
 TLMatching[WCL["\[Nu]eduSRL",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["ledq",{\[Alpha],\[Beta],i,j}],"u"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*(LR) (LR)*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Leptonic*)
 
 
 TLMatching[WCL["eeSRR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=0;
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Semileptonic*)
 
 
@@ -475,7 +475,7 @@ TLMatching[WCL["\[Nu]eduSRR",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["lequ1"
 TLMatching[WCL["\[Nu]eduTRR",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["lequ3",{\[Alpha],\[Beta],i,j}],"d"];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Nonleptonic*)
 
 
@@ -507,4 +507,14 @@ TLMatching[WCL["udduS8RR",{i_,j_,k_,l_}]]:=-MassRotate[WC["quqd8",{k,l,i,j}],"d"
 (*Matching function*)
 
 
-MatchToSMEFT[expr_]:=Series[expr/.a_WCL->TLMatching[a],{Param["vev"],0,2}]//Normal;
+Options[MatchToSMEFT]={
+	SM -> False
+};
+
+
+MatchToSMEFT[expr_,OptionsPattern[]]:=
+	If[
+		!OptionValue[SM],
+		expr/.a_WCL:>(TLMatching[a]-(TLMatching[a]/._WC->0)),
+		(*Series[*)expr/.a_WCL->TLMatching[a](*,{Param["vev"],0,2}]//Normal*)
+	];

@@ -187,7 +187,7 @@ mZ$default = 91.1876;
 \[CapitalGamma]W$default = 2.085;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*CKM input*)
 
 
@@ -226,7 +226,7 @@ CKM= {
 
 
 (* By default down alignment is assumed *)
-Vu = ConjugateTranspose[CKM]
+Vu = (*ConjugateTranspose[CKM]*)CKM
 
 Vd= {
 	{1,0,0},
@@ -262,7 +262,7 @@ Wolfenstein$current = {
 }
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Define alignment of mass basis and flavor basis*)
 
 
@@ -272,7 +272,7 @@ DefineBasisAlignment[\"up\"] specifies to work in the up-aligned basis, where \!
 DefineBasisAlignment[matrix] sets the rotation matrix for left-handed down-type quarks \!\(\*SubscriptBox[\(V\), \(d\)]\) equal to the argument matrix, which must be a unitary 3x3 matrix. Consequently the up-rotation matrix is defined by \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(d\)]\).\!\(\*SubscriptBox[\(V\), \(CKM\)]\)."
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*down*)
 
 
@@ -283,7 +283,7 @@ DefineBasisAlignment["down"] := Module[{},
 	(* set the new Vd matrix*)
 	Vd = DiagonalMatrix[{1,1,1}];
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vu = ConjugateTranspose[CKM];
+	Vu = (*ConjugateTranspose[CKM]*)CKM;
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
@@ -291,7 +291,7 @@ DefineBasisAlignment["down"] := Module[{},
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*up*)
 
 
@@ -299,7 +299,7 @@ DefineBasisAlignment["up"] := Module[{},
 	(* set the new Vd matrix*)
 	Vu = DiagonalMatrix[{1,1,1}];
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vd = CKM;
+	Vd = (*CKM*)ConjugateTranspose[CKM];
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
@@ -307,7 +307,7 @@ DefineBasisAlignment["up"] := Module[{},
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*general*)
 
 
@@ -326,7 +326,7 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 	(* set the new Vd matrix*)
 	Vd = matrix;
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vu = Vd . ConjugateTranspose[CKM];
+	Vu = (*Vd . ConjugateTranspose[CKM]*)CKM . Vd;
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
