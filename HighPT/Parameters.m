@@ -43,9 +43,6 @@ PackageExport["CKM"]
 PackageExport["Vckm"]
 
 
-PackageExport["Yukawa"]
-
-
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -65,7 +62,7 @@ PackageScope["Vd"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Usage messages*)
 
 
@@ -76,9 +73,6 @@ Mass::usage= "Mass[\[Phi]] denotes the mass of the particle \[Phi].";
 
 
 Width::usage= "Width[\[Phi]] denotes the width of the particle \[Phi].";
-
-
-Yukawa::usage="Yukawa[\"label\",{i,j}] denotes the {i,j} entry of the Yukawa matrix. Allowed values for \"label\" are \"u\", \"d\", \"e\"";
 
 
 (* ::Section::Closed:: *)
@@ -115,7 +109,7 @@ ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Make constants real*)
 
 
@@ -131,17 +125,7 @@ Mass/:Conjugate[Mass[a_]]:= Mass[a]
 Width/:Conjugate[Width[a_]]:= Width[a]
 
 
-(* ::Section:: *)
-(*Yukawas*)
-
-
-Yukawa[l:Except[Alternatives@@Join[{"u","d","e"}, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
-	Message[Yukawa::unknownYukawa,l];
-	Abort[]
-)
-
-
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Formatting*)
 
 
@@ -154,21 +138,13 @@ Format[Param["\[Alpha]EM"], TraditionalForm] := Subscript["\[Alpha]","EM"]
 Format[Param["sW"] , TraditionalForm] := Subscript["s","W"]
 Format[Param["cW"] , TraditionalForm] := Subscript["c","W"]
 Format[Param["GF"] , TraditionalForm] := Subscript["G","F"]
-Format[Param["\[Alpha]S"] , TraditionalForm] := Subscript["\[Alpha]","s"]
-Format[Param["g3"] , TraditionalForm] := Subscript["g","3"]
-Format[Param["g2"] , TraditionalForm] := Subscript["g","2"]
-Format[Param["g1"] , TraditionalForm] := Subscript["g","1"]
-Format[Param["\[Lambda]"]  , TraditionalForm] := "\[Lambda]"
 
 
 Format[CKM, TraditionalForm]         := Subscript["V","CKM"]
 Format[Vckm[x_,y_], TraditionalForm] := Subscript["V",ToString[x]<>ToString[y]]
 
 
-Format[Yukawa[l_,{i_,j_}], TraditionalForm] := Subscript["[Y"<>l<>"]",ToString[i]<>ToString[j]]
-
-
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Experimental Inputs*)
 
 
@@ -187,14 +163,14 @@ mZ$default = 91.1876;
 \[CapitalGamma]W$default = 2.085;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*CKM input*)
 
 
-\[Lambda]Wolfenstein$default    = 0.2233;
-AWolfenstein$default    = 0.810;
-\[Rho]BarWolfenstein$default = 0.153;
-\[Eta]BarWolfenstein$default = 0.393;
+\[Lambda]Wolfenstein$default    = 0.22650;
+AWolfenstein$default    = 0.790;
+\[Rho]BarWolfenstein$default = 0.141;
+\[Eta]BarWolfenstein$default = 0.357;
 
 Wolfenstein$default = {
 	\[Lambda]Wolfenstein$default,
@@ -219,24 +195,6 @@ CKM= {
 	{Vckm[2,1], Vckm[2,2], Vckm[2,3]},
 	{Vckm[3,1], Vckm[3,2], Vckm[3,3]}
 };
-
-
-(* ::Subsubsection:: *)
-(*Define rotation matrices for left-handed up and down quarks*)
-
-
-(* By default down alignment is assumed *)
-Vu = (*ConjugateTranspose[CKM]*)CKM
-
-Vd= {
-	{1,0,0},
-	{0,1,0},
-	{0,0,1}
-}
-
-
-(* ::Subsection:: *)
-(*Flavor input (to do)*)
 
 
 (* ::Subsection::Closed:: *)
@@ -272,7 +230,21 @@ DefineBasisAlignment[\"up\"] specifies to work in the up-aligned basis, where \!
 DefineBasisAlignment[matrix] sets the rotation matrix for left-handed down-type quarks \!\(\*SubscriptBox[\(V\), \(d\)]\) equal to the argument matrix, which must be a unitary 3x3 matrix. Consequently the up-rotation matrix is defined by \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(d\)]\).\!\(\*SubscriptBox[\(V\), \(CKM\)]\)."
 
 
-(* ::Subsection:: *)
+(* ::Subsubsection:: *)
+(*Define rotation matrices for left-handed up and down quarks*)
+
+
+(* By default down alignment is assumed *)
+Vu = CKM
+
+Vd= {
+	{1,0,0},
+	{0,1,0},
+	{0,0,1}
+}
+
+
+(* ::Subsection::Closed:: *)
 (*down*)
 
 
@@ -282,8 +254,8 @@ DefineBasisAlignment[] := DefineBasisAlignment["down"]
 DefineBasisAlignment["down"] := Module[{},
 	(* set the new Vd matrix*)
 	Vd = DiagonalMatrix[{1,1,1}];
-	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vu = (*ConjugateTranspose[CKM]*)CKM;
+	(* define Vu matrix such that CKM=Vu.Vd\[ConjugateTranspose] *)
+	Vu = CKM;
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
@@ -291,15 +263,15 @@ DefineBasisAlignment["down"] := Module[{},
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*up*)
 
 
 DefineBasisAlignment["up"] := Module[{},
 	(* set the new Vd matrix*)
 	Vu = DiagonalMatrix[{1,1,1}];
-	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vd = (*CKM*)ConjugateTranspose[CKM];
+	(* define Vu matrix such that CKM=Vu.Vd\[ConjugateTranspose] *)
+	Vd = ConjugateTranspose[CKM];
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
@@ -307,7 +279,7 @@ DefineBasisAlignment["up"] := Module[{},
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*general*)
 
 
@@ -326,7 +298,7 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 	(* set the new Vd matrix*)
 	Vd = matrix;
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vu = (*Vd . ConjugateTranspose[CKM]*)CKM . Vd;
+	Vu = CKM . Vd;
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
