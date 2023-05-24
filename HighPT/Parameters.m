@@ -197,20 +197,6 @@ CKM= {
 };
 
 
-(* ::Subsubsection::Closed:: *)
-(*Define rotation matrices for left-handed up and down quarks*)
-
-
-(* By default down alignment is assumed *)
-Vu = ConjugateTranspose[CKM]
-
-Vd= {
-	{1,0,0},
-	{0,1,0},
-	{0,0,1}
-}
-
-
 (* ::Subsection::Closed:: *)
 (*Save current values of inputs [separate from default values]*)
 
@@ -242,6 +228,20 @@ DefineBasisAlignment::usage=
 "DefineBasisAlignment[\"down\"] specifies to work in the down-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\)\[ConjugateTranspose]. The left-handed rotation matrices are defined by \!\(\*SuperscriptBox[SubscriptBox[\(d\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(d\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(d\), \(j\)], \(weak\)]\) and \!\(\*SuperscriptBox[SubscriptBox[\(u\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(u\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(u\), \(j\)], \(weak\)]\), respectively. Down-alignment is the default choice.
 DefineBasisAlignment[\"up\"] specifies to work in the up-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\).
 DefineBasisAlignment[matrix] sets the rotation matrix for left-handed down-type quarks \!\(\*SubscriptBox[\(V\), \(d\)]\) equal to the argument matrix, which must be a unitary 3x3 matrix. Consequently the up-rotation matrix is defined by \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(d\)]\).\!\(\*SubscriptBox[\(V\), \(CKM\)]\)."
+
+
+(* ::Subsubsection:: *)
+(*Define rotation matrices for left-handed up and down quarks*)
+
+
+(* By default down alignment is assumed *)
+Vu = CKM
+
+Vd= {
+	{1,0,0},
+	{0,1,0},
+	{0,0,1}
+}
 
 
 (* ::Subsection::Closed:: *)
@@ -279,7 +279,7 @@ DefineBasisAlignment["up"] := Module[{},
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*general*)
 
 
