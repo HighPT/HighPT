@@ -234,7 +234,7 @@ Wolfenstein$current = {
 }
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Define alignment of mass basis and flavor basis*)
 
 
@@ -254,8 +254,8 @@ DefineBasisAlignment[] := DefineBasisAlignment["down"]
 DefineBasisAlignment["down"] := Module[{},
 	(* set the new Vd matrix*)
 	Vd = DiagonalMatrix[{1,1,1}];
-	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vu = ConjugateTranspose[CKM];
+	(* define Vu matrix such that CKM=Vu.Vd\[ConjugateTranspose] *)
+	Vu = CKM;
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
@@ -270,8 +270,8 @@ DefineBasisAlignment["down"] := Module[{},
 DefineBasisAlignment["up"] := Module[{},
 	(* set the new Vd matrix*)
 	Vu = DiagonalMatrix[{1,1,1}];
-	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vd = CKM;
+	(* define Vu matrix such that CKM=Vu.Vd\[ConjugateTranspose] *)
+	Vd = ConjugateTranspose[CKM];
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
@@ -279,7 +279,7 @@ DefineBasisAlignment["up"] := Module[{},
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*general*)
 
 
@@ -298,7 +298,7 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 	(* set the new Vd matrix*)
 	Vd = matrix;
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
-	Vu = Vd . ConjugateTranspose[CKM];
+	Vu = CKM . Vd;
 	(* Print *)
 	Print["Defined new mass basis alignment:"];
 	Print["\!\(\*SubscriptBox[\(V\), \(u\)]\) = ", MatrixForm[Vu/.GetParameters[]]];
