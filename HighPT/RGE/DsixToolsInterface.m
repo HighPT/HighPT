@@ -211,7 +211,9 @@ DsixToolsToHighPTSMEFT[expr_] := Module[
 	repl
 	}
 	,
-	var=Select[Variables[(expr//DsixTools`D6Simplify)/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`SMEFTParameterList[],#] &];
+	(*Print[Variables[(expr(*//DsixTools`D6Simplify*))/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a]];*)
+	var=Select[Variables[(expr(*//DsixTools`D6Simplify*))/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`SMEFTParameterList[],#] &];
+	(*Print[var];*)
 	repl={};
 	Do[
 		If[
@@ -230,7 +232,7 @@ DsixToolsToHighPTSMEFT[expr_] := Module[
 		{i,var}
 	];
 	If[Length[repl]==0,Message[DsixToolsToHighPTSMEFT::nocoefficients],0];
-	Return[(expr//DsixTools`D6Simplify)/.repl/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]]
+	Return[(expr(*//DsixTools`D6Simplify*))/.repl/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]]
 ];
 
 
@@ -253,7 +255,7 @@ DsixToolsToHighPTLEFT[expr_] := Module[
 	repl
 	}
 	,
-	var=Select[Variables[(expr//DsixTools`D6Simplify)/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`LEFTParameterList[],#] &];
+	var=Select[Variables[(expr(*//DsixTools`D6Simplify*))/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`LEFTParameterList[],#] &];
 	repl={};
 	Do[
 		If[
@@ -272,7 +274,7 @@ DsixToolsToHighPTLEFT[expr_] := Module[
 		{i,var}
 	];
 	If[Length[repl]==0,Message[DsixToolsToHighPTLEFT::nocoefficients],0];
-	Return[(expr//DsixTools`D6Simplify)/.repl]
+	Return[(expr(*//DsixTools`D6Simplify*))/.repl]
 ];
 
 

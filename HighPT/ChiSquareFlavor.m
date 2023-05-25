@@ -80,7 +80,7 @@ THCov[i_,j_] := Module[
 
 Options[ChiSquareFlavor]={
 	Observables -> All,
-	Scale :> GetScale[],
+	Scale :> GetEFTscale[],
 	Coefficients -> All
 };
 
@@ -105,7 +105,9 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 		covmatrix,
 		covmatrixsymm,
 		invcovmatrix,
-		obsvector
+		obsvector,
+		chi2SMEFTEW,
+		chi2SMEFT\[CapitalLambda]
 	}
 	,
 	(* Set irrelevant WCs or Couplings to zero *)
@@ -113,7 +115,7 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 		"SMEFT",
 			Switch[OptionValue[Coefficients],
 				All,
-					wilson = Except[Alternatives@@(WC[#,_]&/@Join[$WCList0,$WCList2,$WCList4]),WC[___]]->0,
+					wilson = Except[Alternatives@@(WC[#,_]&/@GetAllWC),WC[___]]->0,
 				{Rule[_,_]..},
 					wilson = Append[OptionValue[WC],WC[___]->0],
 				{WC[___]..},
@@ -143,7 +145,6 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 				Message[ChiSquareFlavor::invalidinput];Abort[]
 			]
 	];
-	
 	(* Including correlations *)
 	(* If there are observables selected, 
 	construct the inverse covariance matrix and the vector (Oexp - Oth), 
@@ -155,6 +156,7 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 			ExpCov[i,j]+THCov[i,j](*+NPCov[i,j]*),
 			{i,observables},{j,observables}];
 		covmatrixsymm=covmatrix+Transpose[covmatrix]-DiagonalMatrix[Diagonal[covmatrix]];
+		(*Print[covmatrixsymm];*)
 		invcovmatrix=Inverse[covmatrixsymm];
 		obsvector=Table[
 					If[NumberQ[SMPrediction[i][[1]]],
@@ -163,7 +165,15 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 					],
 				  {i,observables}
 				  ];
-			chi2=SMEFTRun[MatchToSMEFT[(obsvector . invcovmatrix . obsvector)],DsixTools`EWSCALE,OptionValue[Scale]]/.wilson/.GetParameters[]
+		(*Print["Constructing obsvector successful"];*)
+		chi2SMEFTEW=MatchToSMEFT[(obsvector . invcovmatrix . obsvector)];
+		(*Print["Matching to SMEFT:"];
+		Print[chi2SMEFTEW];*)
+		chi2SMEFT\[CapitalLambda]=SMEFTRun[chi2SMEFTEW,DsixTools`EWSCALE,OptionValue[Scale]];
+		(*Print["chi2 at \[CapitalLambda]=",OptionValue[Scale]];
+		Print[chi2SMEFT\[CapitalLambda]];*)
+		chi2=chi2SMEFT\[CapitalLambda]/.wilson/.GetParameters[];
+		(*chi2=SMEFTRun[MatchToSMEFT[(obsvector . invcovmatrix . obsvector)],DsixTools`EWSCALE,OptionValue[Scale]]/.wilson/.GetParameters[]
 				(*/.SMEFTLEFTMatching["full"]
 				/.$NPScale->\[CapitalLambda]
 				/.SMEFTRun[mEW,\[CapitalLambda]]
@@ -172,10 +182,9 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 				/.\[CapitalLambda]->OptionValue[Scale]
 				/.ReplaceYukawas
 				/.ReplaceGaugeCouplings
-				/.GetParameters[]*)
+				/.GetParameters[]*)*)
 		,
 		chi2=0
 	];
-	
 	Return[Expand[chi2/.a_WC->a/OptionValue[Scale]^2]]
 ]

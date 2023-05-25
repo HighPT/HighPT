@@ -64,10 +64,16 @@ SMEFTRun[expr_,lowscale_, highscale_]:=Module[
 		"LL",
 		Return[expr/.wc_WC->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[wc])],
 		"DsixTools",
-		temp=HighPTToDsixToolsSMEFT[expr]//DsixTools`D6Simplify;
-		params=Select[Variables[temp/.Conjugate[a_]->a],MemberQ[DsixTools`SMEFTParameterList[],#] &];
-		temp=(temp/.Dispatch[(#1->DsixTools`SMEFTEvolve[#1,lowscale,highscale]&)/@params])//DsixTools`D6Simplify;
-		Return[DsixToolsToHighPTSMEFT[temp]],
+		(*Print["Matching to DsixTools:"];*)
+		temp=HighPTToDsixToolsSMEFT[expr/.SMEFTSimplify];
+		(*Print[temp];*)
+		(*Print["Coefficients to run:"];*)
+		params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`SMEFTParameterList[],#] &];
+		(*Print[params];*)
+		(*Table[DsixTools`SMEFTEvolve[i,lowscale,highscale],{i,params}]//Print;*)
+		(*Dispatch[(#1->DsixTools`SMEFTEvolve[#1,lowscale,highscale]&)/@params]//Normal//Print;*)
+		temp=(temp/.Dispatch[(#1->DsixTools`SMEFTEvolve[#1,lowscale,highscale]&)/@params]);
+		Return[DsixToolsToHighPTSMEFT[temp]/.SMEFTSimplify],
 		_,
 		Message[SMEFTRun::undefinedrunningmode,SMEFTRGEMode];Abort[];
 	];
