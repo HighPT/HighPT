@@ -142,7 +142,29 @@ $OptionValueAssociation= <|
 	"mZ"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
 	"\[CapitalGamma]Z"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[CapitalGamma]W"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
-	"Wolfenstein"     -> {_?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default}
+	"\[Lambda]"               -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mH"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"\[Alpha]S"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
+	"Wolfenstein"     -> {_?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default, _?((NumericQ[#]&&NonNegative[#])&) | Default},
+	"me"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Mu]"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Tau]"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"md"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"ms"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mb"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mu"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mc"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mt"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Pi]+"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Pi]0"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mK+"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mK0"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mD+"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mD0"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mDs"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mBd"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mBs"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mBc"             -> _?((NumericQ[#]&&NonNegative[#])&) | Default
 |>;
 
 

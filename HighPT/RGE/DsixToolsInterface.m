@@ -283,11 +283,11 @@ DsixToolsToHighPTLEFT[expr_] := Module[
 
 
 DsixToolsToHighPTSM[expr_]:=expr/.{
-	DsixTools`gs->Sqrt[4\[Pi] \[Alpha]sMz]/.\[Alpha]sMz->0.1179,
-	DsixTools`g->2 Sqrt[Sqrt[2]Param["GF"]] Mass["ZBoson"] Sqrt[1/2 (1+(1-(4\[Pi] Param["\[Alpha]EM"])/(Sqrt[2]Param["GF"] Mass["ZBoson"]^2))^(1/2))]/.{Param["GF"]->1/(Sqrt[2]Param["vev"]^2)},
-	DsixTools`gp->Sqrt[4\[Pi] Param["\[Alpha]EM"]]/Sqrt[1/2 (1+(1-(4\[Pi] Param["\[Alpha]EM"])/(Sqrt[2]Param["GF"] Mass["ZBoson"]^2))^(1/2))]/.{Param["GF"]->1/(Sqrt[2]Param["vev"]^2)},
-	DsixTools`m2->mH2/.mH2->8528,
-	DsixTools`\[Lambda]->\[Lambda]/.\[Lambda]->0.2813
+	DsixTools`gs->Param["g3"],
+	DsixTools`g->Param["g2"],
+	DsixTools`gp->Param["g1"],
+	DsixTools`m2->Mass["H"]^2,
+	DsixTools`\[Lambda]->Param["\[Lambda]"]
 	}
 
 

@@ -50,6 +50,30 @@ WCL[\"label\",{i,j}] LEFT Wilson coefficient associated to the dimension-five op
 (*Formatting (to do)*)
 
 
+Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
+	{fields,type,chirality,superscript},
+	If[
+		StringContainsQ[label,"V"|"S"|"T"],
+		{fields,type,chirality}=StringSplit[label,{"V1"->"V1","V8"->"V8","V"->"V","S1"->"S1","S8"->"S8","S"->"S","T"->"T"}];superscript=type<>","<>chirality;,
+		{fields,type,chirality}={label,"",""};superscript="";
+	];
+	DisplayForm@SubscriptBox[
+		RowBox[
+			{
+				"[",
+				Subsuperscript[
+					"L",
+					fields,
+					superscript
+				],
+				"]"
+			}
+		],
+		StringJoin[ToString/@{indices}]
+	]
+]
+
+
 (* ::Subsection:: *)
 (*Index relabeling redundancies (to do)*)
 
