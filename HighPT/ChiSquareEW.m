@@ -40,15 +40,15 @@ PackageExport["ChiSquareEW"]
 
 
 PoleCoeff = {
-	\[Delta]gWlL[1,1],
-	\[Delta]gWlL[2,2],
-	\[Delta]gWlL[3,3],
-	\[Delta]gZlL[1,1],
-	\[Delta]gZlL[2,2],
-	\[Delta]gZlL[3,3],
-	\[Delta]gZlR[1,1],
-	\[Delta]gZlR[2,2],
-	\[Delta]gZlR[3,3],
+	\[Delta]gWeL[1,1],
+	\[Delta]gWeL[2,2],
+	\[Delta]gWeL[3,3],
+	\[Delta]gZeL[1,1],
+	\[Delta]gZeL[2,2],
+	\[Delta]gZeL[3,3],
+	\[Delta]gZeR[1,1],
+	\[Delta]gZeR[2,2],
+	\[Delta]gZeR[3,3],
 	\[Delta]gZuL[1,1],
 	\[Delta]gZuR[1,1],
 	\[Delta]gZdL[1,1],
@@ -123,21 +123,24 @@ PoleLikelihood = (Transpose[PoleBestFit][[1]]-PoleCoeff) . Inverse[PoleCovMatrix
 (*Matching 2103.12074 to our notation*)
 
 
-\[Delta]GFGF0 = ConstantInput["vev"]^2/$NPScale^2 (WC["Hl3",{2,2}]+WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}]-1/2 WC["ll",{2,1,1,2}]);
+\[CapitalDelta]GF = (*Param["vev"]^2*)(*/$NPScale^2*) WC["Hl3",{2,2}]+WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}](*-1/2 WC["ll",{2,1,1,2}]*);
+
+
+f[T3_,Q_]:=-Q (Param["g2"]Param["g1"])/(Param["g2"]^2-Param["g1"]^2) WC["HWB",{}]-(1/4 WC["HD",{}]+1/2 \[CapitalDelta]GF)(T3+Q Param["g1"]^2/(Param["g2"]^2-Param["g1"]^2))
 
 
 SMEFTPoleMatching = {
-\[Delta]gWlL[\[Alpha]_,\[Beta]_]->\[Delta]gZ\[Nu]L[\[Alpha],\[Beta]]-\[Delta]gZlL[\[Alpha],\[Beta]],
-\[Delta]gZ\[Nu]L[\[Alpha]_,\[Beta]_]->Re[-(ConstantInput["vev"]^2/(2$NPScale^2))(WC["Hl1",{\[Alpha],\[Beta]}]-WC["Hl3",{\[Alpha],\[Beta]}])],
-\[Delta]gZlL[\[Alpha]_,\[Beta]_]->Re[-(ConstantInput["vev"]^2/(2$NPScale^2))(WC["Hl1",{\[Alpha],\[Beta]}]+WC["Hl3",{\[Alpha],\[Beta]}])],
-\[Delta]gZlR[\[Alpha]_,\[Beta]_]->Re[-(ConstantInput["vev"]^2/(2$NPScale^2))WC["He",{\[Alpha],\[Beta]}]],
-\[Delta]gWqL[i_,j_]->Sum[\[Delta]gZuL[i,k]*V0[k,j],{k,3}]-Sum[V0[i,k]*\[Delta]gZdL[i,j],{k,3}],
-\[Delta]gZuL[i_,j_]->Re[-(ConstantInput["vev"]^2/(2$NPScale^2))(WC["Hq1",{i,j}]-WC["Hq3",{i,j}])],
-\[Delta]gZdL[i_,j_]->Re[-(ConstantInput["vev"]^2/(2$NPScale^2))(WC["Hq1",{i,j}]+WC["Hq3",{i,j}])],
-\[Delta]gZuR[i_,j_]->Re[-(ConstantInput["vev"]^2/(2$NPScale^2))WC["Hu",{i,j}]],
-\[Delta]gZdR[i_,j_]->Re[-(ConstantInput["vev"]^2/(2$NPScale^2))WC["Hd",{i,j}]],
-\[Delta]gWqR[i_,j_]->-(ConstantInput["vev"]^2/(2$NPScale^2))WC["Hud",{i,j}],
-\[Delta]mW->Re[(1/2)\[Delta]GFGF0]
+\[Delta]gZ\[Nu]L[\[Alpha]_,\[Beta]_]:>\[Delta]gWeL[\[Alpha],\[Beta]]-\[Delta]gZeL[\[Alpha],\[Beta]],
+\[Delta]gWeL[\[Alpha]_,\[Beta]_]:>(Param["vev"]^2(*/($NPScale^2)*))(WC["Hl3",{\[Alpha],\[Beta]}]+(f[1/2,0]-f[-1/2,-1])KroneckerDelta[\[Alpha],\[Beta]]),
+\[Delta]gZeL[\[Alpha]_,\[Beta]_]:>(Param["vev"]^2(*/($NPScale^2)*))(-(1/2)WC["Hl3",{\[Alpha],\[Beta]}]-1/2 WC["Hl1",{\[Alpha],\[Beta]}]+f[-1/2,-1]KroneckerDelta[\[Alpha],\[Beta]]),
+\[Delta]gZeR[\[Alpha]_,\[Beta]_]:>(Param["vev"]^2(*/($NPScale^2)*))(-(1/2)WC["He",{\[Alpha],\[Beta]}]+f[0,-1]KroneckerDelta[\[Alpha],\[Beta]]),
+\[Delta]gWqL[i_,j_]:>Sum[\[Delta]gZuL[i,k]*Vckm[k,j],{k,3}]-Sum[Vckm[i,k]*\[Delta]gZdL[i,j],{k,3}],
+\[Delta]gZuL[i_,j_]:>(Param["vev"]^2(*/($NPScale^2)*))(1/2 MassRotate[WC["Hq3",{i,j}],"uu"]-1/2 MassRotate[WC["Hq1",{i,j}],"uu"]+f[1/2,2/3]KroneckerDelta[i,j]),
+\[Delta]gZdL[i_,j_]:>(Param["vev"]^2(*/($NPScale^2)*))(-(1/2)MassRotate[WC["Hq3",{i,j}],"dd"]-1/2 MassRotate[WC["Hq1",{i,j}],"dd"]+f[-1/2,-1/3]KroneckerDelta[i,j]),
+\[Delta]gZuR[i_,j_]:>(Param["vev"]^2(*/($NPScale^2)*))(-(1/2)WC["Hu",{i,j}]+f[0,2/3]KroneckerDelta[i,j]),
+\[Delta]gZdR[i_,j_]:>(Param["vev"]^2(*/($NPScale^2)*))(-(1/2)WC["Hd",{i,j}]+f[0,-1/3]KroneckerDelta[i,j]),
+(*\[Delta]gWqR[i_,j_]:>(Param["vev"]^2(*/($NPScale^2)*))(-(1/2)WC["Hud",{i,j}]),*)
+\[Delta]mW->1/2 \[Delta]gWeL[1,1]+1/2 \[Delta]gWeL[2,2]-Param["vev"]^2/4 WC["ll",{1,2,2,1}]
 };
 
 
@@ -147,7 +150,7 @@ SMEFTPoleMatching = {
 
 Options[ChiSquareEW]={
 	Observables -> All,
-	Scale :> GetScale[],
+	Scale :> GetEFTscale[],
 	Coefficients -> All
 };
 
@@ -169,7 +172,7 @@ ChiSquareEW[OptionsPattern[]] := Module[
 		"SMEFT",
 			Switch[OptionValue[Coefficients],
 				All,
-					wilson = Except[Alternatives@@(WC[#,_]&/@Join[$WCList2,$WCList4]),WC[___]]->0,
+					wilson = Except[Alternatives@@(WC[#,_]&/@GetAllWC),WC[___]]->0,
 				{Rule[_,_]..},
 					wilson = Append[OptionValue[WC],WC[___]->0],
 				{WC[___]..},
@@ -186,11 +189,11 @@ ChiSquareEW[OptionsPattern[]] := Module[
 	];
 	Switch[OptionValue[Observables],
 		All,
-			chi2=PoleLikelihood/.SMEFTPoleMatching/.SMEFTPoleMatching/.$NPScale->\[CapitalLambda]/.SMEFTRun[mEW,\[CapitalLambda]]/.wilson/.mEW->Mass[ZBoson]/.\[CapitalLambda]->OptionValue[Scale]/.ReplaceYukawas/.ReplaceGaugeCouplings/.GetParameters[],
+			chi2=SMEFTRun[PoleLikelihood/.SMEFTPoleMatching/.SMEFTPoleMatching,91,OptionValue[Scale]]/.wilson(*/.mEW->Mass[ZBoson]/.\[CapitalLambda]->OptionValue[Scale]*)(*/.ReplaceYukawas/.ReplaceGaugeCouplings*)/.GetParameters[],
 		{},
 			Message[ChiSquareEW::emptyobs];Abort[],
 		__,
 			Message[ChiSquareEW::noobs];Abort[]
 	];
-	Return[Expand[chi2]]
+	Return[Expand[chi2/.a_WC->a/OptionValue[Scale]^2]]
 ]

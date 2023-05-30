@@ -33,6 +33,9 @@ PackageExport["MatchToSMEFT"]
 (*Internal*)
 
 
+PackageScope["MassRotate"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -45,7 +48,7 @@ PackageExport["MatchToSMEFT"]
 (*Auxiliary definitions*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Mass rotation*)
 
 
