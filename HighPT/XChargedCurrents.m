@@ -171,7 +171,7 @@ FlavorObservables["b->c"] = {
 LowScale[Alternatives@@(FlavorObservables["b->c"]//Flatten)] = 5;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bc -> \[Tau]\[Nu]*)
 
 
@@ -201,72 +201,72 @@ SMPrediction["Bc->\[Tau]\[Nu]"] = {0.0208,0.0007};
 (*CKM*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*RD\[Tau]l*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Exp*)
 
 
-ExpValue["RD\[Tau]l"] = {0.356,0.029};
+ExpValue$default["RD\[Tau]l"] = {0.356,0.029};
 
 
 ExpInfo["RD\[Tau]l"] = "HFLAV average from Winter 2023"
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM*)
 
 
-SMPrediction["RD\[Tau]l"] = {0.2938,0.0040};
+SMPrediction$default["RD\[Tau]l"] = {0.2938,0.0040};
 
 
 SMInfo["RD\[Tau]l"] = "HFLAV Winter 2023";
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*NP*)
 
 
-NPContribution["RD\[Tau]l"] := 
+NPContribution$default["RD\[Tau]l"] := 
 	((1+\[Delta]BrB0Dp\[Tau]\[Nu])/(
-		(1+SMPrediction["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
-		(1+SMPrediction["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
+		(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
+		(1+SMPrediction$default["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
 		)-1)/.GetParameters[];
 
 
 NPContributionError["RD\[Tau]l"] := 
-	Abs[NPContribution["RD\[Tau]l"]+1]
+	Abs[NPContribution$default["RD\[Tau]l"]+1]
 	Sqrt[
 		(Abs[\[Sigma]\[Delta]BrB0Dp\[Tau]\[Nu]]/(1+\[Delta]BrB0Dp\[Tau]\[Nu]))^2+
 		(
-			(1+SMPrediction["RD\[Mu]e"][[1]]^-1)^-2 Abs[\[Sigma]\[Delta]BrB0Dp\[Mu]\[Nu]]^2+
-			(1+SMPrediction["RD\[Mu]e"][[1]])^-2 Abs[\[Sigma]\[Delta]BrB0Dpe\[Nu]]^2
+			(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-2 Abs[\[Sigma]\[Delta]BrB0Dp\[Mu]\[Nu]]^2+
+			(1+SMPrediction$default["RD\[Mu]e"][[1]])^-2 Abs[\[Sigma]\[Delta]BrB0Dpe\[Nu]]^2
 		)/
 		(
-			(1+SMPrediction["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
-			(1+SMPrediction["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
+			(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
+			(1+SMPrediction$default["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
 		)^2-
 		2(
 			(
-				(1+SMPrediction["RD\[Mu]e"][[1]]^-1)^-1 \[Sigma]\[Delta]BrB0Dp\[Tau]\[Nu]\[Delta]BrB0Dp\[Mu]\[Nu]+
-				(1+SMPrediction["RD\[Mu]e"][[1]])^-1 \[Sigma]\[Delta]BrB0Dp\[Tau]\[Nu]\[Delta]BrB0Dpe\[Nu]
+				(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-1 \[Sigma]\[Delta]BrB0Dp\[Tau]\[Nu]\[Delta]BrB0Dp\[Mu]\[Nu]+
+				(1+SMPrediction$default["RD\[Mu]e"][[1]])^-1 \[Sigma]\[Delta]BrB0Dp\[Tau]\[Nu]\[Delta]BrB0Dpe\[Nu]
 			)/
 			(
 				(1+\[Delta]BrB0Dp\[Tau]\[Nu])
 					(
-						(1+SMPrediction["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
-						(1+SMPrediction["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
+						(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
+						(1+SMPrediction$default["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
 					)
 				)
 			)+
 			2(
-				(1+SMPrediction["RD\[Mu]e"][[1]]^-1)^-1 (1+SMPrediction["\!\(\*SuperscriptBox[SubscriptBox[\(R\), \(D\)], \((\[Mu]/e)\)]\)"][[1]])^-1 \[Sigma]\[Delta]BrB0Dp\[Mu]\[Nu]\[Delta]BrB0Dpe\[Nu]
+				(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-1 (1+SMPrediction["\!\(\*SuperscriptBox[SubscriptBox[\(R\), \(D\)], \((\[Mu]/e)\)]\)"][[1]])^-1 \[Sigma]\[Delta]BrB0Dp\[Mu]\[Nu]\[Delta]BrB0Dpe\[Nu]
 			)/
 			(
-				(1+SMPrediction["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
-				(1+SMPrediction["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
+				(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
+				(1+SMPrediction$default["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
 			)^2
 		]/.GetParameters[];
 
@@ -279,25 +279,32 @@ NPContributionError["RD\[Tau]l"] :=
 (*CKM*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsubsection:: *)
+(*Init*)
+
+
+(*ChangeFlavorObservable["RD\[Tau]l",Default];*)
+
+
+(* ::Subsection:: *)
 (*RD*\[Tau]l*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Exp*)
 
 
-ExpValue["RD*\[Tau]l"] = {0.284,0.013}
+ExpValue$default["RD*\[Tau]l"] = {0.284,0.013}
 
 
 ExpInfo["RD*\[Tau]l"] = "HFLAV average from Winter 2023"
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM*)
 
 
-SMPrediction["RD*\[Tau]l"] = {0.246,0.009};
+SMPrediction$default["RD*\[Tau]l"] = {0.246,0.009};
 
 
 SMInfo["RD*\[Tau]l"] = "HFLAV Winter 2023";
@@ -307,45 +314,45 @@ SMInfo["RD*\[Tau]l"] = "HFLAV Winter 2023";
 (*NP*)
 
 
-NPContribution["RD*\[Tau]l"] := 
+NPContribution$default["RD*\[Tau]l"] := 
 	((1+\[Delta]BrB0Dstp\[Tau]\[Nu])/
 	(
-		(1+SMPrediction["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
-		(1+SMPrediction["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
+		(1+SMPrediction$default["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
+		(1+SMPrediction$default["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
 	)-1)/.GetParameters[];
 
 
 NPContributionError["RD*\[Tau]l"] := 
-	Abs[NPContribution["RD*\[Tau]l"]+1]
+	Abs[NPContribution$default["RD*\[Tau]l"]+1]
 	Sqrt[
 		(Abs[\[Sigma]\[Delta]BrB0Dstp\[Tau]\[Nu]]/(1+\[Delta]BrB0Dstp\[Tau]\[Nu]))^2+
 		(
-			(1+SMPrediction["RD*\[Mu]e"][[1]]^-1)^-
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]]^-1)^-
 			2 Abs[\[Sigma]\[Delta]BrB0Dstp\[Mu]\[Nu]]^2+
-			(1+SMPrediction["RD*\[Mu]e"][[1]])^-
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]])^-
 			2 Abs[\[Sigma]\[Delta]BrB0Dstpe\[Nu]]^2
 		)/(
-			(1+SMPrediction["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
-			(1+SMPrediction["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
 		)^2-
 		2(
 			(
-				(1+SMPrediction["RD*\[Mu]e"][[1]]^-1)^-1 \[Sigma]\[Delta]BrB0Dstp\[Tau]\[Nu]\[Delta]BrB0Dstp\[Mu]\[Nu]+
-				(1+SMPrediction["RD*\[Mu]e"][[1]])^-1 \[Sigma]\[Delta]BrB0Dstp\[Tau]\[Nu]\[Delta]BrB0Dstpe\[Nu]
+				(1+SMPrediction$default["RD*\[Mu]e"][[1]]^-1)^-1 \[Sigma]\[Delta]BrB0Dstp\[Tau]\[Nu]\[Delta]BrB0Dstp\[Mu]\[Nu]+
+				(1+SMPrediction$default["RD*\[Mu]e"][[1]])^-1 \[Sigma]\[Delta]BrB0Dstp\[Tau]\[Nu]\[Delta]BrB0Dstpe\[Nu]
 			)/(
 				(1+\[Delta]BrB0Dstp\[Tau]\[Nu])
 				(
-					(1+SMPrediction["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
-					(1+SMPrediction["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
+					(1+SMPrediction$default["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
+					(1+SMPrediction$default["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
 				)
 			)
 		)+
 		2 (
-			(1+SMPrediction["RD*\[Mu]e"][[1]]^-1)^-1 
-			(1+SMPrediction["RD*\[Mu]e"][[1]])^-1 \[Sigma]\[Delta]BrB0Dstp\[Mu]\[Nu]\[Delta]BrB0Dstpe\[Nu]
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]]^-1)^-1 
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]])^-1 \[Sigma]\[Delta]BrB0Dstp\[Mu]\[Nu]\[Delta]BrB0Dstpe\[Nu]
 		)/(
-			(1+SMPrediction["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
-			(1+SMPrediction["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dstp\[Mu]\[Nu])+
+			(1+SMPrediction$default["RD*\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dstpe\[Nu])
 		)^2
 	]/.GetParameters[];
 
@@ -358,29 +365,33 @@ NPContributionError["RD*\[Tau]l"] :=
 (*CKM*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsubsection:: *)
+(*Init*)
+
+
+(* ::Subsection:: *)
 (*RD\[Mu]e*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Exp*)
 
 
-ExpValue["RD\[Mu]e"] = {1.005,0.045};
+ExpValue$default["RD\[Mu]e"] = {1.005,0.045};
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM*)
 
 
-SMPrediction["RD\[Mu]e"] = {0.99595,0.00011};
+SMPrediction$default["RD\[Mu]e"] = {0.99595,0.00011};
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*NP*)
 
 
-NPContribution["RD\[Mu]e"] := ((1+\[Delta]BrB0Dp\[Mu]\[Nu])/(1+\[Delta]BrB0Dpe\[Nu])-1)/.GetParameters[];
+NPContribution$default["RD\[Mu]e"] := ((1+\[Delta]BrB0Dp\[Mu]\[Nu])/(1+\[Delta]BrB0Dpe\[Nu])-1)/.GetParameters[];
 
 
 NPContributionError["RD\[Mu]e"] := 
@@ -400,29 +411,33 @@ NPContributionError["RD\[Mu]e"] :=
 (*CKM*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsubsection:: *)
+(*Init*)
+
+
+(* ::Subsection:: *)
 (*RD*\[Mu]e*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Exp*)
 
 
-ExpValue["RD*\[Mu]e"] = {0.962,0.047};
+ExpValue$default["RD*\[Mu]e"] = {0.962,0.047};
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM*)
 
 
-SMPrediction["RD*\[Mu]e"] = {0.9953,0.0003};
+SMPrediction$default["RD*\[Mu]e"] = {0.9953,0.0003};
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*NP*)
 
 
-NPContribution["RD*\[Mu]e"] := ((1+\[Delta]BrB0Dstp\[Mu]\[Nu])/(1+\[Delta]BrB0Dstpe\[Nu])-1)/.GetParameters[];
+NPContribution$default["RD*\[Mu]e"] := ((1+\[Delta]BrB0Dstp\[Mu]\[Nu])/(1+\[Delta]BrB0Dstpe\[Nu])-1)/.GetParameters[];
 
 
 NPContributionError["RD*\[Mu]e"] := 
@@ -440,6 +455,10 @@ NPContributionError["RD*\[Mu]e"] :=
 
 (* ::Subsubsection:: *)
 (*CKM*)
+
+
+(* ::Subsubsection:: *)
+(*Init*)
 
 
 (* ::Subsection::Closed:: *)

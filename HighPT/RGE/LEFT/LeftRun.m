@@ -33,6 +33,9 @@ PackageExport["LEFTRun"]
 PackageScope["LEFTAD"]
 
 
+PackageScope["LEFTSimplify"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 

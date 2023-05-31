@@ -47,7 +47,7 @@ WCL[\"label\",{i,j}] LEFT Wilson coefficient associated to the dimension-five op
 
 
 (* ::Subsection:: *)
-(*Formatting (to do)*)
+(*Formatting*)
 
 
 Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
