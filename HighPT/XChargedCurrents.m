@@ -279,13 +279,6 @@ NPContributionError["RD\[Tau]l"] :=
 (*CKM*)
 
 
-(* ::Subsubsection:: *)
-(*Init*)
-
-
-(*ChangeFlavorObservable["RD\[Tau]l",Default];*)
-
-
 (* ::Subsection:: *)
 (*RD*\[Tau]l*)
 
@@ -365,10 +358,6 @@ NPContributionError["RD*\[Tau]l"] :=
 (*CKM*)
 
 
-(* ::Subsubsection:: *)
-(*Init*)
-
-
 (* ::Subsection:: *)
 (*RD\[Mu]e*)
 
@@ -409,10 +398,6 @@ NPContributionError["RD\[Mu]e"] :=
 
 (* ::Subsubsection:: *)
 (*CKM*)
-
-
-(* ::Subsubsection:: *)
-(*Init*)
 
 
 (* ::Subsection:: *)
@@ -457,11 +442,7 @@ NPContributionError["RD*\[Mu]e"] :=
 (*CKM*)
 
 
-(* ::Subsubsection:: *)
-(*Init*)
-
-
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Correlations*)
 
 

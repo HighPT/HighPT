@@ -23,9 +23,6 @@ Package["HighPT`"]
 (*Exported*)
 
 
-PackageExport["TLMatching"]
-
-
 PackageExport["MatchToSMEFT"]
 
 
@@ -34,6 +31,9 @@ PackageExport["MatchToSMEFT"]
 
 
 PackageScope["MassRotate"]
+
+
+PackageScope["TLMatching"]
 
 
 (* ::Chapter:: *)

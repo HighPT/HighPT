@@ -27,13 +27,13 @@ Package["HighPT`"]
 (*Internal*)
 
 
-PackageExport["DsixToolsToHighPTSMEFT"]
-PackageExport["DsixToolsToHighPTLEFT"]
-PackageExport["DsixToolsToHighPTSM"]
+PackageScope["DsixToolsToHighPTSMEFT"]
+PackageScope["DsixToolsToHighPTLEFT"]
+PackageScope["DsixToolsToHighPTSM"]
 
 
-PackageExport["HighPTToDsixToolsSMEFT"]
-PackageExport["HighPTToDsixToolsLEFT"]
+PackageScope["HighPTToDsixToolsSMEFT"]
+PackageScope["HighPTToDsixToolsLEFT"]
 
 
 (* ::Chapter:: *)
