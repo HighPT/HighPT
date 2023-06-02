@@ -30,8 +30,6 @@ PackageExport["SetRGEMode"]
 
 
 PackageExport["GetRGEMode"]
-PackageExport["GetSMEFTRGEMode"]
-PackageExport["GetLEFTRGEMode"]
 
 
 (* ::Subsection:: *)
@@ -42,6 +40,10 @@ PackageScope["SMEFTRGEMode"]
 
 
 PackageScope["LEFTRGEMode"]
+
+
+PackageScope["GetSMEFTRGEMode"]
+PackageScope["GetLEFTRGEMode"]
 
 
 (* ::Chapter:: *)

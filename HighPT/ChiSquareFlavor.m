@@ -80,7 +80,7 @@ THCov[i_,j_] := Module[
 
 Options[ChiSquareFlavor]={
 	Observables -> All,
-	Scale :> GetEFTscale[],
+	EFTscale :> GetEFTscale[],
 	Coefficients -> All
 };
 
@@ -169,7 +169,7 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 		chi2SMEFTEW=MatchToSMEFT[(obsvector . invcovmatrix . obsvector)];
 		(*Print["Matching to SMEFT:"];
 		Print[chi2SMEFTEW];*)
-		chi2SMEFT\[CapitalLambda]=SMEFTRun[chi2SMEFTEW,DsixTools`EWSCALE,OptionValue[Scale]];
+		chi2SMEFT\[CapitalLambda]=SMEFTRun[chi2SMEFTEW,DsixTools`EWSCALE,OptionValue[EFTscale]];
 		(*Print["chi2 at \[CapitalLambda]=",OptionValue[Scale]];
 		Print[chi2SMEFT\[CapitalLambda]];*)
 		chi2=chi2SMEFT\[CapitalLambda]/.wilson/.GetParameters[];
@@ -186,5 +186,5 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 		,
 		chi2=0
 	];
-	Return[Expand[chi2/.a_WC->a/OptionValue[Scale]^2]]
+	Return[Expand[chi2/.a_WC->a/OptionValue[EFTscale]^2]]
 ]

@@ -58,6 +58,9 @@ LEFTSimplify=<<"/Users/allwicher/Documents/Uni/PhD/Research/Flavour@LHC/Mathemat
 LEFTRun::undefinedrunningmode= "The mode `1` is not defined for LEFT Running.";
 
 
+LEFTRun::nonnumericlowscale = "In \"DsixTools\" running mode lowscale must be a number"
+
+
 LEFTRun[expr_,lowscale_,highscale_]:=Module[
 	{
 		params,
@@ -69,12 +72,15 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 		"LL",
 		Return[expr/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])],
 		"DsixTools",
-		temp=(HighPTToDsixToolsLEFT[expr])//DsixTools`D6Simplify;
-		params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
-		temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];
-		(*temp=temp/.DsixTools`MatchAnalytical/.DsixTools`LoopParameter->DsixTools`MatchingLoopOrder/.SMEFTInput;*)
-		(*Return[DsixToolsToHighPTSMEFT[temp//DsixTools`D6Simplify]];*)
-		Return[DsixToolsToHighPTLEFT[temp]],
+		If[NumericQ[lowscale],
+			temp=(HighPTToDsixToolsLEFT[expr])//DsixTools`D6Simplify;
+			params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
+			temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];
+			(*temp=temp/.DsixTools`MatchAnalytical/.DsixTools`LoopParameter->DsixTools`MatchingLoopOrder/.SMEFTInput;*)
+			(*Return[DsixToolsToHighPTSMEFT[temp//DsixTools`D6Simplify]];*)
+			Return[DsixToolsToHighPTLEFT[temp]],
+			Message[LEFTRun::nonnumericlowscale];Abort[]
+		];,
 		_,
 		Message[LEFTRun::undefinedrunningmode,LEFTRGEMode];Abort[];
 	];
