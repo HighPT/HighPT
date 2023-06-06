@@ -1,0 +1,9 @@
+# Ignore the test notebook #
+Tests/
+notebooks_felix/
+
+# Eclipse project #
+.project
+
+# Ignore Desktop Services Store file for Mac #
+.DS_Store
