@@ -33,6 +33,9 @@ PackageExport["SMEFTRun"]
 PackageScope["SMEFTAD"]
 
 
+PackageScope["SMEFTSimplify"]
+
+
 (*<<FileNameJoin[{Global`$DirectoryHighPT,"RGE","SMEFT","SMEFTAD"}]*)
 
 
@@ -44,10 +47,10 @@ PackageScope["SMEFTAD"]
 (*SMEFTRun*)
 
 
-<<"/Users/allwicher/Documents/Uni/PhD/Research/Flavour@LHC/Mathematica/SMEFTAD.m"
+Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","SMEFT","SMEFTAD.dat"}];
 
 
-SMEFTSimplify=<<"/Users/allwicher/Documents/Uni/PhD/Research/Flavour@LHC/Mathematica/SMEFTSimplify.m";
+SMEFTSimplify=Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","Simplifications","SMEFTSimplify.dat"}];
 
 
 SMEFTRun::undefinedrunningmode= "The mode `1` is not defined for SMEFT Running.";

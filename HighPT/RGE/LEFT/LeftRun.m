@@ -49,10 +49,10 @@ PackageScope["LEFTSimplify"]
 };*)
 
 
-<<"/Users/allwicher/Documents/Uni/PhD/Research/Flavour@LHC/Mathematica/LEFTAD.m"
+Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","LEFT","LEFTAD.dat"}];
 
 
-LEFTSimplify=<<"/Users/allwicher/Documents/Uni/PhD/Research/Flavour@LHC/Mathematica/LEFTSimplify.m";
+LEFTSimplify=Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","Simplifications","LEFTSimplify.dat"}];
 
 
 LEFTRun::undefinedrunningmode= "The mode `1` is not defined for LEFT Running.";
