@@ -150,7 +150,7 @@ SMEFTPoleMatching = {
 
 Options[ChiSquareEW]={
 	Observables -> All,
-	Scale :> GetEFTscale[],
+	EFTscale :> GetEFTscale[],
 	Coefficients -> All
 };
 
@@ -189,11 +189,11 @@ ChiSquareEW[OptionsPattern[]] := Module[
 	];
 	Switch[OptionValue[Observables],
 		All,
-			chi2=SMEFTRun[PoleLikelihood/.SMEFTPoleMatching/.SMEFTPoleMatching,91,OptionValue[Scale]]/.wilson(*/.mEW->Mass[ZBoson]/.\[CapitalLambda]->OptionValue[Scale]*)(*/.ReplaceYukawas/.ReplaceGaugeCouplings*)/.GetParameters[],
+			chi2=SMEFTRun[PoleLikelihood/.SMEFTPoleMatching/.SMEFTPoleMatching,91,OptionValue[EFTscale]]/.wilson(*/.mEW->Mass[ZBoson]/.\[CapitalLambda]->OptionValue[Scale]*)(*/.ReplaceYukawas/.ReplaceGaugeCouplings*)/.GetParameters[],
 		{},
 			Message[ChiSquareEW::emptyobs];Abort[],
 		__,
 			Message[ChiSquareEW::noobs];Abort[]
 	];
-	Return[Expand[chi2/.a_WC->a/OptionValue[Scale]^2]]
+	Return[Expand[chi2/.a_WC->a/OptionValue[EFTscale]^2]]
 ]
