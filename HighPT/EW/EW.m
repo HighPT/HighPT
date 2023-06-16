@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPT`Template`*)
+(*HighPT`EW`*)
 
 
 (* ::Subtitle:: *)
-(*Template .m file*)
+(*General implementation of EW pole observables*)
 
 
 (* ::Chapter:: *)
@@ -23,9 +23,129 @@ Package["HighPT`"]
 (*Exported*)
 
 
+PackageExport["EWObservables"]
+
+
+PackageExport["RestoreEWObservables"]
+
+
+PackageExport["ChangeEWObservable"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
 
+PackageScope["gZSM"]
+
+
+PackageScope["\[Delta]gZ"]
+
+
+PackageScope["Replace\[Delta]g"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
+
+
+$EWSectors = {"Zpole","Wpole"};
+
+
+EWObservables::usage = "EWObservables[] returns a nested list of all the pole observables implemented in HighPT. EWObservables[\"sector\"] gives a list of all pole observables in the sector \"sector\". \"sector\" can be \"Zpole\" or \"Wpole\""
+
+
+EWObservables[] = EWObservables/@$EWSectors
+
+
+(* ::Section:: *)
+(*Check Observable implementation*)
+
+
+EWOptionCheck::optionvalue= "Invalid OptionValue specified: `1`\[Rule]`2`, the allowed values for `1` must match `3`.";
+
+
+EWOptionCheck[opt_,optVal_]:=If[!MatchQ[optVal,$EWOptionValueAssociation[opt]],
+	Message[EWOptionCheck::optionvalue, opt, optVal, $EWOptionValueAssociation[opt]];
+	Abort[],
+	True
+];
+
+
+$EWOptionValueAssociation= <|
+	"Exp" -> {_?NumericQ,_?NumericQ},
+	"SM" -> {_?NumericQ,_?NumericQ}
+|>;
+
+
+(* ::Section:: *)
+(*Redefine an EW obervable*)
+
+
+ChangeEWObservable::invalidNP= "Invalid NP contribution. It must be an expressions of SMEFT coefficients (WC) only."
+ChangeEWObservable::wrongobservable= "The observable `1` doesn't exist."
+
+
+Options[ChangeEWObservable]={
+	"Exp"->"current",
+	"SM"->"current",
+	"NP"->"current"
+	};
+
+
+ChangeEWObservable[obs_,Default] := ChangeEWObservable[
+	obs,
+	"Exp"->ExpValue$default[obs],
+	"SM"->SMPrediction$default[obs],
+	"NP"->NPContribution$default[obs]
+]
+
+
+ChangeEWObservable[obs_,OptionsPattern[]] := Module[
+	{
+		exp = OptionValue["Exp"], 
+		SM = OptionValue["SM"], 
+		NP = OptionValue["NP"],
+		var
+	}
+	,
+	If[!MemberQ[EWObservables[]//Flatten,obs],
+		Message[ChangeEWObservable::wrongobservable,obs];Abort[];
+	];
+	If[(!MatchQ[exp,"current"])&&(EWOptionCheck["Exp",exp]),
+		ExpValue[obs] = exp
+	];
+	If[(!MatchQ[SM,"current"])&&(EWOptionCheck["SM",SM]),
+		SMPrediction[obs] = SM
+	];
+	If[!MatchQ[NP,"current"],
+		var=Variables[NP/.Re->Identity/.Abs->Identity/.SMEFTSimplify/.Conjugate[a_]->a];
+		(*Print[var];
+		Print[(Head/@var)//DeleteDuplicates];*)
+		If[MatchQ[(Head/@var)//DeleteDuplicates,{WC}],
+			NPContribution[obs] = NP,
+			Message[ChangeEWObservable::invalidNP];Abort[]
+		];
+	];
+]
+
+
+RestoreEWObservables[]:=ChangeEWObservable[#,Default]& /@ (EWObservables[]//Flatten);
+
+
+(* ::Section:: *)
+(*Replace \[Delta]gs*)
+
+
+\[Delta]U[f_,chir_]:=-Param["vev"]^2(WeakIsospin3[f,chir]+Charge[f] Param["g1"]^2/(Param["g2"]^2-Param["g1"]^2))(1/4 WC["HD",{}]+1/2 WC["Hl3",{2,2}]+1/2 WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}])-Param["vev"]^2 Charge[f] (Param["g1"]Param["g2"])/(Param["g2"]^2-Param["g1"]^2) WC["HWB",{}]
+
+
+Replace\[Delta]g={
+	\[Delta]gZ[\[Nu],Left,{\[Alpha]_,\[Beta]_}]:>-(Param["vev"]^2/2)(WC["Hl1",{\[Alpha],\[Beta]}]-WC["Hl3",{\[Alpha],\[Beta]}])+\[Delta]U[\[Nu],Left] KroneckerDelta[\[Alpha],\[Beta]],
+	\[Delta]gZ[e,Left,{\[Alpha]_,\[Beta]_}]:>-(Param["vev"]^2/2)(WC["Hl1",{\[Alpha],\[Beta]}]+WC["Hl3",{\[Alpha],\[Beta]}])+\[Delta]U[e,Left] KroneckerDelta[\[Alpha],\[Beta]],
+	\[Delta]gZ[e,Right,{\[Alpha]_,\[Beta]_}]:>-(Param["vev"]^2/2)WC["He",{\[Alpha],\[Beta]}]+\[Delta]U[e,Right] KroneckerDelta[\[Alpha],\[Beta]],
+	\[Delta]gZ[u,Left,{i_,j_}]:>-(Param["vev"]^2/2)(MassRotate[WC["Hq1",{i,j}],"uu"]-MassRotate[WC["Hq3",{i,j}],"uu"])+\[Delta]U[u,Left] KroneckerDelta[i,j],
+	\[Delta]gZ[u,Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hu",{i,j}]+\[Delta]U[u,Right] KroneckerDelta[i,j],
+	\[Delta]gZ[d,Left,{i_,j_}]:>-(Param["vev"]^2/2)(MassRotate[WC["Hq1",{i,j}],"dd"]+MassRotate[WC["Hq3",{i,j}],"dd"])+\[Delta]U[d,Left] KroneckerDelta[i,j],
+	\[Delta]gZ[d,Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hd",{i,j}]+\[Delta]U[d,Right] KroneckerDelta[i,j]
+};

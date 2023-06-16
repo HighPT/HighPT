@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPT`ZFlavorInitialize`*)
+(*HighPT`Wpole`*)
 
 
 (* ::Subtitle:: *)
-(*Template .m file*)
+(*W pole observables*)
 
 
 (* ::Chapter:: *)
@@ -31,10 +31,4 @@ Package["HighPT`"]
 (*Private:*)
 
 
-(*Print[FlavorObservables[]];*)
-
-
-(*ChangeFlavorObservable[#,Default]& /@ (FlavorObservables[]//Flatten);*)
-
-
-RestoreFlavorObservables[];
+EWObservables["Wpole"]={};
