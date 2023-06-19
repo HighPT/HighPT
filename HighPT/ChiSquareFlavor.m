@@ -39,6 +39,10 @@ PackageScope["ExpCorrelation"]
 PackageScope["THCorrelation"]
 
 
+PackageScope["ExpCov"]
+PackageScope["THCov"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 

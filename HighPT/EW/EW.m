@@ -40,6 +40,7 @@ PackageScope["gZSM"]
 
 
 PackageScope["\[Delta]gZ"]
+PackageScope["\[Delta]gW"]
 
 
 PackageScope["Replace\[Delta]g"]
@@ -79,10 +80,10 @@ $EWOptionValueAssociation= <|
 
 
 (* ::Section:: *)
-(*Redefine an EW obervable*)
+(*Redefine an EW observable*)
 
 
-ChangeEWObservable::invalidNP= "Invalid NP contribution. It must be an expressions of SMEFT coefficients (WC) only."
+ChangeEWObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of SMEFT coefficients (WC) only."
 ChangeEWObservable::wrongobservable= "The observable `1` doesn't exist."
 
 
@@ -124,7 +125,7 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 		Print[(Head/@var)//DeleteDuplicates];*)
 		If[MatchQ[(Head/@var)//DeleteDuplicates,{WC}],
 			NPContribution[obs] = NP,
-			Message[ChangeEWObservable::invalidNP];Abort[]
+			Message[ChangeEWObservable::invalidNP,obs];Abort[]
 		];
 	];
 ]
@@ -147,5 +148,8 @@ Replace\[Delta]g={
 	\[Delta]gZ[u,Left,{i_,j_}]:>-(Param["vev"]^2/2)(MassRotate[WC["Hq1",{i,j}],"uu"]-MassRotate[WC["Hq3",{i,j}],"uu"])+\[Delta]U[u,Left] KroneckerDelta[i,j],
 	\[Delta]gZ[u,Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hu",{i,j}]+\[Delta]U[u,Right] KroneckerDelta[i,j],
 	\[Delta]gZ[d,Left,{i_,j_}]:>-(Param["vev"]^2/2)(MassRotate[WC["Hq1",{i,j}],"dd"]+MassRotate[WC["Hq3",{i,j}],"dd"])+\[Delta]U[d,Left] KroneckerDelta[i,j],
-	\[Delta]gZ[d,Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hd",{i,j}]+\[Delta]U[d,Right] KroneckerDelta[i,j]
+	\[Delta]gZ[d,Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hd",{i,j}]+\[Delta]U[d,Right] KroneckerDelta[i,j],
+	\[Delta]gW["q",Left,{i_,j_}]:>Param["vev"]^2 MassRotate[WC["Hq1",{i,j}],"ud"]+\[Delta]U[u,Left] KroneckerDelta[i,j]-\[Delta]U[d,Left] KroneckerDelta[i,j],
+	\[Delta]gW["q",Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hud",{i,j}]+\[Delta]U[u,Right] KroneckerDelta[i,j]-\[Delta]U[d,Right] KroneckerDelta[i,j],
+	\[Delta]gW["l",Left,{\[Alpha]_,\[Beta]_}]:>Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+\[Delta]U[\[Nu],Left] KroneckerDelta[\[Alpha],\[Beta]]-\[Delta]U[e,Left] KroneckerDelta[\[Alpha],\[Beta]]
 };

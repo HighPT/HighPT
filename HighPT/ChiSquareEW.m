@@ -160,12 +160,19 @@ ChiSquareEW::nomodel="Model run mode is not implemented yet. Please switch to SM
 ChiSquareEW::undefinedmode="Run mode undefined. Something went very wrong..."
 ChiSquareEW::emptyobs="No observables selected"
 ChiSquareEW::noobs="No individual observables can be selected as of now. The only valid option for Observables is All."
+ChiSquareEW::invalidobs="The observables `1` are not implemented or don't exist"
+ChiSquareEW::invalidinput="Invalid input for Obs"
 
 
 ChiSquareEW[OptionsPattern[]] := Module[
 	{
 	chi2,
-	wilson
+	wilson,
+	observables,
+	covmatrix,
+	covmatrixsymm,
+	invcovmatrix,
+	obsvector
 	}
 	,
 	Switch[$RunMode,
@@ -193,7 +200,28 @@ ChiSquareEW[OptionsPattern[]] := Module[
 		{},
 			Message[ChiSquareEW::emptyobs];Abort[],
 		__,
-			Message[ChiSquareEW::noobs];Abort[]
+			If[ListQ[OptionValue[Observables]],
+				If[SubsetQ[Flatten[EWObservables[]],OptionValue[Observables]],
+					observables=OptionValue[Observables],
+					Message[ChiSquareEW::invalidobs,Complement[OptionValue[Observables],Flatten[EWObservables[]]]];Abort[]
+				],
+				Message[ChiSquareEW::invalidinput];Abort[]
+			]
+	];
+	If[!MatchQ[OptionValue[Observables],All],
+		(*Print["Computing EW observables individually!"];
+		Print["Observables selected: ", observables];*)
+		covmatrix=Table[
+			ExpCov[i,j]+THCov[i,j],
+			{i,observables},{j,observables}];
+		covmatrixsymm=covmatrix+Transpose[covmatrix]-DiagonalMatrix[Diagonal[covmatrix]];
+		(*Print[covmatrixsymm];*)
+		invcovmatrix=Inverse[covmatrixsymm];
+		obsvector=Table[
+			ExpValue[i][[1]]-(SMPrediction[i][[1]] + NPContribution[i]),
+			{i,observables}
+		];
+		chi2=SMEFTRun[(obsvector . invcovmatrix . obsvector),DsixTools`EWSCALE,OptionValue[EFTscale]]/.wilson/.GetParameters[];
 	];
 	Return[Expand[chi2/.a_WC->a/OptionValue[EFTscale]^2]]
 ]
