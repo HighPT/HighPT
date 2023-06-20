@@ -32,15 +32,16 @@ PackageExport["RestoreEWObservables"]
 PackageExport["ChangeEWObservable"]
 
 
+PackageExport["\[Delta]gZ"]
+PackageExport["\[Delta]gW"]
+PackageExport["\[Delta]mW"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
 
 PackageScope["gZSM"]
-
-
-PackageScope["\[Delta]gZ"]
-PackageScope["\[Delta]gW"]
 
 
 PackageScope["Replace\[Delta]g"]
@@ -123,7 +124,7 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 		var=Variables[NP/.Re->Identity/.Abs->Identity/.SMEFTSimplify/.Conjugate[a_]->a];
 		(*Print[var];
 		Print[(Head/@var)//DeleteDuplicates];*)
-		If[MatchQ[(Head/@var)//DeleteDuplicates,{WC}],
+		If[SubsetQ[{\[Delta]gZ,\[Delta]gW,\[Delta]mW(*,WC*)},(Head/@var)//DeleteDuplicates]||MatchQ[(Head/@var)//DeleteDuplicates,{WC}],
 			NPContribution[obs] = NP,
 			Message[ChangeEWObservable::invalidNP,obs];Abort[]
 		];
@@ -151,5 +152,6 @@ Replace\[Delta]g={
 	\[Delta]gZ[d,Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hd",{i,j}]+\[Delta]U[d,Right] KroneckerDelta[i,j],
 	\[Delta]gW["q",Left,{i_,j_}]:>Param["vev"]^2 MassRotate[WC["Hq1",{i,j}],"ud"]+\[Delta]U[u,Left] KroneckerDelta[i,j]-\[Delta]U[d,Left] KroneckerDelta[i,j],
 	\[Delta]gW["q",Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hud",{i,j}]+\[Delta]U[u,Right] KroneckerDelta[i,j]-\[Delta]U[d,Right] KroneckerDelta[i,j],
-	\[Delta]gW["l",Left,{\[Alpha]_,\[Beta]_}]:>Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+\[Delta]U[\[Nu],Left] KroneckerDelta[\[Alpha],\[Beta]]-\[Delta]U[e,Left] KroneckerDelta[\[Alpha],\[Beta]]
+	\[Delta]gW["l",Left,{\[Alpha]_,\[Beta]_}]:>Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+\[Delta]U[\[Nu],Left] KroneckerDelta[\[Alpha],\[Beta]]-\[Delta]U[e,Left] KroneckerDelta[\[Alpha],\[Beta]],
+	\[Delta]mW[]:>-((Param["vev"]^2 Param["g2"]^2)/(4(Param["g2"]^2-Param["g1"]^2)))WC["HD",{}]-(Param["vev"]^2 Param["g2"]Param["g1"])/(Param["g2"]^2-Param["g1"]^2) WC["HWB",{}]+(Param["vev"]^2 Param["g1"]^2)/(4(Param["g2"]^2-Param["g1"]^2)) (WC["ll",{1,2,2,1}]-2 WC["Hl3",{2,2}]-2 WC["Hl3",{1,1}])
 };

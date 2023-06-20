@@ -9,7 +9,6 @@ Package["HighPT`"]
 
 (* ::Subtitle:: *)
 (*Compute the EW likelihood from pole observables*)
-(*For now the likelihood is taken from 2103.12074 - change this at some point*)
 
 
 (* ::Chapter:: *)
@@ -25,6 +24,11 @@ Package["HighPT`"]
 
 
 PackageExport["ChiSquareEW"]
+
+
+PackageExport["\[Delta]g"]
+PackageExport["Running"]
+PackageExport["DimensionlessCoefficients"]
 
 
 (* ::Subsection:: *)
@@ -151,7 +155,10 @@ SMEFTPoleMatching = {
 Options[ChiSquareEW]={
 	Observables -> All,
 	EFTscale :> GetEFTscale[],
-	Coefficients -> All
+	Coefficients -> All,
+	\[Delta]g -> False,
+	Running -> True,
+	DimensionlessCoefficients -> True
 };
 
 
@@ -175,6 +182,9 @@ ChiSquareEW[OptionsPattern[]] := Module[
 	obsvector
 	}
 	,
+	OptionCheck[\[Delta]g,OptionValue[\[Delta]g]];
+	OptionCheck[Running,OptionValue[Running]];
+	OptionCheck[DimensionlessCoefficients,OptionValue[DimensionlessCoefficients]];
 	Switch[$RunMode,
 		"SMEFT",
 			Switch[OptionValue[Coefficients],
@@ -221,7 +231,16 @@ ChiSquareEW[OptionsPattern[]] := Module[
 			ExpValue[i][[1]]-(SMPrediction[i][[1]] + NPContribution[i]),
 			{i,observables}
 		];
-		chi2=SMEFTRun[(obsvector . invcovmatrix . obsvector),DsixTools`EWSCALE,OptionValue[EFTscale]]/.wilson/.GetParameters[];
+		If[MatchQ[OptionValue[\[Delta]g],False],
+			If[MatchQ[OptionValue[Running],True],
+				chi2=SMEFTRun[(obsvector . invcovmatrix . obsvector)/.Replace\[Delta]g,DsixTools`EWSCALE,OptionValue[EFTscale]]/.wilson/.GetParameters[];,
+				chi2=(obsvector . invcovmatrix . obsvector)/.Replace\[Delta]g/.wilson/.GetParameters[];
+			],
+			chi2=(obsvector . invcovmatrix . obsvector)/.GetParameters[];
+		];
 	];
-	Return[Expand[chi2/.a_WC->a/OptionValue[EFTscale]^2]]
+	If[MatchQ[OptionValue[DimensionlessCoefficients],True],
+		Return[Expand[chi2/.a_WC->a/OptionValue[EFTscale]^2]],
+		Return[Expand[chi2]]
+	];
 ]
