@@ -37,6 +37,9 @@ PackageExport["\[Delta]gW"]
 PackageExport["\[Delta]mW"]
 
 
+PackageExport["FCCee"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -45,6 +48,9 @@ PackageScope["gZSM"]
 
 
 PackageScope["Replace\[Delta]g"]
+
+
+(*PackageScope["ExpValue$FCCee"]*)
 
 
 (* ::Chapter:: *)
@@ -86,12 +92,14 @@ $EWOptionValueAssociation= <|
 
 ChangeEWObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of SMEFT coefficients (WC) only."
 ChangeEWObservable::wrongobservable= "The observable `1` doesn't exist."
+ChangeEWObservable::rescaleerror= "The rescaling factor must be a positive number"
 
 
 Options[ChangeEWObservable]={
 	"Exp"->"current",
 	"SM"->"current",
-	"NP"->"current"
+	"NP"->"current",
+	RescaleError -> 1
 	};
 
 
@@ -100,6 +108,17 @@ ChangeEWObservable[obs_,Default] := ChangeEWObservable[
 	"Exp"->ExpValue$default[obs],
 	"SM"->SMPrediction$default[obs],
 	"NP"->NPContribution$default[obs]
+]
+
+
+FCCProjections = Join[FCCZpoleProjections,FCCWpoleProjections];
+
+
+ChangeEWObservable[obs_,FCCee] := ChangeEWObservable[
+	obs,
+	"Exp"->{SMPrediction[obs][[1]],FCCProjections[obs]},
+	"SM"->"current",
+	"NP"->"current"
 ]
 
 
@@ -129,10 +148,21 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 			Message[ChangeEWObservable::invalidNP,obs];Abort[]
 		];
 	];
+	If[!MatchQ[OptionValue[RescaleError],1],
+		If[NumericQ[OptionValue[RescaleError]]&&Positive[OptionValue[RescaleError]],
+			ExpValue[obs] = {SMPrediction[obs][[1]],ExpValue[obs][[2]]/OptionValue[RescaleError]};
+			(*SMPrediction[obs] = SMPrediction$default[obs];
+			NPContribution[obs]= NPContribution$default[obs];*),
+			Message[ChangeEWObservable::rescaleerror];Abort[]
+		];
+	];
 ]
 
 
 RestoreEWObservables[]:=ChangeEWObservable[#,Default]& /@ (EWObservables[]//Flatten);
+
+
+RestoreEWObservables[FCCee]:=ChangeEWObservable[#,FCCee]& /@ (EWObservables[]//Flatten);
 
 
 (* ::Section:: *)

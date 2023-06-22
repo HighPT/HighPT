@@ -27,6 +27,9 @@ Package["HighPT`"]
 (*Internal*)
 
 
+PackageScope["FCCZpoleProjections"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -86,6 +89,9 @@ SMPrediction$default["\[CapitalGamma]Z"]:={2.4941,0};
 
 
 NPContribution$default["\[CapitalGamma]Z"]:=(\[CapitalDelta]\[CapitalGamma]Zhad+\[CapitalDelta]\[CapitalGamma]Zlep)(*/.Replace\[Delta]g*)/.GetParameters[]//Simplify;
+
+
+(*ExpValue$FCC["\[CapitalGamma]Z"]:={SMPrediction$default["\[CapitalGamma]Z"][[1]],ExpValue$default["\[CapitalGamma]Z"]/10}*)
 
 
 (* ::Section:: *)
@@ -456,3 +462,32 @@ ExpCorrelation["A\[Mu]","A\[Tau]"]:=0.007;
 
 
 ExpCorrelation["Ab","Ac"]:=0.11;
+
+
+(* ::Section:: *)
+(*FCC projections*)
+
+
+FCCZpoleProjections=<|
+	"\[CapitalGamma]Z"->0.000004,
+	"\[Sigma]had"->0,
+	"Re"->0,
+	"R\[Mu]"->0,
+	"R\[Tau]"->0,
+	"Rb"->0,
+	"Rc"->0,
+	"Ae"->0,
+	"AeLEP"->0,
+	"A\[Mu]"->0,
+	"A\[Tau]"->0,
+	"A\[Tau]LEP"->0,
+	"Ab"->0,
+	"Ac"->0,
+	"As"->0,
+	"AFB0e"->0,
+	"AFB0\[Mu]"->0,
+	"AFB0\[Tau]"->0,
+	"AFBb"->0,
+	"AFBc"->0,
+	"Ruc"->0
+|>;

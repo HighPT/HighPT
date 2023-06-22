@@ -27,6 +27,9 @@ Package["HighPT`"]
 (*Internal*)
 
 
+PackageScope["FCCWpoleProjections"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -222,3 +225,22 @@ ExpCorrelation["We\[Nu]","W\[Tau]\[Nu]"]:=-0.201;
 
 
 ExpCorrelation["W\[Mu]\[Nu]","W\[Tau]\[Nu]"]:=-0.122;
+
+
+(* ::Section:: *)
+(*FCC projections*)
+
+
+FCCWpoleProjections=<|
+	"mW"->0,
+	"\[CapitalGamma]W"->0,
+	"We\[Nu]"->0,
+	"W\[Mu]\[Nu]"->0,
+	"W\[Tau]\[Nu]"->0,
+	"W\[Mu]\[Nu]We\[Nu]CDF"->0,
+	"We\[Nu]W\[Mu]\[Nu]LHCb"->0,
+	"W\[Mu]\[Nu]We\[Nu]ATLAS"->0,
+	"W\[Tau]\[Nu]We\[Nu]"->0,
+	"W\[Tau]\[Nu]W\[Mu]\[Nu]"->0,
+	"RWc"->0
+|>
