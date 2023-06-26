@@ -74,7 +74,7 @@ PackageScope["FlavorOptionCheck"]
 (*Private:*)
 
 
-$FlavorSectors = {"ChargedCurrents"};
+$FlavorSectors = {"ChargedCurrents"(*,"\[CapitalDelta]F=1"*)};
 
 
 FlavorObservables::usage = "FlavorObservables[] returns a nested list of all the flavor observables implemented in HighPT. FlavorObservables[\"sector\"] gives a list of all flavor observables in the sector \"sector\""

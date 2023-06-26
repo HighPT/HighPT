@@ -215,7 +215,7 @@ Wolfenstein$default = {
 }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Define CKM matrix*)
 
 
@@ -232,7 +232,7 @@ CKM= {
 };
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Define rotation matrices for left-handed up and down quarks*)
 
 
