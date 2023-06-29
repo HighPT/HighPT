@@ -82,13 +82,13 @@ ASM[f_]:=(gZSM[f,Left]^2-gZSM[f,Right]^2)/(gZSM[f,Left]^2+gZSM[f,Right]^2);
 (*\[CapitalGamma]Z*)
 
 
-ExpValue$default["\[CapitalGamma]Z"]:={2.4955,0.0023};
+ExpValue$default["\[CapitalGamma]Z"]:=\[CapitalGamma]Z$default;
 
 
-SMPrediction$default["\[CapitalGamma]Z"]:={2.4941,0};
+SMPrediction$default["\[CapitalGamma]Z"]:=Around[2.4941,0];
 
 
-NPContribution$default["\[CapitalGamma]Z"]:=(\[CapitalDelta]\[CapitalGamma]Zhad+\[CapitalDelta]\[CapitalGamma]Zlep)(*/.Replace\[Delta]g*)/.GetParameters[]//Simplify;
+NPContribution$default["\[CapitalGamma]Z"]:=((\[CapitalDelta]\[CapitalGamma]Zhad+\[CapitalDelta]\[CapitalGamma]Zlep)(*/.Replace\[Delta]g*)/.GetParameters[]//Simplify);
 
 
 (*ExpValue$FCC["\[CapitalGamma]Z"]:={SMPrediction$default["\[CapitalGamma]Z"][[1]],ExpValue$default["\[CapitalGamma]Z"]/10}*)
@@ -98,13 +98,13 @@ NPContribution$default["\[CapitalGamma]Z"]:=(\[CapitalDelta]\[CapitalGamma]Zhad+
 (*\[Sigma]had*)
 
 
-ExpValue$default["\[Sigma]had"]:={41.4802,0.0325};
+ExpValue$default["\[Sigma]had"]:=Around[41.4802,0.0325];
 
 
-SMPrediction$default["\[Sigma]had"]:={41.4842,0};
+SMPrediction$default["\[Sigma]had"]:=Around[41.4842,0];
 
 
-NPContribution$default["\[Sigma]had"]:=(12\[Pi])/Mass["ZBoson"]^2 (\[CapitalGamma]ZfSM[e]\[CapitalGamma]ZhadSM)/\[CapitalGamma]ZSM^2 (\[CapitalDelta]\[CapitalGamma]Z[e,1]/\[CapitalGamma]ZfSM[e]+\[CapitalDelta]\[CapitalGamma]Zhad/\[CapitalGamma]ZhadSM-2 (\[CapitalDelta]\[CapitalGamma]Zhad+\[CapitalDelta]\[CapitalGamma]Zlep)/\[CapitalGamma]ZSM)*(0.389379 10^6)(*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["\[Sigma]had"]:=((12\[Pi])/Mass["ZBoson"]^2 (\[CapitalGamma]ZfSM[e]\[CapitalGamma]ZhadSM)/\[CapitalGamma]ZSM^2 (\[CapitalDelta]\[CapitalGamma]Z[e,1]/\[CapitalGamma]ZfSM[e]+\[CapitalDelta]\[CapitalGamma]Zhad/\[CapitalGamma]ZhadSM-2 (\[CapitalDelta]\[CapitalGamma]Zhad+\[CapitalDelta]\[CapitalGamma]Zlep)/\[CapitalGamma]ZSM)*(0.389379 10^6)(*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)
@@ -118,39 +118,39 @@ NPContribution$default["\[Sigma]had"]:=(12\[Pi])/Mass["ZBoson"]^2 (\[CapitalGamm
 (*Re*)
 
 
-ExpValue$default["Re"]:={20.804,0.050};
+ExpValue$default["Re"]:=Around[20.804,0.050];
 
 
-SMPrediction$default["Re"]:={20.734,0};
+SMPrediction$default["Re"]:=Around[20.734,0];
 
 
-NPContribution$default["Re"]:=\[CapitalDelta]Re[1](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["Re"]:=(\[CapitalDelta]Re[1](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*R\[Mu]*)
 
 
-ExpValue$default["R\[Mu]"]:={20.785,0.033};
+ExpValue$default["R\[Mu]"]:=Around[20.785,0.033];
 
 
-SMPrediction$default["R\[Mu]"]:={20.734,0};
+SMPrediction$default["R\[Mu]"]:=Around[20.734,0];
 
 
-NPContribution$default["R\[Mu]"]:=\[CapitalDelta]Re[2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["R\[Mu]"]:=(\[CapitalDelta]Re[2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*R\[Tau]*)
 
 
-ExpValue$default["R\[Tau]"]:={20.764,0.045};
+ExpValue$default["R\[Tau]"]:=Around[20.764,0.045];
 
 
-SMPrediction$default["R\[Tau]"]:={20.781,0};
+SMPrediction$default["R\[Tau]"]:=Around[20.781,0];
 
 
-NPContribution$default["R\[Tau]"]:=\[CapitalDelta]Re[3](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["R\[Tau]"]:=(\[CapitalDelta]Re[3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)
@@ -164,26 +164,26 @@ NPContribution$default["R\[Tau]"]:=\[CapitalDelta]Re[3](*/.Replace\[Delta]g*)/.G
 (*Rb*)
 
 
-ExpValue$default["Rb"]:={0.21629,0.00066};
+ExpValue$default["Rb"]:=Around[0.21629,0.00066];
 
 
-SMPrediction$default["Rb"]:={0.21581,0};
+SMPrediction$default["Rb"]:=Around[0.21581,0];
 
 
-NPContribution$default["Rb"]:=\[CapitalDelta]R[d,3](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["Rb"]:=(\[CapitalDelta]R[d,3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*Rc*)
 
 
-ExpValue$default["Rc"]:={0.1721,0.0030};
+ExpValue$default["Rc"]:=Around[0.1721,0.0030];
 
 
-SMPrediction$default["Rc"]:={0.17222,0};
+SMPrediction$default["Rc"]:=Around[0.17222,0];
 
 
-NPContribution$default["Rc"]:=\[CapitalDelta]R[u,2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["Rc"]:=(\[CapitalDelta]R[u,2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)
@@ -197,104 +197,104 @@ NPContribution$default["Rc"]:=\[CapitalDelta]R[u,2](*/.Replace\[Delta]g*)/.GetPa
 (*Ae*)
 
 
-ExpValue$default["Ae"]:={0.1516,0.0021};
+ExpValue$default["Ae"]:=Around[0.1516,0.0021];
 
 
-SMPrediction$default["Ae"]:={0.1470,0};
+SMPrediction$default["Ae"]:=Around[0.1470,0];
 
 
-NPContribution$default["Ae"]:=\[CapitalDelta]A[e,1](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["Ae"]:=(\[CapitalDelta]A[e,1](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*AeLEP*)
 
 
-ExpValue$default["AeLEP"]:={0.1498,0.0049};
+ExpValue$default["AeLEP"]:=Around[0.1498,0.0049];
 
 
-SMPrediction$default["AeLEP"]:={0.1470,0};
+SMPrediction$default["AeLEP"]:=Around[0.1470,0];
 
 
-NPContribution$default["AeLEP"]:=\[CapitalDelta]A[e,1](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["AeLEP"]:=(\[CapitalDelta]A[e,1](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*A\[Mu]*)
 
 
-ExpValue$default["A\[Mu]"]:={0.142,0.015};
+ExpValue$default["A\[Mu]"]:=Around[0.142,0.015];
 
 
-SMPrediction$default["A\[Mu]"]:={0.1470,0};
+SMPrediction$default["A\[Mu]"]:=Around[0.1470,0];
 
 
-NPContribution$default["A\[Mu]"]:=\[CapitalDelta]A[e,2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["A\[Mu]"]:=(\[CapitalDelta]A[e,2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*A\[Tau]*)
 
 
-ExpValue$default["A\[Tau]"]:={0.136,0.015};
+ExpValue$default["A\[Tau]"]:=Around[0.136,0.015];
 
 
-SMPrediction$default["A\[Tau]"]:={0.1470,0};
+SMPrediction$default["A\[Tau]"]:=Around[0.1470,0];
 
 
-NPContribution$default["A\[Tau]"]:=\[CapitalDelta]A[e,3](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["A\[Tau]"]:=(\[CapitalDelta]A[e,3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*A\[Tau]LEP*)
 
 
-ExpValue$default["A\[Tau]LEP"]:={0.1439,0.0043};
+ExpValue$default["A\[Tau]LEP"]:=Around[0.1439,0.0043];
 
 
-SMPrediction$default["A\[Tau]LEP"]:={0.1470,0};
+SMPrediction$default["A\[Tau]LEP"]:=Around[0.1470,0];
 
 
-NPContribution$default["A\[Tau]LEP"]:=\[CapitalDelta]A[e,3](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["A\[Tau]LEP"]:=(\[CapitalDelta]A[e,3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*Ab*)
 
 
-ExpValue$default["Ab"]:={0.923,0.020};
+ExpValue$default["Ab"]:=Around[0.923,0.020];
 
 
-SMPrediction$default["Ab"]:={0.935,0};
+SMPrediction$default["Ab"]:=Around[0.935,0];
 
 
-NPContribution$default["Ab"]:=\[CapitalDelta]A[d,3](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["Ab"]:=(\[CapitalDelta]A[d,3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*Ac*)
 
 
-ExpValue$default["Ac"]:={0.670,0.027};
+ExpValue$default["Ac"]:=Around[0.670,0.027];
 
 
-SMPrediction$default["Ac"]:={0.668,0};
+SMPrediction$default["Ac"]:=Around[0.668,0];
 
 
-NPContribution$default["Ac"]:=\[CapitalDelta]A[u,2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["Ac"]:=(\[CapitalDelta]A[u,2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*As*)
 
 
-ExpValue$default["As"]:={0.895,0.091};
+ExpValue$default["As"]:=Around[0.895,0.091];
 
 
-SMPrediction$default["As"]:={0.936,0};
+SMPrediction$default["As"]:=Around[0.936,0];
 
 
-NPContribution$default["As"]:=\[CapitalDelta]A[d,2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["As"]:=(\[CapitalDelta]A[d,2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)
@@ -308,39 +308,39 @@ NPContribution$default["As"]:=\[CapitalDelta]A[d,2](*/.Replace\[Delta]g*)/.GetPa
 (*AFB0e*)
 
 
-ExpValue$default["AFB0e"]:={0.0145,0.0025};
+ExpValue$default["AFB0e"]:=Around[0.0145,0.0025];
 
 
-SMPrediction$default["AFB0e"]:={0.0162,0};
+SMPrediction$default["AFB0e"]:=Around[0.0162,0];
 
 
-NPContribution$default["AFB0e"]:=\[CapitalDelta]AFB0e[1](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["AFB0e"]:=(\[CapitalDelta]AFB0e[1](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*AFB0\[Mu]*)
 
 
-ExpValue$default["AFB0\[Mu]"]:={0.0169,0.0013};
+ExpValue$default["AFB0\[Mu]"]:=Around[0.0169,0.0013];
 
 
-SMPrediction$default["AFB0\[Mu]"]:={0.0162,0};
+SMPrediction$default["AFB0\[Mu]"]:=Around[0.0162,0];
 
 
-NPContribution$default["AFB0\[Mu]"]:=\[CapitalDelta]AFB0e[2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["AFB0\[Mu]"]:=(\[CapitalDelta]AFB0e[2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*AFB0\[Tau]*)
 
 
-ExpValue$default["AFB0\[Tau]"]:={0.0188,0.0017};
+ExpValue$default["AFB0\[Tau]"]:=Around[0.0188,0.0017];
 
 
-SMPrediction$default["AFB0\[Tau]"]:={0.0162,0};
+SMPrediction$default["AFB0\[Tau]"]:=Around[0.0162,0];
 
 
-NPContribution$default["AFB0\[Tau]"]:=\[CapitalDelta]AFB0e[3](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["AFB0\[Tau]"]:=(\[CapitalDelta]AFB0e[3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)
@@ -354,39 +354,39 @@ NPContribution$default["AFB0\[Tau]"]:=\[CapitalDelta]AFB0e[3](*/.Replace\[Delta]
 (*AFBb*)
 
 
-ExpValue$default["AFBb"]:={0.0996,0.0016};
+ExpValue$default["AFBb"]:=Around[0.0996,0.0016];
 
 
-SMPrediction$default["AFBb"]:={0.1032,0};
+SMPrediction$default["AFBb"]:=Around[0.1032,0];
 
 
-NPContribution$default["AFBb"]:=\[CapitalDelta]AFB[d,3](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["AFBb"]:=(\[CapitalDelta]AFB[d,3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*AFBc*)
 
 
-ExpValue$default["AFBc"]:={0.0707,0.0035};
+ExpValue$default["AFBc"]:=Around[0.0707,0.0035];
 
 
-SMPrediction$default["AFBc"]:={0.0736,0};
+SMPrediction$default["AFBc"]:=Around[0.0736,0];
 
 
-NPContribution$default["AFBc"]:=\[CapitalDelta]AFB[u,2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["AFBc"]:=(\[CapitalDelta]AFB[u,2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)
 (*Ruc*)
 
 
-ExpValue$default["Ruc"]:={0.166,0.009};
+ExpValue$default["Ruc"]:=Around[0.166,0.009];
 
 
-SMPrediction$default["Ruc"]:={0.1722,0};
+SMPrediction$default["Ruc"]:=Around[0.1722,0];
 
 
-NPContribution$default["Ruc"]:=(-3(\[CapitalGamma]ZfSM[u]/(\[CapitalGamma]ZhadSM^2))\[CapitalDelta]\[CapitalGamma]Zhad + 3/(2 \[CapitalGamma]ZhadSM) (\[CapitalDelta]\[CapitalGamma]Z[u,1]+\[CapitalDelta]\[CapitalGamma]Z[u,2]))(*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["Ruc"]:=((-3(\[CapitalGamma]ZfSM[u]/(\[CapitalGamma]ZhadSM^2))\[CapitalDelta]\[CapitalGamma]Zhad + 3/(2 \[CapitalGamma]ZhadSM) (\[CapitalDelta]\[CapitalGamma]Z[u,1]+\[CapitalDelta]\[CapitalGamma]Z[u,2]))(*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)

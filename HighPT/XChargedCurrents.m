@@ -50,13 +50,13 @@ coeffPVlnu={Abs[1+gVL]^2+Abs[gVR]^2,Re[(1+gVL)Conjugate[gVR]],Abs[gT]^2,Re[(1+gV
 
 (* Semileptonic replacement *)
 RepSemilep={
-gVL:>WCL["\[Nu]eduVLL",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
-gVR:>WCL["\[Nu]eduVLR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
-gV:>(+WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
-gA:>(-WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
-gS:>(+WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
-gP:>(-WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])),
-gT:>WCL["\[Nu]eduTRR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))};
+gVL:>(WCL["\[Nu]eduVLL",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))),
+gVR:>(WCL["\[Nu]eduVLR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))),
+gV:>((+WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))),
+gA:>((-WCL["\[Nu]eduVLL",ind]\[Conjugate]+WCL["\[Nu]eduVLR",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))),
+gS:>((+WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))),
+gP:>((-WCL["\[Nu]eduSRR",ind]\[Conjugate]+WCL["\[Nu]eduSRL",ind]\[Conjugate])*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate]))),
+gT:>(WCL["\[Nu]eduTRR",ind]\[Conjugate]*(-Param["vev"]^2/(2 Vckm[ind4,ind3]\[Conjugate])))};
 
 
 (* ::Subsection:: *)
@@ -175,18 +175,18 @@ LowScale[Alternatives@@(FlavorObservables["b->c"]//Flatten)] = 5;
 (*Bc -> \[Tau]\[Nu]*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Exp*)
 
 
-ExpValue["Bc->\[Tau]\[Nu]"] = {0,0.3};
+ExpValue["Bc->\[Tau]\[Nu]"] = Around[0,0.3];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM*)
 
 
-SMPrediction["Bc->\[Tau]\[Nu]"] = {0.0208,0.0007};
+SMPrediction["Bc->\[Tau]\[Nu]"] = Around[0.0208,0.0007];
 
 
 (* ::Subsubsection:: *)
@@ -209,7 +209,7 @@ SMPrediction["Bc->\[Tau]\[Nu]"] = {0.0208,0.0007};
 (*Exp*)
 
 
-ExpValue$default["RD\[Tau]l"] = {0.356,0.029};
+ExpValue$default["RD\[Tau]l"] = Around[0.356,0.029];
 
 
 ExpInfo["RD\[Tau]l"] = "HFLAV average from Winter 2023"
@@ -219,7 +219,7 @@ ExpInfo["RD\[Tau]l"] = "HFLAV average from Winter 2023"
 (*SM*)
 
 
-SMPrediction$default["RD\[Tau]l"] = {0.2938,0.0040};
+SMPrediction$default["RD\[Tau]l"] = Around[0.2938,0.0040];
 
 
 SMInfo["RD\[Tau]l"] = "HFLAV Winter 2023";
@@ -230,10 +230,10 @@ SMInfo["RD\[Tau]l"] = "HFLAV Winter 2023";
 
 
 NPContribution$default["RD\[Tau]l"] := 
-	((1+\[Delta]BrB0Dp\[Tau]\[Nu])/(
+	(((1+\[Delta]BrB0Dp\[Tau]\[Nu])/(
 		(1+SMPrediction$default["RD\[Mu]e"][[1]]^-1)^-1 (1+\[Delta]BrB0Dp\[Mu]\[Nu])+
 		(1+SMPrediction$default["RD\[Mu]e"][[1]])^-1 (1+\[Delta]BrB0Dpe\[Nu])
-		)-1)/.GetParameters[];
+		)-1)/.GetParameters[])/.Around[a_,b_]->a;
 
 
 NPContributionError["RD\[Tau]l"] := 
@@ -287,7 +287,7 @@ NPContributionError["RD\[Tau]l"] :=
 (*Exp*)
 
 
-ExpValue$default["RD*\[Tau]l"] = {0.284,0.013}
+ExpValue$default["RD*\[Tau]l"] = Around[0.284,0.013]
 
 
 ExpInfo["RD*\[Tau]l"] = "HFLAV average from Winter 2023"
@@ -297,7 +297,7 @@ ExpInfo["RD*\[Tau]l"] = "HFLAV average from Winter 2023"
 (*SM*)
 
 
-SMPrediction$default["RD*\[Tau]l"] = {0.246,0.009};
+SMPrediction$default["RD*\[Tau]l"] = Around[0.246,0.009];
 
 
 SMInfo["RD*\[Tau]l"] = "HFLAV Winter 2023";
@@ -366,14 +366,14 @@ NPContributionError["RD*\[Tau]l"] :=
 (*Exp*)
 
 
-ExpValue$default["RD\[Mu]e"] = {1.005,0.045};
+ExpValue$default["RD\[Mu]e"] = Around[1.005,0.045];
 
 
 (* ::Subsubsection:: *)
 (*SM*)
 
 
-SMPrediction$default["RD\[Mu]e"] = {0.99595,0.00011};
+SMPrediction$default["RD\[Mu]e"] = Around[0.99595,0.00011];
 
 
 (* ::Subsubsection:: *)
@@ -408,14 +408,14 @@ NPContributionError["RD\[Mu]e"] :=
 (*Exp*)
 
 
-ExpValue$default["RD*\[Mu]e"] = {0.962,0.047};
+ExpValue$default["RD*\[Mu]e"] = Around[0.962,0.047];
 
 
 (* ::Subsubsection:: *)
 (*SM*)
 
 
-SMPrediction$default["RD*\[Mu]e"] = {0.9953,0.0003};
+SMPrediction$default["RD*\[Mu]e"] = Around[0.9953,0.0003];
 
 
 (* ::Subsubsection:: *)

@@ -53,6 +53,9 @@ PackageScope["Replace\[Delta]g"]
 (*PackageScope["ExpValue$FCCee"]*)
 
 
+PackageScope["null"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -81,8 +84,8 @@ EWOptionCheck[opt_,optVal_]:=If[!MatchQ[optVal,$EWOptionValueAssociation[opt]],
 
 
 $EWOptionValueAssociation= <|
-	"Exp" -> {_?NumericQ,_?NumericQ},
-	"SM" -> {_?NumericQ,_?NumericQ}
+	"Exp" -> Around[_?NumericQ,_?NumericQ | {_?NumericQ,_?NumericQ}] | _?((NumericQ[#]&&NonNegative[#])&),
+	"SM" -> Around[_?NumericQ,_?NumericQ | {_?NumericQ,_?NumericQ}]  | _?((NumericQ[#]&&NonNegative[#])&)
 |>;
 
 
@@ -90,7 +93,7 @@ $EWOptionValueAssociation= <|
 (*Redefine an EW observable*)
 
 
-ChangeEWObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of SMEFT coefficients (WC) only."
+ChangeEWObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of SMEFT coefficients (WC) or \[Delta]gs (\[Delta]gW,\[Delta]gZ,\[Delta]mW) only."
 ChangeEWObservable::wrongobservable= "The observable `1` doesn't exist."
 ChangeEWObservable::rescaleerror= "The rescaling factor must be a positive number"
 
@@ -116,7 +119,7 @@ FCCProjections = Join[FCCZpoleProjections,FCCWpoleProjections];
 
 ChangeEWObservable[obs_,FCCee] := ChangeEWObservable[
 	obs,
-	"Exp"->{SMPrediction[obs][[1]],FCCProjections[obs]},
+	"Exp"->Around[SMPrediction[obs]["Value"],FCCProjections[obs]],
 	"SM"->"current",
 	"NP"->"current"
 ]
@@ -124,8 +127,8 @@ ChangeEWObservable[obs_,FCCee] := ChangeEWObservable[
 
 ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 	{
-		exp = OptionValue["Exp"], 
-		SM = OptionValue["SM"], 
+		exp = OptionValue["Exp"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]], 
+		SM = OptionValue["SM"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]], 
 		NP = OptionValue["NP"],
 		var
 	}
@@ -134,10 +137,16 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 		Message[ChangeEWObservable::wrongobservable,obs];Abort[];
 	];
 	If[(!MatchQ[exp,"current"])&&(EWOptionCheck["Exp",exp]),
-		ExpValue[obs] = exp
+		If[NumericQ[exp],
+			ExpValue[obs] = Around[exp,null],
+			ExpValue[obs] = exp
+		];
 	];
 	If[(!MatchQ[SM,"current"])&&(EWOptionCheck["SM",SM]),
-		SMPrediction[obs] = SM
+		If[NumericQ[SM],
+			SMPrediction[obs] = Around[SM,null],
+			SMPrediction[obs] = SM
+		];
 	];
 	If[!MatchQ[NP,"current"],
 		var=Variables[NP/.Re->Identity/.Abs->Identity/.SMEFTSimplify/.Conjugate[a_]->a];
@@ -150,7 +159,7 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 	];
 	If[!MatchQ[OptionValue[RescaleError],1],
 		If[NumericQ[OptionValue[RescaleError]]&&Positive[OptionValue[RescaleError]],
-			ExpValue[obs] = {SMPrediction[obs][[1]],ExpValue[obs][[2]]/OptionValue[RescaleError]};
+			ExpValue[obs] = Around[SMPrediction[obs]["Value"],ExpValue[obs]["Uncertainty"]/OptionValue[RescaleError]];
 			(*SMPrediction[obs] = SMPrediction$default[obs];
 			NPContribution[obs]= NPContribution$default[obs];*),
 			Message[ChangeEWObservable::rescaleerror];Abort[]

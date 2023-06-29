@@ -53,9 +53,9 @@ ExpCov[i_,j_] := Module[
 	}
 	,
 	If[i==j,
-		cov=ExpValue[i][[2]]^2,
+		cov=ExpValue[i]["Uncertainty"]^2,
 		If[NumberQ[ExpCorrelation[i,j]],
-			cov=ExpValue[i][[2]]*ExpValue[j][[2]]*ExpCorrelation[i,j],
+			cov=ExpValue[i]["Uncertainty"]*ExpValue[j]["Uncertainty"]*ExpCorrelation[i,j],
 			cov=0
 		];
 	];
@@ -68,11 +68,11 @@ THCov[i_,j_] := Module[
 		cov
 	}
 	,
-	If[(NumberQ[SMPrediction[i][[1]]] && NumberQ[SMPrediction[j][[1]]]),
+	If[(NumberQ[SMPrediction[i]["Value"]] && NumberQ[SMPrediction[j]["Value"]]),
 		If[i==j,
-			cov=SMPrediction[i][[2]]^2,
+			cov=SMPrediction[i]["Uncertainty"]^2,
 			If[NumberQ[THCorrelation[i,j]],
-				cov=SMPrediction[i][[2]]*SMPrediction[j][[2]]*THCorrelation[i,j],
+				cov=SMPrediction[i]["Uncertainty"]*SMPrediction[j]["Uncertainty"]*THCorrelation[i,j],
 				cov=0
 			];
 		];,
@@ -163,14 +163,16 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 		(*Print[covmatrixsymm];*)
 		invcovmatrix=Inverse[covmatrixsymm];
 		obsvector=Table[
-					If[NumberQ[SMPrediction[i][[1]]],
-						LEFTRun[(ExpValue[i][[1]]-SMPrediction[i][[1]](1+NPContribution[i])),LowScale[i],DsixTools`EWSCALE],
-						LEFTRun[(ExpValue[i][[1]]-NPContribution[i]),LowScale[i],DsixTools`EWSCALE]
+					If[NumberQ[SMPrediction[i]["Value"]],
+						LEFTRun[(ExpValue[i]["Value"]-SMPrediction[i]["Value"](1+NPContribution[i])),LowScale[i],DsixTools`EWSCALE],
+						LEFTRun[(ExpValue[i]["Value"]-NPContribution[i]),LowScale[i],DsixTools`EWSCALE]
 					],
 				  {i,observables}
 				  ];
+		(*Print[obsvector];*)
 		(*Print["Constructing obsvector successful"];*)
-		chi2SMEFTEW=MatchToSMEFT[(obsvector . invcovmatrix . obsvector)];
+		(*Print[(obsvector . invcovmatrix . obsvector)];*)
+		chi2SMEFTEW=MatchToSMEFT[(obsvector . invcovmatrix . obsvector)]/.null->0;
 		(*Print["Matching to SMEFT:"];
 		Print[chi2SMEFTEW];*)
 		chi2SMEFT\[CapitalLambda]=SMEFTRun[chi2SMEFTEW,DsixTools`EWSCALE,OptionValue[EFTscale]];

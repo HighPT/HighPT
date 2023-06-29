@@ -206,7 +206,7 @@ ChiSquareEW[OptionsPattern[]] := Module[
 	];
 	Switch[OptionValue[Observables],
 		All,
-			chi2=SMEFTRun[PoleLikelihood/.SMEFTPoleMatching/.SMEFTPoleMatching,91,OptionValue[EFTscale]]/.wilson(*/.mEW->Mass[ZBoson]/.\[CapitalLambda]->OptionValue[Scale]*)(*/.ReplaceYukawas/.ReplaceGaugeCouplings*)/.GetParameters[],
+			chi2=SMEFTRun[(PoleLikelihood/.SMEFTPoleMatching/.SMEFTPoleMatching),91,OptionValue[EFTscale]]/.wilson(*/.mEW->Mass[ZBoson]/.\[CapitalLambda]->OptionValue[Scale]*)(*/.ReplaceYukawas/.ReplaceGaugeCouplings*)/.GetParameters[],
 		{},
 			Message[ChiSquareEW::emptyobs];Abort[],
 		__,
@@ -228,15 +228,15 @@ ChiSquareEW[OptionsPattern[]] := Module[
 		(*Print[covmatrixsymm];*)
 		invcovmatrix=Inverse[covmatrixsymm];
 		obsvector=Table[
-			ExpValue[i][[1]]-(SMPrediction[i][[1]] + NPContribution[i]),
+			ExpValue[i]["Value"]-(SMPrediction[i]["Value"] + NPContribution[i]),
 			{i,observables}
 		];
 		If[MatchQ[OptionValue[\[Delta]g],False],
 			If[MatchQ[OptionValue[Running],True],
-				chi2=SMEFTRun[(obsvector . invcovmatrix . obsvector)/.Replace\[Delta]g,DsixTools`EWSCALE,OptionValue[EFTscale]]/.wilson/.GetParameters[];,
-				chi2=(obsvector . invcovmatrix . obsvector)/.Replace\[Delta]g/.wilson/.GetParameters[];
+				chi2=SMEFTRun[(obsvector . invcovmatrix . obsvector)/.null->0/.Replace\[Delta]g,DsixTools`EWSCALE,OptionValue[EFTscale]]/.wilson/.GetParameters[];,
+				chi2=(obsvector . invcovmatrix . obsvector)/.null->0/.Replace\[Delta]g/.wilson/.GetParameters[];
 			],
-			chi2=(obsvector . invcovmatrix . obsvector)/.GetParameters[];
+			chi2=(obsvector . invcovmatrix . obsvector)/.null->0/.GetParameters[];
 		];
 	];
 	If[MatchQ[OptionValue[DimensionlessCoefficients],True],

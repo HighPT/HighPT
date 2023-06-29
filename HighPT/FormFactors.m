@@ -549,7 +549,7 @@ FF[Vector, {"regular",_}, {OrderlessPatternSequence[Right,_]}, {_,_,_u,_d}|{_,_,
 FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Weak basis rotation for form factors*)
 
 
