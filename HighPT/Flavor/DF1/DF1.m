@@ -37,24 +37,30 @@ $\[CapitalDelta]F1Sectors={"b->sll"(*,"b->s\[Nu]\[Nu]","leptonic"*)};
 FlavorObservables["\[CapitalDelta]F=1"] = FlavorObservables/@$\[CapitalDelta]F1Sectors
 
 
+CL90to95=3.09/2.3;
+
+
+C10SM=-4.18869;
+
+
 (* ::Section:: *)
 (*Basis change (WET to LEFT)*)
 
 
-DownQuarkMasses={Mass["d"],Mass["s"],Mass["d"]}
+DownQuarkMasses={Mass["d"],Mass["s"],Mass["d"]};
 
 
 WETToLEFT={
 wCL["7",{i_,j_}]:>WCL["d\[Gamma]",{i,j}]*Sqrt[4\[Pi] Param["\[Alpha]EM"]]/DownQuarkMasses[[Max[i,j]]] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
 wCL["7p",{i_,j_}]:>WCL["d\[Gamma]",{j,i}]\[Conjugate]*Sqrt[4\[Pi] Param["\[Alpha]EM"]]/DownQuarkMasses[[Max[i,j]]] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"]),
-wCL["9",{\[Alpha]_,\[Beta]_,i_,j_}]:>(WCL["edVLL",{\[Alpha],\[Beta],i,j}]+WCL["deVLR",{i,j,\[Alpha],\[Beta]}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["9p",{\[Alpha]_,\[Beta]_,i_,j_}]:>(WCL["edVLR",{\[Alpha],\[Beta],i,j}]+WCL["edVRR",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["10",{\[Alpha]_,\[Beta]_,i_,j_}]:>(-WCL["edVLL",{\[Alpha],\[Beta],i,j}]+WCL["deVLR",{i,j,\[Alpha],\[Beta]}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["10p",{\[Alpha]_,\[Beta]_,i_,j_}]:>(-WCL["edVLR",{\[Alpha],\[Beta],i,j}]+WCL["edVRR",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["S",{\[Alpha]_,\[Beta]_,i_,j_}]:>(WCL["edSRR",{\[Alpha],\[Beta],i,j}]+WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["Sp",{\[Alpha]_,\[Beta]_,i_,j_}]:>(WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"]),
-wCL["P",{\[Alpha]_,\[Beta]_,i_,j_}]:>(WCL["edSRR",{\[Alpha],\[Beta],i,j}]-WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["Pp",{\[Alpha]_,\[Beta]_,i_,j_}]:>(-WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"])
+wCL["9",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edVLL",{\[Alpha],\[Beta],i,j}]+WCL["deVLR",{i,j,\[Alpha],\[Beta]}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["9p",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edVLR",{\[Alpha],\[Beta],i,j}]+WCL["edVRR",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["10",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edVLL",{\[Alpha],\[Beta],i,j}]+WCL["deVLR",{i,j,\[Alpha],\[Beta]}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["10p",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edVLR",{\[Alpha],\[Beta],i,j}]+WCL["edVRR",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["S",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Alpha],\[Beta],i,j}]+WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["Sp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"]),
+wCL["P",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Alpha],\[Beta],i,j}]-WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["Pp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"])
 };
 
 
@@ -62,7 +68,10 @@ wCL["Pp",{\[Alpha]_,\[Beta]_,i_,j_}]:>(-WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Con
 (*b -> sll (')*)
 
 
-FlavorObservables["b->sll"] = {"B+->K+\[Tau]\[Tau]"};
+FlavorObservables["b->sll"] = {"B+->K+\[Tau]\[Tau]","B0->K0*\[Tau]\[Tau]","Bs->\[Tau]\[Tau]"};
+
+
+LowScale[Alternatives@@(FlavorObservables["b->sll"]//Flatten)] = 5;
 
 
 (* ::Subsection:: *)
@@ -73,18 +82,14 @@ FlavorObservables["b->sll"] = {"B+->K+\[Tau]\[Tau]"};
 (*B -> K\[Tau]\[Tau]*)
 
 
-ExpValue$default["B+->K+\[Tau]\[Tau]"] := Around[0,2.25]*10^-3
-
-
-(*{0.0001003548981731836`,2.140854596647234`*^-6};
-SMPrediction["B\[Rule]K\[Tau]\[Tau]"]=(Vckm[3,3]Vckm[3,2])^2 %[[1]]{1,Sqrt[(*(((2VtbVts0[[2]])/VtbVts0[[1]])^2)+*)(%[[2]]/%[[1]])^2]}*)
+ExpValue$default["B+->K+\[Tau]\[Tau]"] := Around[0,2.25]*10^-3*CL90to95/2;
 
 
 BK\[Tau]\[Tau]Aux = Around[0.0001003548981731836`,2.140854596647234`*^-6];
-SMPrediction$default["B+->K+\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BK\[Tau]\[Tau]Aux;
+SMPrediction$default["B+->K+\[Tau]\[Tau]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BK\[Tau]\[Tau]Aux)/.GetParameters[Errors->True];
 
 
-vecWC["B+\[Rule]K+\[Tau]\[Tau]"]={
+vecWC["B+->K+\[Tau]\[Tau]"]={
 Abs[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]]^2,
 Re[(wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]) (wCL["9",ind]+wCL["9p",ind])],
 Re[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]],
@@ -96,144 +101,42 @@ Re[wCL["10",ind]+wCL["10p",ind]],
 Abs[wCL["S",ind]+wCL["Sp",ind]]^2,
 Abs[wCL["P",ind]+wCL["Pp",ind]]^2,
 Re[wCL["P",ind]+wCL["Pp",ind]],
-1}/.ind->{3,3,2,3}/.ind\[Gamma]->{2,3}
-Mlow["B+\[Rule]K+\[Tau]\[Tau]"]=\!\(\*
-TagBox[
-RowBox[{"{", 
-RowBox[{
-InterpretationBox[
-StyleBox["\<\"0.042677\"\>",
-ShowStringCharacters->False],
-0.04267688555318238200022953113658025411`19.69897000433602,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.058631\"\>",
-ShowStringCharacters->False],
-0.0586311021787147449191976257961865891`19.698970004336015,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.22883\"\>",
-ShowStringCharacters->False],
-0.22883079554864191036503568560228046043`19.698970004336015,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.020142\"\>",
-ShowStringCharacters->False],
-0.0201418412809770127640275316966008545`19.698970004336015,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.15723\"\>",
-ShowStringCharacters->False],
-0.15722934284976367938460593685279855053`19.698970004336026,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.040812\"\>",
-ShowStringCharacters->False],
-0.040812452996434663628983845616370201`19.69897000433602,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.090806\"\>",
-ShowStringCharacters->False],
-0.09080615906349442191734191356818099337`19.69897000433602,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"-0.33491\"\>",
-ShowStringCharacters->False],
--0.33490698928874291638349692389424880605`19.698970004336015,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.017016\"\>",
-ShowStringCharacters->False],
-0.01701622354914658239091813647513802777`19.698970004336026,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.051602\"\>",
-ShowStringCharacters->False],
-0.05160167032127285354209008776872844926`19.698970004336026,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"-0.37258\"\>",
-ShowStringCharacters->False],
--0.37257767063751762473583773731638132598`19.69897000433602,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"1.0000\"\>",
-ShowStringCharacters->False],
-1.`19.698970004336026,
-AutoDelete->True]}], "}"}],
-NumberForm[#, 5]& ]\);
-\[Sigma]low["B+\[Rule]K+\[Tau]\[Tau]"]=\!\(\*
-TagBox[
-RowBox[{"{", 
-RowBox[{
-InterpretationBox[
-StyleBox["\<\"0.0013050\"\>",
-ShowStringCharacters->False],
-0.00130502616649163324789831729799563938`17.969851027011703,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.0010772\"\>",
-ShowStringCharacters->False],
-0.00107722684697032563960045940737180353`17.744202913270925,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.0038506\"\>",
-ShowStringCharacters->False],
-0.00385057811831618233062158891562486667`17.70386629588272,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.00024070\"\>",
-ShowStringCharacters->False],
-0.00024069744852011826171671986496776749`17.56198224987683,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.0019078\"\>",
-ShowStringCharacters->False],
-0.00190776826731233834248967676837093559`17.574151486565775,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.00023528\"\>",
-ShowStringCharacters->False],
-0.00023528461389858911605903657725114646`17.257249535963265,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.00067924\"\>",
-ShowStringCharacters->False],
-0.00067924226299111871758096418399925685`17.36780761381762,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.0019307\"\>",
-ShowStringCharacters->False],
-0.00193074554165182099017430021642261133`17.25724953596326,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.00014741\"\>",
-ShowStringCharacters->False],
-0.00014741437328366211539715147786699679`17.434079222244538,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.00039434\"\>",
-ShowStringCharacters->False],
-0.00039433581669566136145172668942725011`17.378483741758966,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.0027869\"\>",
-ShowStringCharacters->False],
-0.0027869310050525601850700656723029184`17.36780761381762,
-AutoDelete->True], ",", 
-InterpretationBox[
-StyleBox["\<\"0.\"\>",
-ShowStringCharacters->False],
-0``0.0,
-AutoDelete->True]}], "}"}],
-NumberForm[#, 5]& ]\);
+1}/.ind->{3,3,2,3}/.ind\[Gamma]->{2,3};
 
 
-NPContribution$default["B+\[Rule]K+\[Tau]\[Tau]"]=(Mlow["B+\[Rule]K+\[Tau]\[Tau]"] . vecWC["B+\[Rule]K+\[Tau]\[Tau]"]-1)/.WETToLEFT//Chop
+Mlow["B+->K+\[Tau]\[Tau]"]={0.042677,0.058631,0.22883,0.020142,0.15723,0.040812,0.090806,-0.33491,0.017016,0.051602,-0.37258,1.0000};
+\[Sigma]low["B+->K+\[Tau]\[Tau]"]={0.0013050,0.0010772,0.0038506,0.00024070,0.0019078,0.00023528,0.00067924,0.0019307,0.00014741,0.00039434,0.0027869,0.};
+
+
+NPContribution$default["B+->K+\[Tau]\[Tau]"]:=(Mlow["B+->K+\[Tau]\[Tau]"] . vecWC["B+->K+\[Tau]\[Tau]"]-1)/.WETToLEFT/.GetParameters[]//Chop;
 
 
 (* ::Subsection:: *)
 (*B -> K*\[Tau]\[Tau]*)
+
+
+ExpValue$default["B0->K0*\[Tau]\[Tau]"] := Around[0,3.1]*10^-3*CL90to95/2
+
+
+BKst\[Tau]\[Tau]Aux = Around[0.00008685752993621607`,8.059815071523753`*^-6];
+SMPrediction$default["B0->K0*\[Tau]\[Tau]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BKst\[Tau]\[Tau]Aux)/.GetParameters[Errors->True];
+
+
+vecWC["B0->K0*\[Tau]\[Tau]"]={
+Abs[wCL["7",ind\[Gamma]]-wCL["7p",ind\[Gamma]]]^2,Re[(wCL["7",ind\[Gamma]]-wCL["7p",ind\[Gamma]]) (wCL["9",ind]-wCL["9p",ind])],Re[wCL["7",ind\[Gamma]]-wCL["7p",ind\[Gamma]]],
+Abs[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]]^2,Re[(wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]) (wCL["9",ind]+wCL["9p",ind])],Re[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]],
+Abs[wCL["9",ind]-wCL["9p",ind]]^2,Re[(wCL["9",ind]-wCL["9p",ind])],Abs[wCL["9",ind]+wCL["9p",ind]]^2,Re[(wCL["9",ind]+wCL["9p",ind])],
+Abs[wCL["10",ind]-wCL["10p",ind]]^2,Re[(wCL["10",ind]-wCL["10p",ind])(wCL["P",ind]-wCL["Pp",ind])],Re[(wCL["10",ind]-wCL["10p",ind])],
+Abs[wCL["10",ind]+wCL["10p",ind]]^2,Re[(wCL["10",ind]+wCL["10p",ind])],Abs[wCL["S",ind]-wCL["Sp",ind]]^2,Abs[wCL["P",ind]-wCL["Pp",ind]]^2,Re[(wCL["P",ind]-wCL["Pp",ind])],
+1
+}/.ind->{3,3,2,3}/.ind\[Gamma]->{2,3}
+
+
+Mlow["B0->K0*\[Tau]\[Tau]"]={0.2239991353378814`,0.20166956894989807`,0.7301450070314232`,0.06253060500528816`,0.04445169134368732`,0.15152411248859088`,0.04641285151351181`,0.33762161934640134`,0.007992531113793727`,0.05460943550943313`,0.015467923729101812`,0.01708305933879282`,-0.12692978212100947`,0.0010028453100097308`,-0.008229348613939853`,0.0015180859450262697`,0.008618324891073956`,-0.07009179246706694`,1.`};
+\[Sigma]low["B0->K0*\[Tau]\[Tau]"]={0.024765195431317402`,0.01264699404033608`,0.0376454389137068`,0.007816515020742971`,0.00469125626579789`,0.015445662339033873`,0.0009688822371818457`,0.006406885023162325`,0.0008060555501686212`,0.005635237531279601`,0.0005169645043084875`,0.0010798294628409462`,0.004242210722355448`,0.00010874266623710754`,0.0008923423191417047`,0.00010254491888324721`,0.0005504826464761921`,0.004430540286036402`,0.`};
+
+
+NPContribution$default["B0->K0*\[Tau]\[Tau]"]:=(Mlow["B0->K0*\[Tau]\[Tau]"] . vecWC["B0->K0*\[Tau]\[Tau]"]-1)/.WETToLEFT/.GetParameters[]//Chop;
 
 
 (* ::Subsection:: *)
@@ -249,19 +152,29 @@ NPContribution$default["B+\[Rule]K+\[Tau]\[Tau]"]=(Mlow["B+\[Rule]K+\[Tau]\[Tau]
 
 
 (* ::Section:: *)
-(*Subscript[B, s]->ll*)
+(*Bs->ll*)
 
 
 (* ::Subsection:: *)
-(*Subscript[B, s]->\[Mu]\[Mu]*)
+(*Bs->\[Mu]\[Mu]*)
 
 
 (* ::Subsection:: *)
-(*Subscript[B, s]->\[Tau]\[Tau]*)
+(*Bs->\[Tau]\[Tau]*)
+
+
+ExpValue$default["Bs->\[Tau]\[Tau]"] := Around[0,6.8]*10^-3/2;
+
+
+Bs\[Tau]\[Tau]Aux = Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]*Around[2.1516,0.0442]*10^-6;
+SMPrediction$default["Bs->\[Tau]\[Tau]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*Bs\[Tau]\[Tau]Aux)/.GetParameters[Errors->True];
+
+
+NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+0 Mass["s"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+0 Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{3,3,2,3}/.WETToLEFT/.GetParameters[]//Chop;
 
 
 (* ::Section:: *)
-(*Subscript[B, d]->ll*)
+(*Bd->ll*)
 
 
 (* ::Subsection:: *)
