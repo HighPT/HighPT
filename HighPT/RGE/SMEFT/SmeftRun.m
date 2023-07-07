@@ -83,6 +83,8 @@ SMEFTRun[expr_,lowscale_, highscale_]:=Module[
 			Return[DsixToolsToHighPTSMEFT[temp]/.SMEFTSimplify],
 			Message[SMEFTRun::nonnumericscale];Abort[];
 		];,
+		"Off",
+		Return[expr],
 		_,
 		Message[SMEFTRun::undefinedrunningmode,SMEFTRGEMode];Abort[];
 	];

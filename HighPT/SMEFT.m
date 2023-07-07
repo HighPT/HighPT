@@ -138,7 +138,7 @@ WC[\"label\",{\[ScriptR],\[ScriptS]}] Wilson coefficient associated to the two-f
 (*Formatting*)
 
 
-Format[WC[label_,{indices__}],TraditionalForm]:= Module[
+Format[WC[label_,{indices___}],TraditionalForm]:= Module[
 	{num=StringTake[ToString[label],-1]},
 	If[NumericQ[ToExpression[num]],
 		(* w/ exponents *)

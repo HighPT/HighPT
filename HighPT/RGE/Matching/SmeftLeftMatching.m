@@ -518,6 +518,6 @@ Options[MatchToSMEFT]={
 MatchToSMEFT[expr_,OptionsPattern[]]:=
 	If[
 		!OptionValue[SM],
-		expr/.a_WCL:>(TLMatching[a]-(TLMatching[a]/._WC->0))/.SMEFTSimplify,
+		expr/.a_WCL:>(Series[(TLMatching[a]-(TLMatching[a]/._WC->0))/.b_WC->eps*b,{eps,0,1}]//Normal)/.eps->1/.SMEFTSimplify,
 		(*Series[*)expr/.a_WCL->TLMatching[a]/.SMEFTSimplify(*,{Param["vev"],0,2}]//Normal*)
 	];

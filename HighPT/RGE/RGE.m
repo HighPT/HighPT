@@ -67,10 +67,10 @@ GetLEFTRGEMode[]:=LEFTRGEMode
 GetRGEMode[]:=(Print["RGE settings:"];Print["SMEFT: ", GetSMEFTRGEMode[]];Print["LEFT: ", GetLEFTRGEMode[]];);
 
 
-SetRGEMode["SMEFT",x_]:=Switch[x,"LL",SMEFTRGEMode="LL","DsixTools",SMEFTRGEMode="DsixTools",_,Message[SMEFTRun::undefinedrunningmode,x];Abort[]];
+SetRGEMode["SMEFT",x_]:=Switch[x,"LL",SMEFTRGEMode="LL","DsixTools",SMEFTRGEMode="DsixTools","Off",SMEFTRGEMode="Off",_,Message[SMEFTRun::undefinedrunningmode,x];Abort[]];
 
 
-SetRGEMode["LEFT",x_]:=Switch[x,"LL",LEFTRGEMode="LL","DsixTools",LEFTRGEMode="DsixTools",_,Message[LEFTRun::undefinedrunningmode,x];Abort[]];
+SetRGEMode["LEFT",x_]:=Switch[x,"LL",LEFTRGEMode="LL","DsixTools",LEFTRGEMode="DsixTools","Off",LEFTRGEMode="Off",_,Message[LEFTRun::undefinedrunningmode,x];Abort[]];
 
 
 RunRGE[expr_,lowscale_,highscale_]:=SMEFTRun[LEFTRun[expr,lowscale,DsixTools`EWSCALE],DsixTools`EWSCALE,highscale]

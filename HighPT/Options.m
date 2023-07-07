@@ -140,6 +140,7 @@ $OptionValueAssociation= <|
 	\[Delta]g                -> True | False,
 	Running           -> True | False,
 	DimensionlessCoefficients -> True | False,
+	AFBLHC            -> True | False,
 	"\[Alpha]EM"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&)| Default,
 	"GF"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&)| Default,
 	"mZ"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,

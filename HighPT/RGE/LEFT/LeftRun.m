@@ -81,6 +81,8 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 			Return[DsixToolsToHighPTLEFT[temp]],
 			Message[LEFTRun::nonnumericlowscale];Abort[]
 		];,
+		"Off",
+		Return[expr],
 		_,
 		Message[LEFTRun::undefinedrunningmode,LEFTRGEMode];Abort[];
 	];

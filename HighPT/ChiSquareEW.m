@@ -29,6 +29,7 @@ PackageExport["ChiSquareEW"]
 PackageExport["\[Delta]g"]
 PackageExport["Running"]
 PackageExport["DimensionlessCoefficients"]
+PackageExport["AFBLHC"]
 
 
 (* ::Subsection:: *)
@@ -149,6 +150,33 @@ SMEFTPoleMatching = {
 
 
 (* ::Section:: *)
+(*Lifting the flat direction in the light quarks (2103.12074)*)
+
+
+LightQuarkCoeff={\[Delta]gZ[u,Left,{1,1}],\[Delta]gZ[u,Right,{1,1}],\[Delta]gZ[d,Left,{1,1}],\[Delta]gZ[d,Right,{1,1}]};
+
+
+LightQuarkBestFit={
+	{-0.012,0.024},
+	{-0.005,0.032},
+	{-0.020,0.037},
+	{-0.03,0.13}
+};
+
+
+LightQuarkCorrMatrix={
+	{1,0.51,0.68,0.69},
+	{0.51,1,0.56,0.94},
+	{0.68,0.56,1,0.54},
+	{0.69,0.94,0.54,1}
+};
+LightQuarkCovMatrix = Table[LightQuarkCorrMatrix[[i,j]]*LightQuarkBestFit[[i,2]]*LightQuarkBestFit[[j,2]],{i,LightQuarkCoeff//Length},{j,LightQuarkCoeff//Length}];
+
+
+LightQuarkLikelihood = (Transpose[LightQuarkBestFit][[1]]-LightQuarkCoeff) . Inverse[LightQuarkCovMatrix] . (Transpose[LightQuarkBestFit][[1]]-LightQuarkCoeff);
+
+
+(* ::Section:: *)
 (*ChiSquareEW*)
 
 
@@ -158,7 +186,8 @@ Options[ChiSquareEW]={
 	Coefficients -> All,
 	\[Delta]g -> False,
 	Running -> True,
-	DimensionlessCoefficients -> True
+	DimensionlessCoefficients -> True,
+	AFBLHC -> False
 };
 
 
@@ -179,12 +208,14 @@ ChiSquareEW[OptionsPattern[]] := Module[
 	covmatrix,
 	covmatrixsymm,
 	invcovmatrix,
-	obsvector
+	obsvector,
+	lightquarkchi2
 	}
 	,
 	OptionCheck[\[Delta]g,OptionValue[\[Delta]g]];
 	OptionCheck[Running,OptionValue[Running]];
 	OptionCheck[DimensionlessCoefficients,OptionValue[DimensionlessCoefficients]];
+	OptionCheck[AFBLHC,OptionValue[AFBLHC]];
 	Switch[$RunMode,
 		"SMEFT",
 			Switch[OptionValue[Coefficients],
@@ -231,12 +262,13 @@ ChiSquareEW[OptionsPattern[]] := Module[
 			ExpValue[i]["Value"]-(SMPrediction[i]["Value"] + NPContribution[i]),
 			{i,observables}
 		];
+		If[MatchQ[OptionValue[AFBLHC],True],lightquarkchi2=LightQuarkLikelihood,lightquarkchi2=0];
 		If[MatchQ[OptionValue[\[Delta]g],False],
 			If[MatchQ[OptionValue[Running],True],
-				chi2=SMEFTRun[(obsvector . invcovmatrix . obsvector)/.null->0/.Replace\[Delta]g,DsixTools`EWSCALE,OptionValue[EFTscale]]/.wilson/.GetParameters[];,
-				chi2=(obsvector . invcovmatrix . obsvector)/.null->0/.Replace\[Delta]g/.wilson/.GetParameters[];
+				chi2=SMEFTRun[((obsvector . invcovmatrix . obsvector)+lightquarkchi2)/.null->0/.Replace\[Delta]g,DsixTools`EWSCALE,OptionValue[EFTscale]]/.wilson/.GetParameters[];,
+				chi2=((obsvector . invcovmatrix . obsvector)+lightquarkchi2)/.null->0/.Replace\[Delta]g/.wilson/.GetParameters[];
 			],
-			chi2=(obsvector . invcovmatrix . obsvector)/.null->0/.GetParameters[];
+			chi2=((obsvector . invcovmatrix . obsvector)+lightquarkchi2)/.null->0/.GetParameters[];
 		];
 	];
 	If[MatchQ[OptionValue[DimensionlessCoefficients],True],

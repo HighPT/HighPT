@@ -31,7 +31,7 @@ Package["HighPT`"]
 (*Private:*)
 
 
-$\[CapitalDelta]F1Sectors={"b->sll"(*,"b->s\[Nu]\[Nu]","leptonic"*)};
+$\[CapitalDelta]F1Sectors={"b->sll","b->s\[Nu]\[Nu]"(*,"leptonic"*)};
 
 
 FlavorObservables["\[CapitalDelta]F=1"] = FlavorObservables/@$\[CapitalDelta]F1Sectors
@@ -41,6 +41,7 @@ CL90to95=3.09/2.3;
 
 
 C10SM=-4.18869;
+CL\[Nu]SM=2*Around[-6.32,0.07];
 
 
 (* ::Section:: *)
@@ -58,9 +59,11 @@ wCL["9p",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edVLR",{\[Alpha],\[Beta],i,j}]+W
 wCL["10",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edVLL",{\[Alpha],\[Beta],i,j}]+WCL["deVLR",{i,j,\[Alpha],\[Beta]}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
 wCL["10p",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edVLR",{\[Alpha],\[Beta],i,j}]+WCL["edVRR",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
 wCL["S",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Alpha],\[Beta],i,j}]+WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["Sp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"]),
+wCL["Sp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
 wCL["P",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Alpha],\[Beta],i,j}]-WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
-wCL["Pp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"])
+wCL["Pp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["L\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLL",{\[Alpha],\[Beta],i,j}] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["R\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLR",{\[Alpha],\[Beta],i,j}] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"])
 };
 
 
@@ -185,9 +188,33 @@ NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p
 (*b -> s\[Nu]\[Nu]*)
 
 
+FlavorObservables["b->s\[Nu]\[Nu]"] = {"B+->K+\[Nu]\[Nu]","B0->K0*\[Nu]\[Nu]"};
+
+
 (* ::Subsection:: *)
 (*B -> K\[Nu]\[Nu]*)
 
 
+ExpValue$default["B+->K+\[Nu]\[Nu]"] := Around[0,2.6 10^-5]*CL90to95/2;
+
+
+BK\[Nu]\[Nu]Aux = Around[2.87,0.10]*10^-3;
+SMPrediction$default["B+->K+\[Nu]\[Nu]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BK\[Nu]\[Nu]Aux)/.GetParameters[Errors->True];
+
+
+NPContribution$default["B+->K+\[Nu]\[Nu]"] := (Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]/(3Abs[CL\[Nu]SM["Value"]]^2)-1)/.WETToLEFT/.GetParameters[]//Chop;
+
+
 (* ::Subsection:: *)
 (*B -> K*\[Nu]\[Nu]*)
+
+
+ExpValue$default["B0->K0*\[Nu]\[Nu]"] := Around[0,1.8 10^-5]*CL90to95/2;
+
+
+BKst\[Nu]\[Nu]Aux = Around[5.9,0.8]*10^-3;
+SMPrediction$default["B0->K0*\[Nu]\[Nu]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BKst\[Nu]\[Nu]Aux)/.GetParameters[Errors->True];
+
+
+\[Eta]Kst = Around[3.34,0.04];
+NPContribution$default["B0->K0*\[Nu]\[Nu]"] := (1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]-\[Eta]Kst["Value"] 1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Re[(CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}])Conjugate[wCL["R\[Nu]",{i,j,2,3}]]],{i,1,3},{j,1,3}]-1)/.WETToLEFT/.GetParameters[]//Chop;

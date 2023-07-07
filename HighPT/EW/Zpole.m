@@ -98,7 +98,7 @@ NPContribution$default["\[CapitalGamma]Z"]:=((\[CapitalDelta]\[CapitalGamma]Zhad
 (*\[Sigma]had*)
 
 
-ExpValue$default["\[Sigma]had"]:=Around[41.4802,0.0325];
+ExpValue$default["\[Sigma]had"]:=Around[41.4807,0.0325];
 
 
 SMPrediction$default["\[Sigma]had"]:=Around[41.4842,0];
@@ -118,7 +118,7 @@ NPContribution$default["\[Sigma]had"]:=((12\[Pi])/Mass["ZBoson"]^2 (\[CapitalGam
 (*Re*)
 
 
-ExpValue$default["Re"]:=Around[20.804,0.050];
+ExpValue$default["Re"]:=Around[20.8038,0.0497];
 
 
 SMPrediction$default["Re"]:=Around[20.734,0];
@@ -131,7 +131,7 @@ NPContribution$default["Re"]:=(\[CapitalDelta]Re[1](*/.Replace\[Delta]g*)/.GetPa
 (*R\[Mu]*)
 
 
-ExpValue$default["R\[Mu]"]:=Around[20.785,0.033];
+ExpValue$default["R\[Mu]"]:=Around[20.7842,0.0335];
 
 
 SMPrediction$default["R\[Mu]"]:=Around[20.734,0];
@@ -144,7 +144,7 @@ NPContribution$default["R\[Mu]"]:=(\[CapitalDelta]Re[2](*/.Replace\[Delta]g*)/.G
 (*R\[Tau]*)
 
 
-ExpValue$default["R\[Tau]"]:=Around[20.764,0.045];
+ExpValue$default["R\[Tau]"]:=Around[20.7644,0.0448];
 
 
 SMPrediction$default["R\[Tau]"]:=Around[20.781,0];
@@ -395,6 +395,15 @@ NPContribution$default["Ruc"]:=((-3(\[CapitalGamma]ZfSM[u]/(\[CapitalGamma]ZhadS
 
 (* ::Subsection:: *)
 (*Re and AFB0e*)
+
+
+ExpCorrelation["\[CapitalGamma]Z","\[Sigma]had"]:=-0.3249
+ExpCorrelation["\[CapitalGamma]Z","Re"]:=-0.0110
+ExpCorrelation["\[CapitalGamma]Z","R\[Mu]"]:=0.0079
+ExpCorrelation["\[CapitalGamma]Z","R\[Tau]"]:=0.0059
+ExpCorrelation["\[CapitalGamma]Z","AFB0e"]:=0.0071
+ExpCorrelation["\[CapitalGamma]Z","AFB0\[Mu]"]:=0.0020
+ExpCorrelation["\[CapitalGamma]Z","AFB0\[Tau]"]:=0.0013
 
 
 ExpCorrelation["\[Sigma]had","Re"]:=0.105;
