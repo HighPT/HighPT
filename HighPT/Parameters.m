@@ -39,6 +39,9 @@ PackageExport["Param"]
 PackageExport["DefineBasisAlignment"]
 
 
+PackageExport["GetBasisAlignment"]
+
+
 PackageExport["CKM"]
 PackageExport["Vckm"]
 
@@ -96,7 +99,12 @@ Yukawa::usage="Yukawa[\"label\",{i,j}] denotes the {i,j} entry of the Yukawa mat
 (*Returns an association containing all mediator masses and widths*)
 
 
-ReplaceMassWidth[]:= Module[
+Options[ReplaceMassWidth]={
+	Errors -> False
+};
+
+
+ReplaceMassWidth[OptionsPattern[]]:= Module[
 	{
 		mediators= GetMediators[],
 		replacements= <||>
@@ -108,11 +116,14 @@ ReplaceMassWidth[]:= Module[
 		,
 		{med, Keys[mediators]}
 	];
-	Return[replacements]
+	If[MatchQ[OptionValue[Errors],True],
+		Return[replacements],
+		Return[replacements/.Around[a_,b_]->a]
+	];
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*ReplaceConstants*)
 
 
@@ -175,6 +186,12 @@ Format[Vckm[x_,y_], TraditionalForm] := Subscript["V",ToString[x]<>ToString[y]]
 Format[Yukawa[l_,{i_,j_}], TraditionalForm] := Subscript["[Y"<>l<>"]",ToString[i]<>ToString[j]]
 
 
+Format[Param["Wolfenstein\[Lambda]"],TraditionalForm] := "\[Lambda]"
+Format[Param["WolfensteinA"],TraditionalForm] := "A"
+Format[Param["Wolfenstein\[Rho]bar"],TraditionalForm] := OverBar["\[Rho]"]
+Format[Param["Wolfenstein\[Eta]bar"],TraditionalForm] := OverBar["\[Eta]"]
+
+
 (* ::Section:: *)
 (*Experimental Inputs*)
 
@@ -209,10 +226,10 @@ mH$default = Around[125.25,0.17];
 (*CKM input*)
 
 
-\[Lambda]Wolfenstein$default    = Around[0.2233,0.0007];
-AWolfenstein$default    = Around[0.812,0.009];
-\[Rho]BarWolfenstein$default = Around[0.153,0.029];
-\[Eta]BarWolfenstein$default = Around[0.393,0.023];
+\[Lambda]Wolfenstein$default    = Around[0.2217,0.0009];
+AWolfenstein$default    = Around[0.822,0.009];
+\[Rho]BarWolfenstein$default = Around[0.154,0.030];
+\[Eta]BarWolfenstein$default = Around[0.396,0.023];
 
 Wolfenstein$default = {
 	\[Lambda]Wolfenstein$default,
@@ -368,6 +385,15 @@ mBc$current = mBc$default;
 (*Define alignment of mass basis and flavor basis*)
 
 
+BasisAlignment$default = "down";
+
+
+BasisAlignment$current = BasisAlignment$default;
+
+
+GetBasisAlignment[] := BasisAlignment$current
+
+
 DefineBasisAlignment::usage=
 "DefineBasisAlignment[\"down\"] specifies to work in the down-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\)\[ConjugateTranspose]. The left-handed rotation matrices are defined by \!\(\*SuperscriptBox[SubscriptBox[\(d\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(d\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(d\), \(j\)], \(weak\)]\) and \!\(\*SuperscriptBox[SubscriptBox[\(u\), \(i\)], \(mass\)]\)=[\!\(\*SubscriptBox[\(V\), \(u\)]\)\!\(\*SubscriptBox[\(]\), \(ij\)]\)\!\(\*SuperscriptBox[SubscriptBox[\(u\), \(j\)], \(weak\)]\), respectively. Down-alignment is the default choice.
 DefineBasisAlignment[\"up\"] specifies to work in the up-aligned basis, where \!\(\*SubscriptBox[\(V\), \(d\)]\)=\!\(\*SubscriptBox[\(V\), \(CKM\)]\) and \!\(\*SubscriptBox[\(V\), \(u\)]\)=\!\(\*SubscriptBox[\(1\), \(3  x3\)]\).
@@ -381,7 +407,11 @@ DefineBasisAlignment[matrix] sets the rotation matrix for left-handed down-type 
 DefineBasisAlignment[] := DefineBasisAlignment["down"]
 
 
+DefineBasisAlignment[Default] := DefineBasisAlignment["down"]
+
+
 DefineBasisAlignment["down"] := Module[{},
+	BasisAlignment$current = "down";
 	(* set the new Vd matrix*)
 	Vd = DiagonalMatrix[{1,1,1}];
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
@@ -398,6 +428,7 @@ DefineBasisAlignment["down"] := Module[{},
 
 
 DefineBasisAlignment["up"] := Module[{},
+	BasisAlignment$current = "up";
 	(* set the new Vd matrix*)
 	Vu = DiagonalMatrix[{1,1,1}];
 	(* define Vu matrix such that CKM=Vu\[ConjugateTranspose].Vd *)
@@ -422,6 +453,7 @@ DefineBasisAlignment::invalidarg="The argument `1` is not a 3x3 matrix."
 (* function that defines a down aligned basis  *)
 DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 	(* check unitarity *)
+	BasisAlignment$current = "custom";
 	If[!UnitaryMatrixQ[matrix/.GetParameters[], Tolerance->10^-2],
 		Message[DefineBasisAlignment::notunitary]
 	];
@@ -632,7 +664,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	$g3 = Sqrt[4\[Pi] $\[Alpha]S];
 	$\[Lambda]H = $mH^2/$vev^2;
 	
-	$ckmrep={
+	(*$ckmrep={
 		Vckm[1,1] -> 1-$\[Lambda]^2/2,
 		Vckm[1,2] -> $\[Lambda],
 		Vckm[1,3] -> $A * $\[Lambda]^3 * ($\[Rho] - I*$\[Eta]),
@@ -642,7 +674,8 @@ DefineParameters[OptionsPattern[]] := Module[
 		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
 		Vckm[3,3] -> 1
-		};
+		};*)
+	$ckmrep=WolfensteinParametrization[$\[Lambda],$A,$\[Rho],$\[Eta]];
 	$Yu = ((Sqrt[2]/$vev*DiagonalMatrix[{$mu,$mc,$mt}]) . Vu)/.$ckmrep;
 	$Yd = ((Sqrt[2]/$vev*DiagonalMatrix[{$md,$md,$mb}]) . Vd)/.$ckmrep;
 	$Ye = Sqrt[2]/$vev*DiagonalMatrix[{$me,$m\[Mu],$m\[Tau]}];
@@ -676,7 +709,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	(* Modify all masses and widths *)
 	ModifyMediator[Mediators->mediators$current];
 	
-	(* Create the appropriate supstitution rule *)
+	(* Create the appropriate substitution rule *)
 	ExperimentalParameters = <|
 		Param["\[Alpha]EM"] -> $\[Alpha]EM,
 		Param["GF"]  -> $GF,
@@ -700,6 +733,12 @@ DefineParameters[OptionsPattern[]] := Module[
 		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
 		Vckm[3,3] -> 1,
+		
+		(* Wolfenstein *)
+		Param["Wolfenstein\[Lambda]"]    -> $\[Lambda],
+		Param["WolfensteinA"]    -> $A,
+		Param["Wolfenstein\[Rho]bar"] -> $\[Rho],
+		Param["Wolfenstein\[Eta]bar"] -> $\[Eta],
 		
 		(* Yukawas *)
 		Yukawa["u",{1,1}] -> $Yu[[1,1]],

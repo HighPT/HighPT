@@ -70,6 +70,10 @@ PackageScope["LowScale"]
 PackageScope["FlavorOptionCheck"]
 
 
+PackageScope["InputDependence"]
+PackageScope["NumericalInput"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -107,6 +111,9 @@ Obs[label_] := <|
 SM: "<>SMInfo[label]<>"
 NP: "<>NPInfo[label]
 	|>
+
+
+SMPrediction$default[obs_]:=InputDependence[obs]*NumericalInput[obs]/.GetParameters[Errors->True]
 
 
 (* ::Section:: *)
@@ -176,7 +183,7 @@ ChangeFlavorObservable[obs_,OptionsPattern[]] := Module[
 		];
 	];
 	If[!MatchQ[NP,"current"],
-		var=Variables[NP/.Re->Identity/.Abs->Identity/.LEFTSimplify/.Conjugate[a_]->a];
+		var=Variables[NP/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
 		(*Print[var];
 		Print[(Head/@var)//DeleteDuplicates];*)
 		If[MatchQ[(Head/@var)//DeleteDuplicates,{WCL}],

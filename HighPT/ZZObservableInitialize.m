@@ -35,3 +35,9 @@ RestoreFlavorObservables[];
 
 
 RestoreEWObservables[];
+
+
+RestoreHiggsObservables[];
+
+
+DefineRedefinitions[Default];

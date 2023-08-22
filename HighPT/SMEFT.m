@@ -176,28 +176,10 @@ WC[x_,{f1_[a_],f2_[b_]}] := WC[x,{a,b}]
 
 
 (* ::Subsection:: *)
-(*Hermitian WC*)
+(*WC classes*)
 
 
-HermitianWC4= Alternatives[
-	(* Psi^4 *)
-	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
-	(* Psi^4 H^2 *)
-	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
-	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
-	"e2q2H21","e2q2H22",
-	"e2u2H2", "e2d2H2",
-	(* Psi^4 D^2 *)
-	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
-	"l2u2D21","l2u2D22",
-	"l2d2D21","l2d2D22",
-	"e2q2D21","e2q2D22",
-	"e2u2D21","e2u2D22",
-	"e2d2D21","e2d2D22"
-];
-
-
-HermitianWC2= Alternatives[
+class2WC= Alternatives[
 	(* Psi^2 H^2 D *)
 	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
 	(* Psi^2 H^4 D *)
@@ -213,35 +195,153 @@ HermitianWC2= Alternatives[
 ];
 
 
+class6WC= Alternatives[
+	"ll","qq1","qq3","uu","dd"
+];
+
+
+class7WC= Alternatives[
+	(* Psi^4 *)
+	"le",
+	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
+	"ud1","ud8","qu1","qu8","qd1","qd8",
+	(* Psi^4 H^2 *)
+	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
+	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
+	"e2q2H21","e2q2H22",
+	"e2u2H2", "e2d2H2",
+	(* Psi^4 D^2 *)
+	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
+	"l2u2D21","l2u2D22",
+	"l2d2D21","l2d2D22",
+	"e2q2D21","e2q2D22",
+	"e2u2D21","e2u2D22",
+	"e2d2D21","e2d2D22"
+];
+
+
+class8WC= Alternatives[
+	"ee"
+];
+
+
 (* ::Subsubsection:: *)
 (*Index relabeling redundancies*)
 
 
 (* ::Text:: *)
-(*4 fermion operators*)
+(*2 fermion operators -class 2*)
 
 
-WC[herm:HermitianWC4,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[herm,{b,a,j,i}]\[Conjugate] /; a>b
-
-
-WC[herm:HermitianWC4,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[herm,{b,a,j,i}]\[Conjugate] /; (a==b && i>j)
+WC[lab:class2WC,{p_Integer,r_Integer}]:= WC[lab,{r,p}]\[Conjugate] /; p>r
 
 
 (* ::Text:: *)
-(*2 fermion operators*)
+(*4 fermion operators - class 6*)
 
 
-WC[herm:HermitianWC2,{p_Integer,r_Integer}]:= WC[herm,{r,p}]\[Conjugate] /; p>r
+WC[lab:class6WC,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[lab,{i,j,a,b}] /; ((a<b && i<j && (a>i || b>j)) || (a==b && i<j && a>i) || (a>b && i<j && a>=j) || (a<b && i==j && a>=i && b>j) || (a==b && i==j && a>i))
+
+
+WC[lab:class6WC,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[lab,{b,a,j,i}]\[Conjugate] /; ((a>b && i<j && (a<j || b<i)) || (a>b && i==j && a<=i) || (a==b && i>j && a<i) || (a>b && i>j && a<=i))
+
+
+WC[lab:class6WC,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[lab,{j,i,b,a}]\[Conjugate] /; ((a>b && i==j && a>i) || (a<b && i>j && (b>i || a>j)) || (a==b && i>j && a>=i) || (a>b && i>j && a>i))
+
+
+(* ::Text:: *)
+(*4 fermion operators - class 7*)
+
+
+WC[lab:class7WC,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[lab,{b,a,j,i}]\[Conjugate] /; a>b
+
+
+WC[lab:class7WC,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[lab,{b,a,j,i}]\[Conjugate] /; (a==b && i>j)
+
+
+(* ::Text:: *)
+(*4 fermion operators - class 8*)
+
+
+WC[lab:class8WC,{1,1,2,1}]:=Conjugate[WC[lab,{1,1,1,2}]]
+WC[lab:class8WC,{1,1,3,1}]:=Conjugate[WC[lab,{1,1,1,3}]]
+WC[lab:class8WC,{1,1,3,2}]:=Conjugate[WC[lab,{1,1,2,3}]]
+WC[lab:class8WC,{1,2,1,1}]:=WC[lab,{1,1,1,2}]
+WC[lab:class8WC,{1,2,2,1}]:=WC[lab,{1,1,2,2}]
+WC[lab:class8WC,{1,2,3,1}]:=Conjugate[WC[lab,{1,1,2,3}]]
+WC[lab:class8WC,{1,3,1,1}]:=WC[lab,{1,1,1,3}]
+WC[lab:class8WC,{1,3,1,2}]:=WC[lab,{1,2,1,3}]
+WC[lab:class8WC,{1,3,2,1}]:=WC[lab,{1,1,2,3}]
+WC[lab:class8WC,{1,3,2,2}]:=WC[lab,{1,2,2,3}]
+WC[lab:class8WC,{1,3,3,1}]:=WC[lab,{1,1,3,3}]
+WC[lab:class8WC,{1,3,3,2}]:=WC[lab,{1,2,3,3}]
+WC[lab:class8WC,{2,1,1,1}]:=Conjugate[WC[lab,{1,1,1,2}]]
+WC[lab:class8WC,{2,1,1,2}]:=WC[lab,{1,1,2,2}]
+WC[lab:class8WC,{2,1,1,3}]:=WC[lab,{1,1,2,3}]
+WC[lab:class8WC,{2,1,2,1}]:=Conjugate[WC[lab,{1,2,1,2}]]
+WC[lab:class8WC,{2,1,2,2}]:=Conjugate[WC[lab,{1,2,2,2}]]
+WC[lab:class8WC,{2,1,2,3}]:=Conjugate[WC[lab,{1,2,3,2}]]
+WC[lab:class8WC,{2,1,3,1}]:=Conjugate[WC[lab,{1,2,1,3}]]
+WC[lab:class8WC,{2,1,3,2}]:=Conjugate[WC[lab,{1,2,2,3}]]
+WC[lab:class8WC,{2,1,3,3}]:=Conjugate[WC[lab,{1,2,3,3}]]
+WC[lab:class8WC,{2,2,1,1}]:=WC[lab,{1,1,2,2}]
+WC[lab:class8WC,{2,2,1,2}]:=WC[lab,{1,2,2,2}]
+WC[lab:class8WC,{2,2,1,3}]:=WC[lab,{1,2,2,3}]
+WC[lab:class8WC,{2,2,2,1}]:=Conjugate[WC[lab,{1,2,2,2}]]
+WC[lab:class8WC,{2,2,3,1}]:=Conjugate[WC[lab,{1,2,2,3}]]
+WC[lab:class8WC,{2,2,3,2}]:=Conjugate[WC[lab,{2,2,2,3}]]
+WC[lab:class8WC,{2,3,1,1}]:=WC[lab,{1,1,2,3}]
+WC[lab:class8WC,{2,3,1,2}]:=WC[lab,{1,2,2,3}]
+WC[lab:class8WC,{2,3,1,3}]:=WC[lab,{1,3,2,3}]
+WC[lab:class8WC,{2,3,2,1}]:=Conjugate[WC[lab,{1,2,3,2}]]
+WC[lab:class8WC,{2,3,2,2}]:=WC[lab,{2,2,2,3}]
+WC[lab:class8WC,{2,3,3,1}]:=Conjugate[WC[lab,{1,2,3,3}]]
+WC[lab:class8WC,{2,3,3,2}]:=WC[lab,{2,2,3,3}]
+WC[lab:class8WC,{3,1,1,1}]:=Conjugate[WC[lab,{1,1,1,3}]]
+WC[lab:class8WC,{3,1,1,2}]:=Conjugate[WC[lab,{1,1,2,3}]]
+WC[lab:class8WC,{3,1,1,3}]:=WC[lab,{1,1,3,3}]
+WC[lab:class8WC,{3,1,2,1}]:=Conjugate[WC[lab,{1,2,1,3}]]
+WC[lab:class8WC,{3,1,2,2}]:=Conjugate[WC[lab,{1,2,2,3}]]
+WC[lab:class8WC,{3,1,2,3}]:=Conjugate[WC[lab,{1,2,3,3}]]
+WC[lab:class8WC,{3,1,3,1}]:=Conjugate[WC[lab,{1,3,1,3}]]
+WC[lab:class8WC,{3,1,3,2}]:=Conjugate[WC[lab,{1,3,2,3}]]
+WC[lab:class8WC,{3,1,3,3}]:=Conjugate[WC[lab,{1,3,3,3}]]
+WC[lab:class8WC,{3,2,1,1}]:=Conjugate[WC[lab,{1,1,2,3}]]
+WC[lab:class8WC,{3,2,1,2}]:=WC[lab,{1,2,3,2}]
+WC[lab:class8WC,{3,2,1,3}]:=WC[lab,{1,2,3,3}]
+WC[lab:class8WC,{3,2,2,1}]:=Conjugate[WC[lab,{1,2,2,3}]]
+WC[lab:class8WC,{3,2,2,2}]:=Conjugate[WC[lab,{2,2,2,3}]]
+WC[lab:class8WC,{3,2,2,3}]:=WC[lab,{2,2,3,3}]
+WC[lab:class8WC,{3,2,3,1}]:=Conjugate[WC[lab,{1,3,2,3}]]
+WC[lab:class8WC,{3,2,3,2}]:=Conjugate[WC[lab,{2,3,2,3}]]
+WC[lab:class8WC,{3,2,3,3}]:=Conjugate[WC[lab,{2,3,3,3}]]
+WC[lab:class8WC,{3,3,1,1}]:=WC[lab,{1,1,3,3}]
+WC[lab:class8WC,{3,3,1,2}]:=WC[lab,{1,2,3,3}]
+WC[lab:class8WC,{3,3,1,3}]:=WC[lab,{1,3,3,3}]
+WC[lab:class8WC,{3,3,2,1}]:=Conjugate[WC[lab,{1,2,3,3}]]
+WC[lab:class8WC,{3,3,2,2}]:=WC[lab,{2,2,3,3}]
+WC[lab:class8WC,{3,3,2,3}]:=WC[lab,{2,3,3,3}]
+WC[lab:class8WC,{3,3,3,1}]:=Conjugate[WC[lab,{1,3,3,3}]]
+WC[lab:class8WC,{3,3,3,2}]:=Conjugate[WC[lab,{2,3,3,3}]]
 
 
 (* ::Subsubsection:: *)
-(*Real coefficients on diagonal*)
+(*Real coefficients*)
 
 
-WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[herm,{a,a,i,i}]
+WC/:Conjugate[WC[lab:class2WC,{p_Integer,p_Integer}]]:= WC[lab,{p,p}]
 
 
-WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
+WC/:Conjugate[WC[lab:class6WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}] /; a<=i
+
+
+WC/:Conjugate[WC[lab:class6WC,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= WC[lab,{a,i,i,a}] /; a<i
+
+
+WC/:Conjugate[WC[lab:class7WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}]
+
+
+WC/:Conjugate[WC[lab:class8WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}]
 
 
 (* ::Subsection:: *)
@@ -619,7 +719,7 @@ gZ[particle_, chirality_,{p_,r_}]:= Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["sW
 \[CapitalDelta]gZu[Right, \[Epsilon]_, {i_,j_}]:= - Sqrt[\[Pi]*Param["\[Alpha]EM"]]/(Param["sW"]*Param["cW"]) * \[Epsilon] * WC["Hu",{i,j}]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*W boson*)
 
 

@@ -41177,6 +41177,9 @@ LEFTAD[WCL["\[Nu]uVLR", {3, 3, 2, 2}]] =
     (512*Pi*Conjugate[WCL["\[Nu]\[Gamma]", {2, 3}]]*Param["\[Alpha]EM"]*
       WCL["\[Nu]\[Gamma]", {2, 3}])/3
  
+LEFTAD[-WCL["\[Nu]\[Gamma]", {1, 2}]] = DsixTools`\[Beta][
+    -WCL["\[Nu]\[Gamma]", {1, 2}]]
+ 
 LEFTAD[WCL["\[Nu]\[Gamma]", {1, 2}]] = 
    16*Sqrt[Pi]*Conjugate[WCL["d\[Gamma]", {3, 3}]]*Mass["b"]*
      Sqrt[Param["\[Alpha]EM"]]*WCL["\[Nu]\[Gamma]", {1, 2}] - 
@@ -41212,6 +41215,9 @@ LEFTAD[WCL["\[Nu]\[Gamma]", {1, 2}]] =
      Sqrt[Param["\[Alpha]EM"]]*WCL["u\[Gamma]", {2, 2}]*
      WCL["\[Nu]\[Gamma]", {1, 2}]
  
+LEFTAD[-WCL["\[Nu]\[Gamma]", {1, 3}]] = DsixTools`\[Beta][
+    -WCL["\[Nu]\[Gamma]", {1, 3}]]
+ 
 LEFTAD[WCL["\[Nu]\[Gamma]", {1, 3}]] = 
    16*Sqrt[Pi]*Conjugate[WCL["d\[Gamma]", {3, 3}]]*Mass["b"]*
      Sqrt[Param["\[Alpha]EM"]]*WCL["\[Nu]\[Gamma]", {1, 3}] - 
@@ -41246,6 +41252,9 @@ LEFTAD[WCL["\[Nu]\[Gamma]", {1, 3}]] =
      WCL["\[Nu]\[Gamma]", {1, 3}] - 32*Sqrt[Pi]*Mass["c"]*
      Sqrt[Param["\[Alpha]EM"]]*WCL["u\[Gamma]", {2, 2}]*
      WCL["\[Nu]\[Gamma]", {1, 3}]
+ 
+LEFTAD[-WCL["\[Nu]\[Gamma]", {2, 3}]] = DsixTools`\[Beta][
+    -WCL["\[Nu]\[Gamma]", {2, 3}]]
  
 LEFTAD[WCL["\[Nu]\[Gamma]", {2, 3}]] = 
    16*Sqrt[Pi]*Conjugate[WCL["d\[Gamma]", {3, 3}]]*Mass["b"]*

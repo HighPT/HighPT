@@ -149,7 +149,7 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 		];
 	];
 	If[!MatchQ[NP,"current"],
-		var=Variables[NP/.Re->Identity/.Abs->Identity/.SMEFTSimplify/.Conjugate[a_]->a];
+		var=Variables[NP/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
 		(*Print[var];
 		Print[(Head/@var)//DeleteDuplicates];*)
 		If[SubsetQ[{\[Delta]gZ,\[Delta]gW,\[Delta]mW(*,WC*)},(Head/@var)//DeleteDuplicates]||MatchQ[(Head/@var)//DeleteDuplicates,{WC}],
@@ -178,7 +178,7 @@ RestoreEWObservables[FCCee]:=ChangeEWObservable[#,FCCee]& /@ (EWObservables[]//F
 (*Replace \[Delta]gs*)
 
 
-\[Delta]U[f_,chir_]:=-Param["vev"]^2(WeakIsospin3[f,chir]+Charge[f] Param["g1"]^2/(Param["g2"]^2-Param["g1"]^2))(1/4 WC["HD",{}]+1/2 WC["Hl3",{2,2}]+1/2 WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}])-Param["vev"]^2 Charge[f] (Param["g1"]Param["g2"])/(Param["g2"]^2-Param["g1"]^2) WC["HWB",{}]
+\[Delta]U[f_,chir_]:=-Param["vev"]^2(WeakIsospin3[f,chir]+Charge[f] Param["g1"]^2/(Param["g2"]^2-Param["g1"]^2))(1/4 WC["HD",{}]+1/2 WC["Hl3",{2,2}]+1/2 WC["Hl3",{1,1}]-1/4 WC["ll",{1,2,2,1}])-Param["vev"]^2 Charge[f] (Param["g1"]Param["g2"])/(Param["g2"]^2-Param["g1"]^2) WC["HWB",{}]
 
 
 Replace\[Delta]g={

@@ -168,7 +168,7 @@ FlavorObservables["b->c"] = {
 
 
 (* \[Mu]b = 5 GeV *)
-LowScale[Alternatives@@(FlavorObservables["b->c"]//Flatten)] = 5;
+LowScale[Alternatives@@(FlavorObservables["b->c"]//Flatten)] := Mass["b"]/.GetParameters[];
 
 
 (* ::Subsection:: *)

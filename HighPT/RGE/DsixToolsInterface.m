@@ -120,6 +120,8 @@ SMEFTMap = {
 
 
 LEFTMap = {
+	{"G",DsixTools`LG},
+	{"Gt",DsixTools`LGtilde},
 	(*{"\[Nu]",DsixTools`L},*)
 	{"\[Nu]\[Gamma]",DsixTools`L\[Nu]\[Gamma]},
 	{"e\[Gamma]",DsixTools`Le\[Gamma]},
@@ -127,8 +129,6 @@ LEFTMap = {
 	{"d\[Gamma]",DsixTools`Ld\[Gamma]},
 	{"uG",DsixTools`LuG},
 	{"dG",DsixTools`LdG},
-	{"G",DsixTools`LG},
-	{"Gt",DsixTools`LGtilde},
 	{"\[Nu]\[Nu]VLL",DsixTools`L\[Nu]\[Nu]VLL},
 	{"eeVLL",DsixTools`LeeVLL},
 	{"\[Nu]eVLL",DsixTools`L\[Nu]eVLL},
@@ -199,20 +199,22 @@ LEFTMap = {
 DsixToolsToHighPTSMEFTAss = <| (#1[[2]]->#1[[1]])&/@SMEFTMap |>
 
 
-DsixToolsToHighPTSMEFT::missingcoefficient = "The mapping  of `1` to the HighPT notation is not known"(*. The coefficient will be set to zero"*);
+(*DsixToolsToHighPTSMEFT::missingcoefficient = "The mapping  of `1` to the HighPT notation is not known"(*. The coefficient will be set to zero"*);*)
 
 
-DsixToolsToHighPTSMEFT::nocoefficients = "No SMEFT coefficients found.";
+(*DsixToolsToHighPTSMEFT::nocoefficients = "No SMEFT coefficients found.";*)
 
 
-DsixToolsToHighPTSMEFT[expr_] := Module[
+(*DsixToolsToHighPTSMEFT[expr_] := Module[
 	{
 	var,
-	repl
+	repl,
+	tmp
 	}
 	,
+	tmp=DsixToolsToHighPTSM[expr];
 	(*Print[Variables[(expr(*//DsixTools`D6Simplify*))/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a]];*)
-	var=Select[Variables[(expr(*//DsixTools`D6Simplify*))/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`SMEFTParameterList[],#] &];
+	var=Select[Variables[Variables[tmp(*//DsixTools`D6Simplify*)]/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`SMEFTParameterList[],#] &];
 	(*Print[var];*)
 	repl={};
 	Do[
@@ -232,8 +234,28 @@ DsixToolsToHighPTSMEFT[expr_] := Module[
 		{i,var}
 	];
 	If[Length[repl]==0,Message[DsixToolsToHighPTSMEFT::nocoefficients],0];
-	Return[(expr(*//DsixTools`D6Simplify*))/.repl/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]]
+	Return[(tmp(*//DsixTools`D6Simplify*))/.repl/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]]
+];*)
+
+
+DsixToolsToHighPTSMEFTDispatch = Dispatch[{
+	Table[
+		SMEFTMap[[i,2]]->WC[SMEFTMap[[i,1]],{}],
+		{i,1,15}
+	],
+	Table[
+		SMEFTMap[[i,2]][a_,b_]->WC[SMEFTMap[[i,1]],{a,b}],
+		{i,16,34}
+	],
+	Table[
+		SMEFTMap[[i,2]][a_,b_,c_,f_]->WC[SMEFTMap[[i,1]],{a,b,c,f}],
+		{i,35,59}
+	]
+	}//Flatten
 ];
+
+
+DsixToolsToHighPTSMEFT[expr_]:=DsixToolsToHighPTSM[expr]/.DsixToolsToHighPTSMEFTDispatch/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]
 
 
 (* ::Subsection:: *)
@@ -243,19 +265,21 @@ DsixToolsToHighPTSMEFT[expr_] := Module[
 DsixToolsToHighPTLEFTAss = <| (#1[[2]]->#1[[1]])&/@LEFTMap |>
 
 
-DsixToolsToHighPTLEFT::missingcoefficient = "The mapping  of `1` to the HighPT notation is not known"(*. The coefficient will be set to zero"*);
+(*DsixToolsToHighPTLEFT::missingcoefficient = "The mapping  of `1` to the HighPT notation is not known"(*. The coefficient will be set to zero"*);*)
 
 
-DsixToolsToHighPTLEFT::nocoefficients = "No LEFT coefficients found.";
+(*DsixToolsToHighPTLEFT::nocoefficients = "No LEFT coefficients found.";*)
 
 
-DsixToolsToHighPTLEFT[expr_] := Module[
+(*DsixToolsToHighPTLEFT[expr_] := Module[
 	{
 	var,
-	repl
+	repl,
+	tmp
 	}
 	,
-	var=Select[Variables[(expr(*//DsixTools`D6Simplify*))/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a],MemberQ[DsixTools`LEFTParameterList[],#] &];
+	tmp=DsixToolsToHighPTSM[expr];
+	var=Select[(Variables[(tmp(*//DsixTools`D6Simplify*))/.Re->Identity/.Abs->Identity]/.Conjugate[a_]->a)//DeleteDuplicates,MemberQ[DsixTools`LEFTParameterList[],#] &];
 	repl={};
 	Do[
 		If[
@@ -274,8 +298,28 @@ DsixToolsToHighPTLEFT[expr_] := Module[
 		{i,var}
 	];
 	If[Length[repl]==0,Message[DsixToolsToHighPTLEFT::nocoefficients],0];
-	Return[(expr(*//DsixTools`D6Simplify*))/.repl]
+	Return[(tmp(*//DsixTools`D6Simplify*))/.repl]
+];*)
+
+
+DsixToolsToHighPTLEFTDispatch = Dispatch[{
+	Table[
+		LEFTMap[[i,2]]->WCL[LEFTMap[[i,1]],{}],
+		{i,1,2}
+	],
+	Table[
+		LEFTMap[[i,2]][a_,b_]->WCL[LEFTMap[[i,1]],{a,b}],
+		{i,3,8}
+	],
+	Table[
+		LEFTMap[[i,2]][a_,b_,c_,f_]->WCL[LEFTMap[[i,1]],{a,b,c,f}],
+		{i,9,64}
+	]
+	}//Flatten
 ];
+
+
+DsixToolsToHighPTLEFT[expr_]:=DsixToolsToHighPTSM[expr]/.DsixToolsToHighPTLEFTDispatch
 
 
 (* ::Subsection:: *)
@@ -287,7 +331,15 @@ DsixToolsToHighPTSM[expr_]:=expr/.{
 	DsixTools`g->Param["g2"],
 	DsixTools`gp->Param["g1"],
 	DsixTools`m2->Mass["H"]^2,
-	DsixTools`\[Lambda]->Param["\[Lambda]"]
+	DsixTools`\[Lambda]->Param["\[Lambda]"],
+	DsixTools`Gu[i_,j_]:>Yukawa["u",{i,j}],
+	DsixTools`Gd[i_,j_]:>Yukawa["d",{i,j}],
+	DsixTools`Ge[i_,j_]:>Yukawa["e",{i,j}],
+	DsixTools`eQED:>Sqrt[4\[Pi] Param["\[Alpha]EM"]],
+	DsixTools`gQCD:>Sqrt[4\[Pi] Param["\[Alpha]S"]],
+	DsixTools`Md[i_,j_]:>DiagonalMatrix[{Mass["d"],Mass["s"],Mass["b"]}][[i,j]],
+	DsixTools`Me[i_,j_]:>DiagonalMatrix[{Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]}][[i,j]],
+	DsixTools`Mu[i_,j_]:>DiagonalMatrix[{Mass["u"],Mass["c"],Mass["t"]}][[i,j]]
 	}
 
 

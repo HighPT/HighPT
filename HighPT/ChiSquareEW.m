@@ -40,7 +40,7 @@ PackageExport["AFBLHC"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Stuff from 2103.12074*)
 
 
@@ -124,7 +124,7 @@ PoleCovMatrix = Table[PoleCorrMatrix[[i,j]]*PoleBestFit[[i,2]]*PoleBestFit[[j,2]
 PoleLikelihood = (Transpose[PoleBestFit][[1]]-PoleCoeff) . Inverse[PoleCovMatrix] . (Transpose[PoleBestFit][[1]]-PoleCoeff);
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Matching 2103.12074 to our notation*)
 
 
@@ -149,7 +149,7 @@ SMEFTPoleMatching = {
 };
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Lifting the flat direction in the light quarks (2103.12074)*)
 
 
@@ -197,7 +197,7 @@ ChiSquareEW::undefinedmode="Run mode undefined. Something went very wrong..."
 ChiSquareEW::emptyobs="No observables selected"
 ChiSquareEW::noobs="No individual observables can be selected as of now. The only valid option for Observables is All."
 ChiSquareEW::invalidobs="The observables `1` are not implemented or don't exist"
-ChiSquareEW::invalidinput="Invalid input for Obs"
+ChiSquareEW::invalidinput="Invalid input for Observables"
 
 
 ChiSquareEW[OptionsPattern[]] := Module[
@@ -222,13 +222,13 @@ ChiSquareEW[OptionsPattern[]] := Module[
 				All,
 					wilson = Except[Alternatives@@(WC[#,_]&/@GetAllWC),WC[___]]->0,
 				{Rule[_,_]..},
-					wilson = Append[OptionValue[WC],WC[___]->0],
+					wilson = Append[OptionValue[Coefficients],WC[___]->0],
 				{WC[___]..},
 					wilson = Except[Alternatives@@OptionValue[Coefficients],WC[___]]->0,
 				{},
 					wilson = {WC[___]->0},
 				__,
-					Message[Chi2EW::invalidwc,OptionValue[WC]];Abort[]	
+					Message[ChiSquareEW::invalidwc,OptionValue[Coefficients]];Abort[]	
 			],
 		"Model",
 			Message[ChiSquareEW::nomodel];Abort[],
@@ -250,13 +250,10 @@ ChiSquareEW[OptionsPattern[]] := Module[
 			]
 	];
 	If[!MatchQ[OptionValue[Observables],All],
-		(*Print["Computing EW observables individually!"];
-		Print["Observables selected: ", observables];*)
 		covmatrix=Table[
 			ExpCov[i,j]+THCov[i,j],
 			{i,observables},{j,observables}];
 		covmatrixsymm=covmatrix+Transpose[covmatrix]-DiagonalMatrix[Diagonal[covmatrix]];
-		(*Print[covmatrixsymm];*)
 		invcovmatrix=Inverse[covmatrixsymm];
 		obsvector=Table[
 			ExpValue[i]["Value"]-(SMPrediction[i]["Value"] + NPContribution[i]),

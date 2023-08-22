@@ -33,7 +33,7 @@ PackageExport["LEFTRun"]
 PackageScope["LEFTAD"]
 
 
-PackageScope["LEFTSimplify"]
+(*PackageScope["LEFTSimplify"]*)
 
 
 (* ::Chapter:: *)
@@ -52,7 +52,7 @@ PackageScope["LEFTSimplify"]
 Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","LEFT","LEFTAD.dat"}];
 
 
-LEFTSimplify=Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","Simplifications","LEFTSimplify.dat"}];
+(*LEFTSimplify=Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","Simplifications","LEFTSimplify.dat"}];*)
 
 
 LEFTRun::undefinedrunningmode= "The mode `1` is not defined for LEFT Running.";
@@ -61,24 +61,34 @@ LEFTRun::undefinedrunningmode= "The mode `1` is not defined for LEFT Running.";
 LEFTRun::nonnumericlowscale = "In \"DsixTools\" running mode lowscale must be a number"
 
 
+LEFTRun::nocoefficients="No LEFT coefficients found"
+
+
 LEFTRun[expr_,lowscale_,highscale_]:=Module[
 	{
 		params,
-		temp
+		evolution,
+		mode
 	}
 	,
+	If[lowscale>=DsixTools`EWSCALE,Return@expr];
+	mode=GetLEFTRGEMode[];
 	Switch[
-		LEFTRGEMode,
+		mode,
 		"LL",
 		Return[expr/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])],
 		"DsixTools",
 		If[NumericQ[lowscale],
-			temp=(HighPTToDsixToolsLEFT[expr])//DsixTools`D6Simplify;
-			params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
-			temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];
-			(*temp=temp/.DsixTools`MatchAnalytical/.DsixTools`LoopParameter->DsixTools`MatchingLoopOrder/.SMEFTInput;*)
-			(*Return[DsixToolsToHighPTSMEFT[temp//DsixTools`D6Simplify]];*)
-			Return[DsixToolsToHighPTLEFT[temp]],
+			(*temp=(HighPTToDsixToolsLEFT[expr])//DsixTools`D6Simplify;*)
+			params=DeleteDuplicates@Cases[expr, _WCL, \[Infinity]];
+			(* Deal with the case of a single WCL being evolved *)
+			If[MatchQ[params,{}] && MatchQ[Head@expr,WCL],params={expr}];
+			If[MatchQ[params,{}],Message[LEFTRun::nocoefficients]];
+			evolution=Dispatch[(#1->DsixToolsToHighPTLEFT[DsixTools`LEFTEvolve[HighPTToDsixToolsLEFT[#1],lowscale]]&)/@params];
+			(*params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
+			temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];*)
+			(*Return[DsixToolsToHighPTLEFT[temp]]*)
+			Return[expr/.evolution],
 			Message[LEFTRun::nonnumericlowscale];Abort[]
 		];,
 		"Off",
@@ -87,3 +97,6 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 		Message[LEFTRun::undefinedrunningmode,LEFTRGEMode];Abort[];
 	];
 ];
+
+
+
