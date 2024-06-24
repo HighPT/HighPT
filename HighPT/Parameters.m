@@ -29,6 +29,9 @@ PackageExport["Mass"]
 PackageExport["Width"]
 
 
+PackageExport["Lifetime"]
+
+
 PackageExport["DefineParameters"]
 PackageExport["GetParameters"]
 
@@ -91,6 +94,9 @@ Width::usage= "Width[\[Phi]] denotes the width of the particle \[Phi].";
 Yukawa::usage="Yukawa[\"label\",{i,j}] denotes the {i,j} entry of the Yukawa matrix. Allowed values for \"label\" are \"u\", \"d\", \"e\"";
 
 
+Lifetime::usage="Lifetime[\"label\"] denotes the lifetime of the particle \"label\"";
+
+
 (* ::Section:: *)
 (*Masses and Widths*)
 
@@ -149,6 +155,9 @@ Mass/:Conjugate[Mass[a_]]:= Mass[a]
 Width/:Conjugate[Width[a_]]:= Width[a]
 
 
+Lifetime/:Conjugate[Lifetime[a_]]:= Lifetime[a]
+
+
 (* ::Section:: *)
 (*Yukawas*)
 
@@ -163,8 +172,9 @@ Yukawa[l:Except[Alternatives@@Join[{"u","d","e"}, {_Pattern, _Blank, _Except, _B
 (*Formatting*)
 
 
-Format[Mass[f_] , TraditionalForm] := Subscript["M",f]
-Format[Width[f_], TraditionalForm] := Subscript["\[CapitalGamma]",f]
+Format[Mass[f_]    , TraditionalForm] := Subscript["M",f]
+Format[Width[f_]   , TraditionalForm] := Subscript["\[CapitalGamma]",f]
+Format[Lifetime[f_], TraditionalForm] := Subscript["\[Tau]",f]
 
 
 Format[Param["vev"], TraditionalForm] := "\[ScriptV]"
@@ -213,6 +223,7 @@ mZ$default = Around[91.1876,0.0026];
 
 (*\[Lambda]$default  = 0.2813;*)
 mH$default = Around[125.25,0.17]; 
+\[CapitalGamma]H$default = Around[4.1,0]*10^-3;
 
 
 (* ::Subsection:: *)
@@ -316,6 +327,13 @@ m\[Pi]0$default = Around[0.1349768,0.0000005];
 (* kaons *)
 mKplus$default = Around[0.493677,0.000016];
 mK0$default = Around[0.497611,0.000013];
+(* \[Eta] *)
+m\[Eta]$default = Around[0.547862,0.000017];
+m\[Eta]p$default = Around[0.95778,0.00006];
+(* \[Rho] *)
+m\[Rho]$default = Around[0.77526,0.00023];
+(* \[Phi] *)
+m\[Phi]$default = Around[1.019461,0.000016];
 (* D *)
 mDplus$default = Around[1.86966,0.00005];
 mD0$default = Around[1.86484,0.00005];
@@ -324,6 +342,36 @@ mDs$default = Around[1.96835,0.00007];
 mBd$default = Around[5.27966,0.00012];
 mBs$default = Around[5.36692,0.00010];
 mBc$default = Around[6.27447,0.00032];
+
+
+(* ::Text:: *)
+(*Baryons (PDG)*)
+
+
+mp$default = Around[938.27208816,0.00000029]*10^-3;
+mn$default = Around[939.5654205,0.000005]*10^-3;
+
+
+(* ::Subsubsection:: *)
+(*Lifetimes*)
+
+
+GeVtos=6.582*10^-25;
+stoGeV=GeVtos^-1;
+
+
+(* ::Text:: *)
+(*Leptons*)
+
+
+\[Tau]\[Mu]$default = Around[2.1969811,0.0000022]*10^-6*stoGeV;
+
+
+\[Tau]\[Tau]$default = Around[290.3,0.5]*10^-15*stoGeV;
+
+
+(* ::Text:: *)
+(*Mesons*)
 
 
 (* ::Subsection:: *)
@@ -338,6 +386,7 @@ mZ$current = mZ$default;
 
 (*\[Lambda]$current  = \[Lambda]$default;*)
 mH$current = mH$default;
+\[CapitalGamma]H$current = \[CapitalGamma]H$default;
 
 \[Alpha]S$current = \[Alpha]S$default;
 
@@ -369,6 +418,13 @@ mt$current = mt$default;
 m\[Pi]plus$current = m\[Pi]plus$default;
 m\[Pi]0$current = m\[Pi]0$default;
 
+m\[Eta]$current = m\[Eta]$default;
+m\[Eta]p$current = m\[Eta]p$default;
+
+m\[Rho]$current = m\[Rho]$default;
+
+m\[Phi]$current = m\[Phi]$default;
+
 mKplus$current = mKplus$default;
 mK0$current = mK0$default;
 
@@ -379,6 +435,13 @@ mDs$current = mDs$default;
 mBd$current = mBd$default;
 mBs$current = mBs$default;
 mBc$current = mBc$default;
+
+mp$current = mp$default;
+mn$current = mn$default;
+
+
+\[Tau]\[Mu]$current = \[Tau]\[Mu]$default;
+\[Tau]\[Tau]$current = \[Tau]\[Tau]$default;
 
 
 (* ::Section:: *)
@@ -488,6 +551,7 @@ Options[DefineParameters]= {
 	"\[CapitalGamma]W"          :> \[CapitalGamma]W$current,
 	(*"\[Lambda]"           :> \[Lambda]$current,*)
 	"mH"          :> mH$current,
+	"\[CapitalGamma]H"          :> \[CapitalGamma]H$current,
 	"\[Alpha]S"          :> \[Alpha]S$current,
 	"Wolfenstein" :> Wolfenstein$current,
 	
@@ -506,12 +570,21 @@ Options[DefineParameters]= {
 	"m\[Pi]0"         :> m\[Pi]0$current,
 	"mK+"         :> mKplus$current,
 	"mK0"         :> mK0$current,
+	"m\[Eta]"          :> m\[Eta]$current,
+	"m\[Eta]'"         :> m\[Eta]p$current,
+	"m\[Rho]"          :> m\[Rho]$current,
+	"m\[Phi]"          :> m\[Phi]$current,
 	"mD+"         :> mDplus$current,
 	"mD0"         :> mD0$current,
 	"mDs"         :> mDs$current,
 	"mBd"         :> mBd$current,
 	"mBs"         :> mBs$current,
-	"mBc"         :> mBc$current
+	"mBc"         :> mBc$current,
+	"mp"          :> mp$current,
+	"mn"          :> mn$current,
+	
+	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$current,
+	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$current
 };
 
 
@@ -524,6 +597,7 @@ DefineParameters[Default] := DefineParameters[
 	"\[CapitalGamma]W"          -> \[CapitalGamma]W$default,
 	(*"\[Lambda]"           -> \[Lambda]$default,*)
 	"mH"          -> mH$default,
+	"\[CapitalGamma]H"          -> \[CapitalGamma]H$default,
 	"\[Alpha]S"          -> \[Alpha]S$default,
 	"Wolfenstein" -> Wolfenstein$default,
 	
@@ -542,12 +616,21 @@ DefineParameters[Default] := DefineParameters[
 	"m\[Pi]0"         -> m\[Pi]0$default,
 	"mK+"         -> mKplus$default,
 	"mK0"         -> mK0$default,
+	"m\[Eta]"          -> m\[Eta]$default,
+	"m\[Eta]'"         -> m\[Eta]p$default,
+	"m\[Rho]"          -> m\[Rho]$default,
+	"m\[Phi]"          -> m\[Phi]$default,
 	"mD+"         -> mDplus$default,
 	"mD0"         -> mD0$default,
 	"mDs"         -> mDs$default,
 	"mBd"         -> mBd$default,
 	"mBs"         -> mBs$default,
-	"mBc"         -> mBc$default
+	"mBc"         -> mBc$default,
+	"mp"          -> mp$default,
+	"mn"          -> mn$default,
+	
+	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$default,
+	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$default
 ]
 
 
@@ -561,6 +644,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		$\[CapitalGamma]W          = OptionValue["\[CapitalGamma]W"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		(*$\[Lambda]H          = OptionValue["\[Lambda]"],*)
 		$mH          = OptionValue["mH"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[CapitalGamma]H          = OptionValue["\[CapitalGamma]H"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[Alpha]S          = OptionValue["\[Alpha]S"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$Wolfenstein = OptionValue["Wolfenstein"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
@@ -577,12 +661,21 @@ DefineParameters[OptionsPattern[]] := Module[
 		$m\[Pi]0         = OptionValue["m\[Pi]0"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mKplus      = OptionValue["mK+"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mK0         = OptionValue["mK0"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$m\[Eta]          = OptionValue["m\[Eta]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$m\[Eta]p         = OptionValue["m\[Eta]'"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$m\[Rho]          = OptionValue["m\[Rho]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$m\[Phi]          = OptionValue["m\[Phi]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mDplus      = OptionValue["mD+"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mD0         = OptionValue["mD0"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mDs         = OptionValue["mDs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mBd         = OptionValue["mBd"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mBs         = OptionValue["mBs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$mBc         = OptionValue["mBc"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$mp          = OptionValue["mp"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$mn          = OptionValue["mn"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		
+		$\[Tau]\[Mu]          = OptionValue["\[Tau]\[Mu]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[Tau]\[Tau]          = OptionValue["\[Tau]\[Tau]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
 		(* output *)
 		$mW, $sW, $vev, $g2, $g1, $\[Lambda]H,
@@ -595,7 +688,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	}
 	,
 	(* OPTION CHECKS *)
-	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[Alpha]S", "Wolfenstein", Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc"};
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", "Wolfenstein", Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]"};
 	(* check that all mediator labels are known *)
 	Do[
 		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
@@ -617,6 +710,8 @@ DefineParameters[OptionsPattern[]] := Module[
 	mZ$current  = If[MatchQ[$mZ,  Default], $mZ  = mZ$default , $mZ];
 	\[CapitalGamma]Z$current  = If[MatchQ[$\[CapitalGamma]Z,  Default], $\[CapitalGamma]Z  = \[CapitalGamma]Z$default , $\[CapitalGamma]Z];
 	\[CapitalGamma]W$current  = If[MatchQ[$\[CapitalGamma]W,  Default], $\[CapitalGamma]W  = \[CapitalGamma]W$default , $\[CapitalGamma]W];
+	mH$current  = If[MatchQ[$mH,  Default], $mH  = mH$default , $mH];
+	\[CapitalGamma]H$current  = If[MatchQ[$\[CapitalGamma]H,  Default], $\[CapitalGamma]H  = \[CapitalGamma]H$default , $\[CapitalGamma]H];
 	\[Alpha]S$current  = If[MatchQ[$\[Alpha]S, Default], $\[Alpha]S = \[Alpha]S$default, $\[Alpha]S];
 	
 	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
@@ -644,12 +739,21 @@ DefineParameters[OptionsPattern[]] := Module[
 	m\[Pi]0$current    = If[MatchQ[$m\[Pi]0,  Default], $m\[Pi]0  = m\[Pi]0$default , $m\[Pi]0];
 	mKplus$current = If[MatchQ[$mKplus,  Default], $mKplus  = mKplus$default , $mKplus];
 	mK0$current    = If[MatchQ[$mK0,  Default], $mK0  = mK0$default , $mK0];
+	m\[Eta]$current     = If[MatchQ[$m\[Eta],  Default], $m\[Eta]  = m\[Eta]$default , $m\[Eta]];
+	m\[Eta]p$current    = If[MatchQ[$m\[Eta]p,  Default], $m\[Eta]p  = m\[Eta]p$default , $m\[Eta]p];
+	m\[Rho]$current     = If[MatchQ[$m\[Rho],  Default], $m\[Rho]  = m\[Rho]$default , $m\[Rho]];
+	m\[Phi]$current     = If[MatchQ[$m\[Phi],  Default], $m\[Phi]  = m\[Phi]$default , $m\[Phi]];
 	mDplus$current = If[MatchQ[$mDplus,  Default], $mDplus  = mDplus$default , $mDplus];
 	mD0$current    = If[MatchQ[$mD0,  Default], $mD0  = mD0$default , $mD0];
 	mDs$current    = If[MatchQ[$mDs,  Default], $mDs  = mDs$default , $mDs];
 	mBd$current    = If[MatchQ[$mBd,  Default], $mBd  = mBd$default , $mBd];
 	mBs$current    = If[MatchQ[$mBs,  Default], $mBs  = mBs$default , $mBs];
 	mBc$current    = If[MatchQ[$mBc,  Default], $mBc  = mBc$default , $mBc];
+	mp$current     = If[MatchQ[$mp,  Default], $mp  = mp$default , $mp];
+	mn$current     = If[MatchQ[$mn,  Default], $mn  = mn$default , $mn];
+	
+	\[Tau]\[Mu]$current     = If[MatchQ[$\[Tau]\[Mu],  Default], $\[Tau]\[Mu]  = mBc$default , $\[Tau]\[Mu]];
+	\[Tau]\[Tau]$current     = If[MatchQ[$\[Tau]\[Tau],  Default], $\[Tau]\[Tau]  = mBc$default , $\[Tau]\[Tau]];
 	
 	(* set the non-bared Wolfentein parameters *)
 	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
@@ -778,6 +882,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		Width["Photon"]        -> 0,
 		
 		Mass["H"] -> $mH,
+		Width["H"] -> $\[CapitalGamma]H,
 		
 		Mass["e"] -> $me,
 		Mass["\[Mu]"] -> $m\[Mu],
@@ -792,12 +897,21 @@ DefineParameters[OptionsPattern[]] := Module[
 		Mass["\[Pi]0"] -> $m\[Pi]0,
 		Mass["K+"] -> $mKplus,
 		Mass["K0"] -> $mK0,
+		Mass["\[Eta]"]  -> $m\[Eta],
+		Mass["\[Eta]'"] -> $m\[Eta]p,
+		Mass["\[Rho]"]  -> $m\[Rho],
+		Mass["\[Phi]"]  -> $m\[Phi],
 		Mass["D+"] -> $mDplus,
 		Mass["D0"] -> $mD0,
 		Mass["Ds"] -> $mDs,
 		Mass["Bd"] -> $mBd,
 		Mass["Bs"] -> $mBs,
-		Mass["Bc"] -> $mBc
+		Mass["Bc"] -> $mBc,
+		Mass["p"]  -> $mp,
+		Mass["n"]  -> $mn,
+		
+		Lifetime["\[Mu]"] -> $\[Tau]\[Mu],
+		Lifetime["\[Tau]"] -> $\[Tau]\[Tau]
 	|>;
 ]
 

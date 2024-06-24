@@ -155,7 +155,7 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 			]
 	];
 	obsvector=Table[
-				If[NumberQ[SMPrediction[i]["Value"]],
+				If[NumberQ[SMPrediction[i]["Value"]/.null->0] && (SMPrediction[i]["Value"]/.null->0)!=0,
 					LEFTRun[(ExpValue[i]["Value"]-SMPrediction[i]["Value"](1+NPContribution[i])),LowScale[i],DsixTools`EWSCALE],
 					LEFTRun[(ExpValue[i]["Value"]-NPContribution[i]),LowScale[i],DsixTools`EWSCALE]
 				],

@@ -149,6 +149,7 @@ $OptionValueAssociation= <|
 	"\[CapitalGamma]W"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	(*"\[Lambda]"               -> _?((NumericQ[#]&&NonNegative[#])&) | Default,*)
 	"mH"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"\[CapitalGamma]H"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[Alpha]S"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"Wolfenstein"     -> {Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default},
 	"me"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
@@ -164,12 +165,20 @@ $OptionValueAssociation= <|
 	"m\[Pi]0"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mK+"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mK0"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Eta]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Eta]'"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Rho]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"m\[Phi]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mD+"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mD0"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mDs"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mBd"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mBs"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
-	"mBc"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default
+	"mBc"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mp"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"mn"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"\[Tau]\[Mu]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"\[Tau]\[Tau]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default
 |>;
 
 

@@ -26,6 +26,9 @@ Package["HighPT`"]
 PackageExport["FlavorObservables"]
 
 
+PackageExport["ObsTable"]
+
+
 PackageExport["RestoreFlavorObservables"]
 
 
@@ -78,13 +81,16 @@ PackageScope["NumericalInput"]
 (*Private:*)
 
 
-$FlavorSectors = {"ChargedCurrents","\[CapitalDelta]F=1"};
+$FlavorSectors = {"ChargedCurrents","\[CapitalDelta]F=1","\[CapitalDelta]F=2","LFV"};
 
 
 FlavorObservables::usage = "FlavorObservables[] returns a nested list of all the flavor observables implemented in HighPT. FlavorObservables[\"sector\"] gives a list of all flavor observables in the sector \"sector\""
 
 
 FlavorObservables[] = FlavorObservables/@$FlavorSectors
+
+
+ObsTable[] = Column[ObsTable/@$FlavorSectors,Frame->True]
 
 
 (* ::Section:: *)
@@ -140,7 +146,7 @@ $FlavorOptionValueAssociation= <|
 (*Change Observables*)
 
 
-ChangeFlavorObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of LEFT coefficients (WCL) only. Expression given: `2`"
+ChangeFlavorObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of LEFT coefficients (WCL) and/or SMEFT coefficients (WC) only. Expression given: `2`"
 ChangeFlavorObservable::wrongobservable= "The observable `1` doesn't exist."
 
 
@@ -186,9 +192,9 @@ ChangeFlavorObservable[obs_,OptionsPattern[]] := Module[
 		var=Variables[NP/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
 		(*Print[var];
 		Print[(Head/@var)//DeleteDuplicates];*)
-		If[MatchQ[(Head/@var)//DeleteDuplicates,{WCL}],
+		If[SubsetQ[{WCL,WC},(Head/@var)//DeleteDuplicates],
 			NPContribution[obs] = NP,
-			Message[ChangeFlavorObservable::invalidNP,obs,NP];AboOptinrt[]
+			Message[ChangeFlavorObservable::invalidNP,obs,NP];Abort[]
 		];
 	];
 ]

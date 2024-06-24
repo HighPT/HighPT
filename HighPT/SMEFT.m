@@ -646,7 +646,7 @@ SubstitutionRulesSMEFT[dim_, \[Epsilon]_] := Module[{list,f6,f8,$DelayedRule},
 		(* Gauge coupling modifications CC*)
 		FF[Vector, {"WBoson",0}, {Left,Left}, {l1_[a_],l2_[b_],u[i_],d[j_]}]:>
 		f6 * \[Epsilon] * Mass["WBoson"]^2/Param["vev"]^2 * 2 *(WC["Hl3",{b,a}]\[Conjugate]*KroneckerDelta[i,j]+WC["Hq3",{i,j}]*KroneckerDelta[a,b])+
-		f6 * \[Epsilon] * Mass["WBoson"]^2/Param["vev"]^2 * 2 * WC["Hl3",{b,a}]\[Conjugate] * WC["Hq3",{i,j}]+
+		f6 * \[Epsilon]^2 * Mass["WBoson"]^2/Param["vev"]^2 * 2 * WC["Hl3",{b,a}]\[Conjugate] * WC["Hq3",{i,j}]+
 		f8 * \[Epsilon]^2 * Mass["WBoson"]^2/Param["vev"]^2 * KroneckerDelta[i,j] * (WC["l2H4D2",{b,a}]\[Conjugate]-WC["l2H4D3",{b,a}]\[Conjugate]+WC["l2H4D4",{a,b}])+
 		f8 * \[Epsilon]^2 * Mass["WBoson"]^2/Param["vev"]^2 * KroneckerDelta[a,b] * (WC["q2H4D2",{i,j}]-WC["q2H4D3",{i,j}]+WC["q2H4D4",{j,i}]\[Conjugate])+
 		f8 * \[Epsilon]^2 * Mass["WBoson"]^2/Param["vev"]^2 * (-1) * KroneckerDelta[i,j] * (WC["l2H2D33",{a,b}]-WC["l2H2D34",{b,a}]\[Conjugate])+

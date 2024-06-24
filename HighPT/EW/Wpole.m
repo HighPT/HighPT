@@ -37,8 +37,8 @@ PackageScope["FCCWpoleProjections"]
 EWObservables["Wpole"]={
 	"mW",
 	"\[CapitalGamma]W",
-	"We\[Nu]","W\[Mu]\[Nu]","W\[Tau]\[Nu]",
-	"W\[Mu]\[Nu]We\[Nu]CDF","We\[Nu]W\[Mu]\[Nu]LHCb","W\[Mu]\[Nu]We\[Nu]ATLAS","W\[Tau]\[Nu]We\[Nu]","W\[Tau]\[Nu]W\[Mu]\[Nu]",
+	"W->e\[Nu]","W->\[Mu]\[Nu]","W->\[Tau]\[Nu]",
+	"W->\[Mu]\[Nu]/W->e\[Nu]_CDF","W->e\[Nu]/W->\[Mu]\[Nu]_LHCb","W->\[Mu]\[Nu]/W->e\[Nu]_ATLAS","W->\[Tau]\[Nu]/W->e\[Nu]","W->\[Tau]\[Nu]/W->\[Mu]\[Nu]",
 	"RWc"
 	};
 
@@ -96,39 +96,39 @@ NPContribution$default["\[CapitalGamma]W"]:=((2 NW mWSM (3 Sum[Re[Vckm[i,j]\[Con
 (*W -> e\[Nu]*)
 
 
-ExpValue$default["We\[Nu]"]:=Around[0.1071,0.0016];
+ExpValue$default["W->e\[Nu]"]:=Around[0.1071,0.0016];
 
 
-SMPrediction$default["We\[Nu]"]:=Around[0.1082,0];
+SMPrediction$default["W->e\[Nu]"]:=Around[0.1082,0];
 
 
-NPContribution$default["We\[Nu]"]:=(\[CapitalDelta]BrWl\[Nu][1](*/.Replace\[Delta]g*)/.GetParameters[]);
+NPContribution$default["W->e\[Nu]"]:=(\[CapitalDelta]BrWl\[Nu][1](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*W -> \[Mu]\[Nu]*)
 
 
-ExpValue$default["W\[Mu]\[Nu]"]:=Around[0.1063,0.0015];
+ExpValue$default["W->\[Mu]\[Nu]"]:=Around[0.1063,0.0015];
 
 
-SMPrediction$default["W\[Mu]\[Nu]"]:=Around[0.1082,0];
+SMPrediction$default["W->\[Mu]\[Nu]"]:=Around[0.1082,0];
 
 
-NPContribution$default["W\[Mu]\[Nu]"]:=(\[CapitalDelta]BrWl\[Nu][2](*/.Replace\[Delta]g*)/.GetParameters[]);
+NPContribution$default["W->\[Mu]\[Nu]"]:=(\[CapitalDelta]BrWl\[Nu][2](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*W -> \[Tau]\[Nu]*)
 
 
-ExpValue$default["W\[Tau]\[Nu]"]:=Around[0.1138,0.0021];
+ExpValue$default["W->\[Tau]\[Nu]"]:=Around[0.1138,0.0021];
 
 
-SMPrediction$default["W\[Tau]\[Nu]"]:=Around[0.1081,0];
+SMPrediction$default["W->\[Tau]\[Nu]"]:=Around[0.1081,0];
 
 
-NPContribution$default["W\[Tau]\[Nu]"]:=(\[CapitalDelta]BrWl\[Nu][3](*/.Replace\[Delta]g*)/.GetParameters[]);
+NPContribution$default["W->\[Tau]\[Nu]"]:=(\[CapitalDelta]BrWl\[Nu][3](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Section:: *)
@@ -142,65 +142,65 @@ NPContribution$default["W\[Tau]\[Nu]"]:=(\[CapitalDelta]BrWl\[Nu][3](*/.Replace\
 (*W -> \[Mu]\[Nu]/W -> e\[Nu] (CDF)*)
 
 
-ExpValue$default["W\[Mu]\[Nu]We\[Nu]CDF"]:=Around[0.982,0.024];
+ExpValue$default["W->\[Mu]\[Nu]/W->e\[Nu]_CDF"]:=Around[0.982,0.024];
 
 
-SMPrediction$default["W\[Mu]\[Nu]We\[Nu]CDF"]:=Around[1.000,0];
+SMPrediction$default["W->\[Mu]\[Nu]/W->e\[Nu]_CDF"]:=Around[1.000,0];
 
 
-NPContribution$default["W\[Mu]\[Nu]We\[Nu]CDF"]:=(\[CapitalDelta]BrWl\[Nu]ratio[2,1](*/.Replace\[Delta]g*)/.GetParameters[]);
+NPContribution$default["W->\[Mu]\[Nu]/W->e\[Nu]_CDF"]:=(\[CapitalDelta]BrWl\[Nu]ratio[2,1](*/.Replace\[Delta]g*)/.GetParameters[]);
 
 
 (* ::Subsection:: *)
 (*W -> e\[Nu]/W -> \[Mu]\[Nu] (LHCb)*)
 
 
-ExpValue$default["We\[Nu]W\[Mu]\[Nu]LHCb"]:=Around[1.020,0.019];
+ExpValue$default["W->e\[Nu]/W->\[Mu]\[Nu]_LHCb"]:=Around[1.020,0.019];
 
 
-SMPrediction$default["We\[Nu]W\[Mu]\[Nu]LHCb"]:=Around[1.000,0];
+SMPrediction$default["W->e\[Nu]/W->\[Mu]\[Nu]_LHCb"]:=Around[1.000,0];
 
 
-NPContribution$default["We\[Nu]W\[Mu]\[Nu]LHCb"]:=\[CapitalDelta]BrWl\[Nu]ratio[1,2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["W->e\[Nu]/W->\[Mu]\[Nu]_LHCb"]:=\[CapitalDelta]BrWl\[Nu]ratio[1,2](*/.Replace\[Delta]g*)/.GetParameters[];
 
 
 (* ::Subsection:: *)
 (*W -> \[Mu]\[Nu]/W -> e\[Nu] (ATLAS)*)
 
 
-ExpValue$default["W\[Mu]\[Nu]We\[Nu]ATLAS"]:=Around[1.003,0.010];
+ExpValue$default["W->\[Mu]\[Nu]/W->e\[Nu]_ATLAS"]:=Around[1.003,0.010];
 
 
-SMPrediction$default["W\[Mu]\[Nu]We\[Nu]ATLAS"]:=Around[1.000,0];
+SMPrediction$default["W->\[Mu]\[Nu]/W->e\[Nu]_ATLAS"]:=Around[1.000,0];
 
 
-NPContribution$default["W\[Mu]\[Nu]We\[Nu]ATLAS"]:=\[CapitalDelta]BrWl\[Nu]ratio[2,1](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["W->\[Mu]\[Nu]/W->e\[Nu]_ATLAS"]:=\[CapitalDelta]BrWl\[Nu]ratio[2,1](*/.Replace\[Delta]g*)/.GetParameters[];
 
 
 (* ::Subsection:: *)
 (*W -> \[Tau]\[Nu]/W -> e\[Nu] (PDG, D0)*)
 
 
-ExpValue$default["W\[Tau]\[Nu]We\[Nu]"]:=Around[0.961,0.061];
+ExpValue$default["W->\[Tau]\[Nu]/W->e\[Nu]"]:=Around[0.961,0.061];
 
 
-SMPrediction$default["W\[Tau]\[Nu]We\[Nu]"]:=Around[0.999,0];
+SMPrediction$default["W->\[Tau]\[Nu]/W->e\[Nu]"]:=Around[0.999,0];
 
 
-NPContribution$default["W\[Tau]\[Nu]We\[Nu]"]:=\[CapitalDelta]BrWl\[Nu]ratio[3,1](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["W->\[Tau]\[Nu]/W->e\[Nu]"]:=\[CapitalDelta]BrWl\[Nu]ratio[3,1](*/.Replace\[Delta]g*)/.GetParameters[];
 
 
 (* ::Subsection:: *)
 (*W -> \[Tau]\[Nu]/W -> \[Mu]\[Nu] (ATLAS)*)
 
 
-ExpValue$default["W\[Tau]\[Nu]W\[Mu]\[Nu]"]:=Around[0.992,0.013];
+ExpValue$default["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]"]:=Around[0.992,0.013];
 
 
-SMPrediction$default["W\[Tau]\[Nu]W\[Mu]\[Nu]"]:=Around[0.999,0];
+SMPrediction$default["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]"]:=Around[0.999,0];
 
 
-NPContribution$default["W\[Tau]\[Nu]W\[Mu]\[Nu]"]:=\[CapitalDelta]BrWl\[Nu]ratio[3,2](*/.Replace\[Delta]g*)/.GetParameters[];
+NPContribution$default["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]"]:=\[CapitalDelta]BrWl\[Nu]ratio[3,2](*/.Replace\[Delta]g*)/.GetParameters[];
 
 
 (* ::Section:: *)
@@ -220,11 +220,11 @@ NPContribution$default["RWc"]:=(((2 Vckm[2,2]\[Delta]gW["q",Left,{2,2}])/(Vckm[1
 (*Exp Correlations*)
 
 
-ExpCorrelation["We\[Nu]","W\[Mu]\[Nu]"]:=0.136;
-ExpCorrelation["We\[Nu]","W\[Tau]\[Nu]"]:=-0.201;
+ExpCorrelation["W->e\[Nu]","W->\[Mu]\[Nu]"]:=0.136;
+ExpCorrelation["W->e\[Nu]","W->\[Tau]\[Nu]"]:=-0.201;
 
 
-ExpCorrelation["W\[Mu]\[Nu]","W\[Tau]\[Nu]"]:=-0.122;
+ExpCorrelation["W->\[Mu]\[Nu]","W->\[Tau]\[Nu]"]:=-0.122;
 
 
 (* ::Section:: *)
@@ -234,13 +234,13 @@ ExpCorrelation["W\[Mu]\[Nu]","W\[Tau]\[Nu]"]:=-0.122;
 FCCWpoleProjections=<|
 	"mW"->0,
 	"\[CapitalGamma]W"->0,
-	"We\[Nu]"->0,
-	"W\[Mu]\[Nu]"->0,
-	"W\[Tau]\[Nu]"->0,
-	"W\[Mu]\[Nu]We\[Nu]CDF"->0,
-	"We\[Nu]W\[Mu]\[Nu]LHCb"->0,
-	"W\[Mu]\[Nu]We\[Nu]ATLAS"->0,
-	"W\[Tau]\[Nu]We\[Nu]"->0,
-	"W\[Tau]\[Nu]W\[Mu]\[Nu]"->0,
+	"W->e\[Nu]"->0,
+	"W->\[Mu]\[Nu]"->0,
+	"W->\[Tau]\[Nu]"->0,
+	"W->\[Mu]\[Nu]/W->e\[Nu]_CDF"->0,
+	"W->e\[Nu]/W->\[Mu]\[Nu]_LHCb"->0,
+	"W->\[Mu]\[Nu]/W->e\[Nu]_ATLAS"->0,
+	"W->\[Tau]\[Nu]/W->e\[Nu]"->0,
+	"W->\[Tau]\[Nu]/W->\[Mu]\[Nu]"->0,
 	"RWc"->0
 |>

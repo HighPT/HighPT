@@ -76,3 +76,6 @@ AddAutoCompletion["Coupling"][{"g1u","g1d","g1e","g1q","g1l","g3q","g3l","y1L","
 
 
 AddAutoCompletion["WCL"][GetAllWCL]
+
+
+AddAutoCompletion["Obs"][Flatten@FlavorObservables[]]

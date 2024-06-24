@@ -97,7 +97,7 @@ GetMatchingOrder[]:=If[MatchingOrder==0,Print["Tree-level matching"],Print["One-
 MassRotate::error="Error in the mass rotation of `1`"
 
 
-MassRotate[Conjugate[WC[lab_,flav_]],type_] := Conjugate[MassRotate[WC[lab,flav],type]]
+MassRotate[Conjugate[WC[lab_,flav_]],type_] := Conjugate[MassRotate[WC[lab,flav],type/.{"du"->"ud","ud"->"du","uddu"->"duud","duud"->"uddu"}]]
 
 
 MassRotate[WC[lab_,flav_],type_]:=Module[

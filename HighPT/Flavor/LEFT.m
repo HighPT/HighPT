@@ -376,10 +376,19 @@ $WCLList6psi4=List[
 
 
 (* ::Subsubsection:: *)
+(*d=7 (operators with gluons, for LFV) *)
+
+
+(*$WCLList7=List[
+	"eeGG","eeGGt"
+]*)
+
+
+(* ::Subsubsection:: *)
 (*Check WC label*)
 
 
-WCL[l:Except[Alternatives@@Join[$WCLList3, $WCLList5, $WCLList6X3, $WCLList6psi4, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+WCL[l:Except[Alternatives@@Join[$WCLList3, $WCLList5, $WCLList6X3, $WCLList6psi4(*,$WCLList7*), {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WCL::unknownWCLlabel,l];
 	Abort[]
 )

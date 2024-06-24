@@ -31,10 +31,13 @@ Package["HighPT`"]
 (*Private:*)
 
 
-$\[CapitalDelta]F1Sectors={"b->sll","b->s\[Nu]\[Nu]","b->s\[Gamma]"(*,"leptonic"*)};
+$\[CapitalDelta]F1Sectors={"b->sll","b->s\[Nu]\[Nu]","b->s\[Gamma]","b->dll"(*,"leptonic"*)};
 
 
 FlavorObservables["\[CapitalDelta]F=1"] = FlavorObservables/@$\[CapitalDelta]F1Sectors
+
+
+ObsTable["\[CapitalDelta]F=1"] := Grid[{{"\[CapitalDelta]F=1",Column[ObsTable/@$\[CapitalDelta]F1Sectors]}},Dividers->All];
 
 
 CL90to95=3.09/2.3;
@@ -72,7 +75,10 @@ wCL["R\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLR",{\[Alpha],\[Beta],i,j}
 (*b -> sll (')*)
 
 
-FlavorObservables["b->sll"] = {"B+->K+\[Tau]\[Tau]","B0->K0*\[Tau]\[Tau]","Bs->\[Tau]\[Tau]"};
+FlavorObservables["b->sll"] = {"B+->K+\[Tau]\[Tau]","B0->K0*\[Tau]\[Tau]","Bs->ee","Bs->\[Mu]\[Mu]","Bs->\[Tau]\[Tau]"};
+
+
+ObsTable["b->sll"] := Grid[{{"b->sll",Column[FlavorObservables["b->sll"]]}},Dividers->All];
 
 
 LowScale[Alternatives@@(FlavorObservables["b->sll"]//Flatten)] := Mass["b"]/.GetParameters[];
@@ -232,7 +238,32 @@ NPContribution$default["B0->K0*\[Tau]\[Tau]"]:=(Mlow["B0->K0*\[Tau]\[Tau]"] . ve
 
 
 (* ::Subsection:: *)
+(*Bs -> ee*)
+
+
+ExpValue$default["Bs->ee"] := Around[0,11.2]*10^-9/2;
+
+
+NumericalInput["Bs->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*Around[2.1516,0.0455]*10^-6/.GetParameters[Errors->True];
+InputDependence["Bs->ee"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
+
+
+NPContribution$default["Bs->ee"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["e"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["e"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["e"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{1,1,2,3}/.WETToLEFT/.GetParameters[]//Chop;
+
+
+(* ::Subsection:: *)
 (*Bs->\[Mu]\[Mu]*)
+
+
+ExpValue$default["Bs->\[Mu]\[Mu]"] := Around[3.35,0.27]*10^-9;
+
+
+NumericalInput["Bs->\[Mu]\[Mu]"] := Around[2.1516,0.0455]*10^-6;
+InputDependence["Bs->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
+SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs taken from ..."
+
+
+NPContribution$default["Bs->\[Mu]\[Mu]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Mu]"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Mu]"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{2,2,2,3}/.WETToLEFT/.GetParameters[]//Chop;
 
 
 (* ::Subsection:: *)
@@ -242,11 +273,24 @@ NPContribution$default["B0->K0*\[Tau]\[Tau]"]:=(Mlow["B0->K0*\[Tau]\[Tau]"] . ve
 ExpValue$default["Bs->\[Tau]\[Tau]"] := Around[0,6.8]*10^-3/2;
 
 
-Bs\[Tau]\[Tau]Aux = Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]*Around[2.1516,0.0442]*10^-6;
-SMPrediction$default["Bs->\[Tau]\[Tau]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*Bs\[Tau]\[Tau]Aux)/.GetParameters[Errors->True];
+NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*Around[2.1516,0.0455]*10^-6/.GetParameters[Errors->True];
+InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 
 
-NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+0 Mass["s"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+0 Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{3,3,2,3}/.WETToLEFT/.GetParameters[]//Chop;
+NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{3,3,2,3}/.WETToLEFT/.GetParameters[]//Chop;
+
+
+(* ::Section:: *)
+(*b -> dll*)
+
+
+FlavorObservables["b->dll"] = {"Bd->ee","Bd->\[Mu]\[Mu]","Bd->\[Tau]\[Tau]"};
+
+
+ObsTable["b->dll"] := Grid[{{"b->dll",Column[FlavorObservables["b->dll"]]}},Dividers->All];
+
+
+LowScale[Alternatives@@(FlavorObservables["b->dll"]//Flatten)] := Mass["b"]/.GetParameters[];
 
 
 (* ::Section:: *)
@@ -254,7 +298,45 @@ NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p
 
 
 (* ::Subsection:: *)
-(*Subscript[B, d]->\[Mu]\[Mu]*)
+(*Bd->ee*)
+
+
+ExpValue$default["Bd->ee"] := Around[0,3.0]*10^-9/2;
+
+
+NumericalInput["Bd->ee"] := Mass["e"]^2/Mass["\[Mu]"] Sqrt[1-4 Mass["e"]^2/Mass["Bd"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bd"]^2] Around[1.35685,0.030188]*10^-6/.GetParameters[Errors->True];
+InputDependence["Bd->ee"] := Abs[Vckm[3,3]Vckm[3,1]\[Conjugate]]^2;
+
+
+NPContribution$default["Bd->ee"] := (Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bd"]^2/(2 Mass["e"] (Mass["b"]+Mass["d"]))]^2+(1-4 Mass["e"]^2/Mass["Bd"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bd"]^2/(2 Mass["e"] (Mass["b"]+Mass["d"]))]^2)/Abs[C10SM]^2-1/.ind->{1,1,1,3}/.WETToLEFT/.GetParameters[]//Expand
+
+
+(* ::Subsection:: *)
+(*Bd->\[Mu]\[Mu]*)
+
+
+ExpValue$default["Bd->\[Mu]\[Mu]"] := Around[0.5,0.5]*10^-10;
+
+
+NumericalInput["Bd->\[Mu]\[Mu]"] := Around[1.35685,0.030188]*10^-6;
+InputDependence["Bd->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,1]\[Conjugate]]^2;
+
+
+NPContribution$default["Bd->\[Mu]\[Mu]"] := (Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bd"]^2/(2 Mass["\[Mu]"] (Mass["b"]+Mass["d"]))]^2+(1-4 Mass["\[Mu]"]^2/Mass["Bd"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bd"]^2/(2 Mass["\[Mu]"] (Mass["b"]+Mass["d"]))]^2)/Abs[C10SM]^2-1/.ind->{2,2,1,3}/.WETToLEFT/.GetParameters[]//Expand
+
+
+(* ::Subsection:: *)
+(*Bd->\[Tau]\[Tau]*)
+
+
+ExpValue$default["Bd->\[Tau]\[Tau]"] := Around[0,2.1]*10^-3/2;
+
+
+NumericalInput["Bd->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"] Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bd"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bd"]^2] Around[1.35685,0.030188]*10^-6/.GetParameters[Errors->True];
+InputDependence["Bd->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,1]\[Conjugate]]^2;
+
+
+NPContribution$default["Bd->\[Tau]\[Tau]"] := (Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bd"]^2/(2 Mass["\[Tau]"] (Mass["b"]+Mass["d"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bd"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bd"]^2/(2 Mass["\[Tau]"] (Mass["b"]+Mass["d"]))]^2)/Abs[C10SM]^2-1/.ind->{3,3,1,3}/.WETToLEFT/.GetParameters[]//Expand
 
 
 (* ::Section:: *)
@@ -262,6 +344,9 @@ NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p
 
 
 FlavorObservables["b->s\[Nu]\[Nu]"] = {"B+->K+\[Nu]\[Nu]","B0->K0*\[Nu]\[Nu]"};
+
+
+ObsTable["b->s\[Nu]\[Nu]"] := Grid[{{"b->s\[Nu]\[Nu]",Column[FlavorObservables["b->s\[Nu]\[Nu]"]]}},Dividers->All];
 
 
 LowScale[Alternatives@@(FlavorObservables["b->s\[Nu]\[Nu]"]//Flatten)] := Mass["b"]/.GetParameters[];
@@ -301,6 +386,9 @@ NPContribution$default["B0->K0*\[Nu]\[Nu]"] := (1/(3Abs[CL\[Nu]SM["Value"]]^2) S
 
 
 FlavorObservables["b->s\[Gamma]"] = {"B->Xs\[Gamma]"};
+
+
+ObsTable["b->s\[Gamma]"] := Grid[{{"b->s\[Gamma]",Column[FlavorObservables["b->s\[Gamma]"]]}},Dividers->All];
 
 
 LowScale["B->Xs\[Gamma]"] = 160;

@@ -37,6 +37,9 @@ $ChargedCurrentSectors={"b->c"};
 FlavorObservables["ChargedCurrents"] = FlavorObservables/@$ChargedCurrentSectors
 
 
+ObsTable["ChargedCurrents"] := Grid[{{"ChargedCurrents",Column[ObsTable/@$ChargedCurrentSectors]}},Dividers->All];
+
+
 (* ::Section:: *)
 (*Semileptonic Inputs*)
 
@@ -165,6 +168,9 @@ FlavorObservables["b->c"] = {
 	"RD\[Mu]e",
 	"RD*\[Mu]e"
 };
+
+
+ObsTable["b->c"] := Grid[{{"b->c",Column[FlavorObservables["b->c"]]}},Dividers->All];
 
 
 (* \[Mu]b = 5 GeV *)
