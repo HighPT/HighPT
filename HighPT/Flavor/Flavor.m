@@ -85,6 +85,7 @@ $FlavorSectors = {"ChargedCurrents","\[CapitalDelta]F=1","\[CapitalDelta]F=2","L
 
 
 FlavorObservables::usage = "FlavorObservables[] returns a nested list of all the flavor observables implemented in HighPT. FlavorObservables[\"sector\"] gives a list of all flavor observables in the sector \"sector\""
+ObsTable::usage = "TEST!!!! ObsTable[\"group\"] returns a nice table with all the observables belonging to \"group\""
 
 
 FlavorObservables[] = FlavorObservables/@$FlavorSectors
