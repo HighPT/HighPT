@@ -27,6 +27,7 @@ PackageExport["FlavorObservables"]
 
 
 PackageExport["ObsTable"]
+PackageExport["ObsGrid"]
 
 
 PackageExport["RestoreFlavorObservables"]
@@ -36,6 +37,11 @@ PackageExport["Obs"]
 
 
 PackageExport["ChangeFlavorObservable"]
+
+
+PackageExport["AddFlavorObservable"]
+PackageExport["RemoveFlavorObservable"]
+PackageExport["ClearCustomObservables"]
 
 
 (* ::Subsection:: *)
@@ -81,17 +87,21 @@ PackageScope["NumericalInput"]
 (*Private:*)
 
 
-$FlavorSectors = {"ChargedCurrents","\[CapitalDelta]F=1","\[CapitalDelta]F=2","LFV"};
+$FlavorSectors = {"ChargedCurrents","\[CapitalDelta]F=1","\[CapitalDelta]F=2","LFV","\[Tau]LFU","custom"};
 
 
 FlavorObservables::usage = "FlavorObservables[] returns a nested list of all the flavor observables implemented in HighPT. FlavorObservables[\"sector\"] gives a list of all flavor observables in the sector \"sector\""
 ObsTable::usage = "TEST!!!! ObsTable[\"group\"] returns a nice table with all the observables belonging to \"group\""
 
 
-FlavorObservables[] = FlavorObservables/@$FlavorSectors
+FlavorObservables[] := FlavorObservables/@$FlavorSectors
 
 
-ObsTable[] = Column[ObsTable/@$FlavorSectors,Frame->True]
+ObsTable[] := Column[ObsTable/@$FlavorSectors,Frame->True]
+
+
+FlavorObservables["custom"] := $CustomObservables;
+$CustomObservables = {};
 
 
 (* ::Section:: *)
@@ -123,6 +133,9 @@ NP: "<>NPInfo[label]
 SMPrediction$default[obs_]:=InputDependence[obs]*NumericalInput[obs]/.GetParameters[Errors->True]
 
 
+ObsGrid[obs_]:=Grid[Join[{{"label",obs}},Table[{i,Obs[obs][i]},{i,Keys@Obs[i]}]],Dividers->{All,True}]
+
+
 (* ::Section:: *)
 (*Check Observable implementation*)
 
@@ -139,7 +152,8 @@ FlavorOptionCheck[opt_,optVal_]:=If[!MatchQ[optVal,$FlavorOptionValueAssociation
 
 $FlavorOptionValueAssociation= <|
 	"Exp" -> Around[_?NumericQ,_?NumericQ | {_?NumericQ,_?NumericQ}] | _?((NumericQ[#]&&NonNegative[#])&),
-	"SM" -> Around[_?NumericQ,_?NumericQ | {_?NumericQ,_?NumericQ}] | _?((NumericQ[#]&&NonNegative[#])&)
+	"SM" -> Around[_?NumericQ,_?NumericQ | {_?NumericQ,_?NumericQ}] | _?((NumericQ[#]&&NonNegative[#])&),
+	"Scale" -> _?NumericQ
 |>;
 
 
@@ -202,3 +216,98 @@ ChangeFlavorObservable[obs_,OptionsPattern[]] := Module[
 
 
 RestoreFlavorObservables[]:=ChangeFlavorObservable[#,Default]& /@ (FlavorObservables[]//Flatten);
+
+
+(* ::Section:: *)
+(*Add a custom - defined observable*)
+
+
+Options[AddFlavorObservable] = {
+	"Exp"->"TBD",
+	"SM"->"TBD",
+	"NP"->"TBD",
+	"Scale"->"TBD"
+	};
+
+
+AddFlavorObservable::usage = "AddFlavorObservable[\"name\"] defines a new observable with label \"name\".
+The observable is added to the FlavorObservables list under the sector \"custom\".
+Options are (all compulsory): \"Exp\", \"SM\", \"NP\", and \"Scale\".
+\"Exp\" and \"SM\" need to be Around[] objects,
+\"NP\" a function of WC and WCL only,
+and \"Scale\" a number."
+
+
+AddFlavorObservable::invalidinput = "Input not valid. \"Exp\" and \"SM\" must be Around[] objects, \"NP\" function of WC and WCL only, \"Scale\" a number"
+
+
+AddFlavorObservable::existing = "The observable `1` already exists in a default implementation. Please choose another name."
+
+
+AddFlavorObservable[name_String,OptionsPattern[]]:=Module[
+	{
+	exp = OptionValue["Exp"],
+	sm = OptionValue["SM"],
+	np = OptionValue["NP"],
+	scale = OptionValue["Scale"],
+	var
+	}
+	,
+	(* check if some input has been left out *)
+	If[MemberQ[Complement[FlavorObservables[]//Flatten,FlavorObservables["custom"]],name],Message[AddFlavorObservable::existing,name];Abort[]];
+	Table[If[i == "TBD",Message[AddFlavorObservable::invalidinput];Abort[]],{i,{exp,sm,np,scale}}];
+	
+	(* check all the inputs separately now (NP check below) *)
+	FlavorOptionCheck["Exp",exp];
+	FlavorOptionCheck["SM",sm];
+	FlavorOptionCheck["Scale",scale];
+	
+	(* Define ExpValue, SMPrediction, NPContribution and LowScale *)
+	If[NumericQ[exp],
+			ExpValue[name] = Around[exp,null],
+			ExpValue[name] = exp
+		];
+	If[NumericQ[sm],
+			SMPrediction[name] = Around[sm,null],
+			SMPrediction[name] = sm
+		];
+	var=Variables[np/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
+		(*Print[var];
+		Print[(Head/@var)//DeleteDuplicates];*)
+		If[SubsetQ[{WCL,WC},(Head/@var)//DeleteDuplicates],
+			NPContribution[name] = np,
+			Message[AddFlavorObservable::invalidinput];Abort[]
+		];
+	LowScale[name] := scale;
+	(* Add observable to the list *)
+	If[MemberQ[FlavorObservables["custom"],name]
+	,
+	Nothing[]
+	,
+	AppendTo[$CustomObservables,name];
+	ObsTable["custom"] := Grid[{{"custom",Column[FlavorObservables["custom"]]}},Dividers->All];
+	];
+	Print["Success! Check by running Obs[\""<>name<>"\"], or ObsTable[]."]
+]
+
+
+(* ::Section:: *)
+(*Remove a custom - defined observable*)
+
+
+RemoveFlavorObservable[name_String] := Module[
+	{
+	a
+	}
+	,
+	If[!MemberQ[FlavorObservables["custom"],name],
+	Print["Observable " <> name <> " is not a custom-defined observable."];Abort[]];
+	ExpValue[name]=.;
+	SMPrediction[name]=.;
+	NPContribution[name]=.;
+	LowScale[name]=.;
+	$CustomObservables = DeleteCases[$CustomObservables,name];
+];
+
+
+ClearCustomObservables[] := RemoveFlavorObservable/@FlavorObservables["custom"];

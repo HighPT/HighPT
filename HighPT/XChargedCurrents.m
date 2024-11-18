@@ -215,7 +215,7 @@ SMPrediction["Bc->\[Tau]\[Nu]"] = Around[0.0208,0.0007];
 (*Exp*)
 
 
-ExpValue$default["RD\[Tau]l"] = Around[0.356,0.029];
+ExpValue$default["RD\[Tau]l"] = Around[0.342,0.026];
 
 
 ExpInfo["RD\[Tau]l"] = "HFLAV average from Winter 2023"
@@ -225,7 +225,7 @@ ExpInfo["RD\[Tau]l"] = "HFLAV average from Winter 2023"
 (*SM*)
 
 
-SMPrediction$default["RD\[Tau]l"] = Around[0.2938,0.0040];
+SMPrediction$default["RD\[Tau]l"] = (*Around[0.2938,0.0040];*)Around[0.298,0.004];
 
 
 SMInfo["RD\[Tau]l"] = "HFLAV Winter 2023";
@@ -293,7 +293,7 @@ NPContributionError["RD\[Tau]l"] :=
 (*Exp*)
 
 
-ExpValue$default["RD*\[Tau]l"] = Around[0.284,0.013]
+ExpValue$default["RD*\[Tau]l"] = Around[0.287,0.012]
 
 
 ExpInfo["RD*\[Tau]l"] = "HFLAV average from Winter 2023"
@@ -303,7 +303,7 @@ ExpInfo["RD*\[Tau]l"] = "HFLAV average from Winter 2023"
 (*SM*)
 
 
-SMPrediction$default["RD*\[Tau]l"] = Around[0.246,0.009];
+SMPrediction$default["RD*\[Tau]l"] = (*Around[0.246,0.009];*)Around[0.254,0.005];
 
 
 SMInfo["RD*\[Tau]l"] = "HFLAV Winter 2023";
@@ -452,4 +452,4 @@ NPContributionError["RD*\[Mu]e"] :=
 (*Correlations*)
 
 
-ExpCorrelation["RD\[Tau]l","RD*\[Tau]l"] = -0.37;
+ExpCorrelation["RD\[Tau]l","RD*\[Tau]l"] = -0.39;

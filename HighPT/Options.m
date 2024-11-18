@@ -178,7 +178,8 @@ $OptionValueAssociation= <|
 	"mp"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"mn"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[Tau]\[Mu]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
-	"\[Tau]\[Tau]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default
+	"\[Tau]\[Tau]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"\[Tau]Bs"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default
 |>;
 
 

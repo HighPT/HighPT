@@ -203,44 +203,27 @@ Format[Param["Wolfenstein\[Eta]bar"],TraditionalForm] := OverBar["\[Eta]"]
 
 
 (* ::Section:: *)
-(*Experimental Inputs*)
+(*CKM stuff*)
 
 
 (* ::Subsection:: *)
-(*EW input*)
+(*Experimental input*)
 
 
-(* ::Text:: *)
-(*List of default parameter values*)
-
-
-\[Alpha]EM$default = Around[127.925,0.016]^-1;
-GF$default = Around[1.1663787*10^(-5),0.0000006*10^(-5)];
-mZ$default = Around[91.1876,0.0026];
-\[CapitalGamma]Z$default = Around[2.4955,0.0023];
-\[CapitalGamma]W$default = Around[2.085,0.042];
-
-
-(*\[Lambda]$default  = 0.2813;*)
-mH$default = Around[125.25,0.17]; 
-\[CapitalGamma]H$default = Around[4.1,0]*10^-3;
+Param["|Vus|"] = Around[0.2217,0.0009];
+Param["|Vcb|"] = Around[0.0404,0.0003];
+Param["|Vub|"] = Around[0.0039,0.0002];
+Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;
 
 
 (* ::Subsection:: *)
-(*QCD input*)
+(*Compute default Wolfenstein parameters*)
 
 
-\[Alpha]S$default = Around[0.1179,0.0010];
-
-
-(* ::Subsection:: *)
-(*CKM input*)
-
-
-\[Lambda]Wolfenstein$default    = Around[0.2217,0.0009];
-AWolfenstein$default    = Around[0.822,0.009];
-\[Rho]BarWolfenstein$default = Around[0.154,0.030];
-\[Eta]BarWolfenstein$default = Around[0.396,0.023];
+\[Lambda]Wolfenstein$default    = Param["|Vus|"];
+AWolfenstein$default    = Param["|Vcb|"]/Param["|Vus|"]^2;
+\[Rho]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Cos[Param["\[Gamma]CKM"]];
+\[Eta]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Sin[Param["\[Gamma]CKM"]];
 
 Wolfenstein$default = {
 	\[Lambda]Wolfenstein$default,
@@ -279,6 +262,37 @@ Vd= {
 	{0,1,0},
 	{0,0,1}
 }
+
+
+(* ::Section:: *)
+(*Other experimental Inputs*)
+
+
+(* ::Subsection:: *)
+(*EW input*)
+
+
+(* ::Text:: *)
+(*List of default parameter values*)
+
+
+\[Alpha]EM$default = Around[127.925,0.016]^-1;
+GF$default = Around[1.1663787*10^(-5),0.0000006*10^(-5)];
+mZ$default = Around[91.1876,0.0026];
+\[CapitalGamma]Z$default = Around[2.4955,0.0023];
+\[CapitalGamma]W$default = Around[2.085,0.042];
+
+
+(*\[Lambda]$default  = 0.2813;*)
+mH$default = Around[125.25,0.17]; 
+\[CapitalGamma]H$default = Around[4.1,0]*10^-3;
+
+
+(* ::Subsection:: *)
+(*QCD input*)
+
+
+\[Alpha]S$default = Around[0.1179,0.0010];
 
 
 (* ::Subsection:: *)
@@ -374,6 +388,9 @@ stoGeV=GeVtos^-1;
 (*Mesons*)
 
 
+\[Tau]Bs$default = Around[1.520,0.005]*10^-12*stoGeV;
+
+
 (* ::Subsection:: *)
 (*Save current values of inputs [separate from default values]*)
 
@@ -442,6 +459,8 @@ mn$current = mn$default;
 
 \[Tau]\[Mu]$current = \[Tau]\[Mu]$default;
 \[Tau]\[Tau]$current = \[Tau]\[Tau]$default;
+
+\[Tau]Bs$current = \[Tau]Bs$default;
 
 
 (* ::Section:: *)
@@ -584,7 +603,8 @@ Options[DefineParameters]= {
 	"mn"          :> mn$current,
 	
 	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$current,
-	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$current
+	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$current,
+	"\[Tau]Bs"         :> \[Tau]Bs$current
 };
 
 
@@ -630,7 +650,8 @@ DefineParameters[Default] := DefineParameters[
 	"mn"          -> mn$default,
 	
 	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$default,
-	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$default
+	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$default,
+	"\[Tau]Bs"         :> \[Tau]Bs$default
 ]
 
 
@@ -676,6 +697,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		$\[Tau]\[Mu]          = OptionValue["\[Tau]\[Mu]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[Tau]\[Tau]          = OptionValue["\[Tau]\[Tau]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[Tau]Bs         = OptionValue["\[Tau]Bs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
 		(* output *)
 		$mW, $sW, $vev, $g2, $g1, $\[Lambda]H,
@@ -688,7 +710,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	}
 	,
 	(* OPTION CHECKS *)
-	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", "Wolfenstein", Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]"};
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", "Wolfenstein", Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]","\[Tau]Bs"};
 	(* check that all mediator labels are known *)
 	Do[
 		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
@@ -752,8 +774,9 @@ DefineParameters[OptionsPattern[]] := Module[
 	mp$current     = If[MatchQ[$mp,  Default], $mp  = mp$default , $mp];
 	mn$current     = If[MatchQ[$mn,  Default], $mn  = mn$default , $mn];
 	
-	\[Tau]\[Mu]$current     = If[MatchQ[$\[Tau]\[Mu],  Default], $\[Tau]\[Mu]  = mBc$default , $\[Tau]\[Mu]];
-	\[Tau]\[Tau]$current     = If[MatchQ[$\[Tau]\[Tau],  Default], $\[Tau]\[Tau]  = mBc$default , $\[Tau]\[Tau]];
+	\[Tau]\[Mu]$current     = If[MatchQ[$\[Tau]\[Mu],  Default], $\[Tau]\[Mu]  = \[Tau]\[Mu]$default , $\[Tau]\[Mu]];
+	\[Tau]\[Tau]$current     = If[MatchQ[$\[Tau]\[Tau],  Default], $\[Tau]\[Tau]  = \[Tau]\[Tau]c$default , $\[Tau]\[Tau]];
+	\[Tau]Bs$current    = If[MatchQ[$\[Tau]Bs,  Default], $\[Tau]Bs  = \[Tau]Bs$default , $\[Tau]Bs];
 	
 	(* set the non-bared Wolfentein parameters *)
 	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
@@ -841,8 +864,8 @@ DefineParameters[OptionsPattern[]] := Module[
 		(* Wolfenstein *)
 		Param["Wolfenstein\[Lambda]"]    -> $\[Lambda],
 		Param["WolfensteinA"]    -> $A,
-		Param["Wolfenstein\[Rho]bar"] -> $\[Rho],
-		Param["Wolfenstein\[Eta]bar"] -> $\[Eta],
+		Param["Wolfenstein\[Rho]bar"] -> $\[Rho]Bar,
+		Param["Wolfenstein\[Eta]bar"] -> $\[Eta]Bar,
 		
 		(* Yukawas *)
 		Yukawa["u",{1,1}] -> $Yu[[1,1]],
@@ -910,8 +933,9 @@ DefineParameters[OptionsPattern[]] := Module[
 		Mass["p"]  -> $mp,
 		Mass["n"]  -> $mn,
 		
-		Lifetime["\[Mu]"] -> $\[Tau]\[Mu],
-		Lifetime["\[Tau]"] -> $\[Tau]\[Tau]
+		Lifetime["\[Mu]"]  -> $\[Tau]\[Mu],
+		Lifetime["\[Tau]"]  -> $\[Tau]\[Tau],
+		Lifetime["Bs"] -> $\[Tau]Bs
 	|>;
 ]
 

@@ -66,6 +66,9 @@ PackageScope["MatchingOrder"]
 PackageScope["\[Mu]W"]
 
 
+PackageScope["ZCoupling"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -620,7 +623,7 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 		];
 		If[
 			!OptionValue[SM],
-			res=expr/.a_WCL:>(Series[(TLMatching[a]-(TLMatching[a]/._WC->0))/.b_WC->eps*b,{eps,0,1}]//Normal)/.eps->1,
+			res=expr/.a_WCL:>(Series[(TLMatching[a]-(TLMatching[a]/._WC->0))/.b_WC->eps*b/.Conjugate[Times[eps,c_WC]]->Times[eps,Conjugate[c]],{eps,0,1}]//Normal)/.eps->1,
 			res=(*Series[*)expr/.a_WCL->TLMatching[a](*,{Param["vev"],0,2}]//Normal*)
 		];
 		If[basischanged,
