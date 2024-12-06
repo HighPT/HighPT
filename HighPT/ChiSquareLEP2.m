@@ -116,8 +116,9 @@ ChiSquareLEP2[OptionsPattern[]] := Module[
 	invcovmatrix=DiagonalMatrix[Table[Table[1/ExpValues[i][s]["Uncertainty"]^2,{s,LowScales[i]}],{i,observables}]//Flatten];
 	chi2 = obsvector.invcovmatrix.obsvector;*)
 
+	(*Print["Computed \[Chi]^w. Expanding..."];*)
 	If[MatchQ[OptionValue[DimensionlessCoefficients],True],
-		Return[Expand[chi2/.a_WC->a/OptionValue[EFTscale]^2]],
-		Return[Expand[chi2]]
+		Return[(chi2/.a_WC->a/OptionValue[EFTscale]^2)(*//Expand*)],
+		Return[chi2(*//Expand*)]
 	];
 ]
