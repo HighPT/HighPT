@@ -260,7 +260,7 @@ ExpValue$default["Bs->\[Mu]\[Mu]"] := Around[3.35,0.27]*10^-9;
 
 NumericalInput["Bs->\[Mu]\[Mu]"] := Around[2.1516,0.0455]*10^-6;
 InputDependence["Bs->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
-SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs taken from ..."
+SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs taken from ... "
 
 
 NPContribution$default["Bs->\[Mu]\[Mu]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Mu]"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Mu]"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{2,2,2,3}/.WETToLEFT/.GetParameters[]//Chop;
