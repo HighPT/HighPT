@@ -175,7 +175,7 @@ WC[x_,{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}] := WC[x,{a,b,i,j}]
 WC[x_,{f1_[a_],f2_[b_]}] := WC[x,{a,b}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Hermitian WC*)
 
 

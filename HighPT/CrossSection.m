@@ -114,7 +114,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Phase-space integration*)
 
 
@@ -273,7 +273,7 @@ PartialFractioningSIntegrals[s_]:={
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Integrated CrossSection*)
 
 

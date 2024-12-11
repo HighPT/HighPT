@@ -54,6 +54,11 @@ PackageScope["TChannelSum"]
 PackageScope["UChannelSum"]
 
 
+(* flag that determines whether (d=8)^2 contributions should be included *)
+PackageScope["$SquaredD8"]
+$SquaredD8=False;
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -384,7 +389,7 @@ TChannelSum[_,0]:=0
 UChannelSum[_,0]:=0
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand the full FormFactors*)
 
 
@@ -419,7 +424,10 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 		UChannelSum[uu_, FF[type_,{"u",0},rest___]]:> ($aux * UChannelSum[uu, FF[type,{"u",0},rest]]), (* if u_ is used as pattern here a new variables are exported in the HighPT` context. *)
 		FF[Vector,{"regular",pow:({1,0}|{0,1})}, rest___]:> ($aux^2 * FF[Vector,{"regular",pow}, rest])
 	};
-	temp= (Expand@ExpandConjugate@Expand[temp])/.Power[$aux,n_/;n>=3]:>0;
+	temp= (Expand@ExpandConjugate@Expand[temp]);
+	If[!$SquaredD8,
+		temp= temp/.Power[$aux,n_/;n>=3]:>0;
+	];
 	
 	Return[
 		Expand[ExpandConjugate[temp]]/.{$d8->1, $aux->1}

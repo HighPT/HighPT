@@ -45,7 +45,8 @@ Options[ChiSquareLHC]= {
 	CombineBins       -> Default,
 	EFTscale          :> GetEFTscale[],
 	Luminosity        -> Default,
-	RescaleError      -> True
+	RescaleError      -> True,
+	"Clipped"         -> All
 };
 
 
@@ -74,7 +75,8 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 		OperatorDimension -> OptionValue[OperatorDimension],
 		SM                -> False,
 		EFTscale          -> OptionValue[EFTscale],
-		Luminosity        -> OptionValue[Luminosity]
+		Luminosity        -> OptionValue[Luminosity],
+		"Clipped"         -> OptionValue["Clipped"]
 	];
 	
 	(* prepare experimental data *)
