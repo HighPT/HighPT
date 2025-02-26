@@ -60,7 +60,7 @@ wCL["3p",{i_,j_,i_,j_}]:>(*((4\[Pi]^2)/(Param["GF"]Mass["WBosom"])^21/(Vckm[3,j]
 (*Inputs for matrix elements*)
 
 
-DecayConstant["Bs"] := Around[0.2303,0.0013];
+(*DecayConstant["Bs"] := Around[0.2303,0.0013];*)
 
 
 BagParameter["Bs"] := {

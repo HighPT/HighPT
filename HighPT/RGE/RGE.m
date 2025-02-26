@@ -56,8 +56,8 @@ PackageScope["GetLEFTRGEMode"]
 checkDsixTools=Check[Needs["DsixTools`"],"noDsixTools"]
 If[
 	checkDsixTools==Null,
-	SMEFTRGEMode$default="DsixTools";LEFTRGEMode$default="DsixTools";$AllowedRGEModes={"DsixTools","LL","Off"};DsixTools`SetMatchingLoopOrder[0];Print["RGE running is performed with DsixTools."],
-	SMEFTRGEMode="LL";LEFTRGEMode="LL";$AllowedRGEModes={"LL","Off"};Print["DsixTools was not found. SMEFT and LEFT Running will be performed at LL."]
+	SMEFTRGEMode$default="DsixTools";LEFTRGEMode$default="DsixTools";$AllowedRGEModes={"DsixTools","LL","NLL","Off"};DsixTools`SetMatchingLoopOrder[0];Print["RGE running is performed with DsixTools."],
+	SMEFTRGEMode="LL";LEFTRGEMode="LL";$AllowedRGEModes={"LL","NLL","Off"};Print["DsixTools was not found. SMEFT and LEFT Running will be performed at LL."]
 ];
 
 

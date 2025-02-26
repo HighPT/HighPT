@@ -237,6 +237,12 @@ NPContribution$default["B0->K0*\[Tau]\[Tau]"]:=(Mlow["B0->K0*\[Tau]\[Tau]"] . ve
 (*Bs->ll*)
 
 
+me={Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]};
+
+
+BsToll[l_]:=Lifetime["Bs"]/(128\[Pi]) DecayConstant["Bs"]^2 Mass["Bs"]^2 Sqrt[1-(4me[[l]]^2)/Mass["Bs"]^2]((1-(4me[[l]]^2)/Mass["Bs"]^2)Abs[(WCL["edSRR",{l,l,3,2}]+Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]-Conjugate[WCL["edSRR",{l,l,2,3}]]) Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2+Abs[2me[[l]](WCL["deVLR",{2,3,l,l}]\[Conjugate]-WCL["edVLL",{l,l,2,3}]\[Conjugate]-WCL["edVRR",{l,l,2,3}]\[Conjugate]+WCL["edVLR",{l,l,2,3}]\[Conjugate])+Mass["Bs"]^2/(Mass["b"]+Mass["s"]) (WCL["edSRR",{l,l,3,2}]-Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]+Conjugate[WCL["edSRR",{l,l,2,3}]])]^2)
+
+
 (* ::Subsection:: *)
 (*Bs -> ee*)
 
@@ -273,6 +279,9 @@ NPInfo["Bs->\[Mu]\[Mu]"] := "Ciao Claudia!"
 (*Bs->\[Tau]\[Tau]*)
 
 
+TheoryExpression["Bs->\[Tau]\[Tau]"] := BsToll[3];
+
+
 ExpValue$default["Bs->\[Tau]\[Tau]"] := Around[0,6.8]*10^-3/2;
 
 
@@ -280,7 +289,10 @@ NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 
 InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 
 
-NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{3,3,2,3}/.WETToLEFT/.GetParameters[]//Chop;
+(*NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{3,3,2,3}/.WETToLEFT/.GetParameters[]//Chop;*)
+
+
+NPContribution$default["Bs->\[Tau]\[Tau]"] := 1/SMPrediction$default["Bs->\[Tau]\[Tau]"]["Value"] (TheoryExpression["Bs->\[Tau]\[Tau]"]-(TheoryExpression["Bs->\[Tau]\[Tau]"]/._WCL->0))/.GetParameters[]
 
 
 (* ::Section:: *)

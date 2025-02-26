@@ -48,6 +48,9 @@ PackageExport["ClearCustomObservables"]
 (*Internal*)
 
 
+PackageScope["TheoryExpression"]
+
+
 PackageScope["SMPrediction"]
 PackageScope["SMPrediction$default"]
 
@@ -64,6 +67,7 @@ PackageScope["ExpInfo"]
 
 PackageScope["NPContribution"]
 PackageScope["NPContribution$default"]
+PackageScope["NPContribution$current"]
 PackageScope["NPContributionError"]
 
 
@@ -161,7 +165,7 @@ $FlavorOptionValueAssociation= <|
 (*Change Observables*)
 
 
-ChangeFlavorObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of LEFT coefficients (WCL) and/or SMEFT coefficients (WC) only. Expression given: `2`"
+ChangeFlavorObservable::invalidNP= "Invalid NP contribution for `1`. It must be an expressions of LEFT coefficients (WCL) and/or SMEFT coefficients (WC) only. Spurious dependencies: `2`. Expression given: `3`"
 ChangeFlavorObservable::wrongobservable= "The observable `1` doesn't exist."
 
 
@@ -208,10 +212,13 @@ ChangeFlavorObservable[obs_,OptionsPattern[]] := Module[
 		(*Print[var];
 		Print[(Head/@var)//DeleteDuplicates];*)
 		If[SubsetQ[{WCL,WC},(Head/@var)//DeleteDuplicates],
-			NPContribution[obs] = NP,
-			Message[ChangeFlavorObservable::invalidNP,obs,NP];Abort[]
+		    NPContribution$current[obs] = NP(*NPContribution[obs] = ApplyRedefinitions@NP*),
+			Message[ChangeFlavorObservable::invalidNP,obs,DeleteCases[DeleteCases[var,_WC],_WCL],NP];Abort[]
 		];
+		,
+		ApplyRedefinitions
 	];
+	NPContribution[obs] = ApplyRedefinitions[NPContribution$current[obs]];
 ]
 
 

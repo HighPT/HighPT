@@ -32,6 +32,9 @@ PackageExport["Width"]
 PackageExport["Lifetime"]
 
 
+PackageExport["DecayConstant"]
+
+
 PackageExport["DefineParameters"]
 PackageExport["GetParameters"]
 
@@ -207,23 +210,55 @@ Format[Param["Wolfenstein\[Eta]bar"],TraditionalForm] := OverBar["\[Eta]"]
 
 
 (* ::Subsection:: *)
-(*Experimental input*)
+(*Experimental input - put Olcyr's stuff here*)
 
 
-Param["|Vus|"] = Around[0.2217,0.0009];
+Vus$default = Around[0.2217,0.0009];
+Vcb$default = Around[0.0404,0.0003];
+Vub$default = Around[0.0039,0.0002];
+\[Gamma]CKM$default = Around[68.7,4.2] \[Pi]/180;
+
+CKM$default = {
+	Vus$default,
+	Vcb$default,
+	Vub$default,
+	\[Gamma]CKM$default
+}
+
+
+(*Param["|Vus|"] = Around[0.2217,0.0009];
 Param["|Vcb|"] = Around[0.0404,0.0003];
 Param["|Vub|"] = Around[0.0039,0.0002];
-Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;
+Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;*)
+
+
+(* ::Subsection:: *)
+(*Extracting Wolfenstein from inputs*)
+
+
+WolfensteinExtract[Vus_,Vcb_,Vub_,\[Gamma]_] := Module[
+	{
+		\[Lambda]\[Lambda], AA, \[Rho]\[Rho], \[Eta]\[Eta]
+	}
+	,
+	\[Lambda]\[Lambda] = Vus;
+	AA = Vcb/Vus^2;
+	\[Rho]\[Rho] = Vub/(Vcb Vus (1+Vus^2/2))Cos[\[Gamma]];
+	\[Eta]\[Eta] = Vub/(Vcb Vus (1+Vus^2/2))Sin[\[Gamma]];
+	Return@{\[Lambda]\[Lambda],AA,\[Rho]\[Rho],\[Eta]\[Eta]}
+];
 
 
 (* ::Subsection:: *)
 (*Compute default Wolfenstein parameters*)
 
 
-\[Lambda]Wolfenstein$default    = Param["|Vus|"];
+(*\[Lambda]Wolfenstein$default    = Param["|Vus|"];
 AWolfenstein$default    = Param["|Vcb|"]/Param["|Vus|"]^2;
 \[Rho]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Cos[Param["\[Gamma]CKM"]];
-\[Eta]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Sin[Param["\[Gamma]CKM"]];
+\[Eta]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Sin[Param["\[Gamma]CKM"]];*)
+
+{\[Lambda]Wolfenstein$default,AWolfenstein$default,\[Rho]BarWolfenstein$default,\[Eta]BarWolfenstein$default} = WolfensteinExtract[Vus$default,Vcb$default,Vub$default,\[Gamma]CKM$default];
 
 Wolfenstein$default = {
 	\[Lambda]Wolfenstein$default,
@@ -300,7 +335,7 @@ mH$default = Around[125.25,0.17];
 
 
 (* ::Subsubsection:: *)
-(*Masses*)
+(*Masses (flavour)*)
 
 
 (* ::Text:: *)
@@ -391,8 +426,19 @@ stoGeV=GeVtos^-1;
 \[Tau]Bs$default = Around[1.520,0.005]*10^-12*stoGeV;
 
 
+(* ::Subsubsection:: *)
+(*Decay constants*)
+
+
+fBs$default = Around[228.4,3.7]*10^-3;
+
+
 (* ::Subsection:: *)
 (*Save current values of inputs [separate from default values]*)
+
+
+(* ::Subsubsection:: *)
+(*Gauge inputs*)
 
 
 \[Alpha]EM$current = \[Alpha]EM$default;
@@ -407,6 +453,23 @@ mH$current = mH$default;
 
 \[Alpha]S$current = \[Alpha]S$default;
 
+
+(* ::Subsubsection:: *)
+(*CKM*)
+
+
+Vus$current  = Vus$default;
+Vcb$current  = Vcb$default;
+Vub$current  = Vub$default;
+\[Gamma]CKM$current = \[Gamma]CKM$default;
+
+CKM$current = {
+	Vus$current,
+	Vcb$current,
+	Vub$current,
+	\[Gamma]CKM$current
+}
+
 \[Lambda]Wolfenstein$current    = \[Lambda]Wolfenstein$default;
 AWolfenstein$current    = AWolfenstein$default;
 \[Rho]BarWolfenstein$current = \[Rho]BarWolfenstein$default;
@@ -418,6 +481,10 @@ Wolfenstein$current = {
 	\[Rho]BarWolfenstein$current,
 	\[Eta]BarWolfenstein$current
 }
+
+
+(* ::Subsubsection:: *)
+(*Masses (flavour)*)
 
 
 me$current = me$default;
@@ -457,13 +524,24 @@ mp$current = mp$default;
 mn$current = mn$default;
 
 
+(* ::Subsubsection:: *)
+(*Lifetimes*)
+
+
 \[Tau]\[Mu]$current = \[Tau]\[Mu]$default;
 \[Tau]\[Tau]$current = \[Tau]\[Tau]$default;
 
 \[Tau]Bs$current = \[Tau]Bs$default;
 
 
-(* ::Section:: *)
+(* ::Subsubsection:: *)
+(*Decay Constants*)
+
+
+fBs$current = fBs$default;
+
+
+(* ::Section::Closed:: *)
 (*Define alignment of mass basis and flavor basis*)
 
 
@@ -572,7 +650,12 @@ Options[DefineParameters]= {
 	"mH"          :> mH$current,
 	"\[CapitalGamma]H"          :> \[CapitalGamma]H$current,
 	"\[Alpha]S"          :> \[Alpha]S$current,
-	"Wolfenstein" :> Wolfenstein$current,
+	(*"Vus"         :> Vus$current,
+	"Vcb"         :> Vcb$current,
+	"Vub"         :> Vub$current,
+	"\[Gamma]CKM"        :> \[Gamma]CKM$current,*)
+	"CKM"         :> CKM$current,
+	(*"Wolfenstein" :> Wolfenstein$current,*)
 	
 	Mediators     -> {},
 	
@@ -604,7 +687,9 @@ Options[DefineParameters]= {
 	
 	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$current,
 	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$current,
-	"\[Tau]Bs"         :> \[Tau]Bs$current
+	"\[Tau]Bs"         :> \[Tau]Bs$current,
+	
+	"fBs"         :> fBs$current
 };
 
 
@@ -619,7 +704,12 @@ DefineParameters[Default] := DefineParameters[
 	"mH"          -> mH$default,
 	"\[CapitalGamma]H"          -> \[CapitalGamma]H$default,
 	"\[Alpha]S"          -> \[Alpha]S$default,
-	"Wolfenstein" -> Wolfenstein$default,
+	(*"Vus"         :> Vus$current,
+	"Vcb"         :> Vcb$current,
+	"Vub"         :> Vub$current,
+	"\[Gamma]CKM"        :> \[Gamma]CKM$current,*)
+	"CKM"         -> CKM$default,
+	(*"Wolfenstein" -> Wolfenstein$default,*)
 	
 	Mediators     :> $defaultMediatorProperties,
 	
@@ -651,7 +741,9 @@ DefineParameters[Default] := DefineParameters[
 	
 	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$default,
 	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$default,
-	"\[Tau]Bs"         :> \[Tau]Bs$default
+	"\[Tau]Bs"         :> \[Tau]Bs$default,
+	
+	"fBs"         :> fBs$default
 ]
 
 
@@ -667,7 +759,12 @@ DefineParameters[OptionsPattern[]] := Module[
 		$mH          = OptionValue["mH"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[CapitalGamma]H          = OptionValue["\[CapitalGamma]H"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[Alpha]S          = OptionValue["\[Alpha]S"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
-		$Wolfenstein = OptionValue["Wolfenstein"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		(*$Vus         = OptionValue["Vus"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$Vcb         = OptionValue["Vcb"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$Vub         = OptionValue["Vub"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[Gamma]CKM        = OptionValue["\[Gamma]CKM"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],*)
+		$CKM         = OptionValue["CKM"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		(*$Wolfenstein = OptionValue["Wolfenstein"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],*)
 		
 		$me          = OptionValue["me"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$m\[Mu]          = OptionValue["m\[Mu]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
@@ -699,9 +796,12 @@ DefineParameters[OptionsPattern[]] := Module[
 		$\[Tau]\[Tau]          = OptionValue["\[Tau]\[Tau]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[Tau]Bs         = OptionValue["\[Tau]Bs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
+		$fBs         = OptionValue["fBs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		
 		(* output *)
 		$mW, $sW, $vev, $g2, $g1, $\[Lambda]H,
 		$g3,
+		$Vus, $Vcb, $Vub, $\[Gamma]CKM,
 		$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar, $\[Rho], $\[Eta],
 		$Yu, $Yd, $Ye, $ckmrep,
 		
@@ -710,7 +810,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	}
 	,
 	(* OPTION CHECKS *)
-	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", "Wolfenstein", Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]","\[Tau]Bs"};
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", (*"Vus", "Vcb", "Vub", "\[Gamma]CKM",*) "CKM"(*, "Wolfenstein"*), Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]","\[Tau]Bs","fBs"};
 	(* check that all mediator labels are known *)
 	Do[
 		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
@@ -736,7 +836,20 @@ DefineParameters[OptionsPattern[]] := Module[
 	\[CapitalGamma]H$current  = If[MatchQ[$\[CapitalGamma]H,  Default], $\[CapitalGamma]H  = \[CapitalGamma]H$default , $\[CapitalGamma]H];
 	\[Alpha]S$current  = If[MatchQ[$\[Alpha]S, Default], $\[Alpha]S = \[Alpha]S$default, $\[Alpha]S];
 	
-	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
+	{$Vus, $Vcb, $Vub, $\[Gamma]CKM} = $CKM;
+	Vus$current   = If[MatchQ[$Vus, Default], $Vus = Vus$default, $Vus];
+	Vcb$current   = If[MatchQ[$Vcb, Default], $Vcb = Vcb$default, $Vcb];
+	Vub$current   = If[MatchQ[$Vub, Default], $Vub = Vub$default, $Vub];
+	\[Gamma]CKM$current  = If[MatchQ[$\[Gamma]CKM, Default], $\[Gamma]CKM = \[Gamma]CKM$default, $\[Gamma]CKM];
+	CKM$current = {
+		Vus$current,
+		Vcb$current,
+		Vub$current,
+		\[Gamma]CKM$current
+	};
+	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = WolfensteinExtract[$Vus,$Vcb,$Vub,$\[Gamma]CKM];
+	
+	(*{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = $Wolfenstein;
 	\[Lambda]Wolfenstein$current    = If[MatchQ[$\[Lambda],    Default], $\[Lambda]    = \[Lambda]Wolfenstein$default   , $\[Lambda]   ];
 	AWolfenstein$current    = If[MatchQ[$A,    Default], $A    = AWolfenstein$default   , $A   ];
 	\[Rho]BarWolfenstein$current = If[MatchQ[$\[Rho]Bar, Default], $\[Rho]Bar = \[Rho]BarWolfenstein$default, $\[Rho]Bar];
@@ -746,7 +859,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		AWolfenstein$current,
 		\[Rho]BarWolfenstein$current,
 		\[Eta]BarWolfenstein$current
-	};
+	};*)
 	
 	me$current     = If[MatchQ[$me,  Default], $me  = me$default , $me];
 	m\[Mu]$current     = If[MatchQ[$m\[Mu],  Default], $m\[Mu]  = m\[Mu]$default , $m\[Mu]];
@@ -777,6 +890,8 @@ DefineParameters[OptionsPattern[]] := Module[
 	\[Tau]\[Mu]$current     = If[MatchQ[$\[Tau]\[Mu],  Default], $\[Tau]\[Mu]  = \[Tau]\[Mu]$default , $\[Tau]\[Mu]];
 	\[Tau]\[Tau]$current     = If[MatchQ[$\[Tau]\[Tau],  Default], $\[Tau]\[Tau]  = \[Tau]\[Tau]c$default , $\[Tau]\[Tau]];
 	\[Tau]Bs$current    = If[MatchQ[$\[Tau]Bs,  Default], $\[Tau]Bs  = \[Tau]Bs$default , $\[Tau]Bs];
+	
+	fBs$current    = If[MatchQ[$fBs,  Default], $fBs  = fBs$default , $fBs];
 	
 	(* set the non-bared Wolfentein parameters *)
 	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
@@ -935,7 +1050,9 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		Lifetime["\[Mu]"]  -> $\[Tau]\[Mu],
 		Lifetime["\[Tau]"]  -> $\[Tau]\[Tau],
-		Lifetime["Bs"] -> $\[Tau]Bs
+		Lifetime["Bs"] -> $\[Tau]Bs,
+		
+		DecayConstant["Bs"] -> $fBs
 	|>;
 ]
 

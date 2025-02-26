@@ -128,7 +128,7 @@ $OptionValueAssociation= <|
 	SM                -> True | False,
 	Efficiency        -> True | False,
 	Coefficients      -> All | {} | {(_FF|_WC|_Coupling)..} (*| {_WC..} | {_Coupling..}*) (*| {Rule[_WC,_]..} | {Rule[_FF,_]..}*),
-	EFTorder          -> 0 | 2 | 4 | 8,
+	EFTorder          -> 0 | 2 | 4 | 6 | 8,
 	OperatorDimension -> 4 | 6 | 8,
 	CombineBins       -> Default | {{_?IntegerQ..}..} | {} | None ,
 	Luminosity        -> Default | _?((NumericQ[#]&&Positive[#])&),
@@ -151,7 +151,12 @@ $OptionValueAssociation= <|
 	"mH"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[CapitalGamma]H"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[Alpha]S"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
-	"Wolfenstein"     -> {Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default},
+	(*"Vus"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"Vcb"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"Vub"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"\[Gamma]CKM"            -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,*)
+	"CKM"             -> {Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default},
+	(*"Wolfenstein"     -> {Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default, Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default},*)	
 	"me"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"m\[Mu]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"m\[Tau]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
@@ -179,7 +184,8 @@ $OptionValueAssociation= <|
 	"mn"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[Tau]\[Mu]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[Tau]\[Tau]"              -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
-	"\[Tau]Bs"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default
+	"\[Tau]Bs"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default,
+	"fBs"             -> Around[_,_] | _?((NumericQ[#]&&NonNegative[#])&) | Default
 |>;
 
 

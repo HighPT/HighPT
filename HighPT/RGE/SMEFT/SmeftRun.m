@@ -200,6 +200,11 @@ SMEFTRun[expr_,lowscale_, highscale_,OptionsPattern[]]:=Module[
 		mode,
 		"LL",
 		Return[expr/.ReplaceRedundant/.wc_WC->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[wc])],
+		"NLL",
+		params=DeleteDuplicates@Cases[expr, _WC, All];
+		evolution=Dispatch@Table[wc->Expand[(wc+1/2 1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[wc])/.a_WC->(a+1/2 1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[a])]/.Log[b_]^2->2*Log[b]^2,{wc,params}];
+		(*Print[evolution];*)
+		Return[expr/.evolution],
 		"DsixTools",
 		(*If[MatchQ[OptionValue[Basis],"custom"],
 			Message[SMEFTRun::custombasisdsixtools];Abort[]];*)

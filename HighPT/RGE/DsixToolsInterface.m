@@ -36,12 +36,20 @@ PackageScope["HighPTToDsixToolsSMEFT"]
 PackageScope["HighPTToDsixToolsLEFT"]
 
 
+PackageScope["SOLDToHighPT"]
+PackageScope["HighPTToSOLD"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
 
 (* ::Section:: *)
 (*SMEFT Map*)
+
+
+(* ::Subsection::Closed:: *)
+(*DsixTools*)
 
 
 SMEFTMap = {
@@ -115,7 +123,82 @@ SMEFTMap = {
 };
 
 
-(* ::Section:: *)
+(* ::Subsection:: *)
+(*SOLD*)
+
+
+SMEFTMapSOLD = {
+	(* H^6 *)
+	{"H",SOLD`alphaOH},
+	(* H^4 D^2 *)
+	{"HD",SOLD`alphaOHD},
+	{"HBox",SOLD`alphaOHBox},
+	(* H^2 X^2 *)
+	{"HG",SOLD`alphaOHG},
+	{"HGt",SOLD`alphaOHGt},
+	{"HW",SOLD`alphaOHW},
+	{"HWt",SOLD`alphaOHWt},
+	{"HB",SOLD`alphaOHB},
+	{"HBt",SOLD`alphaOHBt},
+	{"HWB",SOLD`alphaOHWB},
+	{"HWtB",SOLD`alphaOHWBt},
+	(* X^3 *)
+	{"G",SOLD`alphaO3G},
+	{"Gt",SOLD`alphaO3Gt},
+	{"W",SOLD`alphaO3W},
+	{"Wt",SOLD`alphaO3Wt},
+	(* Psi^2 H^3 *)
+	{"uH",SOLD`alphaOuH},
+	{"dH",SOLD`alphaOdH},
+	{"eH",SOLD`alphaOeH},
+	(* Psi^2 X H *)
+	{"eW",SOLD`alphaOeW},
+	{"eB",SOLD`alphaOeB},
+	{"uG",SOLD`alphaOuG},
+	{"uW",SOLD`alphaOuW},
+	{"uB",SOLD`alphaOuB},
+	{"dG",SOLD`alphaOdG},
+	{"dW",SOLD`alphaOdW},
+	{"dB",SOLD`alphaOdB},
+	(* Psi^2 H^2 D *)
+	{"Hl1",SOLD`alphaOHl1},
+	{"Hl3",SOLD`alphaOHl3},
+	{"He",SOLD`alphaOHe},
+	{"Hq1",SOLD`alphaOHq1},
+	{"Hq3",SOLD`alphaOHq3},
+	{"Hu",SOLD`alphaOHu},
+	{"Hd",SOLD`alphaOHd},
+	{"Hud",SOLD`alphaOHud},
+	(* Psi^4 *)
+	{"lq1",SOLD`alphaOlq1},
+	{"lq3",SOLD`alphaOlq3},
+	{"eu",SOLD`alphaOeu},
+	{"ed",SOLD`alphaOed},
+	{"lu",SOLD`alphaOlu},
+	{"ld",SOLD`alphaOld},
+	{"eq",SOLD`alphaOqe},
+	{"ledq",SOLD`alphaOledq},
+	{"lequ1",SOLD`alphaOlequ1},
+	{"lequ3",SOLD`alphaClequ3},
+	{"qq1",SOLD`alphaOqq1},
+	{"qq3",SOLD`alphaOqq3},
+	{"uu",SOLD`alphaOuu},
+	{"dd",SOLD`alphaOdd},
+	{"ud1",SOLD`alphaOud1},
+	{"ud8",SOLD`alphaOud8},
+	{"qu1",SOLD`alphaOqu1},
+	{"qu8",SOLD`alphaOqu8},
+	{"qd1",SOLD`alphaOqd1},
+	{"qd8",SOLD`alphaOqd8},
+	{"quqd1",SOLD`alphaOquqd1},
+	{"quqd8",SOLD`alphaOquqd8},
+	{"ll",SOLD`alphaOll},
+	{"ee",SOLD`alphaOee},
+	{"le",SOLD`alphaOle}
+};
+
+
+(* ::Section::Closed:: *)
 (*LEFT Map*)
 
 
@@ -192,7 +275,7 @@ LEFTMap = {
 (*DsixTools -> HighPT*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*SMEFT*)
 
 
@@ -258,7 +341,7 @@ DsixToolsToHighPTSMEFTDispatch = Dispatch[{
 DsixToolsToHighPTSMEFT[expr_]:=DsixToolsToHighPTSM[expr]/.DsixToolsToHighPTSMEFTDispatch/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*LEFT*)
 
 
@@ -322,7 +405,7 @@ DsixToolsToHighPTLEFTDispatch = Dispatch[{
 DsixToolsToHighPTLEFT[expr_]:=DsixToolsToHighPTSM[expr]/.DsixToolsToHighPTLEFTDispatch
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Other*)
 
 
@@ -344,6 +427,40 @@ DsixToolsToHighPTSM[expr_]:=expr/.{
 
 
 (* ::Section:: *)
+(*SOLD -> HighPT*)
+
+
+(* ::Subsection:: *)
+(*SMEFT*)
+
+
+SOLDToHighPTAss = <| (#1[[2]]->#1[[1]])&/@SMEFTMapSOLD |>
+
+
+SOLDToHighPTDispatch = Dispatch[{
+	Table[
+		SMEFTMapSOLD[[i,2]]->WC[SMEFTMapSOLD[[i,1]],{}],
+		{i,1,15}
+	],
+	Table[
+		SMEFTMapSOLD[[i,2]][a_,b_]->WC[SMEFTMapSOLD[[i,1]],{a,b}],
+		{i,16,34}
+	],
+	Table[
+		SMEFTMapSOLD[[i,2]][a_,b_,c_,f_]->WC[SMEFTMapSOLD[[i,1]],{a,b,c,f}],
+		{i,35,59}
+	]
+	}//Flatten
+];
+
+
+SOLDToHighPTSM[expr_]:=expr
+
+
+SOLDToHighPT[expr_]:=SOLDToHighPTSM[expr]/.SOLDToHighPTDispatch/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]
+
+
+(* ::Section:: *)
 (*HighPT -> DsixTools*)
 
 
@@ -359,3 +476,14 @@ HighPTToDsixToolsSMEFT[expr_] := expr/.Dispatch[(WC[#1[[1]],flav_]->#1[[2]][flav
 
 
 HighPTToDsixToolsLEFT[expr_] := expr/.Dispatch[(WCL[#1[[1]],flav_]->#1[[2]][flav])&/@LEFTMap]/.List->Sequence/.a_[]->a
+
+
+(* ::Section:: *)
+(*HighPT -> SOLD*)
+
+
+(* ::Subsection:: *)
+(*SMEFT*)
+
+
+HighPTToSOLD[expr_] := expr/.Dispatch[(WC[#1[[1]],flav_]->#1[[2]][flav])&/@SMEFTMapSOLD]/.List->Sequence/.SOLD`alphaOqe[i_,j_,\[Alpha]_,\[Beta]_]:>SOLD`alphaOqe[\[Alpha],\[Beta],i,j]/.a_[]->a
