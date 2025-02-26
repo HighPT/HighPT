@@ -254,7 +254,7 @@ NumericalInput["Bs->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mas
 InputDependence["Bs->ee"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 
 
-NPContribution$default["Bs->ee"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["e"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["e"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["e"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{1,1,2,3}/.WETToLEFT/.GetParameters[]//Chop;
+NPContribution$default["Bs->ee"] := Lifetime["Bs"]Param["fBs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{1,1,3,2}]+Conjugate[WCL["edSRL",{1,1,2,3}]]-WCL["edSRL",{1,1,3,2}]-Conjugate[WCL["edSRR",{1,1,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,1,1}]]-Conjugate[WCL["edVLL",{1,1,2,3}]]-Conjugate[WCL["edVRR",{1,1,2,3}]]+Conjugate[WCL["edVLR",{1,1,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{1,1,3,2}]-Conjugate[WCL["edSRL",{1,1,2,3}]]-WCL["edSRL",{1,1,3,2}]+Conjugate[WCL["edSRR",{1,1,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;
 
 
 (* ::Subsection:: *)
@@ -269,7 +269,7 @@ InputDependence["Bs->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
 SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs taken from ... "
 
 
-NPContribution$default["Bs->\[Mu]\[Mu]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Mu]"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Mu]"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{2,2,2,3}/.WETToLEFT/.GetParameters[]//Chop;
+NPContribution$default["Bs->\[Mu]\[Mu]"] := Lifetime["Bs"]Param["fBs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{2,2,3,2}]+Conjugate[WCL["edSRL",{2,2,2,3}]]-WCL["edSRL",{2,2,3,2}]-Conjugate[WCL["edSRR",{2,2,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,2,2}]]-Conjugate[WCL["edVLL",{2,2,2,3}]]-Conjugate[WCL["edVRR",{2,2,2,3}]]+Conjugate[WCL["edVLR",{2,2,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{2,2,3,2}]-Conjugate[WCL["edSRL",{2,2,2,3}]]-WCL["edSRL",{2,2,3,2}]+Conjugate[WCL["edSRR",{2,2,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;
 
 
 NPInfo["Bs->\[Mu]\[Mu]"] := "Ciao Claudia!"
@@ -289,10 +289,7 @@ NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 
 InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 
 
-(*NPContribution$default["Bs->\[Tau]\[Tau]"] := ((Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bs"]^2/(2 Mass["\[Tau]"] (Mass["b"]+ Mass["s"]))]^2)/Abs[C10SM]^2-1)/.ind->{3,3,2,3}/.WETToLEFT/.GetParameters[]//Chop;*)
-
-
-NPContribution$default["Bs->\[Tau]\[Tau]"] := 1/SMPrediction$default["Bs->\[Tau]\[Tau]"]["Value"] (TheoryExpression["Bs->\[Tau]\[Tau]"]-(TheoryExpression["Bs->\[Tau]\[Tau]"]/._WCL->0))/.GetParameters[]
+NPContribution$default["Bs->\[Tau]\[Tau]"] := Lifetime["Bs"]Param["fBs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{3,3,3,2}]+Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]-Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,3,3}]]-Conjugate[WCL["edVLL",{3,3,2,3}]]-Conjugate[WCL["edVRR",{3,3,2,3}]]+Conjugate[WCL["edVLR",{3,3,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{3,3,3,2}]-Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]+Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;
 
 
 (* ::Section:: *)
