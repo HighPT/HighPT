@@ -260,7 +260,13 @@ InputList=InputList$default;
 (*Standard Model values for (LEFT) Wilson Coefficients*)
 
 
-SMValue[WCL["edVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := 1/(16\[Pi]^2) Param["GF"]^2*Vckm[3,i]\[Conjugate]Vckm[3,j] KroneckerDelta[\[Alpha],\[Beta]];
+C10SM  =-4.18869
+
+
+SMValue[x_WCL] := 0
+
+
+SMValue[WCL["edVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := 1/(Sqrt[2]\[Pi])Param["\[Alpha]EM"] Param["GF"]*Vckm[3,i]\[Conjugate]Vckm[3,j] KroneckerDelta[\[Alpha],\[Beta]] C10SM;
 
 
 (* ::Section:: *)
