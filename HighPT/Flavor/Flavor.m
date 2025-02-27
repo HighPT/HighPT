@@ -49,6 +49,7 @@ PackageExport["ClearCustomObservables"]
 
 
 PackageScope["TheoryExpression"]
+PackageScope["NPFromTheoryExpression"]
 
 
 PackageScope["SMPrediction"]
@@ -318,3 +319,10 @@ RemoveFlavorObservable[name_String] := Module[
 
 
 ClearCustomObservables[] := RemoveFlavorObservable/@FlavorObservables["custom"];
+
+
+(* ::Section:: *)
+(*Compute NP from the theor. expression*)
+
+
+NPFromTheoryExpression[obs_] := 1/SMPrediction$default[obs]["Value"] ((TheoryExpression[obs]/.a_WCL->(SMValue[a]+a))-(TheoryExpression[obs]/.a_WCL->SMValue[a]))/.GetParameters[]

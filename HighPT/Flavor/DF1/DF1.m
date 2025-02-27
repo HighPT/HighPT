@@ -47,7 +47,7 @@ C10SM=-4.18869;
 CL\[Nu]SM=2*Around[-6.32,0.07];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Basis change (WET to LEFT)*)
 
 
@@ -71,7 +71,7 @@ wCL["R\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLR",{\[Alpha],\[Beta],i,j}
 };
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*b -> sll (')*)
 
 
@@ -128,7 +128,7 @@ cll[3][i_] := wCL["10p",{i,i,2,3}] + wCL["10",{i,i,2,3}]
 cll[4][i_] := wCL["10p",{i,i,2,3}] - wCL["10",{i,i,2,3}] 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*B -> K\[Mu]\[Mu]*)
 
 
@@ -142,7 +142,7 @@ InputDependence["B0->KS\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
 NPContribution$default["B0->KS\[Mu]\[Mu]"] := (Sum[aK[i]*Re[cll[i][2]],{i,4}] + Sum[bK[i]*Abs[cll[i][2]]^2,{i,4}])/.WETToLEFT/.GetParameters[]//Chop;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*B -> K*\[Mu]\[Mu]*)
 
 
@@ -156,7 +156,7 @@ InputDependence["B0->K0*\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
 NPContribution$default["B0->K0*\[Mu]\[Mu]"] := (Sum[aKst[i]*Re[cll[i][2]],{i,4}] + Sum[bKst[i]*Abs[cll[i][2]]^2,{i,4}])/.WETToLEFT/.GetParameters[]//Chop;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*B -> K\[Tau]\[Tau]*)
 
 
@@ -193,7 +193,7 @@ Mlow["B+->K+\[Tau]\[Tau]"]={0.042677,0.058631,0.22883,0.020142,0.15723,0.040812,
 NPContribution$default["B+->K+\[Tau]\[Tau]"]:=(Mlow["B+->K+\[Tau]\[Tau]"] . vecWC["B+->K+\[Tau]\[Tau]"]-1)/.WETToLEFT/.GetParameters[]//Chop;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*B -> K*\[Tau]\[Tau]*)
 
 
@@ -292,10 +292,13 @@ InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 (*NPContribution$default["Bs->\[Tau]\[Tau]"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{3,3,3,2}]+Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]-Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,3,3}]]-Conjugate[WCL["edVLL",{3,3,2,3}]]-Conjugate[WCL["edVRR",{3,3,2,3}]]+Conjugate[WCL["edVLR",{3,3,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{3,3,3,2}]-Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]+Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;*)
 
 
-NPContribution$default["Bs->\[Tau]\[Tau]"] := 1/SMPrediction$default["Bs->\[Tau]\[Tau]"]["Value"] ((TheoryExpression["Bs->\[Tau]\[Tau]"]/.a_WCL->(SMValue[a]+a))-(TheoryExpression["Bs->\[Tau]\[Tau]"]/.a_WCL->SMValue[a]))/.GetParameters[]
+(*NPContribution$default["Bs->\[Tau]\[Tau]"] := 1/SMPrediction$default["Bs->\[Tau]\[Tau]"]["Value"] ((TheoryExpression["Bs->\[Tau]\[Tau]"]/.a_WCL->(SMValue[a]+a))-(TheoryExpression["Bs->\[Tau]\[Tau]"]/.a_WCL->SMValue[a]))/.GetParameters[]*)
 
 
-(* ::Section:: *)
+NPContribution$default["Bs->\[Tau]\[Tau]"] := NPFromTheoryExpression["Bs->\[Tau]\[Tau]"]
+
+
+(* ::Section::Closed:: *)
 (*b -> dll*)
 
 
@@ -308,7 +311,7 @@ ObsTable["b->dll"] := Grid[{{"b->dll",Column[FlavorObservables["b->dll"]]}},Divi
 LowScale[Alternatives@@(FlavorObservables["b->dll"]//Flatten)] := Mass["b"]/.GetParameters[];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Bd->ll*)
 
 
@@ -354,7 +357,7 @@ InputDependence["Bd->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,1]\[Conjugate]]^2;
 NPContribution$default["Bd->\[Tau]\[Tau]"] := (Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bd"]^2/(2 Mass["\[Tau]"] (Mass["b"]+Mass["d"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bd"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bd"]^2/(2 Mass["\[Tau]"] (Mass["b"]+Mass["d"]))]^2)/Abs[C10SM]^2-1/.ind->{3,3,1,3}/.WETToLEFT/.GetParameters[]//Expand
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*b -> s\[Nu]\[Nu]*)
 
 
@@ -396,7 +399,7 @@ SMPrediction$default["B0->K0*\[Nu]\[Nu]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]
 NPContribution$default["B0->K0*\[Nu]\[Nu]"] := (1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]-\[Eta]Kst["Value"] 1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Re[(CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}])Conjugate[wCL["R\[Nu]",{i,j,2,3}]]],{i,1,3},{j,1,3}]-1)/.WETToLEFT/.GetParameters[]//Chop;
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*b -> s\[Gamma]*)
 
 
