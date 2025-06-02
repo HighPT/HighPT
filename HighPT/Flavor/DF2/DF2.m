@@ -127,7 +127,7 @@ NumericalInput["\[CapitalDelta]MBs"] := (Param["GF"]Mass["WBoson"])^2/(4\[Pi]^2)
 InputDependence["\[CapitalDelta]MBs"] := (Vckm[3,2]Vckm[3,3]\[Conjugate])^2
 
 
-SMPrediction$default["\[CapitalDelta]MBs"] := 2*Re[NumericalInput["\[CapitalDelta]MBs"]*InputDependence["\[CapitalDelta]MBs"]]/.GetParameters[Errors->True]
+SMPrediction$default["\[CapitalDelta]MBs"] := 2*Re[NumericalInput["\[CapitalDelta]MBs"]*InputDependence["\[CapitalDelta]MBs"]]/.GetParameters[Errors->True]//Simplify
 
 
 NPContribution$default["\[CapitalDelta]MBs"] := 1/SMPrediction$default["\[CapitalDelta]MBs"]*2Re[M12bs]/.SUSYToLEFT/.GetParameters[]/.Around[a_,b_]->a

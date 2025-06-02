@@ -36,10 +36,10 @@ PackageExport["RedefineInputs"]
 (*Internal*)
 
 
-PackageScope["ExpCorrelation"]
+(*PackageScope["ExpCorrelation"]*)
 
 
-PackageScope["THCorrelation"]
+(*PackageScope["THCorrelation"]*)
 
 
 PackageScope["ExpCov"]
@@ -177,8 +177,10 @@ ChiSquareFlavor[OptionsPattern[]] := Module[
 							SMEFTRun[obsvectorSMEFTEW[[i]],DsixTools`EWSCALE,OptionValue[EFTscale]]
 							],
 						{i,observables//Length}];
-	covmatrix=Table[ExpCov[i,j]+THCov[i,j](*+NPCov[i,j]*),{i,observables},{j,observables}];
-	covmatrixsymm=covmatrix+Transpose[covmatrix]-DiagonalMatrix[Diagonal[covmatrix]];
+	(*covmatrix=Table[ExpCov[i,j]+THCov[i,j](*+NPCov[i,j]*),{i,observables},{j,observables}];*)
+	covmatrix = (Table[Obs[i]["Exp"]["Uncertainty"]*ExpCorrelation[i,j]*Obs[j]["Exp"]["Uncertainty"],{i,observables},{j,observables}]+Table[Obs[i]["SM"]["Uncertainty"]*THCorrelation[i,j]*Obs[j]["SM"]["Uncertainty"],{i,observables},{j,observables}])/.null->0;
+	(*covmatrixsymm=covmatrix+Transpose[covmatrix]-DiagonalMatrix[Diagonal[covmatrix]];*)
+	covmatrixsymm = covmatrix;
 	invcovmatrix=Inverse[covmatrixsymm];
 	chi2= (obsvectorSMEFT\[CapitalLambda] . invcovmatrix . obsvectorSMEFT\[CapitalLambda])/.null->0/.wilson/.GetParameters[];
 	Return[Expand[chi2/.a_WC->a/OptionValue[EFTscale]^2]]

@@ -26,14 +26,7 @@ Package["HighPT`"]
 PackageExport["FlavorObservables"]
 
 
-PackageExport["ObsTable"]
-PackageExport["ObsGrid"]
-
-
 PackageExport["RestoreFlavorObservables"]
-
-
-PackageExport["Obs"]
 
 
 PackageExport["ChangeFlavorObservable"]
@@ -48,42 +41,10 @@ PackageExport["ClearCustomObservables"]
 (*Internal*)
 
 
-PackageScope["TheoryExpression"]
-PackageScope["NPFromTheoryExpression"]
-
-
-PackageScope["SMPrediction"]
-PackageScope["SMPrediction$default"]
-
-
-PackageScope["SMInfo"]
-
-
-PackageScope["ExpValue"]
-PackageScope["ExpValue$default"]
-
-
-PackageScope["ExpInfo"]
-
-
-PackageScope["NPContribution"]
-PackageScope["NPContribution$default"]
-PackageScope["NPContribution$current"]
-PackageScope["NPContributionError"]
-
-
-PackageScope["NPInfo"]
-
-
-PackageScope["ExpCorrelation"]
-
-
-PackageScope["LowScale"]
-
-
 PackageScope["FlavorOptionCheck"]
 
 
+(* Probably outdated, check *)
 PackageScope["InputDependence"]
 PackageScope["NumericalInput"]
 
@@ -109,36 +70,12 @@ FlavorObservables["custom"] := $CustomObservables;
 $CustomObservables = {};
 
 
+ObservableSectors["Flavor"] := {(*"ChargedCurrents",*)"\[CapitalDelta]F=1"(*,"\[CapitalDelta]F=2","LFV","\[Tau]LFU"*)};
+ObservableList["Flavor"] := ObservableList/@ObservableSectors["Flavor"]
+
+
 (* ::Section:: *)
 (*Observables*)
-
-
-Default[ExpCorrelation,0];
-
-
-ExpInfo[_]="";
-SMInfo[_]="";
-NPInfo[_]="";
-
-
-Obs::usage = "Obs[\"obs\"] returns an association with all the information regarding observable \"obs\""
-
-
-Obs[label_] := <|
-	"Exp"->ExpValue[label]/.null->0,
-	"SM"->SMPrediction[label]/.null->0,
-	"NP"->NPContribution[label],
-	(*"\[Sigma]NP"->NPContributionError[label],*)
-	"info"->"Exp: "<>ExpInfo[label]<>"
-SM: "<>SMInfo[label]<>"
-NP: "<>NPInfo[label]
-	|>
-
-
-SMPrediction$default[obs_]:=InputDependence[obs]*NumericalInput[obs]/.GetParameters[Errors->True]
-
-
-ObsGrid[obs_]:=Grid[Join[{{"label",obs}},Table[{i,Obs[obs][i]},{i,Keys@Obs[i]}]],Dividers->{All,True}]
 
 
 (* ::Section:: *)
@@ -193,6 +130,7 @@ ChangeFlavorObservable[obs_,OptionsPattern[]] := Module[
 		var
 	}
 	,
+	Print["Building observable "<>obs<>" ..."];
 	If[!MemberQ[FlavorObservables[]//Flatten,obs],
 		Message[ChangeFlavorObservable::wrongobservable,obs];Abort[];
 	];
@@ -325,4 +263,4 @@ ClearCustomObservables[] := RemoveFlavorObservable/@FlavorObservables["custom"];
 (*Compute NP from the theor. expression*)
 
 
-NPFromTheoryExpression[obs_] := 1/SMPrediction$default[obs]["Value"] ((TheoryExpression[obs]/.a_WCL->(SMValue[a]+a))-(TheoryExpression[obs]/.a_WCL->SMValue[a]))/.GetParameters[]
+(*NPFromTheoryExpression[obs_] := 1/SMPrediction$default[obs]["Value"] ((TheoryExpression[obs]/.a_WCL->(SMValue[a]+a))-(TheoryExpression[obs]/.a_WCL->SMValue[a]/._WC->0))/.GetParameters[]*)

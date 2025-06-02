@@ -31,13 +31,27 @@ Package["HighPT`"]
 (*Private:*)
 
 
-RestoreFlavorObservables[];
+(*RestoreFlavorObservables[];*)
 
 
-RestoreEWObservables[];
+(*RestoreEWObservables[];*)
 
 
-RestoreHiggsObservables[];
+(*RestoreHiggsObservables[];*)
+
+
+RestoreObservables[Flatten[Join[
+	(*ObservableList["FCC"],
+	ObservableList["EW"],*)
+	ObservableList["Flavor"]
+	]]
+];
+
+
+selector = SelectObservables[];
+
+
+Table[SelectedObservables[sec] = ObservableList[sec], {sec,ObservableSectors[]}]
 
 
 (*DefineRedefinitions[Default];*)

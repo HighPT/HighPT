@@ -60,13 +60,17 @@ PackageScope["null"]
 (*Private:*)
 
 
-$EWSectors = {"Zpole","Wpole"};
+$EWSectors = {"Zpole","Wpole","ZpoleNEW","WpoleNEW"};
 
 
 EWObservables::usage = "EWObservables[] returns a nested list of all the pole observables implemented in HighPT. EWObservables[\"sector\"] gives a list of all pole observables in the sector \"sector\". \"sector\" can be \"Zpole\" or \"Wpole\""
 
 
 EWObservables[] = EWObservables/@$EWSectors
+
+
+ObservableSectors["EW"] := {"ZpoleNEW","WpoleNEW"}
+ObservableList["EW"] := ObservableList/@ObservableSectors["EW"]
 
 
 (* ::Section:: *)
@@ -85,7 +89,7 @@ EWOptionCheck[opt_,optVal_]:=If[!MatchQ[optVal,$EWOptionValueAssociation[opt]],
 
 $EWOptionValueAssociation= <|
 	"Exp" -> Around[_?NumericQ,_?NumericQ | {_?NumericQ,_?NumericQ}] | _?((NumericQ[#]&&NonNegative[#])&),
-	"SM" -> Around[_?NumericQ,_?NumericQ | {_?NumericQ,_?NumericQ}]  | _?((NumericQ[#]&&NonNegative[#])&)
+	"SM" -> Around[_?NumericQ,_?NumericQ  | {_?NumericQ,_?NumericQ}] | Around[_?NumericQ, null] | _?((NumericQ[#]&&NonNegative[#])&)
 |>;
 
 
@@ -152,8 +156,8 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 		var=Variables[NP/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
 		(*Print[var];
 		Print[(Head/@var)//DeleteDuplicates];*)
-		If[SubsetQ[{\[Delta]gZ,\[Delta]gW,\[Delta]mW(*,WC*)},(Head/@var)//DeleteDuplicates]||MatchQ[(Head/@var)//DeleteDuplicates,{WC}],
-			NPContribution[obs] = NP,
+		If[SubsetQ[{\[Delta]gZ,\[Delta]gW,\[Delta]mW(*,WC*)},(Head/@var)//DeleteDuplicates]||MatchQ[(Head/@var)//DeleteDuplicates,{WC}]||MatchQ[(Head/@var)//DeleteDuplicates,{WCL}],
+			NPContribution$current[obs] = NP,
 			Message[ChangeEWObservable::invalidNP,obs];Abort[]
 		];
 	];
@@ -165,6 +169,7 @@ ChangeEWObservable[obs_,OptionsPattern[]] := Module[
 			Message[ChangeEWObservable::rescaleerror];Abort[]
 		];
 	];
+	NPContribution[obs] = ApplyRedefinitions[NPContribution$current[obs]]
 ]
 
 

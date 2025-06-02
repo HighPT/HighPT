@@ -77,6 +77,12 @@ PackageScope["\[CapitalGamma]Z$default"]
 PackageScope["\[CapitalGamma]W$default"]
 
 
+PackageScope["WolfensteinExtract"]
+
+
+PackageScope["ComplexAround"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -175,9 +181,10 @@ Yukawa[l:Except[Alternatives@@Join[{"u","d","e"}, {_Pattern, _Blank, _Except, _B
 (*Formatting*)
 
 
-Format[Mass[f_]    , TraditionalForm] := Subscript["M",f]
-Format[Width[f_]   , TraditionalForm] := Subscript["\[CapitalGamma]",f]
-Format[Lifetime[f_], TraditionalForm] := Subscript["\[Tau]",f]
+Format[Mass[f_]         , TraditionalForm] := Subscript["M",f]
+Format[Width[f_]        , TraditionalForm] := Subscript["\[CapitalGamma]",f]
+Format[Lifetime[f_]     , TraditionalForm] := Subscript["\[Tau]",f]
+Format[DecayConstant[f_], TraditionalForm] := Subscript["f",f]
 
 
 Format[Param["vev"], TraditionalForm] := "\[ScriptV]"
@@ -206,97 +213,81 @@ Format[Param["Wolfenstein\[Eta]bar"],TraditionalForm] := OverBar["\[Eta]"]
 
 
 (* ::Section:: *)
-(*CKM stuff*)
+(*ComplexAround*)
 
 
-(* ::Subsection:: *)
-(*Experimental input - put Olcyr's stuff here*)
+Format[ComplexAround[x_,y_]]:=Infix[{Around[Re[x],Abs[Re[y]]],Postfix[{PrecedenceForm[Around[Im[x],Abs[Im[y]]],50]},I]},"+"];
 
+(*ComplexAround[z_?Internal`RealValuedNumericQ,dz_?Internal`RealValuedNumericQ]:=Around[z,dz];*)
 
-Vus$default = Around[0.2217,0.0009];
-Vcb$default = Around[0.0404,0.0003];
-Vub$default = Around[0.0039,0.0002];
-\[Gamma]CKM$default = Around[68.7,4.2] \[Pi]/180;
+ComplexAround[z_,dz_]:=ComplexAround[z,-Re[dz]+Im[dz] I]/;Re[dz]<0;
 
-CKM$default = {
-	Vus$default,
-	Vcb$default,
-	Vub$default,
-	\[Gamma]CKM$default
-}
+ComplexAround[z_,dz_]:=ComplexAround[z,Re[dz]-Im[dz] I]/;Im[dz]<0;
 
+ComplexAround[z_,dz_]:=z/;dz==0;
 
-(*Param["|Vus|"] = Around[0.2217,0.0009];
-Param["|Vcb|"] = Around[0.0404,0.0003];
-Param["|Vub|"] = Around[0.0039,0.0002];
-Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;*)
+ComplexAround[z_,dz_]["Value"]:=z;
 
+ComplexAround[z_,dz_]["Uncertainty"]:=dz;
 
-(* ::Subsection:: *)
-(*Extracting Wolfenstein from inputs*)
+ComplexAround/:Conjugate[ComplexAround[z_,dz_]]:=ComplexAround[Conjugate[z],dz]
 
+ComplexAround/:Re[ComplexAround[z_,dz_]]:=Around[Re[z],Re[dz]]
+ComplexAround/:Im[ComplexAround[z_,dz_]]:=Around[Im[z],Im[dz]]
 
-WolfensteinExtract[Vus_,Vcb_,Vub_,\[Gamma]_] := Module[
-	{
-		\[Lambda]\[Lambda], AA, \[Rho]\[Rho], \[Eta]\[Eta]
-	}
-	,
-	\[Lambda]\[Lambda] = Vus;
-	AA = Vcb/Vus^2;
-	\[Rho]\[Rho] = Vub/(Vcb Vus (1+Vus^2/2))Cos[\[Gamma]];
-	\[Eta]\[Eta] = Vub/(Vcb Vus (1+Vus^2/2))Sin[\[Gamma]];
-	Return@{\[Lambda]\[Lambda],AA,\[Rho]\[Rho],\[Eta]\[Eta]}
+ComplexAround/:ComplexAround[z_,dz_]+c_?NumericQ:=ComplexAround[z+c,dz];
+
+ComplexAround/:k_?Internal`RealValuedNumericQ ComplexAround[z_,dz_]:=ComplexAround[k z,Abs[k] dz];
+
+ComplexAround/:Times[Complex[0,1], ComplexAround[z_,dz_]]:=ComplexAround[I z,I dz];
+
+ComplexAround/:Times[Complex[0,-1], ComplexAround[z_,dz_]]:=ComplexAround[-I z,-I dz];
+
+ComplexAround/:ComplexAround[z1_,dz1_]+ComplexAround[z2_,dz2_]:=Module[{r,i,x,dx,y,dy},r=Around[Re[z1],Re[dz1]]+Around[Re[z2],Re[dz2]];
+{x,dx}=If[Length[r]==2,List@@r,{r,0}];
+i=Around[Im[z1],Im[dz1]]+Around[Im[z2],Im[dz2]];
+{y,dy}=If[Length[i]==2,List@@i,{i,0}];
+ComplexAround[x+y I,dx+dy I]];
+
+ComplexAround/:Abs[ComplexAround[z_,dz_]]:=Module[{r,i},
+r=Around[Re[z],Abs[Re[dz]]];
+i=Around[Im[z],Abs[Im[dz]]];
+Return[Sqrt[r^2+i^2]]
 ];
 
+ComplexAround/:Arg[ComplexAround[z_,dz_]]:=Module[{r,i},
+r=Around[Re[z],Abs[Re[dz]]];
+i=Around[Im[z],Abs[Im[dz]]];
+Return[ArcTan[i/r]];
+];
 
-(* ::Subsection:: *)
-(*Compute default Wolfenstein parameters*)
+ComplexAround/:Times[ComplexAround[z1_,dz1_],ComplexAround[z2_,dz2_]]:=Module[{rz1,iz1,rz2,iz2,rz,drz,iz,diz},
+rz1=Around[Re[z1],Abs[Re[dz1]]];
+iz1=Around[Im[z1],Abs[Im[dz1]]];
+rz2=Around[Re[z2],Abs[Re[dz2]]];
+iz2=Around[Im[z2],Abs[Im[dz2]]];
+{rz,drz}=If[Length[rz1*rz2-iz1*iz2]==2,List@@(rz1*rz2-iz1*iz2),{rz1*rz2-iz1*iz2,0}];
+{iz,diz}=If[Length[rz1*iz2+iz1*rz2]==2,List@@(rz1*iz2+iz1*rz2),{rz1*iz2+iz1*rz2,0}];
+ComplexAround[rz+I*iz,drz+I*diz]
+];
 
+ComplexAround/:Times[x_Around,ComplexAround[z2_,dz2_]]:=Module[{rz2,iz2,rz,drz,iz,diz},
+rz2=Around[Re[z2],Abs[Re[dz2]]];
+iz2=Around[Im[z2],Abs[Im[dz2]]];
+{rz,drz}=If[Length[x*rz2]==2,List@@(x*rz2),{x*rz2,0}];
+{iz,diz}=If[Length[x*iz2]==2,List@@(x*iz2),{x*iz2,0}];
+ComplexAround[rz+I*iz,drz+I*diz]
+];
 
-(*\[Lambda]Wolfenstein$default    = Param["|Vus|"];
-AWolfenstein$default    = Param["|Vcb|"]/Param["|Vus|"]^2;
-\[Rho]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Cos[Param["\[Gamma]CKM"]];
-\[Eta]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Sin[Param["\[Gamma]CKM"]];*)
-
-{\[Lambda]Wolfenstein$default,AWolfenstein$default,\[Rho]BarWolfenstein$default,\[Eta]BarWolfenstein$default} = WolfensteinExtract[Vus$default,Vcb$default,Vub$default,\[Gamma]CKM$default];
-
-Wolfenstein$default = {
-	\[Lambda]Wolfenstein$default,
-	AWolfenstein$default,
-	\[Rho]BarWolfenstein$default,
-	\[Eta]BarWolfenstein$default
-}
-
-
-(* ::Subsubsection:: *)
-(*Define CKM matrix*)
-
-
-CKM::usage= "CKM denotes the CKM matrix, with CKM[[n,m]] given by Vckm[n,m].";
-
-
-Vckm::usage= "Vckm[n,m] denotes the element of the CKM matrix in the \!\(\*SuperscriptBox[\(n\), \(th\)]\) row and \!\(\*SuperscriptBox[\(m\), \(th\)]\) column.";
-
-
-CKM= {
-	{Vckm[1,1], Vckm[1,2], Vckm[1,3]},
-	{Vckm[2,1], Vckm[2,2], Vckm[2,3]},
-	{Vckm[3,1], Vckm[3,2], Vckm[3,3]}
-};
-
-
-(* ::Subsubsection:: *)
-(*Define rotation matrices for left-handed up and down quarks*)
-
-
-(* By default down alignment is assumed *)
-Vu = CKM
-
-Vd= {
-	{1,0,0},
-	{0,1,0},
-	{0,0,1}
-}
+ComplexAround/:Power[ComplexAround[z_,dz_],n_?Internal`RealValuedNumericQ]:= Module[{mod,ph,modn,phn,rz,drz,iz,diz},
+mod=Abs[ComplexAround[z,dz]];
+ph=Arg[ComplexAround[z,dz]];
+modn=Power[mod,n];
+phn=n*ph;
+{rz,drz}=If[Length[modn*Cos[phn]]==2,List@@(modn*Cos[phn]),{modn*Cos[phn],0}];
+{iz,diz}=If[Length[modn*Sin[phn]]==2,List@@(modn*Sin[phn]),{modn*Sin[phn],0}];
+ComplexAround[rz+I*iz,drz+I*diz]
+]
 
 
 (* ::Section:: *)
@@ -423,7 +414,15 @@ stoGeV=GeVtos^-1;
 (*Mesons*)
 
 
+\[Tau]Kplus$default = Around[1.2380,0.0020]*10^-8*stoGeV;
+\[Tau]KL$default = Around[5.116,0.021]*10^-8*stoGeV;
+
+
 \[Tau]Bs$default = Around[1.520,0.005]*10^-12*stoGeV;
+
+
+\[Tau]B0$default = Around[1.517,0.004]*10^-12*stoGeV;
+\[Tau]Bplus$default = Around[1.638,0.004]*10^-12*stoGeV;
 
 
 (* ::Subsubsection:: *)
@@ -452,35 +451,6 @@ mH$current = mH$default;
 \[CapitalGamma]H$current = \[CapitalGamma]H$default;
 
 \[Alpha]S$current = \[Alpha]S$default;
-
-
-(* ::Subsubsection:: *)
-(*CKM*)
-
-
-Vus$current  = Vus$default;
-Vcb$current  = Vcb$default;
-Vub$current  = Vub$default;
-\[Gamma]CKM$current = \[Gamma]CKM$default;
-
-CKM$current = {
-	Vus$current,
-	Vcb$current,
-	Vub$current,
-	\[Gamma]CKM$current
-}
-
-\[Lambda]Wolfenstein$current    = \[Lambda]Wolfenstein$default;
-AWolfenstein$current    = AWolfenstein$default;
-\[Rho]BarWolfenstein$current = \[Rho]BarWolfenstein$default;
-\[Eta]BarWolfenstein$current = \[Eta]BarWolfenstein$default;
-
-Wolfenstein$current = {
-	\[Lambda]Wolfenstein$current,
-	AWolfenstein$current,
-	\[Rho]BarWolfenstein$current,
-	\[Eta]BarWolfenstein$current
-}
 
 
 (* ::Subsubsection:: *)
@@ -531,7 +501,13 @@ mn$current = mn$default;
 \[Tau]\[Mu]$current = \[Tau]\[Mu]$default;
 \[Tau]\[Tau]$current = \[Tau]\[Tau]$default;
 
+\[Tau]Kplus$current = \[Tau]Kplus$default;
+\[Tau]KL$current = \[Tau]KL$default;
+
 \[Tau]Bs$current = \[Tau]Bs$default;
+
+\[Tau]B0$current = \[Tau]B0$default;
+\[Tau]Bplus$current = \[Tau]Bplus$default;
 
 
 (* ::Subsubsection:: *)
@@ -539,6 +515,169 @@ mn$current = mn$default;
 
 
 fBs$current = fBs$default;
+
+
+(* ::Section:: *)
+(*CKM stuff*)
+
+
+(* ::Subsection:: *)
+(*Vus default*)
+
+
+(*Vus$default := Around[0.2217,0.0009];*)
+
+
+Vusplus$default := Sqrt[ExpValue$default["K+->\[Pi]0e\[Nu]"]/(TheoryExpression["K+->\[Pi]0e\[Nu]"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["K+"]->\[Tau]Kplus$current/.Param["GF"]->GF$current/.Vckm[1,2]->1)]
+
+
+VusL$default := Sqrt[ExpValue$default["KL->\[Pi]-e\[Nu]"]/(TheoryExpression["KL->\[Pi]-e\[Nu]"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["KL"]->\[Tau]KL$current/.Param["GF"]->GF$current/.Vckm[1,2]->1)]
+
+
+Vus$default := 1/2 (Vusplus$default+VusL$default)
+
+
+(* ::Subsection:: *)
+(*Vcb default*)
+
+
+(*Vcb$default := Around[0.0404,0.0003];*)
+
+
+Vcb$default := Sqrt[ExpValue$default["B->Dl\[Nu]_iso"]/(TheoryExpression["B->Dl\[Nu]_iso"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Param["GF"]->GF$current/.Vckm[2,3]->1)]
+
+
+(* ::Subsection:: *)
+(*Vub default*)
+
+
+(*Vub$default := Around[0.0039,0.0002];*)
+
+
+Vub$default := Sqrt[ExpValue$default["B0->\[Pi]-l\[Nu]_high"]/(TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Param["GF"]->GF$current/.Vckm[1,3]->1)]
+
+
+(* ::Subsection:: *)
+(*\[Gamma] default*)
+
+
+\[Gamma]CKM$default := Around[68.7,4.2] \[Pi]/180;
+
+
+(* ::Subsection:: *)
+(*CKM default*)
+
+
+CKM$default := {
+	Vus$default,
+	Vcb$default,
+	Vub$default,
+	\[Gamma]CKM$default
+}
+
+
+(*Param["|Vus|"] = Around[0.2217,0.0009];
+Param["|Vcb|"] = Around[0.0404,0.0003];
+Param["|Vub|"] = Around[0.0039,0.0002];
+Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;*)
+
+
+(* ::Subsection:: *)
+(*Extracting Wolfenstein from inputs*)
+
+
+WolfensteinExtract[Vus_,Vcb_,Vub_,\[Gamma]_] := Module[
+	{
+		\[Lambda]\[Lambda], AA, \[Rho]\[Rho], \[Eta]\[Eta]
+	}
+	,
+	If[MatchQ[Vus,0],Return[{0,0,0,0}]];
+	\[Lambda]\[Lambda] = Vus;
+	If[MatchQ[Vcb,0],Return[{\[Lambda]\[Lambda],0,0,0}]];
+	AA = Vcb/Vus^2;
+	\[Rho]\[Rho] = Vub/(Vcb Vus (1+Vus^2/2))Cos[\[Gamma]];
+	\[Eta]\[Eta] = Vub/(Vcb Vus (1+Vus^2/2))Sin[\[Gamma]];
+	Return@{\[Lambda]\[Lambda],AA,\[Rho]\[Rho],\[Eta]\[Eta]}
+];
+
+
+(* ::Subsection:: *)
+(*Compute default Wolfenstein parameters*)
+
+
+(*\[Lambda]Wolfenstein$default    = Param["|Vus|"];
+AWolfenstein$default    = Param["|Vcb|"]/Param["|Vus|"]^2;
+\[Rho]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Cos[Param["\[Gamma]CKM"]];
+\[Eta]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Sin[Param["\[Gamma]CKM"]];*)
+
+(*{\[Lambda]Wolfenstein$default,AWolfenstein$default,\[Rho]BarWolfenstein$default,\[Eta]BarWolfenstein$default} := WolfensteinExtract[Vus$default,Vcb$default,Vub$default,\[Gamma]CKM$default];
+
+Wolfenstein$default := {
+	\[Lambda]Wolfenstein$default,
+	AWolfenstein$default,
+	\[Rho]BarWolfenstein$default,
+	\[Eta]BarWolfenstein$default
+}*)
+
+
+(* ::Subsubsection:: *)
+(*Define CKM matrix*)
+
+
+CKM::usage= "CKM denotes the CKM matrix, with CKM[[n,m]] given by Vckm[n,m].";
+
+
+Vckm::usage= "Vckm[n,m] denotes the element of the CKM matrix in the \!\(\*SuperscriptBox[\(n\), \(th\)]\) row and \!\(\*SuperscriptBox[\(m\), \(th\)]\) column.";
+
+
+CKM= {
+	{Vckm[1,1], Vckm[1,2], Vckm[1,3]},
+	{Vckm[2,1], Vckm[2,2], Vckm[2,3]},
+	{Vckm[3,1], Vckm[3,2], Vckm[3,3]}
+};
+
+
+(* ::Subsubsection:: *)
+(*Define rotation matrices for left-handed up and down quarks*)
+
+
+(* By default down alignment is assumed *)
+Vu = CKM
+
+Vd= {
+	{1,0,0},
+	{0,1,0},
+	{0,0,1}
+}
+
+
+(* ::Subsubsection:: *)
+(*Set current CKM*)
+
+
+Vus$current  = Vus$default;
+Vcb$current  = Vcb$default;
+Vub$current  = Vub$default;
+\[Gamma]CKM$current = \[Gamma]CKM$default;
+
+CKM$current = {
+	Vus$current,
+	Vcb$current,
+	Vub$current,
+	\[Gamma]CKM$current
+}
+
+(*\[Lambda]Wolfenstein$current    = \[Lambda]Wolfenstein$default;
+AWolfenstein$current    = AWolfenstein$default;
+\[Rho]BarWolfenstein$current = \[Rho]BarWolfenstein$default;
+\[Eta]BarWolfenstein$current = \[Eta]BarWolfenstein$default;
+
+Wolfenstein$current = {
+	\[Lambda]Wolfenstein$current,
+	AWolfenstein$current,
+	\[Rho]BarWolfenstein$current,
+	\[Eta]BarWolfenstein$current
+}*)
 
 
 (* ::Section::Closed:: *)
@@ -687,7 +826,11 @@ Options[DefineParameters]= {
 	
 	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$current,
 	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$current,
+	"\[Tau]K+"         :> \[Tau]Kplus$current,
+	"\[Tau]KL"         :> \[Tau]KL$current,
 	"\[Tau]Bs"         :> \[Tau]Bs$current,
+	"\[Tau]B0"         :> \[Tau]B0$current,
+	"\[Tau]B+"         :> \[Tau]Bplus$current,
 	
 	"fBs"         :> fBs$current
 };
@@ -708,7 +851,7 @@ DefineParameters[Default] := DefineParameters[
 	"Vcb"         :> Vcb$current,
 	"Vub"         :> Vub$current,
 	"\[Gamma]CKM"        :> \[Gamma]CKM$current,*)
-	"CKM"         -> CKM$default,
+	"CKM"         :> CKM$default,
 	(*"Wolfenstein" -> Wolfenstein$default,*)
 	
 	Mediators     :> $defaultMediatorProperties,
@@ -741,7 +884,11 @@ DefineParameters[Default] := DefineParameters[
 	
 	"\[Tau]\[Mu]"          :> \[Tau]\[Mu]$default,
 	"\[Tau]\[Tau]"          :> \[Tau]\[Tau]$default,
+	"\[Tau]K+"         :> \[Tau]Kplus$default,
+	"\[Tau]KL"         :> \[Tau]KL$default,
 	"\[Tau]Bs"         :> \[Tau]Bs$default,
+	"\[Tau]B0"         :> \[Tau]B0$default,
+	"\[Tau]B+"         :> \[Tau]Bplus$default,
 	
 	"fBs"         :> fBs$default
 ]
@@ -794,7 +941,11 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		$\[Tau]\[Mu]          = OptionValue["\[Tau]\[Mu]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[Tau]\[Tau]          = OptionValue["\[Tau]\[Tau]"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[Tau]Kplus      = OptionValue["\[Tau]K+"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[Tau]KL         = OptionValue["\[Tau]KL"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[Tau]Bs         = OptionValue["\[Tau]Bs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[Tau]B0         = OptionValue["\[Tau]B0"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
+		$\[Tau]Bplus      = OptionValue["\[Tau]B+"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
 		$fBs         = OptionValue["fBs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
@@ -810,7 +961,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	}
 	,
 	(* OPTION CHECKS *)
-	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", (*"Vus", "Vcb", "Vub", "\[Gamma]CKM",*) "CKM"(*, "Wolfenstein"*), Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]","\[Tau]Bs","fBs"};
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", (*"Vus", "Vcb", "Vub", "\[Gamma]CKM",*) "CKM"(*, "Wolfenstein"*), Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]","\[Tau]K+","\[Tau]KL","\[Tau]Bs","\[Tau]B0","\[Tau]B+","fBs"};
 	(* check that all mediator labels are known *)
 	Do[
 		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
@@ -888,8 +1039,12 @@ DefineParameters[OptionsPattern[]] := Module[
 	mn$current     = If[MatchQ[$mn,  Default], $mn  = mn$default , $mn];
 	
 	\[Tau]\[Mu]$current     = If[MatchQ[$\[Tau]\[Mu],  Default], $\[Tau]\[Mu]  = \[Tau]\[Mu]$default , $\[Tau]\[Mu]];
-	\[Tau]\[Tau]$current     = If[MatchQ[$\[Tau]\[Tau],  Default], $\[Tau]\[Tau]  = \[Tau]\[Tau]c$default , $\[Tau]\[Tau]];
+	\[Tau]\[Tau]$current     = If[MatchQ[$\[Tau]\[Tau],  Default], $\[Tau]\[Tau]  = \[Tau]\[Tau]$default , $\[Tau]\[Tau]];
+	\[Tau]Kplus$current = If[MatchQ[$\[Tau]Kplus,  Default], $\[Tau]Kplus  = \[Tau]Kplus$default , $\[Tau]Kplus];
+	\[Tau]KL$current    = If[MatchQ[$\[Tau]KL,  Default], $\[Tau]KL  = \[Tau]KL$default , $\[Tau]KL];
 	\[Tau]Bs$current    = If[MatchQ[$\[Tau]Bs,  Default], $\[Tau]Bs  = \[Tau]Bs$default , $\[Tau]Bs];
+	\[Tau]B0$current    = If[MatchQ[$\[Tau]B0,  Default], $\[Tau]B0  = \[Tau]B0$default , $\[Tau]B0];
+	\[Tau]Bplus$current = If[MatchQ[$\[Tau]Bplus,  Default], $\[Tau]Bplus  = \[Tau]Bplus$default , $\[Tau]Bplus];
 	
 	fBs$current    = If[MatchQ[$fBs,  Default], $fBs  = fBs$default , $fBs];
 	
@@ -917,7 +1072,8 @@ DefineParameters[OptionsPattern[]] := Module[
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
 		Vckm[3,3] -> 1
 		};*)
-	$ckmrep=WolfensteinParametrization[$\[Lambda],$A,$\[Rho],$\[Eta]];
+	(*Print[{$\[Lambda],$A,$\[Rho],$\[Eta]}/.Around->ComplexAround/.List->Sequence];*)
+	$ckmrep=WolfensteinParametrization[{$\[Lambda],$A,$\[Rho],$\[Eta]}/.Around->ComplexAround/.List->Sequence](*/.ComplexAround[a_?Internal`RealValuedNumericQ,da_?Internal`RealValuedNumericQ]:>Around[a,da]//Chop*);
 	$Yu = ((Sqrt[2]/$vev*DiagonalMatrix[{$mu,$mc,$mt}]) . Vu)/.$ckmrep;
 	$Yd = ((Sqrt[2]/$vev*DiagonalMatrix[{$md,$md,$mb}]) . Vd)/.$ckmrep;
 	$Ye = Sqrt[2]/$vev*DiagonalMatrix[{$me,$m\[Mu],$m\[Tau]}];
@@ -952,7 +1108,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	ModifyMediator[Mediators->mediators$current];
 	
 	(* Create the appropriate substitution rule *)
-	ExperimentalParameters = <|
+	ExperimentalParameters = Join[<|
 		Param["\[Alpha]EM"] -> $\[Alpha]EM,
 		Param["GF"]  -> $GF,
 		Param["vev"] -> $vev,
@@ -963,7 +1119,15 @@ DefineParameters[OptionsPattern[]] := Module[
 		Param["g2"]  -> $g2,
 		Param["\[Alpha]S"]  -> $\[Alpha]S,
 		Param["g3"]  -> $g3,
-		(* CKM *)
+		Param["gZ"]  -> $g2/Sqrt[1. - $sW^2],
+		
+		(* CKM inputs *)
+		Param["|Vus|"] -> $Vus,
+		Param["|Vcb|"] -> $Vcb,
+		Param["|Vub|"] -> $Vub,
+		Param["\[Gamma]"] -> $\[Gamma]CKM,
+		
+		(*(* CKM *)
 		Vckm[1,1] -> 1-$\[Lambda]^2/2,
 		Vckm[1,2] -> $\[Lambda],
 		Vckm[1,3] -> $A * $\[Lambda]^3 * ($\[Rho] - I*$\[Eta]),
@@ -974,7 +1138,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		Vckm[3,1] -> $A * $\[Lambda]^3 * (1 - $\[Rho] - I*$\[Eta]),
 		Vckm[3,2] -> -$A * $\[Lambda]^2,
-		Vckm[3,3] -> 1,
+		Vckm[3,3] -> 1,*)
 		
 		(* Wolfenstein *)
 		Param["Wolfenstein\[Lambda]"]    -> $\[Lambda],
@@ -1050,10 +1214,16 @@ DefineParameters[OptionsPattern[]] := Module[
 		
 		Lifetime["\[Mu]"]  -> $\[Tau]\[Mu],
 		Lifetime["\[Tau]"]  -> $\[Tau]\[Tau],
+		Lifetime["K+"] -> $\[Tau]Kplus,
+		Lifetime["KL"] -> $\[Tau]KL,
 		Lifetime["Bs"] -> $\[Tau]Bs,
+		Lifetime["B0"] -> $\[Tau]B0,
+		Lifetime["B+"] -> $\[Tau]Bplus,
 		
 		DecayConstant["Bs"] -> $fBs
-	|>;
+	|>,
+	Association[$ckmrep]
+	];
 ]
 
 
@@ -1079,7 +1249,7 @@ Options[GetParameters]={
 (* returns the current value of the (B)SM parameters *)
 GetParameters[OptionsPattern[]]:= If[MatchQ[OptionValue[Errors],True],
 	Join[ExperimentalParameters, ReplaceMassWidth[]],
-	Join[ExperimentalParameters, ReplaceMassWidth[]]/.Around[a_,b_]->a
+	Join[ExperimentalParameters, ReplaceMassWidth[]]/.Around[a_,b_]->a/.ComplexAround[a_,da_]->a
 	]
 
 

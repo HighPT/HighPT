@@ -33,6 +33,9 @@ PackageExport["WCL"]
 PackageScope["GetAllWCL"]
 
 
+PackageScope["LEFTTruncate"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -102,8 +105,8 @@ class8WCL= Alternatives[
 ];
 
 
-(* ::Subsubsection:: *)
-(*Index relabeling redundancies (to do)*)
+(* ::Subsubsection::Closed:: *)
+(*Index relabeling redundancies*)
 
 
 (* ::Text:: *)
@@ -224,7 +227,37 @@ WCL/:Conjugate[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= W
 WCL/:Conjugate[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
 
 
-(* ::Subsubsection:: *)
+WCL/:Re[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
+
+
+WCL/:Re[WCL[lab:class6WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}] /; a<=i
+
+
+WCL/:Re[WCL[lab:class6WCL,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= WCL[lab,{a,i,i,a}] /; a<i
+
+
+WCL/:Re[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
+
+
+WCL/:Re[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
+
+
+WCL/:Im[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= 0
+
+
+WCL/:Im[WCL[lab:class6WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0 /; a<=i
+
+
+WCL/:Im[WCL[lab:class6WCL,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= 0 /; a<i
+
+
+WCL/:Im[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
+
+
+WCL/:Im[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
+
+
+(* ::Subsubsection::Closed:: *)
 (*Set coefficients with top quark to zero*)
 
 
@@ -318,6 +351,21 @@ $WCLList3=List[
 
 
 (* ::Subsubsection:: *)
+(*d = 4*)
+
+
+$WCLList4=List[
+	"gZeL","gZeR",
+	"gZ\[Nu]L",
+	"gZdL","gZdR",
+	"gZuL","gZuR",
+	"mW",
+	"gWqL","gWqR",
+	"gWlL"
+]
+
+
+(* ::Subsubsection:: *)
 (*d = 5*)
 
 
@@ -388,10 +436,25 @@ $WCLList6psi4=List[
 (*Check WC label*)
 
 
-WCL[l:Except[Alternatives@@Join[$WCLList3, $WCLList5, $WCLList6X3, $WCLList6psi4(*,$WCLList7*), {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+WCL[l:Except[Alternatives@@Join[$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4(*,$WCLList7*), {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WCL::unknownWCLlabel,l];
 	Abort[]
 )
 
 
-GetAllWCL = Join[$WCLList3, $WCLList5, $WCLList6X3, $WCLList6psi4]
+GetAllWCL = Join[$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4]
+
+
+(* ::Section:: *)
+(*LEFT Truncation*)
+
+
+MassDimension[Alternatives@@$WCLList4] := 4
+MassDimension[Alternatives@@$WCLList5] := 5
+MassDimension[Alternatives@@Join[$WCLList6X3,$WCLList6psi4]] := 6
+
+
+DimensionCountingLEFT[expr_]:=expr/.WCL[lab_,ind_]:>WCL[lab,ind]*Power[eps,MassDimension[lab]-4]/.Conjugate[WC[lab_,ind_]]:>Conjugate[WC[lab,ind]]*Power[eps,MassDimension[lab]-4]
+
+
+LEFTTruncate[expr_,lambdapower_Integer]:=(Series[DimensionCountingLEFT[expr],{eps,0,-lambdapower}]//Normal)/.eps->1

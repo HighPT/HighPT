@@ -110,7 +110,7 @@ rot,i,j,k,l,\[Alpha],\[Beta]
 ,
 Switch[
 lab,
-"Hq1" | "Hq3",
+"Hq1" | "Hq3" | "q2H4D1" | "q2H4D2" | "q2H4D3" | "q2H4D4",
 i=flav[[1]];j=flav[[2]];
 Switch[
 		type,
@@ -235,13 +235,13 @@ MassRotate[Conjugate[a_],"dd"]:=MassRotate[a,"dd"]\[Conjugate]
 g22onmW2:=(4\[Pi] Param["\[Alpha]EM"])/(Param["sW"]^2 Mass["WBoson"]^2);
 
 
-WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}];
+WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}](*+Param["vev"]^4/2 (WC["l2H4D2",{\[Alpha],\[Beta]}]+I*WC["l2H4D3",{\[Alpha],\[Beta]}])*);
 
 
-WCoupling["q",{i_,j_}]:=Vckm[i,j]+Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"ud"];
+WCoupling["q",{i_,j_}]:=Vckm[i,j]+Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"ud"](*+Param["vev"]^4/2 (MassRotate[WC["q2H4D2",{i,j}],"ud"]+I*MassRotate[WC["q2H4D3",{i,j}],"ud"])*);
 
 
-WCoupling["ud",{i_,j_}]:=1/2 Param["vev"]^2 WC["Hud",{i,j}];
+WCoupling["ud",{i_,j_}]:=(*1/2*) Param["vev"]^2 WC["Hud",{i,j}] (*+ Param["vev"]^4/2 WC["udH4D",{i,j}]*);
 
 
 (* ::Subsubsection:: *)
@@ -251,32 +251,58 @@ WCoupling["ud",{i_,j_}]:=1/2 Param["vev"]^2 WC["Hud",{i,j}];
 gZ2onmZ2:=(4\[Pi] Param["\[Alpha]EM"])/(Param["cW"]^2 Param["sW"]^2 Mass["ZBoson"]^2);
 
 
-ZCoupling["\[Nu]L",{\[Alpha]_,\[Beta]_}]:=1/2 KroneckerDelta[\[Alpha],\[Beta]]-1/2 Param["vev"]^2 WC["Hl1",{\[Alpha],\[Beta]}]+1/2 Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}];
+ZCoupling["\[Nu]L",{\[Alpha]_,\[Beta]_}]:=1/2 KroneckerDelta[\[Alpha],\[Beta]]-1/2 Param["vev"]^2 WC["Hl1",{\[Alpha],\[Beta]}]+1/2 Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}](*-Param["vev"]^4/4 (WC["l2H4D1",{\[Alpha],\[Beta]}]-2 WC["l2H4D2",{\[Alpha],\[Beta]}])*);
 
 
-ZCoupling["eL",{\[Alpha]_,\[Beta]_}]:=(Param["sW"]^2-1/2)KroneckerDelta[\[Alpha],\[Beta]]-1/2 Param["vev"]^2 WC["Hl1",{\[Alpha],\[Beta]}]-1/2 Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}];
+ZCoupling["eL",{\[Alpha]_,\[Beta]_}]:=(Param["sW"]^2-1/2)KroneckerDelta[\[Alpha],\[Beta]]-1/2 Param["vev"]^2 WC["Hl1",{\[Alpha],\[Beta]}]-1/2 Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}](*-Param["vev"]^4/4 (WC["l2H4D1",{\[Alpha],\[Beta]}]+2 WC["l2H4D2",{\[Alpha],\[Beta]}])*);
 
 
-ZCoupling["eR",{\[Alpha]_,\[Beta]_}]:=Param["sW"]^2 KroneckerDelta[\[Alpha],\[Beta]]-1/2 Param["vev"]^2 WC["He",{\[Alpha],\[Beta]}];
+ZCoupling["eR",{\[Alpha]_,\[Beta]_}]:=Param["sW"]^2 KroneckerDelta[\[Alpha],\[Beta]]-1/2 Param["vev"]^2 WC["He",{\[Alpha],\[Beta]}](*-Param["vev"]^4/4 WC["e2H4D",{\[Alpha],\[Beta]}]*);
 
 
-ZCoupling["uL",{i_,j_}]:=(1/2-2/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 MassRotate[WC["Hq1",{i,j}],"uu"]+1/2 Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"uu"];
+ZCoupling["uL",{i_,j_}]:=(1/2-2/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 MassRotate[WC["Hq1",{i,j}],"uu"]+1/2 Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"uu"](*-Param["vev"]^4/4 (MassRotate[WC["q2H4D1",{i,j}],"uu"]-2 MassRotate[WC["q2H4D2",{i,j}],"uu"])*);
 
 
-ZCoupling["uR",{i_,j_}]:=(-(2/3) Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 WC["Hu",{i,j}];
+ZCoupling["uR",{i_,j_}]:=(-(2/3) Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 WC["Hu",{i,j}](*-Param["vev"]^4/4 WC["u2H4D",{i,j}]*);
 
 
-ZCoupling["dL",{i_,j_}]:=(-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 MassRotate[WC["Hq1",{i,j}],"dd"]-1/2 Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"dd"];
+ZCoupling["dL",{i_,j_}]:=(-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 MassRotate[WC["Hq1",{i,j}],"dd"]-1/2 Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"dd"](*-Param["vev"]^4/4 (MassRotate[WC["q2H4D1",{i,j}],"dd"]+2 MassRotate[WC["q2H4D2",{i,j}],"dd"])*);
 
 
-ZCoupling["dR",{i_,j_}]:=(1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 WC["Hd",{i,j}];
+ZCoupling["dR",{i_,j_}]:=(1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 WC["Hd",{i,j}](*-Param["vev"]^4/4 WC["d2H4D",{i,j}]*);
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*\[Nu]\[Nu]X*)
 
 
 TLMatching[WCL["\[Nu]\[Gamma]",{\[Alpha]_,\[Beta]_}]]:=0;
+
+
+(* ::Subsection:: *)
+(*\[Delta]gZ, \[Delta]gW*)
+
+
+TLMatching[WCL["gZeL",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Param["cW"])ZCoupling["eL",{\[Alpha],\[Beta]}]
+TLMatching[WCL["gZeR",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Param["cW"])ZCoupling["eR",{\[Alpha],\[Beta]}]
+
+
+TLMatching[WCL["gZ\[Nu]L",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Param["cW"])ZCoupling["\[Nu]L",{\[Alpha],\[Beta]}]
+
+
+TLMatching[WCL["gZdL",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Param["cW"])ZCoupling["dL",{\[Alpha],\[Beta]}]
+TLMatching[WCL["gZdR",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Param["cW"])ZCoupling["dR",{\[Alpha],\[Beta]}]
+
+
+TLMatching[WCL["gZuL",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Param["cW"])ZCoupling["uL",{\[Alpha],\[Beta]}]
+TLMatching[WCL["gZuR",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Param["cW"])ZCoupling["uR",{\[Alpha],\[Beta]}]
+
+
+TLMatching[WCL["gWqL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])WCoupling["q",{i,j}]
+TLMatching[WCL["gWqR",{i_,j_}]] := -(Param["g2"]/Sqrt[2])WCoupling["ud",{i,j}]
+
+
+TLMatching[WCL["gWlL",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Sqrt[2])WCoupling["l",{\[Alpha],\[Beta]}]
 
 
 (* ::Subsection:: *)

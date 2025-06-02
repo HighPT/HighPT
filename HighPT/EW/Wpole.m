@@ -43,6 +43,30 @@ EWObservables["Wpole"]={
 	};
 
 
+EWObservables["WpoleNEW"]={
+	"mWNEW",
+	"\[CapitalGamma]WNEW",
+	"W->e\[Nu]NEW","W->\[Mu]\[Nu]NEW","W->\[Tau]\[Nu]NEW",
+	"W->\[Mu]\[Nu]/W->e\[Nu]_CDFNEW","W->e\[Nu]/W->\[Mu]\[Nu]_LHCbNEW","W->\[Mu]\[Nu]/W->e\[Nu]_ATLASNEW","W->\[Tau]\[Nu]/W->e\[Nu]NEW","W->\[Tau]\[Nu]/W->\[Mu]\[Nu]NEW",
+	"RWcNEW"
+	};
+
+
+ObservableList["WpoleNEW"] := {
+	"mWNEW",
+	"\[CapitalGamma]WNEW",
+	"W->e\[Nu]NEW","W->\[Mu]\[Nu]NEW","W->\[Tau]\[Nu]NEW",
+	"W->\[Mu]\[Nu]/W->e\[Nu]_CDFNEW","W->e\[Nu]/W->\[Mu]\[Nu]_LHCbNEW","W->\[Mu]\[Nu]/W->e\[Nu]_ATLASNEW","W->\[Tau]\[Nu]/W->e\[Nu]NEW","W->\[Tau]\[Nu]/W->\[Mu]\[Nu]NEW",
+	"RWcNEW"
+}
+
+
+LowScale[Alternatives@@(Join[EWObservables["Wpole"],{}(*EWObservables["WpoleNEW"]*)])] := \[Mu]EW;
+
+
+LowScale$default[Alternatives@@(ObservableList["WpoleNEW"])] := \[Mu]EW;
+
+
 (* ::Section:: *)
 (*Useful definitions*)
 
@@ -217,6 +241,200 @@ NPContribution$default["RWc"]:=(((2 Vckm[2,2]\[Delta]gW["q",Left,{2,2}])/(Vckm[1
 
 
 (* ::Section:: *)
+(*mW NEW*)
+
+
+TheoryExpression["mWNEW"] := WCL["mW",{}]
+
+
+ExpValue$default["mWNEW"] := Around[80.379,0.012];
+
+
+SMPrediction$default["mWNEW"] := Around[80.356,null];
+
+
+NPContribution$default["mWNEW"] := NPFromTheoryExpression["mWNEW"]
+
+
+(* ::Section:: *)
+(*\[CapitalGamma]W NEW*)
+
+
+TheoryExpression["\[CapitalGamma]WNEW"] := Mass["WBoson"]/(24\[Pi])*(Sum[WCL["gWlL",{i,j}]^2,{i,3},{j,3}]+3*Sum[WCL["gWqL",{i,j}]^2+WCL["gWqR",{i,j}]^2,{i,2},{j,3}])
+
+
+ExpValue$default["\[CapitalGamma]WNEW"] := \[CapitalGamma]W$default;
+
+
+SMPrediction$default["\[CapitalGamma]WNEW"] := Around[2.088,null];
+
+
+NPContribution$default["\[CapitalGamma]WNEW"] := NPFromTheoryExpression["\[CapitalGamma]WNEW"]
+
+
+(* ::Section:: *)
+(*Branching fractions NEW*)
+
+
+BrWlnu[i_,j_] := 1/TheoryExpression["\[CapitalGamma]WNEW"] Mass["WBoson"]/(24\[Pi])*WCL["gWlL",{i,j}]^2
+
+
+(* ::Subsection:: *)
+(*W -> e\[Nu]*)
+
+
+TheoryExpression["W->e\[Nu]NEW"] := Sum[BrWlnu[1,j],{j,3}]
+
+
+ExpValue$default["W->e\[Nu]NEW"] := Around[0.1071,0.0016];
+
+
+SMPrediction$default["W->e\[Nu]NEW"] := Around[0.1082,null];
+
+
+NPContribution$default["W->e\[Nu]NEW"] := NPFromTheoryExpression["W->e\[Nu]NEW"]
+
+
+(* ::Subsection:: *)
+(*W -> \[Mu]\[Nu]*)
+
+
+TheoryExpression["W->\[Mu]\[Nu]NEW"] := Sum[BrWlnu[2,j],{j,3}]
+
+
+ExpValue$default["W->\[Mu]\[Nu]NEW"] := Around[0.1063,0.0015];
+
+
+SMPrediction$default["W->\[Mu]\[Nu]NEW"] := Around[0.1082,null];
+
+
+NPContribution$default["W->\[Mu]\[Nu]NEW"] := NPFromTheoryExpression["W->\[Mu]\[Nu]NEW"]
+
+
+(* ::Subsection:: *)
+(*W -> \[Tau]\[Nu]*)
+
+
+TheoryExpression["W->\[Tau]\[Nu]NEW"] := Sum[BrWlnu[3,j],{j,3}]
+
+
+ExpValue$default["W->\[Tau]\[Nu]NEW"] := Around[0.1138,0.0021];
+
+
+SMPrediction$default["W->\[Tau]\[Nu]NEW"] := Around[0.1081,null];
+
+
+NPContribution$default["W->\[Tau]\[Nu]NEW"] := NPFromTheoryExpression["W->\[Tau]\[Nu]NEW"]
+
+
+(* ::Section:: *)
+(*Universality ratios NEW*)
+
+
+(*\[CapitalDelta]BrWl\[Nu]ratio[i_,j_]:=2 \[Delta]gW["l",Left,{i,i}]-2 \[Delta]gW["l",Left,{j,j}];*)
+
+
+(* W->l_i \[Nu] / W->l_k \[Nu] *)
+BrWlnuRatio[i_,k_] := Sum[WCL["gWlL",{i,j}]^2,{j,3}]/Sum[WCL["gWlL",{k,l}]^2,{l,3}]
+
+
+(* ::Subsection:: *)
+(*W -> \[Mu]\[Nu]/W -> e\[Nu] (CDF)*)
+
+
+TheoryExpression["W->\[Mu]\[Nu]/W->e\[Nu]_CDFNEW"] := BrWlnuRatio[2,1]
+
+
+ExpValue$default["W->\[Mu]\[Nu]/W->e\[Nu]_CDFNEW"] := Around[0.982,0.024];
+
+
+SMPrediction$default["W->\[Mu]\[Nu]/W->e\[Nu]_CDFNEW"] := Around[1.000,null];
+
+
+NPContribution$default["W->\[Mu]\[Nu]/W->e\[Nu]_CDFNEW"] := NPFromTheoryExpression["W->\[Mu]\[Nu]/W->e\[Nu]_CDFNEW"]
+
+
+(* ::Subsection:: *)
+(*W -> e\[Nu]/W -> \[Mu]\[Nu] (LHCb)*)
+
+
+TheoryExpression["W->e\[Nu]/W->\[Mu]\[Nu]_LHCbNEW"] := BrWlnuRatio[1,2]
+
+
+ExpValue$default["W->e\[Nu]/W->\[Mu]\[Nu]_LHCbNEW"] := Around[1.020,0.019];
+
+
+SMPrediction$default["W->e\[Nu]/W->\[Mu]\[Nu]_LHCbNEW"] := Around[1.000,null];
+
+
+NPContribution$default["W->e\[Nu]/W->\[Mu]\[Nu]_LHCbNEW"] := NPFromTheoryExpression["W->e\[Nu]/W->\[Mu]\[Nu]_LHCbNEW"]
+
+
+(* ::Subsection:: *)
+(*W -> \[Mu]\[Nu]/W -> e\[Nu] (ATLAS)*)
+
+
+TheoryExpression["W->\[Mu]\[Nu]/W->e\[Nu]_ATLASNEW"] := BrWlnuRatio[2,1]
+
+
+ExpValue$default["W->\[Mu]\[Nu]/W->e\[Nu]_ATLASNEW"] := Around[1.003,0.010];
+
+
+SMPrediction$default["W->\[Mu]\[Nu]/W->e\[Nu]_ATLASNEW"] := Around[1.000,null];
+
+
+NPContribution$default["W->\[Mu]\[Nu]/W->e\[Nu]_ATLASNEW"] := NPFromTheoryExpression["W->\[Mu]\[Nu]/W->e\[Nu]_ATLASNEW"]
+
+
+(* ::Subsection:: *)
+(*W -> \[Tau]\[Nu]/W -> e\[Nu] (PDG, D0)*)
+
+
+TheoryExpression["W->\[Tau]\[Nu]/W->e\[Nu]NEW"] := BrWlnuRatio[3,1]
+
+
+ExpValue$default["W->\[Tau]\[Nu]/W->e\[Nu]NEW"] := Around[0.961,0.061];
+
+
+SMPrediction$default["W->\[Tau]\[Nu]/W->e\[Nu]NEW"] := Around[0.999,null];
+
+
+NPContribution$default["W->\[Tau]\[Nu]/W->e\[Nu]NEW"] := NPFromTheoryExpression["W->\[Tau]\[Nu]/W->e\[Nu]NEW"]
+
+
+(* ::Subsection:: *)
+(*W -> \[Tau]\[Nu]/W -> \[Mu]\[Nu] (ATLAS)*)
+
+
+TheoryExpression["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]NEW"] := BrWlnuRatio[3,2]
+
+
+ExpValue$default["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]NEW"] := Around[0.992,0.013];
+
+
+SMPrediction$default["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]NEW"] := Around[0.999,null];
+
+
+NPContribution$default["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]NEW"] := NPFromTheoryExpression["W->\[Tau]\[Nu]/W->\[Mu]\[Nu]NEW"]
+
+
+(* ::Section:: *)
+(*RWc NEW*)
+
+
+TheoryExpression["RWcNEW"] := (WCL["gWqL",{2,2}]^2+WCL["gWqR",{2,2}]^2)/Sum[WCL["gWqL",{i,i}]^2+WCL["gWqR",{i,i}]^2,{i,2}]
+
+
+ExpValue$default["RWcNEW"] := Around[0.49,0.04];
+
+
+SMPrediction$default["RWcNEW"] := Around[0.50,null];
+
+
+NPContribution$default["RWcNEW"] := NPFromTheoryExpression["RWcNEW"]
+
+
+(* ::Section:: *)
 (*Exp Correlations*)
 
 
@@ -225,6 +443,17 @@ ExpCorrelation["W->e\[Nu]","W->\[Tau]\[Nu]"]:=-0.201;
 
 
 ExpCorrelation["W->\[Mu]\[Nu]","W->\[Tau]\[Nu]"]:=-0.122;
+
+
+(* ::Section:: *)
+(*Exp Correlations NEW*)
+
+
+ExpCorrelation["W->e\[Nu]NEW","W->\[Mu]\[Nu]NEW"]:=0.136;
+ExpCorrelation["W->e\[Nu]NEW","W->\[Tau]\[Nu]NEW"]:=-0.201;
+
+
+ExpCorrelation["W->\[Mu]\[Nu]NEW","W->\[Tau]\[Nu]NEW"]:=-0.122;
 
 
 (* ::Section:: *)

@@ -51,6 +51,10 @@ PackageScope["SubstitutionRulesSMEFT"]
 PackageScope["GetAllWC"]
 
 
+PackageScope["MassDimension"]
+PackageScope["SMEFTTruncate"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -59,7 +63,7 @@ PackageScope["GetAllWC"]
 (*EFT dimension and power counting*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*EFT operator dimensions*)
 
 
@@ -85,7 +89,7 @@ SetOperatorDimension[d:Except[4|6|8]] := Message[SetOperatorDimension::dimension
 GetOperatorDimension[] := $OperatorDimension
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*EFT power expansion*)
 
 
@@ -344,6 +348,36 @@ WC/:Conjugate[WC[lab:class7WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[l
 WC/:Conjugate[WC[lab:class8WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}]
 
 
+WC/:Re[WC[lab:class2WC,{p_Integer,p_Integer}]]:= WC[lab,{p,p}]
+
+
+WC/:Re[WC[lab:class6WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}] /; a<=i
+
+
+WC/:Re[WC[lab:class6WC,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= WC[lab,{a,i,i,a}] /; a<i
+
+
+WC/:Re[WC[lab:class7WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}]
+
+
+WC/:Re[WC[lab:class8WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}]
+
+
+WC/:Im[WC[lab:class2WC,{p_Integer,p_Integer}]]:= 0
+
+
+WC/:Im[WC[lab:class6WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0 /; a<=i
+
+
+WC/:Im[WC[lab:class6WC,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= 0 /; a<i
+
+
+WC/:Im[WC[lab:class7WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
+
+
+WC/:Im[WC[lab:class8WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
+
+
 (* ::Subsection:: *)
 (*WC argument check*)
 
@@ -352,18 +386,69 @@ WC/:Conjugate[WC[lab:class8WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[l
 (*\[Psi]^0*)
 
 
-$WCList0=List[
+$WCList0d6=List[
 	"H","HD","HBox",
 	"HG","HGt","HW","HWt","HB","HBt","HWB","HWtB",
 	"G","Gt","W","Wt"
 ]
 
 
+$WCList0d8=List[
+	"H61","H62",
+	"G2H41","G2H42",
+	"W2H41","W2H42","W2H43","W2H44",
+	"WBH41","WBH42",
+	"B2H41","B2H42"
+]
+
+
+(*$WCList0=List[
+	"H","HD","HBox",
+	"HG","HGt","HW","HWt","HB","HBt","HWB","HWtB",
+	"G","Gt","W","Wt",
+	"H61","H62",
+	"G2H41","G2H42",
+	"W2H41","W2H42","W2H43","W2H44",
+	"WBH41","WBH42",
+	"B2H41","B2H42"
+]*)
+$WCList0=Join[$WCList0d6,$WCList0d8]
+
+
 (* ::Subsubsection:: *)
 (*\[Psi]^2*)
 
 
-$WCList2=List[
+$WCList2d6=List[
+	(* Psi^2 H^2 D *)
+	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
+	
+	(* non-hermitain *)
+	"Hud", "eW", "eB", "uW", "uB", "dW", "dB","uG","dG",
+	
+	(* Psi^2 H^3 *)
+	"uH","dH","eH"
+]
+
+
+$WCList2d8=List[
+	(* Psi^2 H^4 D *)
+	"l2H4D1","l2H4D2","l2H4D3","l2H4D4",
+	"q2H4D1","q2H4D2","q2H4D3","q2H4D4",
+	"e2H4D","u2H4D","d2H4D",
+	(* Psi^2 H^2 D^3 *)
+	"l2H2D31","l2H2D32","l2H2D33","l2H2D34",
+	"e2H2D31","e2H2D32",
+	"q2H2D31","q2H2D32","q2H2D33","q2H2D34",
+	"u2H2D31","u2H2D32",
+	"d2H2D31","d2H2D32",
+	
+	(* non-hermitain *)
+	"udH4D"
+]
+
+
+(*$WCList2=List[
 	(* Psi^2 H^2 D *)
 	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
 	(* Psi^2 H^4 D *)
@@ -378,11 +463,12 @@ $WCList2=List[
 	"d2H2D31","d2H2D32",
 	
 	(* non-hermitain *)
-	"Hud", "eW", "eB", "uW", "uB", "dW", "dB","uG","dG",
+	"Hud", "eW", "eB", "uW", "uB", "dW", "dB","uG","dG","udH4D",
 	
 	(* Psi^2 H^3 *)
 	"uH","dH","eH"
-]
+]*)
+$WCList2=Join[$WCList2d6,$WCList2d8]
 
 
 (*$WCList2=List[
@@ -408,7 +494,43 @@ $WCList2=List[
 (*\[Psi]^4*)
 
 
-$WCList4=List[
+$WCList4d6=List[
+	(* Psi^4 *)
+	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
+
+	(* non-hermitian *)
+	"ledq", "lequ1", "lequ3",
+	
+	(* 4-quarks *)
+	"qq1","qq3",
+	"uu","dd","ud1","ud8",
+	"qu1","qu8","qd1","qd8",
+	"quqd1","quqd8",
+	
+	(* 4-leptons *)
+	"ll","ee","le"
+];
+
+
+$WCList4d8=List[
+	(* Psi^4 H^2 *)
+	"l2q2H21","l2q2H22","l2q2H23","l2q2H24","l2q2H25",
+	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
+	"e2q2H21","e2q2H22",
+	"e2u2H2", "e2d2H2",
+	"l4H21", "l4H22",
+	"l2e2H21","l2e2H22",
+	(* Psi^4 D^2 *)
+	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
+	"l2u2D21","l2u2D22",
+	"l2d2D21","l2d2D22",
+	"e2q2D21","e2q2D22",
+	"e2u2D21","e2u2D22",
+	"e2d2D21","e2d2D22"
+];
+
+
+(*$WCList4=List[
 	(* Psi^4 *)
 	"lq1", "lq3", "eu", "ed", "lu", "ld", "eq",
 	(* Psi^4 H^2 *)
@@ -416,6 +538,7 @@ $WCList4=List[
 	"l2u2H21","l2u2H22","l2d2H21","l2d2H22",
 	"e2q2H21","e2q2H22",
 	"e2u2H2", "e2d2H2",
+	"l4H21", "l4H22",
 	(* Psi^4 D^2 *)
 	"l2q2D21","l2q2D22","l2q2D23","l2q2D24",
 	"l2u2D21","l2u2D22",
@@ -434,7 +557,8 @@ $WCList4=List[
 	"quqd1","quqd8",
 	(* 4-leptons *)
 	"ll","ee","le"
-];
+];*)
+$WCList4=Join[$WCList4d6,$WCList4d8]
 
 
 (*$WCList4=List[
@@ -469,6 +593,20 @@ WC[l:Except[Alternatives@@Join[$WCList0, $WCList2, $WCList4, {_Pattern, _Blank, 
 
 
 GetAllWC = Join[$WCList0, $WCList2, $WCList4]
+
+
+(* ::Section:: *)
+(*SMEFT Truncation*)
+
+
+MassDimension[Alternatives@@Join[$WCList0d6,$WCList2d6,$WCList4d6]] := 6
+MassDimension[Alternatives@@Join[$WCList0d8,$WCList2d8,$WCList4d8]] := 8
+
+
+DimensionCountingSMEFT[expr_]:=expr/.WC[lab_,ind_]:>WC[lab,ind]*Power[eps,MassDimension[lab]-4]/.Conjugate[WC[lab_,ind_]]:>Conjugate[WC[lab,ind]]*Power[eps,MassDimension[lab]-4]
+
+
+SMEFTTruncate[expr_,lambdapower_Integer]:=(Series[DimensionCountingSMEFT[expr],{eps,0,-lambdapower}]//Normal)/.eps->1
 
 
 (* ::Section:: *)

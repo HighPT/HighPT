@@ -47,6 +47,10 @@ C10SM=-4.18869;
 CL\[Nu]SM=2*Around[-6.32,0.07];
 
 
+ObservableSectors["\[CapitalDelta]F=1"] := {"b->sll"}
+ObservableList["\[CapitalDelta]F=1"] := ObservableList/@ObservableSectors["\[CapitalDelta]F=1"]
+
+
 (* ::Section::Closed:: *)
 (*Basis change (WET to LEFT)*)
 
@@ -71,17 +75,23 @@ wCL["R\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLR",{\[Alpha],\[Beta],i,j}
 };
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*b -> sll (')*)
 
 
 FlavorObservables["b->sll"] = {"B+->K+\[Tau]\[Tau]","B0->K0*\[Tau]\[Tau]","Bs->ee","Bs->\[Mu]\[Mu]","Bs->\[Tau]\[Tau]"};
 
 
+ObservableList["b->sll"] := {"Bs->\[Tau]\[Tau]","Bs->\[Mu]\[Mu]"}
+
+
 ObsTable["b->sll"] := Grid[{{"b->sll",Column[FlavorObservables["b->sll"]]}},Dividers->All];
 
 
 LowScale[Alternatives@@(FlavorObservables["b->sll"]//Flatten)] := Mass["b"]/.GetParameters[];
+
+
+LowScale$default[Alternatives@@(ObservableList["b->sll"]//Flatten)] := Mass["b"]/.GetParameters[];
 
 
 (* ::Text:: *)
@@ -247,6 +257,9 @@ BsToll[l_]:=Lifetime["Bs"]/(128\[Pi]) DecayConstant["Bs"]^2 Mass["Bs"] Sqrt[1-(4
 (*Bs -> ee*)
 
 
+TheoryExpression["Bs->ee"] := BsToll[1];
+
+
 ExpValue$default["Bs->ee"] := Around[0,11.2]*10^-9/2;
 
 
@@ -261,15 +274,18 @@ NPContribution$default["Bs->ee"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"
 (*Bs->\[Mu]\[Mu]*)
 
 
+TheoryExpression["Bs->\[Mu]\[Mu]"] := BsToll[2];
+
+
 ExpValue$default["Bs->\[Mu]\[Mu]"] := Around[3.35,0.27]*10^-9;
 
 
 NumericalInput["Bs->\[Mu]\[Mu]"] := Around[2.1516,0.0455]*10^-6;
 InputDependence["Bs->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
-SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs taken from ... "
+SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs taken from ..., theory prediction from ..."
 
 
-NPContribution$default["Bs->\[Mu]\[Mu]"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{2,2,3,2}]+Conjugate[WCL["edSRL",{2,2,2,3}]]-WCL["edSRL",{2,2,3,2}]-Conjugate[WCL["edSRR",{2,2,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,2,2}]]-Conjugate[WCL["edVLL",{2,2,2,3}]]-Conjugate[WCL["edVRR",{2,2,2,3}]]+Conjugate[WCL["edVLR",{2,2,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{2,2,3,2}]-Conjugate[WCL["edSRL",{2,2,2,3}]]-WCL["edSRL",{2,2,3,2}]+Conjugate[WCL["edSRR",{2,2,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;
+NPContribution$default["Bs->\[Mu]\[Mu]"] := NPFromTheoryExpression["Bs->\[Mu]\[Mu]"]
 
 
 NPInfo["Bs->\[Mu]\[Mu]"] := "Ciao Claudia!"
@@ -287,6 +303,9 @@ ExpValue$default["Bs->\[Tau]\[Tau]"] := Around[0,6.8]*10^-3/2;
 
 NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*Around[2.1516,0.0455]*10^-6/.GetParameters[Errors->True];
 InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
+
+
+SMInfo["Bs->\[Tau]\[Tau]"] := "f_Bs taken from ..., theory prediction from ... rescaling for the tau mass"
 
 
 (*NPContribution$default["Bs->\[Tau]\[Tau]"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{3,3,3,2}]+Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]-Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,3,3}]]-Conjugate[WCL["edVLL",{3,3,2,3}]]-Conjugate[WCL["edVRR",{3,3,2,3}]]+Conjugate[WCL["edVLR",{3,3,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{3,3,3,2}]-Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]+Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;*)
