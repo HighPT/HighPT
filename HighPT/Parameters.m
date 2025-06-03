@@ -152,7 +152,7 @@ ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 (*Make constants real*)
 
 
-$realParameters = Alternatives["vev", "\[Alpha]EM", "sW", "cW", "GF", "\[Alpha]S"]
+$realParameters = Alternatives["vev", "\[Alpha]EM", "sW", "cW", "GF", "\[Alpha]S", "|Vus|", "|Vcb|", "|Vub|", "\[Gamma]"]
 
 
 Param/:Conjugate[Param[x:$realParameters]] := Param[x]

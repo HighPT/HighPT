@@ -28,6 +28,7 @@ PackageExport["DefineRedefinitions"]
 
 PackageExport["InputList"]
 PackageExport["SetInputRedefinitions"]
+PackageExport["GetInputRedefinitionMode"]
 
 
 (* ::Subsection:: *)
@@ -75,7 +76,7 @@ SetInputRedefinitions[x_Integer] := Module[
 	If[!MatchQ[x,0|1],Print["Please enter 0 or 1."];Abort[]];
     If[!MatchQ[x,RedefinitionFlag],
 		RedefinitionFlag = x;
-		ChangeFlavorObservable/@Flatten[FlavorObservables[]];
+		ChangeObservable/@Flatten[ObservableList["Flavor"]];
 		Print["Redefinition behaviour changed, all flavour observables updated."];
 	];
 ]
