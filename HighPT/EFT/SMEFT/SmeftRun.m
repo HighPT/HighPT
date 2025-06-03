@@ -157,7 +157,7 @@ WC["qq3",{2,3,3,3}]:>WC["qq3",{2,3,3,3}]+WC["qq3",{3,3,2,3}]
 (*SMEFTRun*)
 
 
-Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","SMEFT","SMEFTAD.dat"}];
+Get@FileNameJoin[{Global`$DirectoryHighPT,"EFT","SMEFT","SMEFTAD.dat"}];
 
 
 SMEFTAD[Conjugate[WC[lab_,ind___]]] := Conjugate[SMEFTAD[WC[lab,ind]]]

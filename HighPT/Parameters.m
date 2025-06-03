@@ -430,9 +430,10 @@ stoGeV=GeVtos^-1;
 
 
 fBs$default = Around[228.4,3.7]*10^-3;
+Info$default[DecayConstant["Bs"]] := "Taken from ..."
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Save current values of inputs [separate from default values]*)
 
 
@@ -528,10 +529,10 @@ fBs$current = fBs$default;
 (*Vus$default := Around[0.2217,0.0009];*)
 
 
-Vusplus$default := Sqrt[ExpValue$default["K+->\[Pi]0e\[Nu]"]/(TheoryExpression["K+->\[Pi]0e\[Nu]"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["K+"]->\[Tau]Kplus$current/.Param["GF"]->GF$current/.Vckm[1,2]->1)]
+Vusplus$default := Sqrt[ExpValue$default["K+->\[Pi]0e\[Nu]"]/((TheoryExpression["K+->\[Pi]0e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["K+"]->\[Tau]Kplus$current/.Vckm[1,2]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
 
 
-VusL$default := Sqrt[ExpValue$default["KL->\[Pi]-e\[Nu]"]/(TheoryExpression["KL->\[Pi]-e\[Nu]"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["KL"]->\[Tau]KL$current/.Param["GF"]->GF$current/.Vckm[1,2]->1)]
+VusL$default := Sqrt[ExpValue$default["KL->\[Pi]-e\[Nu]"]/((TheoryExpression["KL->\[Pi]-e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["KL"]->\[Tau]KL$current/.Vckm[1,2]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
 
 
 Vus$default := 1/2 (Vusplus$default+VusL$default)
@@ -544,7 +545,7 @@ Vus$default := 1/2 (Vusplus$default+VusL$default)
 (*Vcb$default := Around[0.0404,0.0003];*)
 
 
-Vcb$default := Sqrt[ExpValue$default["B->Dl\[Nu]_iso"]/(TheoryExpression["B->Dl\[Nu]_iso"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Param["GF"]->GF$current/.Vckm[2,3]->1)]
+Vcb$default := Sqrt[ExpValue$default["B->Dl\[Nu]_iso"]/((TheoryExpression["B->Dl\[Nu]_iso"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Vckm[2,3]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
 
 
 (* ::Subsection:: *)
@@ -554,7 +555,7 @@ Vcb$default := Sqrt[ExpValue$default["B->Dl\[Nu]_iso"]/(TheoryExpression["B->Dl\
 (*Vub$default := Around[0.0039,0.0002];*)
 
 
-Vub$default := Sqrt[ExpValue$default["B0->\[Pi]-l\[Nu]_high"]/(TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.a_WCL->SMValue[a]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Param["GF"]->GF$current/.Vckm[1,3]->1)]
+Vub$default := Sqrt[ExpValue$default["B0->\[Pi]-l\[Nu]_high"]/((TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Vckm[1,3]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
 
 
 (* ::Subsection:: *)

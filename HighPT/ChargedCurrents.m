@@ -316,7 +316,7 @@ TheoryExpression["B->Dl\[Nu]_iso"] := 1/2 (TheoryExpression["B0->D+l\[Nu]"]+Life
 ExpValue$default["B->Dl\[Nu]_iso"] := Around[2.11,Sqrt[0.01^2+0.05^2]]*10^-2
 
 
-SMPrediction$default["B->Dl\[Nu]_iso"] := TheoryExpression["B->Dl\[Nu]_iso"]/.a_WCL->SMValue[a]/.GetParameters[Errors->True]/.SubstitutePsi
+SMPrediction$default["B->Dl\[Nu]_iso"] := TheoryExpression["B->Dl\[Nu]_iso"]/.a_WCL->SMValue[a,TreeOnly->True]/.GetParameters[Errors->True]/.SubstitutePsi
 
 
 ExpInfo["B->Dl\[Nu]_iso"] := "Isospin average of B0->D+ and B-->D0, from HFLAV (insert link)"
@@ -644,7 +644,7 @@ TheoryExpression["B0->\[Pi]-l\[Nu]_high"] := 1/2 (TheoryExpression["B0->\[Pi]-e\
 ExpValue$default["B0->\[Pi]-l\[Nu]_high"] := Around[4.04,0.21]*10^-5
 
 
-SMPrediction$default["B0->\[Pi]-l\[Nu]_high"] := TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.a_WCL->SMValue[a]/.GetParameters[Errors->True]/.SubstitutePsi
+SMPrediction$default["B0->\[Pi]-l\[Nu]_high"] := TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.a_WCL->SMValue[a,TreeOnly->True]/.GetParameters[Errors->True]/.SubstitutePsi
 
 
 (* ::Subsection:: *)
@@ -671,7 +671,7 @@ TheoryExpression["K+->\[Pi]0e\[Nu]"] := Lifetime["K+"]/2*SEW*Kto\[Pi]l\[Nu]["K+-
 ExpValue$default["K+->\[Pi]0e\[Nu]"] := Around[5.088,0.027]*10^-2
 
 
-SMPrediction$default["K+->\[Pi]0e\[Nu]"] := TheoryExpression["K+->\[Pi]0e\[Nu]"]/.a_WCL->SMValue[a]/.GetParameters[Errors->True]/.SubstitutePsi
+SMPrediction$default["K+->\[Pi]0e\[Nu]"] := TheoryExpression["K+->\[Pi]0e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.GetParameters[Errors->True]/.SubstitutePsi
 
 
 (* ::Subsection:: *)
@@ -684,4 +684,4 @@ TheoryExpression["KL->\[Pi]-e\[Nu]"] := Lifetime["KL"]*SEW*Kto\[Pi]l\[Nu]["KL->\
 ExpValue$default["KL->\[Pi]-e\[Nu]"] := Around[4.056,0.009]*10^-1
 
 
-SMPrediction$default["KL->\[Pi]-e\[Nu]"] := TheoryExpression["KL->\[Pi]-e\[Nu]"]/.a_WCL->SMValue[a]/.GetParameters[Errors->True]/.SubstitutePsi
+SMPrediction$default["KL->\[Pi]-e\[Nu]"] := TheoryExpression["KL->\[Pi]-e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.GetParameters[Errors->True]/.SubstitutePsi

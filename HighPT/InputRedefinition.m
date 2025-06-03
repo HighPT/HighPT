@@ -119,7 +119,7 @@ InputList$default = {Param["\[Alpha]EM"],Mass["ZBoson"],Param["GF"],Param["|Vus|
 InputRedefinition$default[Param["GF"]] := Param["GF"]Param["vev"]^2 (WC["Hl3",{2,2}]+WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}](*-1/2 WC["ll",{2,1,1,2}]*))(*/.GetParameters[]*);
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*CKM*)
 
 
@@ -136,7 +136,7 @@ InputRedefinition$default[Param["|Vus|"]] := Module[
 	,
 	BrKplus = TheoryExpression["K+->\[Pi]0e\[Nu]"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
 	(*Print["Extracted K+ BR"];*)
-	BrNPKplus = 1/SMPrediction$default["K+->\[Pi]0e\[Nu]"]["Value"] ((BrKplus/.a_WCL:>(SMValue[a] + a + D[SMValue[a],Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKplus/.a_WCL:>SMValue[a]))/.GetParameters[];
+	BrNPKplus = 1/SMPrediction$default["K+->\[Pi]0e\[Nu]"]["Value"] ((BrKplus/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKplus/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	(*Print["Extracted NP part"];*)
 	BrNPKplusExpanded = Normal[Series[
 			ComplexExpand[
@@ -146,7 +146,7 @@ InputRedefinition$default[Param["|Vus|"]] := Module[
 		]]/.eps->1/.ReWCL[lab_,ind_]:>Re[WCL[lab,ind]]/.ReWC[lab_,ind_]:>Re[WC[lab,ind]];
 	(*Print["Finished expanding"];*)
 	BrKL = TheoryExpression["KL->\[Pi]-e\[Nu]"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
-	BrNPKL = 1/SMPrediction$default["KL->\[Pi]-e\[Nu]"]["Value"] ((BrKL/.a_WCL:>(SMValue[a] + a + D[SMValue[a],Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKL/.a_WCL:>SMValue[a]))/.GetParameters[];
+	BrNPKL = 1/SMPrediction$default["KL->\[Pi]-e\[Nu]"]["Value"] ((BrKL/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKL/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	BrNPKLExpanded = Normal[Series[
 			ComplexExpand[
 				BrNPKL/.WCL[lab_,ind_]:>eps*ReWCL[lab,ind]+I*eps*ImWCL[lab,ind]/.WC[lab_,ind_]:>eps*ReWC[lab,ind]+I*eps*ImWC[lab,ind]
@@ -172,7 +172,7 @@ InputRedefinition$default[Param["|Vcb|"]] := Module[
 	}
 	,
 	Br = TheoryExpression["B->Dl\[Nu]_iso"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
-	BrNP = 1/SMPrediction$default["B->Dl\[Nu]_iso"]["Value"] ((Br/.a_WCL:>(SMValue[a] + a + D[SMValue[a],Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a]))/.GetParameters[];
+	BrNP = 1/SMPrediction$default["B->Dl\[Nu]_iso"]["Value"] ((Br/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	BrNPExpanded = Normal[Series[
 			ComplexExpand[
 				BrNP/.WCL[lab_,ind_]:>eps*ReWCL[lab,ind]+I*eps*ImWCL[lab,ind]/.WC[lab_,ind_]:>eps*ReWC[lab,ind]+I*eps*ImWC[lab,ind]
@@ -198,7 +198,7 @@ InputRedefinition$default[Param["|Vub|"]] := Module[
 	}
 	,
 	Br = TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
-	BrNP = 1/SMPrediction$default["B0->\[Pi]-l\[Nu]_high"]["Value"] ((Br/.a_WCL:>(SMValue[a] + a + D[SMValue[a],Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a]))/.GetParameters[];
+	BrNP = 1/SMPrediction$default["B0->\[Pi]-l\[Nu]_high"]["Value"] ((Br/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	BrNPExpanded = Normal[Series[
 			ComplexExpand[
 				BrNP/.WCL[lab_,ind_]:>eps*ReWCL[lab,ind]+I*eps*ImWCL[lab,ind]/.WC[lab_,ind_]:>eps*ReWC[lab,ind]+I*eps*ImWC[lab,ind]
@@ -370,30 +370,45 @@ InputList=InputList$default;
 (*Standard Model values for (LEFT) Wilson Coefficients*)
 
 
-C10SM  =-4.18869
+(*C10SM  =-4.18869*)
 
 
-SMValue[x_WCL] := 0
+(*SMValue[x_WCL] := 0*)
 
 
-SMValue[WCL["edVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := 1/(Sqrt[2]\[Pi])Param["\[Alpha]EM"] Param["GF"]*Vckm[3,i]\[Conjugate]Vckm[3,j] KroneckerDelta[\[Alpha],\[Beta]] C10SM;
+(*SMValue[WCL["edVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := 1/(Sqrt[2]\[Pi])Param["\[Alpha]EM"] Param["GF"]*Vckm[3,i]\[Conjugate]Vckm[3,j] KroneckerDelta[\[Alpha],\[Beta]] C10SM;*)
 
 
-SMValue[WCL["\[Nu]eduVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := -2*Sqrt[2]Param["GF"]KroneckerDelta[\[Alpha],\[Beta]]Vckm[j,i]\[Conjugate]
+(*SMValue[WCL["\[Nu]eduVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := -2*Sqrt[2]Param["GF"]KroneckerDelta[\[Alpha],\[Beta]]Vckm[j,i]\[Conjugate]*)
 
 
-SMValue[WCL["gZeL",{i_,j_}]] := -Param["gZ"](*(Param["g2"]/Param["cW"])*)(-(1/2)+Param["sW"]^2)KroneckerDelta[i,j]
+(*SMValue[WCL["gZeL",{i_,j_}]] := -Param["gZ"](*(Param["g2"]/Param["cW"])*)(-(1/2)+Param["sW"]^2)KroneckerDelta[i,j]
 SMValue[WCL["gZeR",{i_,j_}]] := -Param["gZ"](Param["sW"]^2)KroneckerDelta[i,j]
 SMValue[WCL["gZ\[Nu]L",{i_,j_}]] := -Param["gZ"](+(1/2))KroneckerDelta[i,j]
 SMValue[WCL["gZdL",{i_,j_}]] := -Param["gZ"](-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]
 SMValue[WCL["gZdR",{i_,j_}]] := -Param["gZ"](1/3 Param["sW"]^2)KroneckerDelta[i,j]
 SMValue[WCL["gZuL",{i_,j_}]] := -Param["gZ"](+(1/2)-2/3 Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZuR",{i_,j_}]] := -Param["gZ"](-(2/3) Param["sW"]^2)KroneckerDelta[i,j]
+SMValue[WCL["gZuR",{i_,j_}]] := -Param["gZ"](-(2/3) Param["sW"]^2)KroneckerDelta[i,j]*)
 
 
-SMValue[WCL["mW",{}]] := 1/2 Param["g2"]Param["vev"]
+(*SMValue[WCL["mW",{}]] := 1/2 Param["g2"]Param["vev"]
 SMValue[WCL["gWqL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])Vckm[i,j]
-SMValue[WCL["gWlL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])KroneckerDelta[i,j]
+SMValue[WCL["gWlL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])KroneckerDelta[i,j]*)
+
+
+Options[SMValue] = {TreeOnly -> False};
+SMValue[x_WCL,OptionsPattern[]] := Module[
+	{
+	treematching
+	}
+	,
+	treematching = MatchToSMEFT[x,SM->True,LoopOrder->0]/._WC->0;
+	If[OptionValue[TreeOnly],Return[treematching]];
+	If[!MatchQ[treematching,0],
+		Return[treematching],
+		Return[MatchToSMEFT[x,SM->True,LoopOrder->1]/._WC->0]
+	];
+];
 
 
 (* ::Section:: *)

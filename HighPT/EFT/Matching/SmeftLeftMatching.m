@@ -305,6 +305,9 @@ TLMatching[WCL["gWqR",{i_,j_}]] := -(Param["g2"]/Sqrt[2])WCoupling["ud",{i,j}]
 TLMatching[WCL["gWlL",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Sqrt[2])WCoupling["l",{\[Alpha],\[Beta]}]
 
 
+TLMatching[WCL["mW",{}]] := 1/2 Param["g2"]Param["vev"]
+
+
 (* ::Subsection:: *)
 (*(LR)X*)
 
@@ -584,7 +587,7 @@ TLMatching[WCL["udduS8RR",{i_,j_,k_,l_}]]:=-MassRotate[WC["quqd8",{k,l,i,j}],"d"
 (*One - loop matching*)
 
 
-Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","Matching","OneLoopMatching.dat"}];
+Get@FileNameJoin[{Global`$DirectoryHighPT,"EFT","Matching","OneLoopMatching.dat"}];
 
 
 ReplaceMasses=<|

@@ -49,7 +49,7 @@ PackageScope["LEFTAD"]
 };*)
 
 
-Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","LEFT","LEFTAD.dat"}];
+Get@FileNameJoin[{Global`$DirectoryHighPT,"EFT","LEFT","LEFTAD.dat"}];
 
 
 (*LEFTSimplify=Get@FileNameJoin[{Global`$DirectoryHighPT,"RGE","Simplifications","LEFTSimplify.dat"}];*)
