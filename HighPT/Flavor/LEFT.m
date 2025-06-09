@@ -81,6 +81,24 @@ Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
 (*WCL classes and redundancies*)
 
 
+class0WCL=Alternatives[
+	"G", "Gt", "mW"
+];
+
+
+class2WCL=Alternatives[
+	"gZeL", "gZeR",
+	"gZ\[Nu]L",
+	"gZdL", "gZdR",
+	"gZuL", "gZuR"
+];
+
+
+class3WCL=Alternatives[
+	"\[Nu]"
+];
+
+
 class4WCL= Alternatives[
 	"\[Nu]\[Gamma]"
 ];
@@ -105,8 +123,22 @@ class8WCL= Alternatives[
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Index relabeling redundancies*)
+
+
+(* ::Text:: *)
+(*2 fermion operators -class 2*)
+
+
+WCL[lab:class2WCL,{p_Integer,r_Integer}]:= WCL[lab,{r,p}]\[Conjugate] /; p>r
+
+
+(* ::Text:: *)
+(*2 fermion operators -class 3*)
+
+
+WCL[lab:class3WCL,{p_Integer,r_Integer}]:= WCL[lab,{r,p}] /; p>r
 
 
 (* ::Text:: *)
@@ -212,6 +244,13 @@ WCL[lab:class8WCL,{3,3,3,2}]:=Conjugate[WCL[lab,{2,3,3,3}]]
 (*Real coefficients*)
 
 
+(* ::Text:: *)
+(*Remove conjugates*)
+
+
+WCL/:Conjugate[WCL[lab:class0WCL,{}]]:= WCL[lab,{}] 
+
+
 WCL/:Conjugate[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
 
 
@@ -225,6 +264,13 @@ WCL/:Conjugate[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= W
 
 
 WCL/:Conjugate[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
+
+
+(* ::Text:: *)
+(*Remove real parts*)
+
+
+WCL/:Re[WCL[lab:class0WCL,{}]]:= WCL[lab,{}] 
 
 
 WCL/:Re[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
@@ -242,6 +288,13 @@ WCL/:Re[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,
 WCL/:Re[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
 
 
+(* ::Text:: *)
+(*Set imaginary parts to zero*)
+
+
+WCL/:Im[WCL[lab:class0WCL,{}]]:= 0 
+
+
 WCL/:Im[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= 0
 
 
@@ -257,7 +310,7 @@ WCL/:Im[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 WCL/:Im[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Set coefficients with top quark to zero*)
 
 
@@ -346,7 +399,7 @@ WCL::unknownWCLlabel= "The label `1` is not an allowed label for LEFT Wilson coe
 
 
 $WCLList3=List[
-	(*"\[Nu]"*)
+	"\[Nu]"
 ]
 
 

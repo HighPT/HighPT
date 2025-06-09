@@ -429,11 +429,15 @@ stoGeV=GeVtos^-1;
 (*Decay constants*)
 
 
+fKplus$default = Around[0.1557,0.0003];
+Info$default[DecayConstant["K+"]] := "FLAG 2024 average, Nf = 2+1+1, ..."
+
+
 fBs$default = Around[228.4,3.7]*10^-3;
 Info$default[DecayConstant["Bs"]] := "Taken from ..."
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Save current values of inputs [separate from default values]*)
 
 
@@ -516,6 +520,9 @@ mn$current = mn$default;
 
 
 fBs$current = fBs$default;
+
+
+fKplus$current = fKplus$default;
 
 
 (* ::Section:: *)
@@ -833,6 +840,7 @@ Options[DefineParameters]= {
 	"\[Tau]B0"         :> \[Tau]B0$current,
 	"\[Tau]B+"         :> \[Tau]Bplus$current,
 	
+	"fK+"         :> fKplus$current,
 	"fBs"         :> fBs$current
 };
 
@@ -891,6 +899,7 @@ DefineParameters[Default] := DefineParameters[
 	"\[Tau]B0"         :> \[Tau]B0$default,
 	"\[Tau]B+"         :> \[Tau]Bplus$default,
 	
+	"fK+"         :> fKplus$default,
 	"fBs"         :> fBs$default
 ]
 
@@ -948,6 +957,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		$\[Tau]B0         = OptionValue["\[Tau]B0"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$\[Tau]Bplus      = OptionValue["\[Tau]B+"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
+		$fKplus      = OptionValue["fK+"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		$fBs         = OptionValue["fBs"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
 		
 		(* output *)
@@ -962,7 +972,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	}
 	,
 	(* OPTION CHECKS *)
-	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", (*"Vus", "Vcb", "Vub", "\[Gamma]CKM",*) "CKM"(*, "Wolfenstein"*), Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]","\[Tau]K+","\[Tau]KL","\[Tau]Bs","\[Tau]B0","\[Tau]B+","fBs"};
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W"(*, "\[Lambda]"*), "mH", "\[CapitalGamma]H", "\[Alpha]S", (*"Vus", "Vcb", "Vub", "\[Gamma]CKM",*) "CKM"(*, "Wolfenstein"*), Mediators, "me", "m\[Mu]", "m\[Tau]", "md", "ms", "mb", "mu", "mc", "mt", "m\[Pi]+", "m\[Pi]0", "mK+", "mK0", "m\[Eta]", "m\[Eta]'", "m\[Rho]", "m\[Phi]", "mD+", "mD0", "mDs", "mBd", "mBs", "mBc", "mp", "mn", "\[Tau]\[Mu]", "\[Tau]\[Tau]","\[Tau]K+","\[Tau]KL","\[Tau]Bs","\[Tau]B0","\[Tau]B+","fK+","fBs"};
 	(* check that all mediator labels are known *)
 	Do[
 		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
@@ -1047,6 +1057,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	\[Tau]B0$current    = If[MatchQ[$\[Tau]B0,  Default], $\[Tau]B0  = \[Tau]B0$default , $\[Tau]B0];
 	\[Tau]Bplus$current = If[MatchQ[$\[Tau]Bplus,  Default], $\[Tau]Bplus  = \[Tau]Bplus$default , $\[Tau]Bplus];
 	
+	fKplus$current = If[MatchQ[$fKplus,  Default], $fKplus  = fKplus$default , $fKplus];
 	fBs$current    = If[MatchQ[$fBs,  Default], $fBs  = fBs$default , $fBs];
 	
 	(* set the non-bared Wolfentein parameters *)
@@ -1221,6 +1232,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		Lifetime["B0"] -> $\[Tau]B0,
 		Lifetime["B+"] -> $\[Tau]Bplus,
 		
+		DecayConstant["K+"] -> $fKplus,
 		DecayConstant["Bs"] -> $fBs
 	|>,
 	Association[$ckmrep]

@@ -183,6 +183,13 @@ WC[x_,{f1_[a_],f2_[b_]}] := WC[x,{a,b}]
 (*WC classes*)
 
 
+class0WC= Alternatives[
+	"H", "HD", "HBox",
+	"HG", "HGt", "HW", "HWt", "HB", "HBt", "HWB", "HWtB",
+	"G", "Gt", "W", "Wt"
+];
+
+
 class2WC= Alternatives[
 	(* Psi^2 H^2 D *)
 	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
@@ -333,6 +340,13 @@ WC[lab:class8WC,{3,3,3,2}]:=Conjugate[WC[lab,{2,3,3,3}]]
 (*Real coefficients*)
 
 
+(* ::Text:: *)
+(*Remove conjugates*)
+
+
+WC/:Conjugate[WC[lab:class0WC,{}]]:= WC[lab,{}] 
+
+
 WC/:Conjugate[WC[lab:class2WC,{p_Integer,p_Integer}]]:= WC[lab,{p,p}]
 
 
@@ -348,6 +362,13 @@ WC/:Conjugate[WC[lab:class7WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[l
 WC/:Conjugate[WC[lab:class8WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}]
 
 
+(* ::Text:: *)
+(*Remove real parts*)
+
+
+WC/:Re[WC[lab:class0WC,{}]]:= WC[lab,{}] 
+
+
 WC/:Re[WC[lab:class2WC,{p_Integer,p_Integer}]]:= WC[lab,{p,p}]
 
 
@@ -361,6 +382,13 @@ WC/:Re[WC[lab:class7WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a
 
 
 WC/:Re[WC[lab:class8WC,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WC[lab,{a,a,i,i}]
+
+
+(* ::Text:: *)
+(*Set imaginary parts to zero*)
+
+
+WC/:Im[WC[lab:class0WC,{}]]:= 0
 
 
 WC/:Im[WC[lab:class2WC,{p_Integer,p_Integer}]]:= 0
@@ -424,7 +452,7 @@ $WCList2d6=List[
 	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
 	
 	(* non-hermitain *)
-	"Hud", "eW", "eB", "uW", "uB", "dW", "dB","uG","dG",
+	"Hud", "eW", "eB", "uW", "uB", "dW", "dB", "uG", "dG",
 	
 	(* Psi^2 H^3 *)
 	"uH","dH","eH"
