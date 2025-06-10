@@ -43,6 +43,9 @@ PackageExport["NewObservable"]
 PackageExport["RemoveObservable"]
 
 
+PackageExport["Info"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -135,9 +138,11 @@ Obs[label_] := If[MemberQ[Flatten[ObservableList[]],label],
 					"NP"->NPContribution[label],
 					(*"\[Sigma]NP"->NPContributionError[label],*)
 					"Scale"->LowScale[label],
-					"info"->"Exp: "<>ExpInfo[label]<>"
-SM: "<>SMInfo[label]<>"
-NP: "<>NPInfo[label]
+					"info"->Grid[{
+						{"Exp:",ExpInfo[label]},
+						{"SM:",SMInfo[label]},
+						{"NP:",NPInfo[label]}},
+						Dividers->True]
 				|>,
 				Print["The observable "<>label<>" is not implemented. Run ObservableList[] to see all observables."]
 ]
@@ -148,6 +153,13 @@ SMPrediction$default[obs_]:=InputDependence[obs]*NumericalInput[obs]/.GetParamet
 
 
 ObsGrid[obs_]:=Grid[Join[{{"label",obs}},Table[{i,Obs[obs][i]},{i,Keys@Obs[i]}]],Dividers->{All,True}]
+
+
+(* ::Section:: *)
+(*Print information*)
+
+
+Info[x_Association] := If[MemberQ[Keys@x,"info"],x["info"],Print["No information available"]]
 
 
 (* ::Section:: *)

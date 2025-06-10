@@ -31,6 +31,18 @@ Package["HighPT`"]
 (*Private:*)
 
 
+DefineRedefinitions[Default];
+
+
+paramlist = Keys[GetParameters[]];
+Table[
+	If[!MatchQ[Head[Info$default[i]],Info$default],
+		Info[i] := Info$default[i]//Evaluate
+	],
+	{i,paramlist}
+];
+
+
 (*RestoreFlavorObservables[];*)
 
 
@@ -52,6 +64,3 @@ selector = SelectObservables[];
 
 
 Table[SelectedObservables[sec] = ObservableList[sec], {sec,ObservableSectors[]}]
-
-
-(*DefineRedefinitions[Default];*)

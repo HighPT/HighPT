@@ -112,18 +112,18 @@ InputList$default = {Param["\[Alpha]EM"],Mass["ZBoson"],Param["GF"],Param["|Vus|
 (*InputRedefinition[_]:=0*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*GF*)
 
 
 InputRedefinition$default[Param["GF"]] := Param["GF"]Param["vev"]^2 (WC["Hl3",{2,2}]+WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}](*-1/2 WC["ll",{2,1,1,2}]*))(*/.GetParameters[]*);
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*CKM*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vus*)
 
 
@@ -157,7 +157,7 @@ InputRedefinition$default[Param["|Vus|"]] := Module[
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vcb*)
 
 
@@ -183,7 +183,7 @@ InputRedefinition$default[Param["|Vcb|"]] := Module[
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vub*)
 
 
@@ -209,7 +209,7 @@ InputRedefinition$default[Param["|Vub|"]] := Module[
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*\[Gamma]*)
 
 
@@ -264,14 +264,14 @@ A = Vcb/Vus^2;
 (*ParameterRedefinition$default[Param["Wolfenstein\[Eta]bar"]] := Sum[D[\[Eta],i]*CKMRedefinition[i],{i,{Vus,Vub,Vcb}}]/.Vus->Abs[Vckm[1,2]]/.Vcb->Abs[Vckm[2,3]]/.Vub->Abs[Vckm[1,3]]/.Cos[\[Gamma]]->Re[Vckm[1,3]]/Abs[Vckm[1,3]]/.Sin[\[Gamma]]->-(Im[Vckm[1,3]]/Abs[Vckm[1,3]])/.GetParameters[];*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*\[Alpha]EM*)
 
 
 InputRedefinition$default[Param["\[Alpha]EM"]] := Simplify[SMEFTValue[Param["\[Alpha]EM"]]-(SMEFTValue[Param["\[Alpha]EM"]]/._WC->0)]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*mZ*)
 
 
@@ -285,7 +285,64 @@ InputRedefinition$default[Mass["ZBoson"]] := SMEFTValue[Mass["ZBoson"]]-(SMEFTVa
 (*Initialize - to redo*)
 
 
-InputRedefinition[x_] := InputRedefinition$default[x]
+DefineRedefinitions::invalidinput
+
+
+Options[DefineRedefinitions] = {
+	"GF"    -> "current",
+	"\[Alpha]EM"   -> "current",
+	"mZ"    -> "current",
+	"|Vus|" -> "current",
+	"|Vcb|" -> "current",
+	"|Vub|" -> "current",
+	"\[Gamma]"     -> "current"
+};
+
+
+DefineRedefinitions[Default] := DefineRedefinitions[
+	"GF"    -> InputRedefinition$default[Param["GF"]],
+	"\[Alpha]EM"   -> InputRedefinition$default[Param["\[Alpha]EM"]],
+	"mZ"    -> InputRedefinition$default[Mass["ZBoson"]],
+	"|Vus|" -> InputRedefinition$default[Param["|Vus|"]],
+	"|Vcb|" -> InputRedefinition$default[Param["|Vcb|"]],
+	"|Vub|" -> InputRedefinition$default[Param["Vub|"]],
+	"\[Gamma]"     -> InputRedefinition$default[Param["GF"]]
+]
+
+
+DefineRedefinitions[OptionsPattern[]] := Module[
+	{
+	(*opt = {"GF","\[Alpha]EM","mZ","|Vus|","|Vcb|","|Vub|","\[Gamma]"}*)tmp
+	}
+	,
+	If[!MatchQ[OptionValue["GF"],"current"],
+		InputRedefinition[Param["GF"]] := OptionValue["GF"]
+	];
+	If[!MatchQ[OptionValue["\[Alpha]EM"],"current"],
+		InputRedefinition[Param["\[Alpha]EM"]] := OptionValue["\[Alpha]EM"]
+	];
+	If[!MatchQ[OptionValue["mZ"],"current"],
+		InputRedefinition[Mass["ZBoson"]] := OptionValue["mZ"]
+	];
+	If[!MatchQ[OptionValue["|Vus|"],"current"],
+		InputRedefinition[Param["GF"]] := OptionValue["GF"]
+	];
+	If[!MatchQ[OptionValue["|Vus|"],"current"],
+		InputRedefinition[Param["|Vus|"]] := OptionValue["|Vus|"]
+	];
+	If[!MatchQ[OptionValue["|Vcb|"],"current"],
+		InputRedefinition[Param["|Vcb|"]] := OptionValue["|Vcb|"]
+	];
+	If[!MatchQ[OptionValue["|Vub|"],"current"],
+		InputRedefinition[Param["|Vub|"]] := OptionValue["|Vub|"]
+	];
+	If[!MatchQ[OptionValue["\[Gamma]"],"current"],
+		InputRedefinition[Param["\[Gamma]"]] := OptionValue["\[Gamma]"]
+	]
+]
+
+
+(*InputRedefinition[x_] := InputRedefinition$default[x]*)
 
 
 (* ::Section:: *)

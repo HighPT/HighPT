@@ -83,6 +83,9 @@ PackageScope["WolfensteinExtract"]
 PackageScope["ComplexAround"]
 
 
+PackageScope["Info$default"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -686,6 +689,14 @@ Wolfenstein$current = {
 	\[Rho]BarWolfenstein$current,
 	\[Eta]BarWolfenstein$current
 }*)
+
+
+(* ::Section:: *)
+(*Parameter info*)
+
+
+(* Default info for parameters *)
+Info[x_:(_Param| _DecayConstant | _Lifetime | _Mass | _Yukawa | _Vckm)] := "No information available"
 
 
 (* ::Section::Closed:: *)
