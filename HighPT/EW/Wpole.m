@@ -260,7 +260,10 @@ NPContribution$default["mWNEW"] := NPFromTheoryExpression["mWNEW"]
 (*\[CapitalGamma]W NEW*)
 
 
-TheoryExpression["\[CapitalGamma]WNEW"] := Mass["WBoson"]/(24\[Pi])*(Sum[WCL["gWlL",{i,j}]^2,{i,3},{j,3}]+3*Sum[WCL["gWqL",{i,j}]^2+WCL["gWqR",{i,j}]^2,{i,2},{j,3}])
+Wcouplingsum = (*Sum[Abs[WCL["gWlL",{i,j}]]^2,{i,3},{j,3}]+3*Sum[Abs[WCL["gWqL",{i,j}]]^2+Abs[WCL["gWqR",{i,j}]]^2,{i,2},{j,3}]*)Sum[WCL["gWlL",{i,j}]^2,{i,3},{j,3}]+3*Sum[WCL["gWqL",{i,j}]^2+WCL["gWqR",{i,j}]^2,{i,2},{j,3}]
+
+
+TheoryExpression["\[CapitalGamma]WNEW"] := (*Mass["WBoson"]*)WCL["mW",{}]/(24\[Pi])*Wcouplingsum(*(Sum[WCL["gWlL",{i,j}]^2,{i,3},{j,3}]+3*Sum[WCL["gWqL",{i,j}]^2+WCL["gWqR",{i,j}]^2,{i,2},{j,3}])*)
 
 
 ExpValue$default["\[CapitalGamma]WNEW"] := \[CapitalGamma]W$default;
@@ -276,7 +279,7 @@ NPContribution$default["\[CapitalGamma]WNEW"] := NPFromTheoryExpression["\[Capit
 (*Branching fractions NEW*)
 
 
-BrWlnu[i_,j_] := 1/TheoryExpression["\[CapitalGamma]WNEW"] Mass["WBoson"]/(24\[Pi])*WCL["gWlL",{i,j}]^2
+BrWlnu[i_,j_] := (*1/TheoryExpression["\[CapitalGamma]WNEW"] Mass["WBoson"]/(24\[Pi])**)WCL["gWlL",{i,j}]^2/Wcouplingsum
 
 
 (* ::Subsection:: *)

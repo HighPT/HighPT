@@ -52,12 +52,18 @@ Table[
 (*RestoreHiggsObservables[];*)
 
 
-RestoreObservables[Flatten[Join[
-	(*ObservableList["FCC"],
-	ObservableList["EW"],*)
+(*RestoreObservables[Flatten[Join[
+	(*ObservableList["FCC"],*)
+	ObservableList["EW"],
 	ObservableList["Flavor"]
 	]]
-];
+];*)
+
+
+Print["Initializing EW observables..."]
+RestoreObservables[ObservableList["EW"]]
+Print["Initializing Flavor observables..."]
+RestoreObservables[ObservableList["Flavor"]]
 
 
 selector = SelectObservables[];

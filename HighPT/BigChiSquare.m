@@ -123,18 +123,22 @@ ChiSquare[OptionsPattern[]] := Module[
 				Message[ChiSquare::invalidinput];Abort[]
 			]
 	];
+	(*Print["All options seem to be ok, computing likelihood for ", observables];*)
 	
 	(* ####################### building individual \[Chi]^2 contributions ####################### *)
 	
 	
 	(* separate Drell-Yan from other observables *)
 	nondyobs = Complement[observables,Keys[LHCSearch[]]];
+	(*Print["Non Drell-Yan observables: ",nondyobs];*)
 	dyobs = Intersection[observables,Keys[LHCSearch[]]];
+	(*Print["Drell-Yan observables: ",dyobs];*)
 	
 	(* compute individual contribution to the \[Chi]^2 for non Drell-Yan *)
 	If[MatchQ[nondyobs,{}],
 		chi2 = 0,
-		obsvector = ChiSquarePiece[#, EFTscale -> OptionValue[EFTscale]]& /@Obs/@nondyobs
+		(*Print["Computing observable vector"];*)
+		obsvector = ChiSquarePiece[#, EFTscale -> OptionValue[EFTscale], EFTorder -> OptionValue[EFTorder], OperatorDimension -> OptionValue[OperatorDimension]]& /@Obs/@nondyobs
 	];
 	
 	(* ####################### build covariance matrix and invert ####################### *)
@@ -196,7 +200,8 @@ ChiSquare[OptionsPattern[]] := Module[
 
 Options[ChiSquarePiece] = {
 	EFTscale :> GetEFTscale[],
-	EFTorder :> GetEFTorder[]
+	EFTorder :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[]
 };
 
 
@@ -205,52 +210,34 @@ ChiSquarePiece::smeftbelowEWscale = "SMEFT coefficients detected below the EW sc
 
 ChiSquarePiece[obs_Association, OptionsPattern[]] := Module[
 	{
-	npatmu, npSMEFT, np\[CapitalLambda],
+	npatmu, npatEW, npatEWSMEFT, npSMEFT, np\[CapitalLambda],
 	chi2p
 	}
 	,
-	(*npatmu = obs["NP"];*)
+	(*Print["Computing ChiSquarePiece for "<>obs["label"]];*)
+	npatmu = obs["NP"];
 	(*npatmu = Normal[Series[obs["NP"]/.a_WCL->a*eps/.b_WC->b*eps,{eps,0,2}]]/.eps->1;*)
-	npatmu = EFTTruncate[obs["NP"],-OptionValue[EFTorder],ExpandComplex->True];
+	(*npatmu = EFTTruncate[obs["NP"],-OptionValue[EFTorder],ExpandComplex->True];*)
 	(* Define npSMEFT as an expression in terms of SMEFT operators at either the EW scale (after LEFT running), or at whatever scale the purely SMEFT observable is defined *)
 	If[MatchQ[DeleteDuplicates[Cases[npatmu,_WCL,All]],{}],
 		(* only SMEFT coefficients present *)
+		(*Print["Only SMEFT coefficients detected."];*)
 		If[obs["Scale"] < \[Mu]EW, Message[ChiSquarePiece::smeftbelowEWscale]];
-		npSMEFT = npatmu,
+		(*Print["Expanding to order \[CapitalLambda]^-" <>ToString[OptionValue[EFTorder]]<>"..."];*)
+		npSMEFT = EFTTruncate[npatmu, EFTorder->OptionValue[EFTorder], ExpandComplex->True],
 		(* at least one LEFT coefficient present, run to EW scale and match to SMEFT *)
-		npSMEFT = MatchToSMEFT@LEFTRun[npatmu, obs["Scale"], \[Mu]EW]
+		(*Print["LEFT coefficients found: ",DeleteDuplicates[Cases[npatmu,_WCL,All]]];*)
+		(*Print["Running in LEFT up to EW scale..."];*)
+		npatEW = LEFTRun[npatmu, obs["Scale"], \[Mu]EW];
+		(*Print["Matching to SMEFT (and substituting parameters)..."];*)
+		npatEWSMEFT = MatchToSMEFT[npatEW];
+		(*Print["Expanding to order \[CapitalLambda]^-" <>ToString[OptionValue[EFTorder]]<>"..."];*)
+		npSMEFT = EFTTruncate[MatchToSMEFT@LEFTRun[npatmu, obs["Scale"], \[Mu]EW]/.GetParameters[], EFTorder->OptionValue[EFTorder], OperatorDimension->OptionValue[OperatorDimension](*, ExpandComplex->True*)]
 	];
 	(* Run in SMEFT up to the scale \[CapitalLambda] *)
+	(*Print["Running in the SMEFT..."];*)
 	np\[CapitalLambda] = SMEFTRun[npSMEFT, Max[obs["Scale"],\[Mu]EW], OptionValue[EFTscale]]/.GetParameters[];
+	(*Print["Fetching SM and Exp input and building piece..."];*)
 	chi2p = (obs["SM"]["Value"](1+np\[CapitalLambda])-obs["Exp"]["Value"]);
 	Return@chi2p
-];
-
-
-(* ::Section:: *)
-(*Truncate the (mixed) EFT*)
-
-
-Options[EFTTruncate] = {ExpandComplex -> False};
-
-
-EFTTruncate::wrongOption
-
-
-EFTTruncate[expr_, lambdapower_Integer, OptionsPattern[]] := Module[
-	{
-	exprwithdimensions, eps,
-	expanded
-	}
-	,
-	Switch[OptionValue[ExpandComplex],
-		True,
-		exprwithdimensions = expr/.WCL[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*(ReWCL[lab,ind]+I*ImWCL[lab,ind])/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*(ReWC[lab,ind]+I*ImWC[lab,ind])//ComplexExpand,
-		False,
-		exprwithdimensions = expr/.WCL[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WCL[lab,ind]/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WC[lab,ind](*/.Conjugate[Times[eps,WCL[lab_,ind_]]]:>Times[eps,Conjugate[WCL[lab,ind]]]/.Conjugate[Times[eps,WC[lab_,ind_]]]:>Times[eps,Conjugate[WC[lab,ind]]]*),
-		_,
-		Print["Wrong value given for option ExpandComplex"];Abort[]
-	];
-	expanded = Normal[Series[exprwithdimensions,{eps,0,-lambdapower}]]/.eps->1;
-	Return[expanded/.ReWCL[lab_,ind_]:>Re[WCL[lab,ind]]/.ReWC[lab_,ind_]:>Re[WC[lab,ind]]/.ImWCL[lab_,ind_]:>Im[WCL[lab,ind]]/.ImWC[lab_,ind_]:>Im[WC[lab,ind]]]
 ];

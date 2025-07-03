@@ -638,6 +638,50 @@ SMEFTTruncate[expr_,lambdapower_Integer]:=(Series[DimensionCountingSMEFT[expr],{
 
 
 (* ::Section:: *)
+(*Truncate the (mixed) EFT*)
+
+
+Options[EFTTruncate] = {
+	EFTorder :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[],
+	ExpandComplex -> False
+};
+
+
+EFTTruncate[expr_, OptionsPattern[]] := Module[
+	{
+	tmpexpr,
+	exprwithdimensions, eps, ReWC, ImWC,
+	expanded
+	}
+	,
+	eps/:Conjugate[eps]:=eps;
+	(*ReWC/:Conjugate[ReWC[lab_,ind_]]:=ReWC[lab,ind];
+	ReWC/:Re[ReWC[lab_,ind_]]:=ReWC[lab,ind];
+	ReWC/:Im[ReWC[lab_,ind_]]:=0;
+	ImWC/:Conjugate[ImWC[lab_,ind_]]:=ImWC[lab,ind];
+	ImWC/:Re[ImWC[lab_,ind_]]:=0;
+	ImWC/:Im[ImWC[lab_,ind_]]:=ImWC[lab,ind];*)
+	If[
+		MatchQ[OptionValue[OperatorDimension],6],
+		tmpexpr = expr/.WC[l:Alternatives@@Join[$WCList0d8,$WCList2d8,$WCList4d8],_]:>0,
+		tmpexpr = expr
+	];
+	Switch[OptionValue[ExpandComplex],
+		True,
+		(*exprwithdimensions = ComplexExpand[tmpexpr/.WCL[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*(ReWCL[lab,ind]+I*ImWCL[lab,ind])/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*(ReWC[lab,ind]+I*ImWC[lab,ind])]*)
+		exprwithdimensions = tmpexpr/.Power[Abs[x_],2]:>Times[x,Conjugate[x]]/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WC[lab,ind](*;Print[tmpexpr]*),
+		False,
+		exprwithdimensions = tmpexpr(*/.WCL[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WCL[lab,ind]*)/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WC[lab,ind](*/.Conjugate[Times[eps,WCL[lab_,ind_]]]:>Times[eps,Conjugate[WCL[lab,ind]]]/.Conjugate[Times[eps,WC[lab_,ind_]]]:>Times[eps,Conjugate[WC[lab,ind]]]*),
+		_,
+		Print["Wrong value given for option ExpandComplex"];Abort[]
+	];
+	expanded = Normal[Series[exprwithdimensions,{eps,0,OptionValue[EFTorder]}]]/.eps->1;
+	Return[expanded(*/.ReWCL[lab_,ind_]:>Re[WCL[lab,ind]]/.ReWC[lab_,ind_]:>Re[WC[lab,ind]]/.ImWCL[lab_,ind_]:>Im[WCL[lab,ind]]/.ImWC[lab_,ind_]:>Im[WC[lab,ind]]*)]
+];
+
+
+(* ::Section:: *)
 (*Matching the form factors to the SMEFT*)
 
 

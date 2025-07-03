@@ -36,6 +36,7 @@ PackageExport["GetInputRedefinitionMode"]
 
 
 PackageScope["InputRedefinition"]
+PackageScope["InputRedefinitionAssociation"]
 
 
 (*PackageScope["ParameterRedefinition"]
@@ -112,11 +113,28 @@ InputList$default = {Param["\[Alpha]EM"],Mass["ZBoson"],Param["GF"],Param["|Vus|
 (*InputRedefinition[_]:=0*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*GF*)
 
 
-InputRedefinition$default[Param["GF"]] := Param["GF"]Param["vev"]^2 (WC["Hl3",{2,2}]+WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}](*-1/2 WC["ll",{2,1,1,2}]*))(*/.GetParameters[]*);
+(*InputRedefinition$default[Param["GF"]] := Param["GF"]Param["vev"]^2 (WC["Hl3",{2,2}]+WC["Hl3",{1,1}]-1/2 WC["ll",{1,2,2,1}](*-1/2 WC["ll",{2,1,1,2}]*))(*/.GetParameters[]*);*)
+
+
+CL621 = 1/2 (WC["ll",{2,1,1,2}] + WC["ll",{1,2,2,1}]) - 2 WC["Hl3",{1,1}] - 2 WC["Hl3",{2,2}];
+CL821 = 1/2 (WC["l4H21",{2,1,1,2}]+WC["l4H21",{1,2,2,1}]+WC["l4H22",{2,1,1,2}]-WC["l4H22",{1,2,2,1}]);
+CL6x621 = -(WC["Hl1",{2,1}]-WC["Hl3",{2,1}])(WC["Hl1",{1,2}]+WC["Hl3",{1,2}]);
+CL62summed = 2 Sum[Abs[WC["ll",{i,j,1,2}]]^2,{i,3},{j,3}] +
+	3 Abs[WC["Hl1",{1,2}]+WC["Hl3",{1,2}]]^2 + 
+	Sum[Abs[WC["Hl3",{i,1}]]^2+Abs[WC["Hl3",{i,2}]]^2,{i,3}] + 
+	2 WC["Hl3",{1,1}]WC["Hl3",{2,2}] + 
+	2 Sum[Re[WC["ll",{i,i,1,2}]Conjugate[WC["Hl1",{1,2}]+WC["Hl3",{1,2}]]] + Re[WC["ll",{2,i,1,2}]Conjugate[WC["Hl3",{i,1}]]] + Re[WC["ll",{i,1,1,2}]Conjugate[WC["Hl3",{i,2}]]],{i,3}] +
+	2 Re[(WC["Hl1",{1,2}]+WC["Hl3",{1,2}])Conjugate[WC["Hl3",{1,2}]]];
+CR62summed = Sum[Abs[WC["le",{i,j,1,2}]]^2,{i,3},{j,3}] +
+	3 Abs[WC["He",{1,2}]]^2 +
+	2 Sum[Re[WC["le",{i,i,1,2}]Conjugate[WC["He",{1,2}]]],{i,3}]
+
+
+InputRedefinition$default[Param["GF"]] := -(1/(2Sqrt[2]))CL621-Param["vev"]^2/(8Sqrt[2]) CL621^2-Param["vev"]^2/(2Sqrt[2]) Re[CL821+CL6x621]+Param["vev"]^2/(8Sqrt[2]) CL62summed+Param["vev"]^2/(8Sqrt[2]) CR62summed
 
 
 (* ::Subsection::Closed:: *)
@@ -136,7 +154,7 @@ InputRedefinition$default[Param["|Vus|"]] := Module[
 	,
 	BrKplus = TheoryExpression["K+->\[Pi]0e\[Nu]"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
 	(*Print["Extracted K+ BR"];*)
-	BrNPKplus = 1/SMPrediction$default["K+->\[Pi]0e\[Nu]"]["Value"] ((BrKplus/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKplus/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
+	BrNPKplus = 1/SMPrediction$default["K+->\[Pi]0e\[Nu]"]["Value"] ((BrKplus/.a_WCL:>(SMValue[a,TreeOnly->True] + a - D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKplus/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	(*Print["Extracted NP part"];*)
 	BrNPKplusExpanded = Normal[Series[
 			ComplexExpand[
@@ -146,7 +164,7 @@ InputRedefinition$default[Param["|Vus|"]] := Module[
 		]]/.eps->1/.ReWCL[lab_,ind_]:>Re[WCL[lab,ind]]/.ReWC[lab_,ind_]:>Re[WC[lab,ind]];
 	(*Print["Finished expanding"];*)
 	BrKL = TheoryExpression["KL->\[Pi]-e\[Nu]"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
-	BrNPKL = 1/SMPrediction$default["KL->\[Pi]-e\[Nu]"]["Value"] ((BrKL/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKL/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
+	BrNPKL = 1/SMPrediction$default["KL->\[Pi]-e\[Nu]"]["Value"] ((BrKL/.a_WCL:>(SMValue[a,TreeOnly->True] + a - D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (BrKL/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	BrNPKLExpanded = Normal[Series[
 			ComplexExpand[
 				BrNPKL/.WCL[lab_,ind_]:>eps*ReWCL[lab,ind]+I*eps*ImWCL[lab,ind]/.WC[lab_,ind_]:>eps*ReWC[lab,ind]+I*eps*ImWC[lab,ind]
@@ -172,7 +190,7 @@ InputRedefinition$default[Param["|Vcb|"]] := Module[
 	}
 	,
 	Br = TheoryExpression["B->Dl\[Nu]_iso"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
-	BrNP = 1/SMPrediction$default["B->Dl\[Nu]_iso"]["Value"] ((Br/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
+	BrNP = 1/SMPrediction$default["B->Dl\[Nu]_iso"]["Value"] ((Br/.a_WCL:>(SMValue[a,TreeOnly->True] + a - D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	BrNPExpanded = Normal[Series[
 			ComplexExpand[
 				BrNP/.WCL[lab_,ind_]:>eps*ReWCL[lab,ind]+I*eps*ImWCL[lab,ind]/.WC[lab_,ind_]:>eps*ReWC[lab,ind]+I*eps*ImWC[lab,ind]
@@ -198,7 +216,7 @@ InputRedefinition$default[Param["|Vub|"]] := Module[
 	}
 	,
 	Br = TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.SubstitutePsi/.Around[a_,b_]:>a/.GetParameters[];
-	BrNP = 1/SMPrediction$default["B0->\[Pi]-l\[Nu]_high"]["Value"] ((Br/.a_WCL:>(SMValue[a,TreeOnly->True] + a + D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
+	BrNP = 1/SMPrediction$default["B0->\[Pi]-l\[Nu]_high"]["Value"] ((Br/.a_WCL:>(SMValue[a,TreeOnly->True] + a - D[SMValue[a,TreeOnly->True]//ParamsAsInputs//FullSimplify,Param["GF"]]*InputRedefinition$default[Param["GF"]])) - (Br/.a_WCL:>SMValue[a,TreeOnly->True]))/.GetParameters[];
 	BrNPExpanded = Normal[Series[
 			ComplexExpand[
 				BrNP/.WCL[lab_,ind_]:>eps*ReWCL[lab,ind]+I*eps*ImWCL[lab,ind]/.WC[lab_,ind_]:>eps*ReWC[lab,ind]+I*eps*ImWC[lab,ind]
@@ -264,14 +282,14 @@ A = Vcb/Vus^2;
 (*ParameterRedefinition$default[Param["Wolfenstein\[Eta]bar"]] := Sum[D[\[Eta],i]*CKMRedefinition[i],{i,{Vus,Vub,Vcb}}]/.Vus->Abs[Vckm[1,2]]/.Vcb->Abs[Vckm[2,3]]/.Vub->Abs[Vckm[1,3]]/.Cos[\[Gamma]]->Re[Vckm[1,3]]/Abs[Vckm[1,3]]/.Sin[\[Gamma]]->-(Im[Vckm[1,3]]/Abs[Vckm[1,3]])/.GetParameters[];*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*\[Alpha]EM*)
 
 
 InputRedefinition$default[Param["\[Alpha]EM"]] := Simplify[SMEFTValue[Param["\[Alpha]EM"]]-(SMEFTValue[Param["\[Alpha]EM"]]/._WC->0)]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*mZ*)
 
 
@@ -282,7 +300,7 @@ InputRedefinition$default[Mass["ZBoson"]] := SMEFTValue[Mass["ZBoson"]]-(SMEFTVa
 
 
 (* ::Section:: *)
-(*Initialize - to redo*)
+(*Define redefinitions (Standard input scheme)*)
 
 
 DefineRedefinitions::invalidinput
@@ -305,7 +323,7 @@ DefineRedefinitions[Default] := DefineRedefinitions[
 	"mZ"    -> InputRedefinition$default[Mass["ZBoson"]],
 	"|Vus|" -> InputRedefinition$default[Param["|Vus|"]],
 	"|Vcb|" -> InputRedefinition$default[Param["|Vcb|"]],
-	"|Vub|" -> InputRedefinition$default[Param["Vub|"]],
+	"|Vub|" -> InputRedefinition$default[Param["|Vub|"]],
 	"\[Gamma]"     -> InputRedefinition$default[Param["GF"]]
 ]
 
@@ -338,14 +356,21 @@ DefineRedefinitions[OptionsPattern[]] := Module[
 	];
 	If[!MatchQ[OptionValue["\[Gamma]"],"current"],
 		InputRedefinition[Param["\[Gamma]"]] := OptionValue["\[Gamma]"]
-	]
+	];
+	InputRedefinitionAssociation = Association[Table[
+		i -> (<|
+			"d6" -> EFTTruncate[InputRedefinition[i], EFTorder->2, ExpandComplex->True],
+			"d8" -> EFTTruncate[InputRedefinition[i], EFTorder->4, OperatorDimension->8, ExpandComplex->True] - EFTTruncate[InputRedefinition[i], EFTorder->2, ExpandComplex->True]
+		|>/.GetParameters[]),
+		{i,InputList}
+	]];
 ]
 
 
 (*InputRedefinition[x_] := InputRedefinition$default[x]*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Expressing all other parameters in terms of inputs (default)*)
 
 
@@ -378,51 +403,6 @@ Return[expr/.rep]
 InputList=InputList$default;
 
 
-(*$InputParameters={
-	Param["GF"],
-	Param["Wolfenstein\[Lambda]"],
-	Param["WolfensteinA"],
-	Param["Wolfenstein\[Rho]bar"],
-	Param["Wolfenstein\[Eta]bar"]
-};*)
-
-
-(*Options[DefineRedefinitions] = {
-	"GF" :> ParameterRedefinition$current[Param["GF"]],
-	"\[Lambda]"  :> ParameterRedefinition$current[Param["Wolfenstein\[Lambda]"]],
-	"A"  :> ParameterRedefinition$current[Param["WolfensteinA"]],
-	"\[Rho]"  :> ParameterRedefinition$current[Param["Wolfenstein\[Rho]bar"]],
-	"\[Eta]"  :> ParameterRedefinition$current[Param["Wolfenstein\[Eta]bar"]]
-};*)
-
-
-(*DefineRedefinitions[Default] := DefineRedefinitions[
-	"GF" -> ParameterRedefinition$default[Param["GF"]],
-	"\[Lambda]"  -> ParameterRedefinition$default[Param["Wolfenstein\[Lambda]"]],
-	"A"  -> ParameterRedefinition$default[Param["WolfensteinA"]],
-	"\[Rho]"  -> ParameterRedefinition$default[Param["Wolfenstein\[Rho]bar"]],
-	"\[Eta]"  -> ParameterRedefinition$default[Param["Wolfenstein\[Eta]bar"]]
-]*)
-
-
-(*DefineRedefinitions[OptionsPattern[]] := Module[
-	{
-	$GF = OptionValue["GF"],
-	$\[Lambda]  = OptionValue["\[Lambda]"], 
-	$A  = OptionValue["A"],
-	$\[Rho]  = OptionValue["\[Rho]"], 
-	$\[Eta]  = OptionValue["\[Eta]"]
-	}
-	,
-	ParameterRedefinition$current[Param["GF"]]              = If[MatchQ[$GF, Default], $GF = ParameterRedefinition$default[Param["GF"]], $GF];
-	ParameterRedefinition$current[Param["Wolfenstein\[Lambda]"]]    = If[MatchQ[$\[Lambda], Default], $\[Lambda] = ParameterRedefinition$default[Param["Wolfenstein\[Lambda]"]], $\[Lambda]];
-	ParameterRedefinition$current[Param["WolfensteinA"]]    = If[MatchQ[$A, Default], $A = ParameterRedefinition$default[Param["WolfensteinA"]], $A];
-	ParameterRedefinition$current[Param["Wolfenstein\[Rho]bar"]] = If[MatchQ[$\[Rho], Default], $\[Rho] = ParameterRedefinition$default[Param["Wolfenstein\[Rho]bar"]], $\[Rho]];
-	ParameterRedefinition$current[Param["Wolfenstein\[Eta]bar"]] = If[MatchQ[$\[Eta], Default], $\[Eta] = ParameterRedefinition$default[Param["Wolfenstein\[Eta]bar"]], $\[Eta]];
-	Table[ParameterRedefinition[i_] := ParameterRedefinition$current[i], {i,$InputParameters}];
-]*)
-
-
 (* ::Section:: *)
 (*Standard Model values for (LEFT) Wilson Coefficients*)
 
@@ -437,20 +417,6 @@ InputList=InputList$default;
 
 
 (*SMValue[WCL["\[Nu]eduVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := -2*Sqrt[2]Param["GF"]KroneckerDelta[\[Alpha],\[Beta]]Vckm[j,i]\[Conjugate]*)
-
-
-(*SMValue[WCL["gZeL",{i_,j_}]] := -Param["gZ"](*(Param["g2"]/Param["cW"])*)(-(1/2)+Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZeR",{i_,j_}]] := -Param["gZ"](Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZ\[Nu]L",{i_,j_}]] := -Param["gZ"](+(1/2))KroneckerDelta[i,j]
-SMValue[WCL["gZdL",{i_,j_}]] := -Param["gZ"](-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZdR",{i_,j_}]] := -Param["gZ"](1/3 Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZuL",{i_,j_}]] := -Param["gZ"](+(1/2)-2/3 Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZuR",{i_,j_}]] := -Param["gZ"](-(2/3) Param["sW"]^2)KroneckerDelta[i,j]*)
-
-
-(*SMValue[WCL["mW",{}]] := 1/2 Param["g2"]Param["vev"]
-SMValue[WCL["gWqL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])Vckm[i,j]
-SMValue[WCL["gWlL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])KroneckerDelta[i,j]*)
 
 
 Options[SMValue] = {TreeOnly -> False};
@@ -468,6 +434,21 @@ SMValue[x_WCL,OptionsPattern[]] := Module[
 ];
 
 
+SMValue[WCL["gZeL",{i_,j_}]] := -Param["gZ"](*(Param["g2"]/Param["cW"])*)(-(1/2)+Param["sW"]^2)KroneckerDelta[i,j]
+SMValue[WCL["gZeR",{i_,j_}]] := -Param["gZ"](Param["sW"]^2)KroneckerDelta[i,j]
+SMValue[WCL["gZ\[Nu]L",{i_,j_}]] := -Param["gZ"](+(1/2))KroneckerDelta[i,j]
+SMValue[WCL["gZdL",{i_,j_}]] := -Param["gZ"](-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]
+SMValue[WCL["gZdR",{i_,j_}]] := -Param["gZ"](1/3 Param["sW"]^2)KroneckerDelta[i,j]
+SMValue[WCL["gZuL",{i_,j_}]] := -Param["gZ"](+(1/2)-2/3 Param["sW"]^2)KroneckerDelta[i,j]
+SMValue[WCL["gZuR",{i_,j_}]] := -Param["gZ"](-(2/3) Param["sW"]^2)KroneckerDelta[i,j]
+
+
+SMValue[WCL["mW",{}]] := 1/2 Param["g2"]Param["vev"]
+SMValue[WCL["gWqL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])Vckm[i,j]
+SMValue[WCL["gWqR",{i_,j_}]] := 0
+SMValue[WCL["gWlL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])KroneckerDelta[i,j]
+
+
 (* ::Section:: *)
 (*SMEFT values of parameters*)
 
@@ -478,7 +459,7 @@ SMEFTValues[expr_] := (Series[expr/.a_Param:>SMEFTValue[a](*/.b_Mass->SMEFTValue
 SMEFTValue[x_] := x
 
 
-SMEFTValue[x_WCL] := (Series[SMValue[x]/.a_Param:>SMEFTValue[a]/.b_WC:>eps*b,{eps,0,1}]//Normal)/.eps->1
+SMEFTValue[x_WCL] := (*(Series[SMValue[x]/.a_Param:>SMEFTValue[a]/.b_WC:>eps*b,{eps,0,1}]//Normal)/.eps->1*)EFTTruncate[SMValue[x]/.a_Param:>SMEFTValue[a], EFTorder->(GetOperatorDimension[]-4), OperatorDimension->GetOperatorDimension[]]
 
 
 (* ::Subsection:: *)
@@ -501,46 +482,120 @@ SMEFTValue[Mass["H"]] := 2 Param["\[Lambda]"] Param["vev"]^2(1 - (3 Param["vev"]
 (*Gauge couplings*)
 
 
+YY = WC["WBH41",{}] + 2 WC["HWB",{}](WC["HW",{}]+WC["HB",{}]);
+
+
 (*SMEFTValue[Param["g1"]] := Param["g1"](1+Param["vev"]^2WC["HB",{}])
 SMEFTValue[Param["g2"]] := Param["g2"](1+Param["vev"]^2WC["HW",{}])
 SMEFTValue[Param["g3"]] := Param["g3"](1+Param["vev"]^2WC["HG",{}])*)
 
 
-SMEFTValue[Param["\[Alpha]EM"]] := (Param["g1"]^2 Param["g2"]^2)/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2)) (1-2 (Param["g1"] Param["g2"] Param["vev"]^2 WC["HWB",{}])/( Param["g1"]^2+Param["g2"]^2))
+SMEFTValue[Param["\[Alpha]EM"]] := (Param["g1"]^2 Param["g2"]^2)/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2))-(Param["g1"]^3 Param["g2"]^3 Param["vev"]^2 WC["HWB",{}])/(2 \[Pi] (Param["g1"]^2+Param["g2"]^2)^2)-1/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3) Param["g2"]^3 (2 Param["g1"]^5 Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+2 Param["g1"]^3 Param["g2"]^2 Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+2 Param["g1"]^5 Param["vev"]^4 WC["HW",{}] WC["HWB",{}]+2 Param["g1"]^3 Param["g2"]^2 Param["vev"]^4 WC["HW",{}] WC["HWB",{}]-4 Param["g1"]^4 Param["g2"] Param["vev"]^4 WC["HWB",{}]^2+Param["g1"]^5 Param["vev"]^4 WC["WBH41",{}]+Param["g1"]^3 Param["g2"]^2 Param["vev"]^4 WC["WBH41",{}])
 
 
-SMEFTValue[Param["gZ"]] := Sqrt[Param["g2"]^2+Param["g1"]^2](1+(Param["g1"]Param["g2"]Param["vev"]^2)/(Param["g1"]^2+Param["g2"]^2) WC["HWB",{}])
+SMEFTValue[Param["gZ"]] := Sqrt[Param["g2"]^2+Param["g1"]^2](1+(Param["g1"]Param["g2"]Param["vev"]^2)/(Param["g1"]^2+Param["g2"]^2) WC["HWB",{}]) + 1/(Param["g1"]^2+Param["g2"]^2)^(3/2) Param["vev"]^4/2 (Param["g1"]Param["g2"](Param["g1"]^2+Param["g2"]^2)YY + (Param["g1"]^4+Param["g1"]^2 Param["g2"]^2+Param["g2"]^4)WC["HWB",{}]^2)
 
 
 (* ::Subsection:: *)
 (*Mixing angle*)
 
 
-SMEFTValue[Param["sW"]] := Param["g1"]/Sqrt[Param["g2"]^2+Param["g1"]^2] (1+Param["vev"]^2/2 Param["g2"]/Param["g1"] (Param["g2"]^2-Param["g1"]^2)/(Param["g2"]^2+Param["g1"]^2) WC["HWB",{}])(*//SMEFTValues*)
-SMEFTValue[Param["cW"]] := (Param["g2"]/Sqrt[Param["g2"]^2+Param["g1"]^2]) (1+Param["vev"]^2/2 Param["g2"]/Param["g1"] (Param["g2"]^2-Param["g1"]^2)/(Param["g2"]^2+Param["g1"]^2) WC["HWB",{}])(*//SMEFTValues*)
+SMEFTValue[Param["sW"]] := Param["g1"]/Sqrt[Param["g1"]^2+Param["g2"]^2]-(Param["g1"]^2 Param["g2"] Param["vev"]^2 WC["HWB",{}]-Param["g2"]^3 Param["vev"]^2 WC["HWB",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))-1/(8 Param["g1"] (Param["g1"]^2+Param["g2"]^2)^(5/2)) (4 Param["g1"]^5 Param["g2"] Param["vev"]^4 WC["HB",{}] WC["HWB",{}]-4 Param["g1"] Param["g2"]^5 Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+4 Param["g1"]^5 Param["g2"] Param["vev"]^4 WC["HW",{}] WC["HWB",{}]-4 Param["g1"] Param["g2"]^5 Param["vev"]^4 WC["HW",{}] WC["HWB",{}]-7 Param["g1"]^4 Param["g2"]^2 Param["vev"]^4 WC["HWB",{}]^2+6 Param["g1"]^2 Param["g2"]^4 Param["vev"]^4 WC["HWB",{}]^2+Param["g2"]^6 Param["vev"]^4 WC["HWB",{}]^2+2 Param["g1"]^5 Param["g2"] Param["vev"]^4 WC["WBH41",{}]-2 Param["g1"] Param["g2"]^5 Param["vev"]^4 WC["WBH41",{}])
+SMEFTValue[Param["cW"]] := EFTTruncate[Sqrt[1-SMEFTValue[Param["sW"]]^2], EFTorder->4, OperatorDimension->8](*(Param["g2"]/Sqrt[Param["g2"]^2+Param["g1"]^2]) (1+Param["vev"]^2/2 Param["g2"]/Param["g1"] (Param["g2"]^2-Param["g1"]^2)/(Param["g2"]^2+Param["g1"]^2) WC["HWB",{}])(*//SMEFTValues*)*)
 
 
 (* ::Subsection:: *)
 (*Gauge boson masses*)
 
 
-SMEFTValue[Mass["WBoson"]] := (1/2) Param["g2"]Param["vev"](*//SMEFTValues*)
+SMEFTValue[Mass["WBoson"]] := 1/2 Param["g2"] Param["vev"]+1/16 Param["g2"] Param["vev"]^5 (WC["H61",{}]-WC["H62",{}])
 
 
-SMEFTValue[Mass["ZBoson"]] := (Series[Sqrt[1/4 Param["vev"]^2 (Param["g1"]^2+Param["g2"]^2) + 1/8 Param["vev"]^4 WC["HD",{}](Param["g1"]^2+Param["g2"]^2) + 1/2 Param["vev"]^4 Param["g1"]Param["g2"]WC["HWB",{}]]/.a_WC:>eps*a,{eps,0,1}]//Normal)/.eps->1(*//SMEFTValues*)
+SMEFTValue[Mass["ZBoson"]] := 1/2 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"]+(Param["vev"]^3 (Param["g1"]^2 WC["HD",{}]+Param["g2"]^2 WC["HD",{}]+4 Param["g1"] Param["g2"] WC["HWB",{}]))/(8 Sqrt[Param["g1"]^2+Param["g2"]^2])+1/8 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"] (-((8 (1/8 (Param["g1"]^2+Param["g2"]^2) Param["vev"]^4 WC["HD",{}]+1/2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HWB",{}])^2)/((Param["g1"]^2+Param["g2"]^2)^2 Param["vev"]^4))+1/((Param["g1"]^2+Param["g2"]^2) Param["vev"]^2) 8 (1/16 (Param["g1"]^2+Param["g2"]^2) (Param["vev"]^6 WC["H61",{}]+Param["vev"]^6 WC["H62",{}])+1/4 Param["g1"] Param["g2"] Param["vev"]^6 WC["HD",{}] WC["HWB",{}]+1/4 Param["vev"]^2 (2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HW",{}] WC["HWB",{}]+Param["g1"]^2 Param["vev"]^4 WC["HWB",{}]^2+Param["g2"]^2 Param["vev"]^4 WC["HWB",{}]^2+Param["g1"] Param["g2"] Param["vev"]^4 WC["WBH41",{}])))
 
 
 (* ::Section:: *)
 (*Redefine Inputs in generic expressions*)
 
 
-InputShift[x_WCL] := Sum[(D[SMValue[x]//ParamsAsInputs,i]/.GetParameters[])*(InputRedefinition[i]/.GetParameters[]),{i,InputList}]
+(* ::Subsection:: *)
+(*Old implementation*)
 
 
-(*InputRedefinition[obs_]:=-(1/InputDependence[obs])Sum[(D[InputDependence[obs]/.WolfensteinParametrization[Param["Wolfenstein\[Lambda]"],Param["WolfensteinA"],Param["Wolfenstein\[Rho]bar"],Param["Wolfenstein\[Eta]bar"]],i])*ParameterRedefinition[i],{i,$InputParameters}]/.GetParameters[];*)
+(*InputShift[x_WCL] := -Sum[(D[SMValue[x]//ParamsAsInputs,i]/.GetParameters[])*(InputRedefinition[i]/.GetParameters[]),{i,InputList}]*)
 
 
-ApplyRedefinitions[expr_] := expr/.a_WCL:>(a+(SMEFTValue[a]-(SMEFTValue[a]/._WC->0))+InputShift[a]*RedefinitionFlag)/.GetParameters[]
+(*ApplyRedefinitions[expr_] := expr/.a_WCL:>(a+(SMEFTValue[a]-(SMEFTValue[a]/._WC->0))+InputShift[a]*RedefinitionFlag)/.GetParameters[]*)
 
 
-(*Print["DONE!"]*)
+(* ::Subsection:: *)
+(*New implementation (up to d = 8)*)
+
+
+Options[ApplyRedefinitions] = {
+	EFTorder :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[]
+};
+
+
+ApplyRedefinitions[expr_,OptionsPattern[]] := Module[
+	{
+		LEFTcoeff, pieces,
+		gradSM, hessSM,gradd6,
+		rules
+	}
+	,
+	(* Return expression if redefinitions are switched off *)
+	If[MatchQ[RedefinitionFlag,0], Return[expr]];
+	
+	(* Find all LEFT coefficients *)
+	LEFTcoeff=Cases[expr,_WCL,All]//DeleteDuplicates;
+	
+	(* Extract SM and d=6 piece (latter needed for d=8 redefinitions) *)
+	pieces = Association@Table[
+		i->Association[
+			"SM"->SMValue[i],
+			"d6"->MatchToSMEFT[i,OperatorDimension->6]
+		],
+		{i,LEFTcoeff}
+	];
+	
+	(* Compute necessary derivatives *)
+	gradSM = Association[Table[
+		i -> Association[Table[
+			j -> (D[pieces[i]["SM"]//ParamsAsInputs,j]/.GetParameters[]),
+			{j,InputList}
+		]],
+		{i,LEFTcoeff}
+	]];
+	gradd6 = Association[Table[
+		i -> Association[Table[
+			j -> (D[pieces[i]["d6"]//ParamsAsInputs,j]/.GetParameters[]),
+			{j,InputList}
+		]],
+		{i,LEFTcoeff}
+	]];
+	hessSM = Association[Table[
+		i -> Association[Table[
+			j -> Association[Table[
+				k -> (D[pieces[i]["SM"]//ParamsAsInputs,j,k]/.GetParameters[]),
+				{k,InputList}
+			]],
+			{j,InputList}
+		]],
+		{i,LEFTcoeff}
+	]];
+	
+	(* Assemble substitution rules *)
+	If[MatchQ[OptionValue[OperatorDimension],6],
+		rules = Association[Table[
+			i -> (i-Sum[gradSM[i][j]*InputRedefinitionAssociation[j]["d6"],{j,InputList}]),
+			{i,LEFTcoeff}
+		]],
+		rules = Association[Table[
+			i -> (i-Sum[gradSM[i][j]*(InputRedefinitionAssociation[j]["d6"]+InputRedefinitionAssociation[j]["d8"]),{j,InputList}]+1/2 Sum[hessSM[i][j,k]*InputRedefinitionAssociation[j]["d6"]*InputRedefinitionAssociation[k]["d6"],{j,InputList},{k,InputList}]-Sum[gradd6[i][j]*InputRedefinitionAssociation[j]["d6"],{j,InputList}]),
+			{i,LEFTcoeff}
+		]]
+	];
+	Return[Chop[expr/.rules]]
+];

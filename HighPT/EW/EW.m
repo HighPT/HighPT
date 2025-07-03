@@ -66,7 +66,7 @@ $EWSectors = {"Zpole","Wpole","ZpoleNEW","WpoleNEW"};
 EWObservables::usage = "EWObservables[] returns a nested list of all the pole observables implemented in HighPT. EWObservables[\"sector\"] gives a list of all pole observables in the sector \"sector\". \"sector\" can be \"Zpole\" or \"Wpole\""
 
 
-EWObservables[] = EWObservables/@$EWSectors
+EWObservables[] = EWObservables/@{"Zpole","Wpole"}
 
 
 ObservableSectors["EW"] := {"ZpoleNEW","WpoleNEW"}
@@ -195,7 +195,7 @@ Replace\[Delta]g={
 	\[Delta]gZ[d,Left,{i_,j_}]:>-(Param["vev"]^2/2)(MassRotate[WC["Hq1",{i,j}],"dd"]+MassRotate[WC["Hq3",{i,j}],"dd"])+\[Delta]U[d,Left] KroneckerDelta[i,j],
 	\[Delta]gZ[d,Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hd",{i,j}]+\[Delta]U[d,Right] KroneckerDelta[i,j],
 	\[Delta]gW["q",Left,{i_,j_}]:>Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"ud"]+\[Delta]U[u,Left] KroneckerDelta[i,j]-\[Delta]U[d,Left] KroneckerDelta[i,j],
-	\[Delta]gW["q",Right,{i_,j_}]:>-(Param["vev"]^2/2)WC["Hud",{i,j}]+\[Delta]U[u,Right] KroneckerDelta[i,j]-\[Delta]U[d,Right] KroneckerDelta[i,j],
+	\[Delta]gW["q",Right,{i_,j_}]:>(Param["vev"]^2(*/2*))WC["Hud",{i,j}](*+\[Delta]U[u,Right] KroneckerDelta[i,j]-\[Delta]U[d,Right] KroneckerDelta[i,j]*),
 	\[Delta]gW["l",Left,{\[Alpha]_,\[Beta]_}]:>Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+\[Delta]U[\[Nu],Left] KroneckerDelta[\[Alpha],\[Beta]]-\[Delta]U[e,Left] KroneckerDelta[\[Alpha],\[Beta]],
 	\[Delta]mW[]:>-((Param["vev"]^2 Param["g2"]^2)/(4(Param["g2"]^2-Param["g1"]^2)))WC["HD",{}]-(Param["vev"]^2 Param["g2"]Param["g1"])/(Param["g2"]^2-Param["g1"]^2) WC["HWB",{}]+(Param["vev"]^2 Param["g1"]^2)/(4(Param["g2"]^2-Param["g1"]^2)) (WC["ll",{1,2,2,1}]-2 WC["Hl3",{2,2}]-2 WC["Hl3",{1,1}])
 };

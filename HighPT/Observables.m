@@ -101,7 +101,8 @@ PackageScope["AllSelector"]
 ObservableSectors[] := {"Flavor","Drell-Yan","Higgs","EW","LEP2","FCC","custom"};
 
 
-ObservableList[] := ObservableList/@ObservableSectors[]
+(* Remove EWObservables from here eventually *)
+ObservableList[] := Join[ObservableList/@ObservableSectors[],EWObservables[]]
 
 
 (*ObservableList["Flavor"] := FlavorObservables[];*)
@@ -142,7 +143,8 @@ Obs[label_] := If[MemberQ[Flatten[ObservableList[]],label],
 						{"Exp:",ExpInfo[label]},
 						{"SM:",SMInfo[label]},
 						{"NP:",NPInfo[label]}},
-						Dividers->True]
+						Dividers->True],
+					"label"->label
 				|>,
 				Print["The observable "<>label<>" is not implemented. Run ObservableList[] to see all observables."]
 ]
@@ -233,7 +235,7 @@ ChangeObservable[obs_String,OptionsPattern[]] := Module[
 		var
 	}
 	,
-	Print["Modifying observable "<>obs];
+	(*Print["Modifying observable "<>obs];*)
 	If[!MemberQ[ObservableList[]//Flatten,obs],
 		Message[ChangeObservable::wrongobservable,obs];Abort[];
 	];

@@ -56,23 +56,40 @@ WCL[\"label\",{i,j}] LEFT Wilson coefficient associated to the dimension-five op
 Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
 	{fields,type,chirality,superscript},
 	If[
-		StringContainsQ[label,"V"|"S"|"T"],
-		{fields,type,chirality}=StringSplit[label,{"V1"->"V1","V8"->"V8","V"->"V","S1"->"S1","S8"->"S8","S"->"S","T"->"T"}];superscript=type<>","<>chirality;,
-		{fields,type,chirality}={label,"",""};superscript="";
-	];
-	DisplayForm@SubscriptBox[
-		RowBox[
-			{
-				"[",
-				Subsuperscript[
-					"L",
-					fields,
-					superscript
-				],
-				"]"
-			}
+		MatchQ[StringTake[label,1],"g"],
+		DisplayForm@SubscriptBox[
+			RowBox[
+				{
+					"[",
+					Subsuperscript[
+						"g",
+						StringTake[label,4],
+						StringTake[label,{2,3}]
+					],
+					"]"
+				}
+			],
+			StringJoin[ToString/@{indices}]
 		],
-		StringJoin[ToString/@{indices}]
+		If[
+			StringContainsQ[label,"V"|"S"|"T"],
+			{fields,type,chirality}=StringSplit[label,{"V1"->"V1","V8"->"V8","V"->"V","S1"->"S1","S8"->"S8","S"->"S","T"->"T"}];superscript=type<>","<>chirality;,
+			{fields,type,chirality}={label,"",""};superscript="";
+		];
+		DisplayForm@SubscriptBox[
+			RowBox[
+				{
+					"[",
+					Subsuperscript[
+						"L",
+						fields,
+						superscript
+					],
+					"]"
+				}
+			],
+			StringJoin[ToString/@{indices}]
+		]
 	]
 ]
 

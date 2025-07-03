@@ -199,6 +199,7 @@ Format[Param["\[Alpha]S"] , TraditionalForm] := Subscript["\[Alpha]","s"]
 Format[Param["g3"] , TraditionalForm] := Subscript["g","3"]
 Format[Param["g2"] , TraditionalForm] := Subscript["g","2"]
 Format[Param["g1"] , TraditionalForm] := Subscript["g","1"]
+Format[Param["gZ"] , TraditionalForm] := Subscript["g","Z"]
 Format[Param["\[Lambda]"]  , TraditionalForm] := "\[Lambda]"
 
 
