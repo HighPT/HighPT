@@ -61,7 +61,12 @@ LoadExperimentalResults[str_String]:= Get@FileNameJoin[{Global`$DirectoryHighPT,
 
 LoadExperimentalResultsCSV[str_String]:= Import[
 	FileNameJoin[{Global`$DirectoryHighPT, "LHC_searches", str, str<>".csv"}],
-	"CSV"
+	"CSV", 
+	(* 
+	The Option MissingValuePattern is required for Mathematica v14.2 and later since the default behavior for importing CSV files changed in this version. 
+	Of course, backwards compatibility of this Option is entirely unclear and undocumented... (at least it works on v14.0)
+	*)
+	MissingValuePattern -> None
 ]/.{
 	""       -> Nothing,
 	s_String :> StringReplace[s,{
@@ -77,7 +82,7 @@ LoadExperimentalResultsCSV[str_String]:= Import[
 };
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*LHCSearch*)
 
 
