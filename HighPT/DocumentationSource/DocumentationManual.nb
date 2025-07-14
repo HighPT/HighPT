@@ -10,20 +10,17 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    118439,       2681]
-NotebookOptionsPosition[    113256,       2595]
-NotebookOutlinePosition[    113653,       2611]
-CellTagsIndexPosition[    113610,       2608]
+NotebookDataLength[    117040,       2641]
+NotebookOptionsPosition[    111817,       2553]
+NotebookOutlinePosition[    112258,       2571]
+CellTagsIndexPosition[    112215,       2568]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
 
 Cell[CellGroupData[{
-Cell["Manual for generating documentation", "Title",
- CellChangeTimes->{{3.935915608636887*^9, 
-  3.935915614554525*^9}},ExpressionUUID->"d185cba6-52b9-4271-ac69-\
-0c0616901bd3"],
+Cell["Manual for generating documentation", "Title",ExpressionUUID->"d185cba6-52b9-4271-ac69-0c0616901bd3"],
 
 Cell["\<\
 Useful tutorial links:
@@ -129,8 +126,7 @@ Cell[BoxData[
      Thickness[0.011991904155317559`], Opacity[1.], 
      Dashing[{0.008674698565379682, 0.008674698565379682}], CapForm["Butt"], 
      JoinForm[{"Miter", 1.}], JoinedCurveBox[CompressedData["
-1:eJztxkENACEAA8ECSs4SEhAAKvF18MLEbNJmvrH6bEnK2T53fat5FWZmZmZm
-ZmZmZmbODyLIBEY=
+1:eJxTTMoPSmJmYGBgBOKjQALEZmAC80fRKBpFo2gUUYYA5M0EOg==
       "], CompressedData["
 1:eJxV2QtUVHUeB/DbiEiIiorGGksDiWLIU0ARgUEQeUiAL/A1jpOgiI9JrShR
 B1GxgwpuZeaRGCLL3cyo3JaK2HtYw8cxl9RNSwk4LKFHXXCBEBF2h+/3Nx3r
@@ -212,8 +208,7 @@ vB/zMaykHafSjeIB/t1F12yU+Vz5dxXDCzLfeLpRfHc03FS/mr48gk7JpCMd
     {RGBColor[0.27058823529411763`, 0.5098039215686274, 0.7098039215686275], 
      Thickness[0.011991904155317559`], Opacity[1.], JoinForm[{"Miter", 1.}], 
      JoinedCurveBox[CompressedData["
-1:eJztxtENABAQRMFDJVpSggLoUl34Ej3MS3Yztc82SkSks3Xu+pbjlZiZmZmZ
-mZmZmZn58wZraARI
+1:eJxTTMoPSmJmYGBgBOJjQALEZmAC80fRKBpFo2gUUYwA9tcEPA==
       "], CompressedData["
 1:eJxV1wtQVXUeB/Aj3UFCopuisUZ4JfGFvDQVROTeQB4SetFW0AiPVxHweUtl
 1VAuImKD+NgazSbiImtrs2XkVmtFzBli8bGGVJZuRlxi0MpxhVBRXu7l+/3d
@@ -295,8 +290,8 @@ Em/8P1CE6XY=
     {RGBColor[0.8, 0.5019607843137255, 0.10196078431372549`], Thickness[
      0.011991904155317559`], Opacity[1.], JoinForm[{"Miter", 1.}], 
      JoinedCurveBox[CompressedData["
-1:eJztxkENwCAABMGDKsESEiqASsYK8OJZA7PJJtPer48nSdnPmhyfam6FmZmZ
-mZmZmZmZmZmZmZmZmfnHC5EkBXs=
+1:eJxTTMoPSmJmYGBgBOL7TAwMIDYDE5g/ikbRKBpFo2gUjaJRNDgQAJlhBW8=
+
       "], CompressedData["
 1:eJxdmgtcVNX2x0/jCBMSYaKhEh7NZ4qAD5SQZiZAQFAevk3xSAK+oklJMdAZ
 RAREHOlh2pXLTKTmzche5vXS3HO5hujHuFim9jCGy9+4/tWQAHkIeIf1W3M/
@@ -664,23 +659,16 @@ In[1]:=",ExpressionUUID->"f365e989-a318-4df7-9f36-4bd11824ab78"]
 
 Cell[CellGroupData[{
 
-Cell["Integrated documentation generation", "Section",
- CellChangeTimes->{{3.935915578457242*^9, 
-  3.935915603737843*^9}},ExpressionUUID->"1d47823b-839e-4370-9799-\
-2d67fce2e55f"],
+Cell["Integrated documentation generation", "Section",ExpressionUUID->"1d47823b-839e-4370-9799-2d67fce2e55f"],
 
 Cell[CellGroupData[{
 
-Cell["Generate a pre-filled documentation notebook", "Subsection",
- CellChangeTimes->{{3.9359156437222633`*^9, 
-  3.935915694583455*^9}},ExpressionUUID->"c0df91f9-f02e-487e-bf16-\
-d9935f0811be"],
+Cell["Generate a pre-filled documentation notebook", "Subsection",ExpressionUUID->"c0df91f9-f02e-487e-bf16-d9935f0811be"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"?", "CreateTemplateDocumentation"}]], "Input",
- CellChangeTimes->{{3.935915716204668*^9, 3.935915716452244*^9}},
  CellLabel->"In[3]:=",ExpressionUUID->"aeca3b8d-ab74-41ba-aca5-1d179eaab437"],
 
 Cell[BoxData[
@@ -1129,9 +1117,9 @@ pacletDocumentationPath, "English", "ReferencePages", "Symbols",
                 ".nb"}]], 
              DialogInput[
               DialogNotebook[{
-                TextCell[
-                "The function " <> 
-                 HighPT`DocumentationUtility`PackagePrivate`function <> 
+                
+                TextCell[("The function " <> 
+                  HighPT`DocumentationUtility`PackagePrivate`function) <> 
                  " is already documented. Do you want to overwrite the \
 documentation?", 16], 
                 ChoiceButtons[{"Overwrite", "Cancel"}, {
@@ -1148,9 +1136,9 @@ documentation?", 16],
              Print["No documentation was generated."]; Return[]; Null]; 
            Print["Please click ok on all notebooks that are opened and then \
 close the template documentation notebook."]; 
-           Print["This will generate a template documentation notebook for \
-the function " <> HighPT`DocumentationUtility`PackagePrivate`function <> 
-             " in the directory " <> 
+           Print[(("This will generate a template documentation notebook for \
+the function " <> HighPT`DocumentationUtility`PackagePrivate`function) <> 
+              " in the directory ") <> 
              FileNameJoin[{
                HighPT`DocumentationUtility`PackagePrivate`$pacletPath, 
                 "Documentation", "English", "ReferencePages", "Symbols", 
@@ -1183,25 +1171,17 @@ Cell[CellGroupData[{
 
 Cell["\<\
 Copy the documentation notebook just generated to the proper directory\
-\>", "Subsection",
- CellChangeTimes->{{3.935915728287603*^9, 
-  3.935915758250232*^9}},ExpressionUUID->"b33d5a01-75bd-4823-8e88-\
-fb3186e04ca0"],
+\>", "Subsection",ExpressionUUID->"b33d5a01-75bd-4823-8e88-fb3186e04ca0"],
 
 Cell["\<\
 This only copies the notebook if no other notebook with the same name already \
 exist in the source directory.\
-\>", "Text",
- CellChangeTimes->{{3.935915760953026*^9, 3.935915833397272*^9}, {
-  3.936158232883375*^9, 3.936158236691877*^9}, {3.93615859231989*^9, 
-  3.9361586103803453`*^9}},ExpressionUUID->"a09c252c-9fb4-48d2-a62e-\
-454637099078"],
+\>", "Text",ExpressionUUID->"a09c252c-9fb4-48d2-a62e-454637099078"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"?", "CopyDocumentationToSourceDirectory"}]], "Input",
- CellChangeTimes->{{3.9359157501262903`*^9, 3.935915751400909*^9}},
  CellLabel->"In[8]:=",ExpressionUUID->"e3df2103-71b2-4a7f-8c95-85311bf0d7b8"],
 
 Cell[BoxData[
@@ -1753,10 +1733,10 @@ pacletDocumentationSourcePath, "English", "ReferencePages", "Symbols",
              FileNameJoin[{
               HighPT`DocumentationUtility`PackagePrivate`$\
 pacletDocumentationPath, "English", "ReferencePages", "Symbols", "*.nb"}]]}]; 
-         Print["The following files were copied to the documentation source \
+         Print[("The following files were copied to the documentation source \
 diractory at " <> 
-           HighPT`DocumentationUtility`PackagePrivate`$\
-pacletDocumentationSourcePath <> ":"]; 
+            HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath) <> ":"]; 
          Print[HighPT`DocumentationUtility`PackagePrivate`copiedDocs]; 
          Print["You can now complete the information in this file in the \
 source directory."]; 
@@ -1781,9 +1761,9 @@ pacletDocumentationSourcePath, "English", "ReferencePages", "Symbols",
           FileExistsQ[HighPT`DocumentationUtility`PackagePrivate`fileEnd]; 
          If[HighPT`DocumentationUtility`PackagePrivate`existing, DialogInput[
              DialogNotebook[{
-               TextCell[
-               "A documentation source file for the function " <> 
-                HighPT`DocumentationUtility`PackagePrivate`func <> 
+               
+               TextCell[("A documentation source file for the function " <> 
+                 HighPT`DocumentationUtility`PackagePrivate`func) <> 
                 " already exists. Do you want to overwrite the source \
 documentation?", 16], 
                ChoiceButtons[{"Overwrite", "Cancel"}, {
@@ -1816,17 +1796,12 @@ rebuild the Matchete documentation."]; Null]}], "SubValues" -> None,
 
 Cell[BoxData[
  RowBox[{"CopyDocumentationToSourceDirectory", "[", "]"}]], "Input",
- CellChangeTimes->{{3.935834920907683*^9, 3.93583492097578*^9}},
  CellLabel->"In[9]:=",ExpressionUUID->"2c5a49c2-8e82-4900-acd0-a504b821ec8c"],
 
 Cell["\<\
 If  you  try  to  overwrite  an  existing  documentation  notebook  in the \
 source directory please  use :\
-\>", "Text",
- CellChangeTimes->{{3.9361582348807087`*^9, 3.936158239819316*^9}, {
-  3.9361586247223387`*^9, 
-  3.936158630587792*^9}},ExpressionUUID->"e5753abf-032a-4466-8d44-\
-c41fe3be84d7"],
+\>", "Text",ExpressionUUID->"e5753abf-032a-4466-8d44-c41fe3be84d7"],
 
 Cell[BoxData[
  RowBox[{"CopyDocumentationToSourceDirectory", "[", "\"\<ChiSquareLHC\>\"", 
@@ -1854,10 +1829,7 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["Building the documentation", "Subsection",
- CellChangeTimes->{{3.935917040461609*^9, 
-  3.9359170465611362`*^9}},ExpressionUUID->"15ebbb46-7ff5-4c88-bd35-\
-7bf0a8da6654"],
+Cell["Building the documentation", "Subsection",ExpressionUUID->"15ebbb46-7ff5-4c88-bd35-7bf0a8da6654"],
 
 Cell["\<\
 Once your modifications to the source notebook are finished you can rebuild \
@@ -1868,7 +1840,6 @@ Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"?", "BuildDocumentation"}]], "Input",
- CellChangeTimes->{{3.935917050608739*^9, 3.935917050923615*^9}},
  CellLabel->"In[12]:=",ExpressionUUID->"68f83009-3936-4918-85a3-badbdce6cefb"],
 
 Cell[BoxData[
@@ -2259,41 +2230,29 @@ pacletDocumentationPath];
 Cell["\<\
 Notice that creating HTML documentation does not work properly at the moment.\
 \
-\>", "Text",
- CellChangeTimes->{{3.935917125874701*^9, 
-  3.935917159142274*^9}},ExpressionUUID->"04bd0ba5-1d5a-4410-9905-\
-b2081d9e7f5c"],
+\>", "Text",ExpressionUUID->"04bd0ba5-1d5a-4410-9905-b2081d9e7f5c"],
 
 Cell[BoxData[
  RowBox[{"BuildDocumentation", "[", 
   RowBox[{"\"\<HTML\>\"", "->", "False"}], "]"}]], "Input",
- CellChangeTimes->{{3.9359154027565536`*^9, 3.935915411605077*^9}},
  CellLabel->"In[13]:=",ExpressionUUID->"5e9d40c5-67fa-41db-84c4-d9468c3bac85"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["Linking the documentation", "Subsection",
- CellChangeTimes->{{3.935917163369442*^9, 
-  3.935917167226656*^9}},ExpressionUUID->"5c8b6851-724f-4c00-a6a7-\
-95ad970ff4a0"],
+Cell["Linking the documentation", "Subsection",ExpressionUUID->"5c8b6851-724f-4c00-a6a7-95ad970ff4a0"],
 
 Cell[TextData[{
  "This only links the documentation and is currently not required since it is \
 automatically performed by ",
  StyleBox["BuildDocumentation", "Code"],
  "."
-}], "Text",
- CellChangeTimes->{{3.935917181039528*^9, 3.935917209301526*^9}, {
-  3.93615872227398*^9, 
-  3.93615875550182*^9}},ExpressionUUID->"e251d2fd-f551-4314-b9de-\
-53f19e04ef72"],
+}], "Text",ExpressionUUID->"e251d2fd-f551-4314-b9de-53f19e04ef72"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"?", "LinkDocumentation"}]], "Input",
- CellChangeTimes->{{3.935917171136399*^9, 3.935917171338835*^9}},
  CellLabel->"In[14]:=",ExpressionUUID->"961066ec-ab2b-4392-8967-fd088cc2fe5b"],
 
 Cell[BoxData[
@@ -2586,7 +2545,6 @@ Matchete from its build.\"\>", "InformationUsageText",
 
 Cell[BoxData[
  RowBox[{"LinkDocumentation", "[", "]"}]], "Input",
- CellChangeTimes->{{3.935914362283115*^9, 3.935914387116494*^9}},
  CellLabel->"In[15]:=",ExpressionUUID->"ddd7625a-36b0-4bf5-aa29-6a33f6242a35"]
 }, Open  ]]
 }, Open  ]]
@@ -2595,6 +2553,8 @@ Cell[BoxData[
 },
 WindowSize->{1280, 1387},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Visible->True,
+TrackCellChangeTimes->False,
 FrontEndVersion->"14.0 for Mac OS X ARM (64-bit) (December 12, 2023)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"01f8d920-b45d-408f-883b-f05773418a2b"
@@ -2611,74 +2571,74 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 178, 3, 123, "Title",ExpressionUUID->"d185cba6-52b9-4271-ac69-0c0616901bd3"],
-Cell[761, 27, 559, 14, 159, "Text",ExpressionUUID->"b24389d1-43bd-4723-81b9-bfe63e3a6482"],
+Cell[580, 22, 107, 0, 123, "Title",ExpressionUUID->"d185cba6-52b9-4271-ac69-0c0616901bd3"],
+Cell[690, 24, 559, 14, 159, "Text",ExpressionUUID->"b24389d1-43bd-4723-81b9-bfe63e3a6482"],
 Cell[CellGroupData[{
-Cell[1345, 45, 112, 0, 67, "Subtitle",ExpressionUUID->"15e64579-1902-47ba-8268-da4973654f0f"],
-Cell[1460, 47, 631, 17, 186, "Code",ExpressionUUID->"128b8f32-a5f1-4e9e-a4cb-27bae616b0a3"],
-Cell[2094, 66, 376, 10, 62, "Text",ExpressionUUID->"f1f87b67-0899-4f62-868f-85d1b745de9d"],
+Cell[1274, 42, 112, 0, 67, "Subtitle",ExpressionUUID->"15e64579-1902-47ba-8268-da4973654f0f"],
+Cell[1389, 44, 631, 17, 186, "Code",ExpressionUUID->"128b8f32-a5f1-4e9e-a4cb-27bae616b0a3"],
+Cell[2023, 63, 376, 10, 62, "Text",ExpressionUUID->"f1f87b67-0899-4f62-868f-85d1b745de9d"],
 Cell[CellGroupData[{
-Cell[2495, 80, 1233, 25, 81, "Print",ExpressionUUID->"051cd627-a0e2-4a21-9f14-14e0040c8559"],
-Cell[3731, 107, 178, 3, 29, "Print",ExpressionUUID->"cdf04ab9-2b83-404f-9fd1-3a8655c3aca2"],
-Cell[3912, 112, 168, 3, 29, "Print",ExpressionUUID->"69aff119-1432-4470-9ecf-9da8aeff85f2"],
-Cell[4083, 117, 172, 3, 29, "Print",ExpressionUUID->"56180973-65e0-43df-b438-0f66baf8a908"]
+Cell[2424, 77, 1233, 25, 81, "Print",ExpressionUUID->"051cd627-a0e2-4a21-9f14-14e0040c8559"],
+Cell[3660, 104, 178, 3, 29, "Print",ExpressionUUID->"cdf04ab9-2b83-404f-9fd1-3a8655c3aca2"],
+Cell[3841, 109, 168, 3, 29, "Print",ExpressionUUID->"69aff119-1432-4470-9ecf-9da8aeff85f2"],
+Cell[4012, 114, 172, 3, 29, "Print",ExpressionUUID->"56180973-65e0-43df-b438-0f66baf8a908"]
 }, Open  ]],
-Cell[4270, 123, 22887, 389, 166, InheritFromParent,ExpressionUUID->"ffa1d7b9-959e-43fe-8ff4-1dc3067b6fd3"],
+Cell[4199, 120, 22809, 387, 166, InheritFromParent,ExpressionUUID->"ffa1d7b9-959e-43fe-8ff4-1dc3067b6fd3"],
 Cell[CellGroupData[{
-Cell[27182, 516, 310, 8, 33, "Print",ExpressionUUID->"e8dba6fa-7426-4e17-ad17-da26e8f45374"],
-Cell[27495, 526, 1486, 45, 35, "Print",ExpressionUUID->"14647aa7-fe7e-4c17-a987-05b362c790c8"],
-Cell[28984, 573, 822, 25, 35, "Print",ExpressionUUID->"ce66319e-31da-4c17-b90e-770fd0bab649"],
-Cell[29809, 600, 259, 7, 29, "Print",ExpressionUUID->"19cf40b0-c555-4fb4-9a4b-c7c153b33775"],
-Cell[30071, 609, 203, 6, 29, "Print",ExpressionUUID->"d0edb74f-17c5-4f44-8886-9503e74ff79f"],
-Cell[30277, 617, 174, 3, 29, "Print",ExpressionUUID->"e166b24f-98ab-4380-b486-e89244b6387b"],
-Cell[30454, 622, 161, 3, 29, "Print",ExpressionUUID->"f50d4d78-4893-4b15-b945-1489abe1c12b"],
-Cell[30618, 627, 300, 7, 29, "Print",ExpressionUUID->"d19daef7-7826-428a-afbf-81cde8c602d6"],
-Cell[30921, 636, 445, 12, 32, "Print",ExpressionUUID->"a7bb8efd-f0ab-4e32-afca-ccdc533ef410"],
-Cell[31369, 650, 451, 11, 29, "Print",ExpressionUUID->"f365e989-a318-4df7-9f36-4bd11824ab78"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[31857, 666, 180, 3, 84, "Section",ExpressionUUID->"1d47823b-839e-4370-9799-2d67fce2e55f"],
-Cell[CellGroupData[{
-Cell[32062, 673, 194, 3, 67, "Subsection",ExpressionUUID->"c0df91f9-f02e-487e-bf16-d9935f0811be"],
-Cell[CellGroupData[{
-Cell[32281, 680, 214, 3, 37, "Input",ExpressionUUID->"aeca3b8d-ab74-41ba-aca5-1d179eaab437"],
-Cell[32498, 685, 21004, 479, 119, "Output",ExpressionUUID->"77fe1eae-361e-4d03-863c-d91fd5eb6033"]
-}, Open  ]],
-Cell[53517, 1167, 180, 3, 37, "Input",ExpressionUUID->"a3c280df-05ea-4dab-b2d0-2fa954ff3145"],
-Cell[53700, 1172, 340, 6, 102, "Text",ExpressionUUID->"81ba0f0c-336e-4213-88c7-9a30dce8c660"]
+Cell[27033, 511, 310, 8, 33, "Print",ExpressionUUID->"e8dba6fa-7426-4e17-ad17-da26e8f45374"],
+Cell[27346, 521, 1486, 45, 35, "Print",ExpressionUUID->"14647aa7-fe7e-4c17-a987-05b362c790c8"],
+Cell[28835, 568, 822, 25, 35, "Print",ExpressionUUID->"ce66319e-31da-4c17-b90e-770fd0bab649"],
+Cell[29660, 595, 259, 7, 29, "Print",ExpressionUUID->"19cf40b0-c555-4fb4-9a4b-c7c153b33775"],
+Cell[29922, 604, 203, 6, 29, "Print",ExpressionUUID->"d0edb74f-17c5-4f44-8886-9503e74ff79f"],
+Cell[30128, 612, 174, 3, 29, "Print",ExpressionUUID->"e166b24f-98ab-4380-b486-e89244b6387b"],
+Cell[30305, 617, 161, 3, 29, "Print",ExpressionUUID->"f50d4d78-4893-4b15-b945-1489abe1c12b"],
+Cell[30469, 622, 300, 7, 29, "Print",ExpressionUUID->"d19daef7-7826-428a-afbf-81cde8c602d6"],
+Cell[30772, 631, 445, 12, 32, "Print",ExpressionUUID->"a7bb8efd-f0ab-4e32-afca-ccdc533ef410"],
+Cell[31220, 645, 451, 11, 29, "Print",ExpressionUUID->"f365e989-a318-4df7-9f36-4bd11824ab78"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[54077, 1183, 226, 5, 67, "Subsection",ExpressionUUID->"b33d5a01-75bd-4823-8e88-fb3186e04ca0"],
-Cell[54306, 1190, 356, 7, 44, "Text",ExpressionUUID->"a09c252c-9fb4-48d2-a62e-454637099078"],
+Cell[31708, 661, 109, 0, 84, "Section",ExpressionUUID->"1d47823b-839e-4370-9799-2d67fce2e55f"],
 Cell[CellGroupData[{
-Cell[54687, 1201, 223, 3, 37, "Input",ExpressionUUID->"e3df2103-71b2-4a7f-8c95-85311bf0d7b8"],
-Cell[54913, 1206, 27076, 607, 177, "Output",ExpressionUUID->"4298996e-297b-4ca5-adfb-46f21d0cf962"]
+Cell[31842, 665, 121, 0, 67, "Subsection",ExpressionUUID->"c0df91f9-f02e-487e-bf16-d9935f0811be"],
+Cell[CellGroupData[{
+Cell[31988, 669, 148, 2, 37, "Input",ExpressionUUID->"aeca3b8d-ab74-41ba-aca5-1d179eaab437"],
+Cell[32139, 673, 21012, 479, 119, "Output",ExpressionUUID->"77fe1eae-361e-4d03-863c-d91fd5eb6033"]
 }, Open  ]],
-Cell[82004, 1816, 225, 3, 37, "Input",ExpressionUUID->"2c5a49c2-8e82-4900-acd0-a504b821ec8c"],
-Cell[82232, 1821, 310, 7, 44, "Text",ExpressionUUID->"e5753abf-032a-4466-8d44-c41fe3be84d7"],
-Cell[82545, 1830, 164, 2, 37, "Input",ExpressionUUID->"4d69de21-3e81-44b3-afc2-e26c383ff344"],
-Cell[82712, 1834, 343, 6, 102, "Text",ExpressionUUID->"84dd9f74-41c3-4345-a166-6c573390df08"],
-Cell[83058, 1842, 185, 3, 44, "Text",ExpressionUUID->"80b41f4a-9636-4763-8673-a5fdc1855e9b"],
-Cell[83246, 1847, 196, 4, 37, "Input",ExpressionUUID->"ae961c78-a47c-4114-b9f3-6b6c369712ef"]
+Cell[53166, 1155, 180, 3, 37, "Input",ExpressionUUID->"a3c280df-05ea-4dab-b2d0-2fa954ff3145"],
+Cell[53349, 1160, 340, 6, 102, "Text",ExpressionUUID->"81ba0f0c-336e-4213-88c7-9a30dce8c660"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[83479, 1856, 176, 3, 67, "Subsection",ExpressionUUID->"15ebbb46-7ff5-4c88-bd35-7bf0a8da6654"],
-Cell[83658, 1861, 182, 3, 44, "Text",ExpressionUUID->"747c33e5-8bd0-4598-a132-f0137dbe710e"],
+Cell[53726, 1171, 155, 2, 67, "Subsection",ExpressionUUID->"b33d5a01-75bd-4823-8e88-fb3186e04ca0"],
+Cell[53884, 1175, 189, 3, 44, "Text",ExpressionUUID->"a09c252c-9fb4-48d2-a62e-454637099078"],
 Cell[CellGroupData[{
-Cell[83865, 1868, 206, 3, 37, "Input",ExpressionUUID->"68f83009-3936-4918-85a3-badbdce6cefb"],
-Cell[84074, 1873, 16149, 382, 148, "Output",ExpressionUUID->"46b59248-4719-406b-97db-db15b7dc27bd"]
+Cell[54098, 1182, 155, 2, 37, "Input",ExpressionUUID->"e3df2103-71b2-4a7f-8c95-85311bf0d7b8"],
+Cell[54256, 1186, 27082, 607, 177, "Output",ExpressionUUID->"4298996e-297b-4ca5-adfb-46f21d0cf962"]
 }, Open  ]],
-Cell[100238, 2258, 229, 6, 44, "Text",ExpressionUUID->"04bd0ba5-1d5a-4410-9905-b2081d9e7f5c"],
-Cell[100470, 2266, 257, 4, 37, "Input",ExpressionUUID->"5e9d40c5-67fa-41db-84c4-d9468c3bac85"]
+Cell[81353, 1796, 160, 2, 37, "Input",ExpressionUUID->"2c5a49c2-8e82-4900-acd0-a504b821ec8c"],
+Cell[81516, 1800, 186, 3, 44, "Text",ExpressionUUID->"e5753abf-032a-4466-8d44-c41fe3be84d7"],
+Cell[81705, 1805, 164, 2, 37, "Input",ExpressionUUID->"4d69de21-3e81-44b3-afc2-e26c383ff344"],
+Cell[81872, 1809, 343, 6, 102, "Text",ExpressionUUID->"84dd9f74-41c3-4345-a166-6c573390df08"],
+Cell[82218, 1817, 185, 3, 44, "Text",ExpressionUUID->"80b41f4a-9636-4763-8673-a5fdc1855e9b"],
+Cell[82406, 1822, 196, 4, 37, "Input",ExpressionUUID->"ae961c78-a47c-4114-b9f3-6b6c369712ef"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[100764, 2275, 173, 3, 67, "Subsection",ExpressionUUID->"5c8b6851-724f-4c00-a6a7-95ad970ff4a0"],
-Cell[100940, 2280, 356, 9, 44, "Text",ExpressionUUID->"e251d2fd-f551-4314-b9de-53f19e04ef72"],
+Cell[82639, 1831, 103, 0, 67, "Subsection",ExpressionUUID->"15ebbb46-7ff5-4c88-bd35-7bf0a8da6654"],
+Cell[82745, 1833, 182, 3, 44, "Text",ExpressionUUID->"747c33e5-8bd0-4598-a132-f0137dbe710e"],
 Cell[CellGroupData[{
-Cell[101321, 2293, 205, 3, 37, "Input",ExpressionUUID->"961066ec-ab2b-4392-8967-fd088cc2fe5b"],
-Cell[101529, 2298, 11450, 285, 119, "Output",ExpressionUUID->"d044770e-a07a-4bae-9486-6e1aded10d93"]
+Cell[82952, 1840, 140, 2, 37, "Input",ExpressionUUID->"68f83009-3936-4918-85a3-badbdce6cefb"],
+Cell[83095, 1844, 16149, 382, 148, "Output",ExpressionUUID->"46b59248-4719-406b-97db-db15b7dc27bd"]
 }, Open  ]],
-Cell[112994, 2586, 210, 3, 37, "Input",ExpressionUUID->"ddd7625a-36b0-4bf5-aa29-6a33f6242a35"]
+Cell[99259, 2229, 158, 3, 44, "Text",ExpressionUUID->"04bd0ba5-1d5a-4410-9905-b2081d9e7f5c"],
+Cell[99420, 2234, 189, 3, 37, "Input",ExpressionUUID->"5e9d40c5-67fa-41db-84c4-d9468c3bac85"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[99646, 2242, 102, 0, 67, "Subsection",ExpressionUUID->"5c8b6851-724f-4c00-a6a7-95ad970ff4a0"],
+Cell[99751, 2244, 238, 5, 44, "Text",ExpressionUUID->"e251d2fd-f551-4314-b9de-53f19e04ef72"],
+Cell[CellGroupData[{
+Cell[100014, 2253, 139, 2, 37, "Input",ExpressionUUID->"961066ec-ab2b-4392-8967-fd088cc2fe5b"],
+Cell[100156, 2257, 11450, 285, 119, "Output",ExpressionUUID->"d044770e-a07a-4bae-9486-6e1aded10d93"]
+}, Open  ]],
+Cell[111621, 2545, 144, 2, 37, "Input",ExpressionUUID->"ddd7625a-36b0-4bf5-aa29-6a33f6242a35"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
