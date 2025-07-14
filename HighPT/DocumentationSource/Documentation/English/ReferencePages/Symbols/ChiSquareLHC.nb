@@ -1,0 +1,1774 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 14.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     65440,       1764]
+NotebookOptionsPosition[     58539,       1622]
+NotebookOutlinePosition[     59311,       1648]
+CellTagsIndexPosition[     59231,       1643]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ChiSquareLHC", "ObjectName",
+ CellID->431143341,ExpressionUUID->"a12c67ba-61ee-4ea3-8304-99e97638b933"],
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox["Nothing",
+  BaseStyle->
+   "Link"]], \
+"InlineFormula",ExpressionUUID->"aa6b588e-b9b4-4450-9fe4-b69b79ca24d0"]], \
+"Input",
+ CellChangeTimes->{3.961495785014325*^9},
+ CellID->200028216,ExpressionUUID->"0506f86c-42d8-4995-89b4-a1e410165627"],
+
+Cell[TextData[{
+ Cell["   ", "ModInfo",ExpressionUUID->"40fb8c00-ab5d-4f91-a304-fae2c2b772b7"],
+ "ChiSquareLHC[\"proc\"] computes the \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\
+\) likelihood for the process specified by the string \"proc\". The \
+\!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) is computed for each bin of the \
+experimental search individually. Returned is a list of the \
+\!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) for all the experimental bins. The \
+combined \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) can be obtained by \
+Total[ChiSquareLHC[\"proc\"]]. The binning and all other relevant information \
+is printed on the screen when evaluating ChiSquareLHC[\"proc\"]. The options \
+and their default values are: FF \[Rule] False; Coefficients \[Rule] All; \
+EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] \
+GetOperatorDimension[]; CombineBins \[Rule] Default; Luminosity \[Rule] \
+Default; RescaleError \[Rule] True."
+}], "Usage",
+ CellID->616307209,ExpressionUUID->"ba79a682-1b0e-4ffd-9d7c-2f23be410d31"],
+
+Cell["The following options can be given: ", "Notes",
+ CellID->961632182,ExpressionUUID->"a8334f6f-920f-49f7-913e-2c1fb681aa0f"],
+
+Cell[BoxData[GridBox[{
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "512fe7d3-42db-433a-8ae5-895b4ba347fa"], 
+    ButtonBox["FF",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/FF"], 
+    ButtonBox["False",
+     BaseStyle->"Link"], Cell[TextData[{
+     "FF[lorentz, type, {",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "76fb2269-148a-4577-875e-34b33135e273"],
+     ", \(\[ScriptL]\)]\),",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "f9565911-9098-4899-b3cd-79e86504d326"],
+     ", \(q\)]\)}, {\[Alpha],\[Beta],i,j}] represents a form factor with \
+Lorentz structure lorentz \[Element] {Scalar, Vector, Tensor, DipoleL, \
+DipoleQ}. The chirality of the lepton (quark) current is ",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "e586bc10-f080-4b91-9f41-7fbed53de9f2"],
+     ", \(\[ScriptL]\)]\) (",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "c47ea419-9380-44fd-83df-b1f364903e28"],
+     ", \(q\)]\)). The field content of the corresponding operator is (",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "cd976caa-1bfc-4110-a4d7-725257436dab"],
+     ", \(1\)], \(_\)]\)",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "33c7e341-3ea8-4466-af09-b35c72ad12ee"],
+     ", \(2\)]\))(",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "c664fbc4-6972-464d-a99a-4ae99b0eaa8c"],
+     ", \(1\)], \(_\)]\)",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "257f1854-86b4-4dd1-9bd3-94dab5c93d36"],
+     ", \(2\)]\)) with ",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "cae44a7e-5c03-40f8-9549-1a4d46a65ff8"],
+     ", \(1, 2\)]\)\[Element]{e,\[Nu]}, ",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "0acaa3d2-115a-460e-a747-b8bcd544e2f6"],
+     ", \(1, 2\)]\)\[Element]{u,d} and \[Alpha],\[Beta],i,j\[Element]{1,2,3} \
+are the corresponding flavor indices. The type of the form factors are \
+divided into regular and singular: {\"regular\",{",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "6ddd3c87-e507-44d8-a4aa-a673780d9242"],
+     ", \(s\)]\),",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "8bce5fc3-d4e8-4bed-8f14-4b6e1cc56cd6"],
+     ", \(t\)]\)}} is the form factor for an EFT contact interaction with the \
+scaling ",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "12e915ef-723e-4477-8fe9-db38f3fc37fe"],
+     ", \(^\)], SubscriptBox[\(n\), \(s\)]]\)",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "fa840093-b252-45c9-8cd5-149f15f7843e"],
+     ", \(^\)], SubscriptBox[\(n\), \(t\)]]\) in the partonic Mandelstam \
+variables, whereas {mediator, 0 | SM} is the form factor for a non-local \
+interaction through the specified mediator \[Element] {\"Photon\", \
+\"ZBoson\", \"WBoson\", ...}. The singular form factors are divided into \
+Standard Model contributions (SM) and NP contributions (0).\nFF \[Rule] bool \
+is an option that specifies whether the output should be given in terms of \
+form factors (bool=True) or in terms of Wilson coefficients or coupling \
+constants (bool=False), where the latter is the default. This option can be \
+used with: DifferentialCrossSection, CrossSection, EventYield, ChiSquareLHC."
+    }], "TableText",ExpressionUUID->"5f03291a-b975-4ada-9aec-79ea19908f07"]},
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "11a1268f-8772-4ad4-af58-d3e052108d37"], 
+    ButtonBox["Coefficients",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/Coefficients"], 
+    ButtonBox["All",
+     BaseStyle->"Link"], Cell[TextData[{
+     Cell[BoxData[
+      ButtonBox["Coefficients",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/Coefficients"]], "InlineFormula",
+      ExpressionUUID->"78512644-92b6-4e78-a274-b51a821aac6b"],
+     " \[Rule] {\[ScriptC]\[ScriptO]\[ScriptE]\[ScriptF]1, \[ScriptC]\
+\[ScriptO]\[ScriptE]\[ScriptF]2, ...} is an option sp",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "f6d276e2-8504-4216-a90d-5d2f9e58d9be"],
+     "cifying which form factors (",
+     Cell[BoxData[
+      ButtonBox["FF",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/FF"]], "InlineFormula",ExpressionUUID->
+      "2e486b73-170a-4068-9e68-87ae9b9ac92c"],
+     "), Wilson co",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "c61e83e6-8fd5-4518-bb8b-9ad3615f4879"],
+     "ffici",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "9f9626d1-3141-4285-a0d1-811e30fcd9a5"],
+     "nts (",
+     Cell[BoxData[
+      ButtonBox["WC",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/WC"]], "InlineFormula",ExpressionUUID->
+      "3b13bf69-3eda-49ad-a0d2-fbd5746018a7"],
+     ") or co",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "525bdeb6-bb97-460b-9d9c-0f37b4bc8223"],
+     "pling constants (Co",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "a840c306-2361-453b-933a-8508600c5d3a"],
+     "ling), that m",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "22f791db-161d-4f3e-a431-b052062ae20b"],
+     "st b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "e6b6f3a9-8e63-454a-933c-ad451d788446"],
+     " giv",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "da29c074-1829-41b3-8609-71c9744a0fe1"],
+     "n as \[ScriptC]\[ScriptO]\[ScriptE]\[ScriptF]n, sho",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "aec2d341-89e4-43a1-80a2-b4c87439cdb6"],
+     "l",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "24b10e7f-3dce-4da7-893f-bed8f4d36483"],
+     " b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "437850ab-79d2-432b-88bd-d4f432302d4b"],
+     " consi",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "54ba3731-8983-4c0d-8abd-ff9d59ff4a84"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "86cd21cb-5896-48f3-8efa-998027101e47"],
+     "r",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "de09f519-8bb1-4b3e-a43b-c738ab884141"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "f72ecb69-7d52-4d6f-905f-623495a668ee"],
+     ". ",
+     Cell[BoxData[
+      ButtonBox["All",
+       BaseStyle->"Link"]], "InlineFormula",ExpressionUUID->
+      "598ea483-35cf-4246-9832-7e04829b0046"],
+     " co",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "ed3e6450-26d7-4393-99c2-60a8bfbfdcef"],
+     "ffici",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "9c6f38c1-6254-4dc6-b848-5ed66323e898"],
+     "nts not matching any of th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "bd0ee13c-c8f6-47c4-bd05-9425e5c0072a"],
+     " \[ScriptC]\[ScriptO]\[ScriptE]\[ScriptF]n ar",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "3ea0749f-3b94-4795-bc8d-d8bfd413b812"],
+     " s",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "03beaa3c-55c3-46b0-bcd6-6d5fecdfd9ac"],
+     "t to z",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "ef2fbdb9-9c44-44a8-a7c7-293771c53079"],
+     "ro. Th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "3c3f1d95-59f2-4b3c-afe4-1f4246535ba7"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "d97040c6-00c2-41e1-9876-36c94fac98db"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "a06fd3ea-ce51-4e29-a122-a1c7a94609fa"],
+     "fa",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "45f1d71e-53c6-43cf-a617-3aa28a605346"],
+     "lt val",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "c87afeb3-ec0f-4fb7-8ec5-f077b267a720"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "7079a49a-659a-40a1-bdb7-b236400d1146"],
+     " is ",
+     Cell[BoxData[
+      ButtonBox["Coefficients",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/Coefficients"]], "InlineFormula",
+      ExpressionUUID->"bb3e8be0-9b1f-41e2-8c03-d4a027e88db8"],
+     "\[Rule]",
+     Cell[BoxData[
+      ButtonBox["All",
+       BaseStyle->"Link"]], "InlineFormula",ExpressionUUID->
+      "c4c53a22-03ca-4195-9515-f9c1e42ecdbf"],
+     ", co",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "06d7787e-dc70-4422-991e-22859282689f"],
+     "ffici",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "dfbed068-c637-4d55-b8be-176e528f8cd4"],
+     "nts sho",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "84eb1a48-1cc5-4f8c-b73b-42142db2cff8"],
+     "l",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "502e9c7e-543b-4ca8-90ba-52d7642a6332"],
+     " b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "4b56ddd1-6fc6-48eb-8704-390023b0c614"],
+     " k",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "34decd90-d9c7-437d-b461-e1b93f2b2a2d"],
+     "pt. This option can b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "85726ad6-907e-46ed-88ad-0153f2ed8fae"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "3cdb824d-d769-4943-9270-f8c2c3c69f40"],
+     "s",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "f6f47e00-672d-413c-9b50-8882337e9212"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "d5aafecb-075f-4dbc-9129-5cc8b32e3b99"],
+     " with: ",
+     Cell[BoxData[
+      ButtonBox["DifferentialCrossSection",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/DifferentialCrossSection"]], 
+      "InlineFormula",ExpressionUUID->"bec3f430-5aa8-4eff-93ef-c9e80a4ca648"],
+     
+     ", ",
+     Cell[BoxData[
+      ButtonBox["CrossSection",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/CrossSection"]], "InlineFormula",
+      ExpressionUUID->"774cef1b-7b8e-4fdb-94d7-6602ecfd674d"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["EventYield",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/EventYield"]], "InlineFormula",
+      ExpressionUUID->"9d046ea7-8050-4753-9025-f75c590a6ce2"],
+     ", ",
+     Cell[BoxData[
+     "ChiSquareLHC"], "InlineFormula",ExpressionUUID->
+      "8608e4f0-2144-46d5-803f-50c60f6f6c19"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["SubstituteFF",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/SubstituteFF"]], "InlineFormula",
+      ExpressionUUID->"82968a83-f2d8-4366-87f8-3fc00102194c"],
+     "."
+    }], "TableText",ExpressionUUID->"7b33e72e-2283-4145-92f7-a8a5655c4974"]},
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "dcd6b47c-9d76-43c3-814c-a0ed65bd426c"], 
+    ButtonBox["EFTorder",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/EFTorder"], 
+    RowBox[{"GetEFTorder", "[", "]"}], Cell[TextData[{
+     "EFTorder \[Rule] \[ScriptN] is an option specifying that the result of \
+the computation should be truncated at order (",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "7c94930e-0706-4c86-82e1-fe2dcb4ddfd2"],
+     ", \(NP\)]\)",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "15d3b46f-65dd-4e84-8ee9-2eb48d0688ec"],
+     ", \(-\[ScriptN]\)]\). The deault value is determined by the last call \
+of InitializeModel. This option can be used with: InitializeModel, \
+DifferentialCrossSection, CrossSection, EventYield, ChiSquareLHC, \
+SubstituteFF, and is omitted in the mediator mode."
+    }], "TableText",ExpressionUUID->"ccc2c322-63e7-4213-922d-6c30ee6df119"]},
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "04916da4-8a90-4416-8d25-7ffc87a8ecad"], 
+    ButtonBox["OperatorDimension",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/OperatorDimension"], 
+    RowBox[{"GetOperatorDimension", "[", "]"}], Cell[TextData[{
+     Cell[BoxData[
+      ButtonBox["OperatorDimension",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/OperatorDimension"]], "InlineFormula",
+      ExpressionUUID->"6402df77-a7c4-46d9-a137-a7ad285dd848"],
+     " \[Rule] \[ScriptD] is an option sp",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "cba482f1-7a5e-49b7-9f2b-2a3802e225d6"],
+     "cifying that EFT op",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "e04bdf8e-e240-44a2-a62f-40d454732663"],
+     "rators ",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "e7450737-bada-4632-b5c9-6e578011527f"],
+     "p to mass ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "0ce457c3-1fa4-49d0-a07b-91ff4e4cc98c"],
+     "im",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "38dcb04e-7391-4473-a1e1-70e2236b53b7"],
+     "nsion \[ScriptD] sho",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "8da5f0ee-66f4-4fcc-a2c6-22162503154d"],
+     "l",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "bc47193e-973b-4c1a-8b42-96d7d789ffee"],
+     " b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "a8f0293e-68a5-4ef4-bbb2-f090a4a9a261"],
+     " consi",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "7cc4c6bb-69ad-4c12-9806-28e45adea616"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "b68e989a-0bf9-4dd8-b05c-c08d322784f8"],
+     "r",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "ac978325-a5f0-4d02-9c68-53ccd66e14fc"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "dd00a445-8167-4d7f-a266-1ad244a87e11"],
+     ". Th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "7e912c36-fb64-43e7-92da-90baf462aa99"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "7b0729e1-031e-4a2a-971c-2e8a44447092"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "c899fc26-1cb5-4758-9f13-527b3f7c8e01"],
+     "a",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "7e9f454e-dfcf-4492-b389-38c6009e60eb"],
+     "lt val",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "890ed606-f9d4-4a32-8064-c83879cc55d6"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "8cc11abb-c2cd-41e0-b9bb-045de2855626"],
+     " is ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "7efdb259-2998-4166-90b9-17144d0db1bd"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "afd781b6-5a61-4451-805d-b33905c3b5c4"],
+     "t",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "f80d7a0c-a9b6-485b-afb0-0d6fcfa51047"],
+     "rmi",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "d5aa6df6-29cb-4342-af07-6d21e75f60fc"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "55a091c1-ca44-4314-8952-8480051ce843"],
+     " by th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "477e310e-d38f-422d-8297-6453b8b2e5b1"],
+     " last call ",
+     Cell[BoxData[
+      ButtonBox["InitializeModel",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/InitializeModel"]], "InlineFormula",
+      ExpressionUUID->"da7b9464-c4ab-406c-b074-2b6464d02f6e"],
+     ". This option can b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "a7f8312c-0c81-4267-8afa-7efe38719a5d"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "c8b771cc-084c-44cc-9af7-6fb56087bf44"],
+     "s",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "6a242b76-37a2-452a-8e37-c70ab5945a30"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "ec081958-5588-4966-b655-ac18de241b4c"],
+     " with: ",
+     Cell[BoxData[
+      ButtonBox["InitializeModel",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/InitializeModel"]], "InlineFormula",
+      ExpressionUUID->"c4aea134-26b6-4f81-abfc-da82cb7f2eb4"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["DifferentialCrossSection",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/DifferentialCrossSection"]], 
+      "InlineFormula",ExpressionUUID->"777d5ce1-4be4-4037-9a5e-5dd21cab9657"],
+     
+     ", ",
+     Cell[BoxData[
+      ButtonBox["CrossSection",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/CrossSection"]], "InlineFormula",
+      ExpressionUUID->"5cf5886c-61ab-4474-a3ef-5769a220d493"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["EventYield",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/EventYield"]], "InlineFormula",
+      ExpressionUUID->"5dabf527-81f3-400f-abd3-344c06ed6cef"],
+     ", ",
+     Cell[BoxData[
+     "ChiSquareLHC"], "InlineFormula",ExpressionUUID->
+      "cc5896cb-f710-4366-9b9c-2c8c19175002"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["SubstituteFF",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/SubstituteFF"]], "InlineFormula",
+      ExpressionUUID->"ad0a5abc-6fbd-4af9-9ccd-bce8cf49578b"],
+     "."
+    }], "TableText",ExpressionUUID->"367a86e2-a699-451b-9b39-a30210645e3b"]},
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "1c1cc6e5-9c67-483b-816b-757092d7cf1a"], 
+    ButtonBox["CombineBins",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/CombineBins"], 
+    ButtonBox["Default",
+     BaseStyle->"Link"], Cell[TextData[{
+     Cell[BoxData[
+      ButtonBox["CombineBins",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/CombineBins"]], "InlineFormula",
+      ExpressionUUID->"a6a57f81-f82d-450b-80a3-e5b0f109c916"],
+     " is an Option of ",
+     Cell[BoxData[
+     "ChiSquareLHC"], "InlineFormula",ExpressionUUID->
+      "1bde2be7-2c05-42c4-968c-4f0b73bf2ff2"],
+     " that allows to combin",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "378371da-c67b-4225-8866-21d1f06e7920"],
+     " s",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "0377bdac-a8d5-4ca8-893f-bd271cb19a6e"],
+     "v",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "53baeb4b-d773-4274-bd03-b0e2c42da61f"],
+     "ral bins of th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "ec78eb7a-1d72-422b-adb3-802120a9af58"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "055544ac-755e-4c71-b3c4-840ced5bf858"],
+     "x",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "0df5d46c-957a-4639-a48f-2c08907d44ec"],
+     "rpim",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "9d460832-04df-46a1-965c-7142cb193538"],
+     "ntal s",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "052fc454-42ac-483a-b7f8-a5e19c227c50"],
+     "arch. Th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "f64e41ec-960b-43f8-8db0-cd006b3a1eb7"],
+     " bins ",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "45bff717-1c95-40e0-8600-63e84f29ea10"],
+     "s",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "263f7334-4ea5-48e5-9864-a066f9f4b0f7"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "8933a42f-6994-411e-b4f1-6ceaa3abe67f"],
+     " in a giv",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "c338201f-0ac2-4a27-b179-1db144c3ad3e"],
+     "n \"\[ScriptS]\[ScriptE]\[ScriptA]\[ScriptR]\[ScriptC]\[ScriptH]\" an",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "10a6f2b3-c59c-48aa-be53-1cfb92d3a95b"],
+     " th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "d17f8798-05e2-40a2-9ae3-20ad13f881af"],
+     " corr",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "361ef472-aee6-4893-a42f-6fc939d9fd7e"],
+     "spon",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "daadd531-ac67-4b1c-803c-f4b7cfbf3754"],
+     "ing ",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "44fbc838-1b64-487b-96a8-432fdec6a6ac"],
+     "v",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "61ac1504-5441-4da2-a6aa-45adcf3fd7da"],
+     "nt co",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "82febf4a-6e61-41eb-9afc-0ca397be0e46"],
+     "nt p",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "ec9fb14f-b5d7-4b88-af80-e43424fd5a73"],
+     "r bin can b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "1cdf81f8-2f78-49b1-8237-d0dc49b4c19a"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "bf76299d-7eab-4205-8e52-30ba00c8279f"],
+     "isplay",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "017f67c8-60af-4d3e-bd40-775795ca0278"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "d390186d-631c-4f54-bc99-93b358b16966"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "9b3c9892-fba2-40de-b562-ddd4f17d4728"],
+     "sing ",
+     Cell[BoxData[
+      ButtonBox["LHCSearch",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/LHCSearch"]], "InlineFormula",
+      ExpressionUUID->"24d6dcb3-0b57-4f8f-945e-35626e21ec0a"],
+     "[\"\[ScriptS]\[ScriptE]\[ScriptA]\[ScriptR]\[ScriptC]\[ScriptH]\"]. For \
+",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "984687ba-6bb9-4626-96fd-7311724d2d19"],
+     "xampl",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "c2faa892-aea1-4ce2-8ff9-e998056f9f75"],
+     " to combin",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "0517e7df-43d8-4054-8761-f50e0df1b522"],
+     " th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "1f17df00-bb9e-4a41-8b63-912363f6060b"],
+     " 2n",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "4e912064-d2dc-461c-a314-ecdb500baf19"],
+     " an",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "5c1a7ef7-df4d-4efd-916d-954bcadf7c70"],
+     " 3r",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "ad0d0c3c-1057-4a7f-b320-0b40bbdcbbbd"],
+     " bin as w",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "918cc915-01c1-45d7-bbde-b66c6a1a4718"],
+     "ll as th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "0d69fd0a-250a-4d93-9851-a3f82a62791a"],
+     " bins 7 to 9 on",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "e32f1286-881c-4d43-9a7f-cfe567c9259e"],
+     " sho",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "3685d0ca-1164-48a6-be65-caf4f47c5f4f"],
+     "l",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "53363670-0f10-4b8a-a772-6eebfb3e77d5"],
+     " sp",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "bd796fbd-4016-486c-954c-975bb7e1baa7"],
+     "cify ",
+     Cell[BoxData[
+      ButtonBox["CombineBins",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/CombineBins"]], "InlineFormula",
+      ExpressionUUID->"c3d6fef2-fff2-43aa-b09e-33b326bd0587"],
+     "->{{2,3},{7,8,9}}. By ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "9eda4cff-9c07-4a03-b8fb-419c5da4ba80"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "67460284-791e-470d-9c51-0387965a1fde"],
+     "fa",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "dbe1018e-e9e7-4b58-809c-1f37cd52e7db"],
+     "lt bins ar",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "e0b6d53a-7acb-4a0e-93bf-d9e952290115"],
+     " m",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "f772b119-a3a1-4d9a-b193-77208592ed5a"],
+     "rg",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "37abea81-0850-48f2-bf16-a500c7d47360"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "133b90b2-bb6f-42de-893f-1594ad3a3194"],
+     " s",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "7f4c3251-6f31-4268-a59d-b41f0d91ffd2"],
+     "ch that at l",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "d7fc63ae-ffd7-48c2-babc-1341688467cc"],
+     "ast 10 ",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "14749918-1b56-4b86-ac54-71e78ee22bed"],
+     "v",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "8d6a2292-c2c8-4df1-900b-b3fba79c0489"],
+     "nts ar",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "5ca1180d-a124-4d45-b307-a098297c8fb1"],
+     " in all r",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "cd31baf5-6644-47bf-bf79-2d9344b82277"],
+     "s",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "11438f33-7187-4400-8151-8853bd3ff20b"],
+     "lting bins."
+    }], "TableText",ExpressionUUID->"d40109d7-9543-42e8-ad7a-247e264703e3"]},
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "f03a1e40-cd22-4ec9-b3ac-1460fbc51770"], 
+    ButtonBox["EFTscale",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/EFTscale"], 
+    RowBox[{"GetEFTscale", "[", "]"}], Cell[TextData[{
+     Cell[BoxData[
+      ButtonBox["EFTscale",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/EFTscale"]], "InlineFormula",
+      ExpressionUUID->"ca59da75-12a3-4492-b859-18698b43bc8e"],
+     " \[Rule] \[CapitalLambda] is an option sp",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "55e56576-199d-45d1-8e17-a5e865cc91ee"],
+     "cifying th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "4c261984-c80f-4f73-bd17-1ff94a57d195"],
+     " EFT c",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "3dfec819-4a04-4fd2-9528-772db9a8bb4d"],
+     "toff scal",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "3d4549ad-3f05-4271-850c-ba328b375e75"],
+     " \[CapitalLambda]. Th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "420fa7d5-aadb-4c4c-b14d-2ec8b2297185"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "5e39bcb4-fffe-457b-b49c-fffe44c9b008"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "6b19897d-9534-47c2-823a-b98ef0217cce"],
+     "a",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "b8b4dd89-609a-4bf8-b4f9-4c27fd1f047f"],
+     "lt val",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "51c57f62-8a3a-4149-abfb-0f3b186ff041"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "2f9939ef-8305-415d-9bbc-0fca01400f77"],
+     " is ",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "145f2c13-3e66-4d30-bf45-9a3c92f685d9"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "5f47ca89-5e22-4ff4-8161-f3cff02c3ddd"],
+     "t",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "dbe41a43-fed7-4924-9d8a-4ae677fe0473"],
+     "rmin",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "598d1bf2-8366-4017-8929-e7f9a84ee783"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "9d0ca122-582e-4be5-8863-0d74385ad357"],
+     " by th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "50ff12a3-53a1-44f0-8891-be31ea90c2f9"],
+     " last call of ",
+     Cell[BoxData[
+      ButtonBox["InitializeModel",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/InitializeModel"]], "InlineFormula",
+      ExpressionUUID->"3cdbd378-fbce-464f-a000-b0f5902aa187"],
+     ". This option can b",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "fd2a5580-65e5-4cdb-9887-ccb5dd999b05"],
+     " ",
+     Cell[BoxData[
+      ButtonBox["u",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/u"]], "InlineFormula",ExpressionUUID->
+      "a35c444c-b1b6-43d6-809d-f899cc87d886"],
+     "s",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "b45e34dc-9319-484b-8ef7-2f0f78cd39e4"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "f8c0c0a1-a06d-4d6e-b226-381aed77c3fa"],
+     " with: ",
+     Cell[BoxData[
+      ButtonBox["InitializeModel",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/InitializeModel"]], "InlineFormula",
+      ExpressionUUID->"ebb1c34f-596e-4bb9-ac7b-8e0747354c9a"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["DifferentialCrossSection",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/DifferentialCrossSection"]], 
+      "InlineFormula",ExpressionUUID->"80821e4a-bb2e-4349-bdb4-1917f4b0353a"],
+     
+     ", ",
+     Cell[BoxData[
+      ButtonBox["CrossSection",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/CrossSection"]], "InlineFormula",
+      ExpressionUUID->"811c200b-fd85-4276-9e3e-75c3d9eebb95"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["EventYield",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/EventYield"]], "InlineFormula",
+      ExpressionUUID->"df4864d9-80cd-49ea-82cc-15c18480a938"],
+     ", ",
+     Cell[BoxData[
+     "ChiSquareLHC"], "InlineFormula",ExpressionUUID->
+      "f77507fe-a876-4fad-ba57-41aa8fb94181"],
+     ", ",
+     Cell[BoxData[
+      ButtonBox["SubstituteFF",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/SubstituteFF"]], "InlineFormula",
+      ExpressionUUID->"d1dd8a6a-2254-44ff-9424-f9332e80e041"],
+     ", an",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "99b794af-6a93-49bf-8da8-6214ba154f95"],
+     " is omitt",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "c89d0b14-af1f-4b93-8453-0280240929b7"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "cb89c8dd-7b79-458b-babb-e6be5807cc8a"],
+     " in th",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "1285e330-1dcd-45c6-b366-e0c57010aae9"],
+     " m",
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "9399ea97-a775-417c-878e-fb39716fdc07"],
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "e380272b-6464-4d68-ba70-5fd02b55ad45"],
+     "iator mo",
+     Cell[BoxData[
+      ButtonBox["d",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/d"]], "InlineFormula",ExpressionUUID->
+      "dd7af045-6e9a-4236-b82e-6e03a32f5ecf"],
+     Cell[BoxData[
+      ButtonBox["e",
+       BaseStyle->"Link",
+       ButtonData->"paclet:HighPT/ref/e"]], "InlineFormula",ExpressionUUID->
+      "79798c41-4573-41c5-96d8-cbafe386fb46"],
+     "."
+    }], "TableText",ExpressionUUID->"df883f7c-c96f-4f99-8132-ccd4d4051b2f"]},
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "ace0e7d0-59d6-418f-821f-bfbfa7a099a4"], 
+    ButtonBox["Luminosity",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/Luminosity"], 
+    ButtonBox["Default",
+     BaseStyle->"Link"], Cell[TextData[{
+     "Luminosity \[Rule] \[ScriptL]\[ScriptU]\[ScriptM] is an option, that \
+can be used for projections, that determines the integrated Luminosity (in ",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "cc0ea0b4-0e06-4715-86e5-dfce17b8119a"],
+     ", \(-1\)]\)) used for computing EventYield and ChiSquareLHC. The \
+default value is \[ScriptL]\[ScriptU]\[ScriptM]=Default corresponding to the \
+actual experimental luminosity of the specified search. This option can be \
+used with: EventYield, ChiSquareLHC."
+    }], "TableText",ExpressionUUID->"ac365db5-cbf1-4c23-8756-709ad838111a"]},
+   {Cell["   ", "ModInfo",ExpressionUUID->
+     "e36701c2-3cf1-4a11-8478-402fdb790125"], 
+    ButtonBox["RescaleError",
+     BaseStyle->"Link",
+     ButtonData->"paclet:HighPT/ref/RescaleError"], 
+    ButtonBox["True",
+     BaseStyle->"Link"], Cell[TextData[{
+     "RescaleError \[Rule] \[ScriptB]\[ScriptO]\[ScriptO]\[ScriptL] is an \
+option that determines whether the background uncertainty should be rescaled \
+when changing the default luminosity. The default value is \[ScriptB]\
+\[ScriptO]\[ScriptO]\[ScriptL]=True, for which the error is scaled as \
+\[CapitalDelta]BKG \[Rule] ",
+     Cell[BoxData[
+     "$Failed"], "InlineFormula",ExpressionUUID->
+      "b76e363f-3c9d-442c-a5e6-f82da76af243"],
+     ", \(projection\)]/\*SubscriptBox[\(L\), \(search\)]\)]\) \
+\[CapitalDelta]BKG. If \[ScriptB]\[ScriptO]\[ScriptO]\[ScriptL]=False, the \
+relative error for the background, i.e. \[CapitalDelta]BKG/BKG, is kept \
+constant. This option can be used with: ChiSquareLHC."
+    }], "TableText",ExpressionUUID->"1cbf4a46-86ea-4c62-a9c4-9914b0896295"]}
+  }]], "3ColumnTableMod",
+ CellID->190155552,ExpressionUUID->"8349903a-9516-465f-9486-0c622680dd31"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "See Also",
+ Cell[BoxData[
+  TemplateBox[{"SeeAlso", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related reference (function) pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "fe81e588-91c5-4227-959d-fb50088098c0"]
+}], "SeeAlsoSection",
+ CellID->488695728,ExpressionUUID->"ee49ab4a-d5a5-4829-8a07-380a0fdbec1e"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TagBox[
+   FrameBox["\<\"XXXX\"\>"],
+   "FunctionPlaceholder"]], "InlineSeeAlsoFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "4d415953-5d89-44bd-b2b4-e5f59bd3a422"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "e3cbaa65-ee4a-4025-8707-e704706256d7"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+     FrontEndObject[
+      LinkObject["i7bzb_shm", 209, 9]], 22], $CellContext`cellobj$$ = 
+    CellObject[6753]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "eae7d125-6e54-4630-a00b-d4fe468a1e97"]
+}], "SeeAlso",
+ CellID->1531634368,ExpressionUUID->"242c3d05-4ccf-4e36-a116-9a2b4ae8d414"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Tech Notes",
+ Cell[BoxData[
+  TemplateBox[{"TechNotes", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Insert links to related tech notes.", "MoreInfoText"], BaseStyle -> 
+       "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "1c049267-0948-4260-89a6-c79283f1b784"]
+}], "TechNotesSection",
+ CellID->292346387,ExpressionUUID->"ea5bb1bc-f6e9-4b57-b411-28b224da8a9e"],
+
+Cell["XXXX", "Tutorials",
+ CellID->23141973,ExpressionUUID->"02fbfde5-bdae-4abd-affb-6ff9249db9cc"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "MoreAboutSection",
+ CellID->252600104,ExpressionUUID->"63ca31de-2bfe-4f62-89af-b4227f2a73b8"],
+
+Cell["XXXX", "MoreAbout",
+ CellID->2022261456,ExpressionUUID->"3fe343ac-5cff-4a22-81b6-75e253165b09"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Related Links",
+ Cell[BoxData[
+  TemplateBox[{"RelatedLinks", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related page, including web pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "1fe6e2d7-759e-401a-99e4-81e1cf04e336"]
+}], "RelatedLinksSection",
+ CellID->2072093570,ExpressionUUID->"58211494-9e28-4d7f-a331-69e918b40f52"],
+
+Cell["XXXX", "RelatedLinks",
+ CellID->2081811238,ExpressionUUID->"019f71c8-a903-4c02-aac2-5d1b9ad12871"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Examples Initialization",
+ Cell[BoxData[
+  TemplateBox[{"ExamplesInitialization", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Input that is to be evaluated before any examples are run, e.g. \
+Needs[\[Ellipsis]].", "MoreInfoText"], BaseStyle -> "IFrameBox"]], 
+     "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "c1abf7b1-f878-41c9-87d1-533d36991889"]
+}], "ExamplesInitializationSection",
+ CellID->50416495,ExpressionUUID->"53933a77-9ba8-42e2-a181-80987ef7f4f0"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<HighPT`\>\"", "]"}]], "ExampleInitialization",
+ CellID->1241474547,ExpressionUUID->"86aad6b4-717f-4c29-9309-02af1c38bee9"]
+}, Open  ]],
+
+Cell[BoxData[
+ InterpretationBox[GridBox[{
+    {
+     StyleBox[
+      RowBox[{"Basic", " ", "Examples"}], "PrimaryExamplesSection"], 
+     ButtonBox[
+      RowBox[{
+       RowBox[{"More", " ", "Examples"}], " ", "\[RightTriangle]"}],
+      BaseStyle->"ExtendedExamplesLink",
+      ButtonData:>"ExtendedExamples"]}
+   }],
+  $Line = 0; Null]], "PrimaryExamplesSection",
+ CellID->511597177,ExpressionUUID->"07b6e908-7b42-40a4-9ac7-ae84191875d9"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "More Examples",
+ Cell[BoxData[
+  TemplateBox[{"MoreExamples", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Extended examples in standardized sections.", "MoreInfoText"], 
+       BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "8134addf-4005-4c6d-956b-5ef2f580a1f2"]
+}], "ExtendedExamplesSection",
+ CellTags->"ExtendedExamples",
+ CellID->2036714898,ExpressionUUID->"97463594-3f0a-4122-a49d-f957a2f1ed49"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Scope", "ExampleSection",ExpressionUUID->
+   "a96f3372-d9e3-4ca8-afc8-ae0c37749ae1"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->177957506,ExpressionUUID->"f4d7f943-257d-45e9-b8fb-fc3e5cff6cae"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Generalizations & Extensions", "ExampleSection",ExpressionUUID->
+   "637521ca-4c25-4dac-bdb0-cb4ac3cd1274"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1634566718,ExpressionUUID->"2cb5cdad-8d5c-4d84-b6c2-9222a53e7ade"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Options", "ExampleSection",ExpressionUUID->
+   "49dd6345-9cc0-4396-bfe7-f2f13de68504"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1062318757,ExpressionUUID->"64fca043-dc91-4ac6-90c2-16c555a314ee"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "FF", "ExampleSubsection",ExpressionUUID->
+   "e193e2d1-c9ef-4be5-a503-f66a90505578"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->212307741,ExpressionUUID->"aa627b92-b770-43a0-bff2-670248d8e796"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Coefficients", "ExampleSubsection",ExpressionUUID->
+   "366fa1ec-b6ec-4728-9e15-1b7a4446aff7"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->1285865320,ExpressionUUID->"a73b7e90-85e3-4f9a-acda-f456c099d188"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "EFTorder", "ExampleSubsection",ExpressionUUID->
+   "0e5eea5f-874f-461c-89ef-a716984b32ed"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->1410493479,ExpressionUUID->"6c7f5026-4cbe-40b3-82ab-a5e3d1e80f1a"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "OperatorDimension", "ExampleSubsection",ExpressionUUID->
+   "4c3a22df-7e12-46df-9db8-5cdcc4808009"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->91922320,ExpressionUUID->"2ed4bb15-9f5e-40da-91bb-a4f81f1eef10"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "CombineBins", "ExampleSubsection",ExpressionUUID->
+   "97253ef9-3f4f-4ad3-8ce9-28411326bca8"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->897690047,ExpressionUUID->"98eb6128-5555-40e9-91be-138904b2244f"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "EFTscale", "ExampleSubsection",ExpressionUUID->
+   "7132609e-abff-4668-b9f0-36849e6a8e49"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->1403999754,ExpressionUUID->"0aa852a7-6f09-4978-bff1-1b1404a9cc2c"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Luminosity", "ExampleSubsection",ExpressionUUID->
+   "aed04457-f116-4edf-8113-bed3a30f6cde"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->473552242,ExpressionUUID->"83b531de-6b26-439d-9c75-4ba21c647386"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "RescaleError", "ExampleSubsection",ExpressionUUID->
+   "2b4f3e65-05e4-4fc6-9aeb-8e810140d295"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->418135512,ExpressionUUID->"79e17f83-609c-4b1f-9b4c-b4dd4f3539e8"]
+}, Open  ]],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Applications", "ExampleSection",ExpressionUUID->
+   "53497133-b974-47c8-948e-0dd09a132dac"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1821881164,ExpressionUUID->"3ddf62d2-7255-479f-b3ed-4d20c689d6fb"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Properties & Relations", "ExampleSection",ExpressionUUID->
+   "dd78a636-9667-4b32-bdd7-5a4ee5ef6696"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1534884422,ExpressionUUID->"33a502b2-c161-4477-b0d8-70dc704e368d"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Possible Issues", "ExampleSection",ExpressionUUID->
+   "b2355162-95eb-49fb-80ef-d9e7f5ae2a87"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1228912790,ExpressionUUID->"1ee00445-2bda-415f-8c43-691b21cf592f"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Interactive Examples", "ExampleSection",ExpressionUUID->
+   "33c44475-90ca-40d6-a8f6-af047acfb97d"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1987028331,ExpressionUUID->"101c5ce3-070b-48fc-b38a-755d310d512d"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Neat Examples", "ExampleSection",ExpressionUUID->
+   "a54bb156-3f94-4d9a-bc4b-06640259a8b6"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->466964620,ExpressionUUID->"061c680a-84f7-4149-a3df-a0ad374b303f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->1369122202,ExpressionUUID->"25a8215e-bf93-409c-afe7-249560e8b8b5"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["XX", "HistoryData",
+  CellTags->"New",ExpressionUUID->"46a87d77-b096-4991-8142-949055230941"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"7626ef47-b767-4cf6-81f8-0d5f76acd3ba"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "04e034dc-6b56-44f5-89ba-1fc62f520f90"]
+}], "History",
+ CellID->549571409,ExpressionUUID->"296e84fd-6c29-4ae0-b726-267ec5c45fb5"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Categorization",
+ Cell[BoxData[
+  TemplateBox[{"Metadata", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Metadata such as page URI, context, and type of documentation page.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "af4e2b0e-ecfc-4315-a12c-7199d2635b15"]
+}], "CategorizationSection",
+ CellID->319505316,ExpressionUUID->"1a02238a-c46f-4df6-8cba-b8a745d6b4ed"],
+
+Cell["Symbol", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->1216728512,ExpressionUUID->"928dfc0f-c1d9-407d-a289-5cec7e79b9d6"],
+
+Cell["HighPT", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->1037057200,ExpressionUUID->"1b3210b2-e5ec-46fa-b4af-0dbee396dae3"],
+
+Cell["HighPT`", "Categorization",
+ CellLabel->"Context",
+ CellID->843081348,ExpressionUUID->"362a5049-7658-49c0-b34d-fa7da04702ca"],
+
+Cell["HighPT/ref/ChiSquareLHC", "Categorization",
+ CellLabel->"URI",
+ CellID->571112930,ExpressionUUID->"649b8eca-1ded-48fb-812e-3bbc7b43f3f6"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->1167849172,ExpressionUUID->"11f2a4b0-63f6-4e98-aec5-6715b5b78613"],
+
+Cell["XXXX", "Keywords",
+ CellID->40500224,ExpressionUUID->"38385df5-caff-4b7b-96de-ae0f9099fc0d"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Syntax Templates", "TemplatesSection",
+ CellID->2082432316,ExpressionUUID->"538a890c-d8e4-42a3-9d12-dfb0b1db7ebd"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Additional Function Template",
+ CellID->1898939853,ExpressionUUID->"2b08b728-a040-40ad-a52a-583816dfe1a3"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Arguments Pattern",
+ CellID->1727631304,ExpressionUUID->"1f8b4efb-509a-46b3-95ab-66c2c5d2d3bf"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Local Variables",
+ CellID->172935241,ExpressionUUID->"a080ef84-1ca5-4762-a72b-16e262df6e9e"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Color Equal Signs",
+ CellID->977221096,ExpressionUUID->"530a8cfb-65c9-4a11-abc2-de1a0f3ae98a"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{5, Automatic}, {Automatic, 0}},
+TaggingRules-><|"Paclet" -> "HighPT"|>,
+CellContext->"Global`",
+FrontEndVersion->"14.0 for Mac OS X ARM (64-bit) (December 12, 2023)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "FunctionPageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"fcafac68-21ae-4ec3-8968-e0d6e3d4134a"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "ExtendedExamples"->{
+  Cell[51238, 1406, 488, 13, 63, "ExtendedExamplesSection",ExpressionUUID->"97463594-3f0a-4122-a49d-f957a2f1ed49",
+   CellTags->"ExtendedExamples",
+   CellID->2036714898]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"ExtendedExamples", 59035, 1636}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 109, 1, 92, "ObjectName",ExpressionUUID->"a12c67ba-61ee-4ea3-8304-99e97638b933",
+ CellID->431143341],
+Cell[692, 25, 280, 7, 36, "Input",ExpressionUUID->"0506f86c-42d8-4995-89b4-a1e410165627",
+ CellID->200028216],
+Cell[975, 34, 1041, 15, 232, "Usage",ExpressionUUID->"ba79a682-1b0e-4ffd-9d7c-2f23be410d31",
+ CellID->616307209],
+Cell[2019, 51, 128, 1, 33, "Notes",ExpressionUUID->"a8334f6f-920f-49f7-913e-2c1fb681aa0f",
+ CellID->961632182],
+Cell[2150, 54, 44382, 1200, 2129, "3ColumnTableMod",ExpressionUUID->"8349903a-9516-465f-9486-0c622680dd31",
+ CellID->190155552]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[46569, 1259, 458, 13, 50, "SeeAlsoSection",ExpressionUUID->"ee49ab4a-d5a5-4829-8a07-380a0fdbec1e",
+ CellID->488695728],
+Cell[47030, 1274, 1544, 40, 32, "SeeAlso",ExpressionUUID->"242c3d05-4ccf-4e36-a116-9a2b4ae8d414",
+ CellID->1531634368]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48611, 1319, 435, 12, 51, "TechNotesSection",ExpressionUUID->"ea5bb1bc-f6e9-4b57-b411-28b224da8a9e",
+ CellID->292346387],
+Cell[49049, 1333, 99, 1, 24, "Tutorials",ExpressionUUID->"02fbfde5-bdae-4abd-affb-6ff9249db9cc",
+ CellID->23141973]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[49185, 1339, 117, 1, 50, "MoreAboutSection",ExpressionUUID->"63ca31de-2bfe-4f62-89af-b4227f2a73b8",
+ CellID->252600104],
+Cell[49305, 1342, 101, 1, 24, "MoreAbout",ExpressionUUID->"3fe343ac-5cff-4a22-81b6-75e253165b09",
+ CellID->2022261456]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[49443, 1348, 473, 13, 50, "RelatedLinksSection",ExpressionUUID->"58211494-9e28-4d7f-a331-69e918b40f52",
+ CellID->2072093570],
+Cell[49919, 1363, 104, 1, 24, "RelatedLinks",ExpressionUUID->"019f71c8-a903-4c02-aac2-5d1b9ad12871",
+ CellID->2081811238]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[50060, 1369, 529, 14, 87, "ExamplesInitializationSection",ExpressionUUID->"53933a77-9ba8-42e2-a181-80987ef7f4f0",
+ CellID->50416495],
+Cell[50592, 1385, 164, 2, 57, "ExampleInitialization",ExpressionUUID->"86aad6b4-717f-4c29-9309-02af1c38bee9",
+ CellID->1241474547]
+}, Open  ]],
+Cell[50771, 1390, 442, 12, 90, "PrimaryExamplesSection",ExpressionUUID->"07b6e908-7b42-40a4-9ac7-ae84191875d9",
+ CellID->511597177],
+Cell[CellGroupData[{
+Cell[51238, 1406, 488, 13, 63, "ExtendedExamplesSection",ExpressionUUID->"97463594-3f0a-4122-a49d-f957a2f1ed49",
+ CellTags->"ExtendedExamples",
+ CellID->2036714898],
+Cell[51729, 1421, 241, 5, 43, "ExampleSection",ExpressionUUID->"f4d7f943-257d-45e9-b8fb-fc3e5cff6cae",
+ CellID->177957506],
+Cell[51973, 1428, 265, 5, 27, "ExampleSection",ExpressionUUID->"2cb5cdad-8d5c-4d84-b6c2-9222a53e7ade",
+ CellID->1634566718],
+Cell[CellGroupData[{
+Cell[52263, 1437, 244, 5, 27, "ExampleSection",ExpressionUUID->"64fca043-dc91-4ac6-90c2-16c555a314ee",
+ CellID->1062318757],
+Cell[52510, 1444, 244, 5, 32, "ExampleSubsection",ExpressionUUID->"aa627b92-b770-43a0-bff2-670248d8e796",
+ CellID->212307741],
+Cell[52757, 1451, 255, 5, 26, "ExampleSubsection",ExpressionUUID->"a73b7e90-85e3-4f9a-acda-f456c099d188",
+ CellID->1285865320],
+Cell[53015, 1458, 251, 5, 26, "ExampleSubsection",ExpressionUUID->"6c7f5026-4cbe-40b3-82ab-a5e3d1e80f1a",
+ CellID->1410493479],
+Cell[53269, 1465, 258, 5, 26, "ExampleSubsection",ExpressionUUID->"2ed4bb15-9f5e-40da-91bb-a4f81f1eef10",
+ CellID->91922320],
+Cell[53530, 1472, 253, 5, 26, "ExampleSubsection",ExpressionUUID->"98eb6128-5555-40e9-91be-138904b2244f",
+ CellID->897690047],
+Cell[53786, 1479, 251, 5, 26, "ExampleSubsection",ExpressionUUID->"0aa852a7-6f09-4978-bff1-1b1404a9cc2c",
+ CellID->1403999754],
+Cell[54040, 1486, 252, 5, 26, "ExampleSubsection",ExpressionUUID->"83b531de-6b26-439d-9c75-4ba21c647386",
+ CellID->473552242],
+Cell[54295, 1493, 254, 5, 26, "ExampleSubsection",ExpressionUUID->"79e17f83-609c-4b1f-9b4c-b4dd4f3539e8",
+ CellID->418135512]
+}, Open  ]],
+Cell[54564, 1501, 249, 5, 43, "ExampleSection",ExpressionUUID->"3ddf62d2-7255-479f-b3ed-4d20c689d6fb",
+ CellID->1821881164],
+Cell[54816, 1508, 259, 5, 27, "ExampleSection",ExpressionUUID->"33a502b2-c161-4477-b0d8-70dc704e368d",
+ CellID->1534884422],
+Cell[55078, 1515, 252, 5, 27, "ExampleSection",ExpressionUUID->"1ee00445-2bda-415f-8c43-691b21cf592f",
+ CellID->1228912790],
+Cell[55333, 1522, 257, 5, 27, "ExampleSection",ExpressionUUID->"101c5ce3-070b-48fc-b38a-755d310d512d",
+ CellID->1987028331],
+Cell[55593, 1529, 249, 5, 27, "ExampleSection",ExpressionUUID->"061c680a-84f7-4149-a3df-a0ad374b303f",
+ CellID->466964620]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[55879, 1539, 111, 1, 90, "MetadataSection",ExpressionUUID->"25a8215e-bf93-409c-afe7-249560e8b8b5",
+ CellID->1369122202],
+Cell[55993, 1542, 476, 12, 33, "History",ExpressionUUID->"296e84fd-6c29-4ae0-b726-267ec5c45fb5",
+ CellID->549571409],
+Cell[CellGroupData[{
+Cell[56494, 1558, 484, 13, 27, "CategorizationSection",ExpressionUUID->"1a02238a-c46f-4df6-8cba-b8a745d6b4ed",
+ CellID->319505316],
+Cell[56981, 1573, 135, 2, 45, "Categorization",ExpressionUUID->"928dfc0f-c1d9-407d-a289-5cec7e79b9d6",
+ CellID->1216728512],
+Cell[57119, 1577, 135, 2, 45, "Categorization",ExpressionUUID->"1b3210b2-e5ec-46fa-b4af-0dbee396dae3",
+ CellID->1037057200],
+Cell[57257, 1581, 131, 2, 45, "Categorization",ExpressionUUID->"362a5049-7658-49c0-b34d-fa7da04702ca",
+ CellID->843081348],
+Cell[57391, 1585, 143, 2, 45, "Categorization",ExpressionUUID->"649b8eca-1ded-48fb-812e-3bbc7b43f3f6",
+ CellID->571112930]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[57571, 1592, 111, 1, 26, "KeywordsSection",ExpressionUUID->"11f2a4b0-63f6-4e98-aec5-6715b5b78613",
+ CellID->1167849172],
+Cell[57685, 1595, 98, 1, 70, "Keywords",ExpressionUUID->"38385df5-caff-4b7b-96de-ae0f9099fc0d",
+ CellID->40500224]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[57820, 1601, 120, 1, 26, "TemplatesSection",ExpressionUUID->"538a890c-d8e4-42a3-9d12-dfb0b1db7ebd",
+ CellID->2082432316],
+Cell[57943, 1604, 149, 2, 70, "Template",ExpressionUUID->"2b08b728-a040-40ad-a52a-583816dfe1a3",
+ CellID->1898939853],
+Cell[58095, 1608, 138, 2, 70, "Template",ExpressionUUID->"1f8b4efb-509a-46b3-95ab-66c2c5d2d3bf",
+ CellID->1727631304],
+Cell[58236, 1612, 135, 2, 70, "Template",ExpressionUUID->"a080ef84-1ca5-4762-a72b-16e262df6e9e",
+ CellID->172935241],
+Cell[58374, 1616, 137, 2, 70, "Template",ExpressionUUID->"530a8cfb-65c9-4a11-abc2-de1a0f3ae98a",
+ CellID->977221096]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

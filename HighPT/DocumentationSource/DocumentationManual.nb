@@ -1,0 +1,2689 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 14.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    118439,       2681]
+NotebookOptionsPosition[    113256,       2595]
+NotebookOutlinePosition[    113653,       2611]
+CellTagsIndexPosition[    113610,       2608]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Manual for generating documentation", "Title",
+ CellChangeTimes->{{3.935915608636887*^9, 
+  3.935915614554525*^9}},ExpressionUUID->"d185cba6-52b9-4271-ac69-\
+0c0616901bd3"],
+
+Cell["\<\
+Useful tutorial links:
+ - Overview: \
+https://reference.wolfram.com/language/DocumentationTools/tutorial/\
+DocumentationToolsQuickStart.html
+ - Function pages: \
+https://reference.wolfram.com/language/DocumentationTools/workflow/\
+GenerateFunctionPages.html
+ - Guides pages: \
+https://reference.wolfram.com/language/DocumentationTools/workflow/\
+CreateANewGuidePage.html
+ - Tech notes: \
+https://reference.wolfram.com/language/DocumentationTools/workflow/\
+CreateANewTechNote.html\
+\>", "Text",ExpressionUUID->"b24389d1-43bd-4723-81b9-bfe63e3a6482"],
+
+Cell[CellGroupData[{
+
+Cell["Loading HighPT` and the PackageScope`", "Subtitle",ExpressionUUID->"15e64579-1902-47ba-8268-da4973654f0f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"uncomment", " ", "if", " ", "required"}], " ", "*)"}], "\n", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"PrependTo", "[", 
+     RowBox[{"$Path", ",", 
+      RowBox[{"ParentDirectory", "@", 
+       RowBox[{"ParentDirectory", "@", 
+        RowBox[{"NotebookDirectory", "[", "]"}]}]}]}], "]"}], ";"}], "*)"}], 
+  "\n", "\n", 
+  RowBox[{
+   RowBox[{"<<", "HighPT`"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"PrependTo", "[", 
+     RowBox[{"$ContextPath", ",", "\"\<HighPT`PackageScope`\>\""}], "]"}], 
+    ";"}]}]}]], "Code",ExpressionUUID->"128b8f32-a5f1-4e9e-a4cb-27bae616b0a3"],
+
+Cell["DsixTools 2.1", "Text",
+ GeneratedCell->True,
+ CellAutoOverwrite->True,
+ LineColor->RGBColor[0.5, 0, 0.5],
+ FrontFaceColor->RGBColor[0.5, 0, 0.5],
+ BackFaceColor->RGBColor[0.5, 0, 0.5],
+ GraphicsColor->RGBColor[0.5, 0, 0.5],
+ FontSize->14,
+ FontColor->RGBColor[0.5, 0, 0.5],
+ Background->RGBColor[
+  0.87, 0.94, 1],ExpressionUUID->"f1f87b67-0899-4f62-868f-85d1b745de9d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"by Alejandro Celis, Javier Fuentes-Martin, Pedro Ruiz-Femenia, \
+Avelino Vicente and Javier Virto \\n\"\>", 
+   "\[InvisibleSpace]", "\<\"References: \"\>", "\[InvisibleSpace]", 
+   TemplateBox[{"\"arXiv:1704.04504\"", "https://arxiv.org/abs/1704.04504"},
+    "HyperlinkURL"], "\[InvisibleSpace]", "\<\" and \"\>", 
+   "\[InvisibleSpace]", 
+   TemplateBox[{"\"arXiv:2010.16341\"", "https://arxiv.org/abs/2010.16341"},
+    "HyperlinkURL"], "\[InvisibleSpace]", "\<\"\\n\"\>", 
+   "\[InvisibleSpace]", "\<\"Website: \"\>", "\[InvisibleSpace]", 
+   TemplateBox[{
+    "\"https://dsixtools.github.io/\"", "https://dsixtools.github.io/"},
+    "HyperlinkURL"]}],
+  SequenceForm[
+  "by Alejandro Celis, Javier Fuentes-Martin, Pedro Ruiz-Femenia, Avelino \
+Vicente and Javier Virto \n", "References: ", 
+   Hyperlink["arXiv:1704.04504", "https://arxiv.org/abs/1704.04504"], " and ", 
+   Hyperlink["arXiv:2010.16341", "https://arxiv.org/abs/2010.16341"], "\n", 
+   "Website: ", 
+   Hyperlink["https://dsixtools.github.io/", "https://dsixtools.github.io/"]],
+  
+  Editable->False]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"051cd627-a0e2-4a21-9f14-14e0040c8559"],
+
+Cell[BoxData["\<\"RGE running is performed with DsixTools.\"\>"], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"cdf04ab9-2b83-404f-9fd1-3a8655c3aca2"],
+
+Cell[BoxData["\<\"Initializing EW observables...\"\>"], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"69aff119-1432-4470-9ecf-9da8aeff85f2"],
+
+Cell[BoxData["\<\"Initializing Flavor observables...\"\>"], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"56180973-65e0-43df-b438-0f66baf8a908"]
+}, Open  ]],
+
+Cell[BoxData[
+ StyleBox[
+  GraphicsBox[
+   {Thickness[0.0024096385542168677`], 
+    {RGBColor[0.5019607843137255, 0.5019607843137255, 0.5019607843137255], 
+     Thickness[0.011991904155317559`], Opacity[1.], 
+     Dashing[{0.008674698565379682, 0.008674698565379682}], CapForm["Butt"], 
+     JoinForm[{"Miter", 1.}], JoinedCurveBox[CompressedData["
+1:eJztxkENACEAA8ECSs4SEhAAKvF18MLEbNJmvrH6bEnK2T53fat5FWZmZmZm
+ZmZmZmbODyLIBEY=
+      "], CompressedData["
+1:eJxV2QtUVHUeB/DbiEiIiorGGksDiWLIU0ARgUEQeUiAL/A1jpOgiI9JrShR
+B1GxgwpuZeaRGCLL3cyo3JaK2HtYw8cxl9RNSwk4LKFHXXCBEBF2h+/3Nx3r
+HLvnM7//4/f/3Xv/987gYdw0P3OIoihPWP/VWf+nUfCf1u6wVmc9OmuSsgeP
+ltq/wiW1c2C15wrsUKCDzXdGe+jQLxRuunwAdsj3YH/X3Z6DxxNuD9ey/SE4
+t6YHVi+Uw/GGbtj6CVxf0QFbOvtpzzZYe+PVZwePpuqr7K81TRw8niv/VPqb
+4SMxn9jmgzv6T7K/72ewc8EJxmu7Gc8rs43vNXisdDsIN03cO4nr2cC43WG4
+qjSH87d/OIn1yYZ1gefgjJZMxuuGTx48ztDrbflMZt6pzHfKMW/OF8rxHU7C
+1yuC2b7ta2+uZxrr4faTN+sfABucXaegvaePLT+40t2DvlYxhXXRsn3Yadis
+ujO/nitTWA83yW/0c2zvyvVfPgCbakZxfSHvwqnNI9ne5RRsaBkh7b+DnRUn
+2/p9kEeBA+02AVZLh7F93xQfjmfP8SISYXPUUOYfuA82RWhs9YYN1Yqcnzof
+nr//reH6f2B/dQDWtbT6sG60xdVuKtY38AhWrj0Lm2v6YIPTbLhEfcj+Trtg
+U/UDurEYTjXS5pqyqfy8B1Y7v4HrPWlrPTi++ivtfRMO0NOGtj7OV9vN8SIc
+fZFXPm2tD9zR30Vfmu7L9dO6wHi2L6ANzhm+zE/ckgmrWuk/cS8c0NjJfHve
+8OX5pa3XC2wpFft+9jvrnGqZTx6tXBnh97h1Ie5+j7c3u/j93m3hfo/Pp9Yl
++T2ej8VtKawokm9fNmyOpq33p9/j67NeH3B9BW29PuBKd9bPun/BOoPUc2Id
+25d3y/lvYT4RPB+6sC7Gy8ROGv/Bo7NGzu8FD/i3860N8Gc+vB60ig7+7XoJ
+0fvzPPQyn87tbN/M68t6/8P1Wl6P1vtf+tO6G19yPkO/nN/r0l+u5/Y2f9af
+1796qYftjbw/tJrhAWjf8oTtfgvgeEPlfg+EA/T2cn/OhJXtw6R/UgDr9STv
+f4f10p73v6FtG93gzPjIA7CldKxtf5D5/iD70xfMp3kC97+HNbBt/7FM+Cds
+qnlG9vcOWC2bRN8PCsT5lf3SPCYGnqGfKfvZAnifGsn19m8N5DjxbH8vD1Z2
+JjL/lj1wR/882/4Jn3Cbz/U4/i2Q52O57fnE9nkrmW/7WcYjjLIfX5f51sp+
+/RA+p90q+3l4ENfD54vFNRa+1XfIVm843vAW3bw0iP2PyXivBXG9f+F4zlWw
+Oeq8rZ5BrPd3jN+ugx3yv5f1/SDz/Sj16YKrSu/Y6jsN9asdnS31ncZ1u8nz
+Pm0a558EG1pN05jfLD7vJ3wCey/PyZb6MV7+It8POr+R8XLZ3+USHNCwmx55
+T+IWWNH4BKMezT9lS37BHL8lW+oZzPZ3OZ/DPLiktp9xl42wg+bZdWhn9zJs
+qp4KN/XuCOb5CF3H/ItlvsR1XF+ljPcS4+O/DGa+Zti6HzIevX8d6/M9nFtT
+Aas9nRzP8C+2d5weQs/J4fmKDGE+C2FL+1zYtWA1bN3P4Y7+3Yy7vRbCfC/k
+cP5dEr8JazVF8IzGdsabj4Zw/U+tR/971XC9Zw6sun/LeH7+ejkf8DzjEcZ7
+f4YrS8+uZ52VUManbmC+w+DqsrgNrJczbI5aRTt5wk6at2Hr/gPf6vt0A+sV
+CK+tvkiPiYFdCpSNXE8SfLXCdSPruQB+M8YfNrQtg/dFx8Jm19UyXzps3a/g
+y55rpP8Wab+V7e/lwa52Oxh33wPPaixg/5EH4IUte2Bl4M3fxdXOUolvZz4t
+x0NZJxnf5RRcU5bF9dh9IfMt5ngPa+Dd6my2v10HV7n7wtb9EL5YPo75OF6D
+nQseSf3b4Lt5Z2G122E665kBK48S4PjmvTz/9+eLN8LW/WU665nO86vJgc+V
+T1nP+u2fzvVczWH93oBza/7O6/HeMYmf5PU68mPpv4d2uQQ75Efw+rT7Ac4w
+TmX/zga4I+9pekK75PeQ90vjqBmsxzdyf6XBJbXJ9Pgl8L7aaFhrvwrOaAnh
+/ac1wWqZu+3+hm/13Zf94iLHLy2zfb+R/m9xP2q7wfmi98t+dAc2R71KP3oy
+bPBovX+539yOg+ONzrIfpoQxDwfZD9PFCt2SCe+L5vcd6/UH6wzcr637C1zv
++Tb3/3uzZmK+CD953ibDHf1a+b60YibHd+H+3ruDLrO9z9bClW4X1ki+4exv
+WiP5wuaaHNv7JFxfliXvG2sYj17O95dHrzOujV8j9QznOjzYvzV1FvKouJ4l
+5wtWCq5mMW6CtQXnsni+i2FdQxXjLpdmcb1HszhfQgTiRgPHGxMTic+VB5kS
+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
+6bQsepK9tBeP1Pjo/g9ZFtPg
+      "],
+      CurveClosed->{0}]}, 
+    {RGBColor[0.27058823529411763`, 0.5098039215686274, 0.7098039215686275], 
+     Thickness[0.011991904155317559`], Opacity[1.], JoinForm[{"Miter", 1.}], 
+     JoinedCurveBox[CompressedData["
+1:eJztxtENABAQRMFDJVpSggLoUl34Ej3MS3Yztc82SkSks3Xu+pbjlZiZmZmZ
+mZmZmZn58wZraARI
+      "], CompressedData["
+1:eJxV1wtQVXUeB/Aj3UFCopuisUZ4JfGFvDQVROTeQB4SetFW0AiPVxHweUtl
+1VAuImKD+NgazSbiImtrs2XkVmtFzBli8bGGVJZuRlxi0MpxhVBRXu7l+/3d
+GXWmznzu7//4/X/nnP/5M9ayYWHWI4qiDHH+d9r5PzcF/wy6Qwaj8zoxIzl3
+8Gqv+wSu9ouHte7v4JwaI2y7/sTYwWtE5gzY8W0ZbG4by/6+uwIY78lh+4Ow
+otyFtXOVsEfh7Rz+rgVw/A7Y3tUfwHyuwYYrW58ZvHb0X2R/g3Xc4HVP3UfS
+3zaO7T90zQef8v+A/YNPwperjjNed5vx8grX+IFc7z7YMW73eOa3jnHdIbgj
+fw3nv/l3uKkyFzaGn4EP1GUx3jBsAtef6cpnAvM0M99Jb09k++mMX/sC9nCb
+xvX7/QjvMYXBqt53Etppk135TGK9DPSlqknMbwzbR34Mh2X658j9g/WKn+Tz
+xGTksf3JHLl/sD32ccZ9TsC2mMck/vVkjj/Mtb4grLtlKO03Gta70Y7eSbA1
+2p3jRc+Dm6p0zDd8D6wUDpH1vQmrNYqrvmxvUOR+NARx/QPZXP8PQawTbWxr
+Zz5qP2z31U1Be1MfrFx6Zgrz64VVr+dgte0e+3vtnML7c5du2U9v74ZttRVw
+UwCtdX05heu7ky31gc1tt+mJP7F/Ia1e64UNzbc4XrRnMOtBO+sHmy20s37B
+zEfcOBO21nYxv/BE2F5Oq/p0OCxD3JYFH4ilbXWbg7l+2vl8w8bWPzh/9+vB
+rC/tfJ7g6gpx8MmHbPSqY34FtO36Nw/b5OD4mbTzX8hD/u6xkAfbG6f7P2Sb
+T0jIg/PZrkWFPJif1pD8kO1+S0MeXJ/zfQ55cP3O5w3uyKedz1fIg/V17ncc
+zyT1HtfAeNEteX7amI8/76cx8hbjcn+NXm6huH9y/7VzY+GmCj4fmiGMlufH
+oBhhrbxb1p8JO6ruyvrXM+7P59PetT2UedLO/YPztfZwPI/3Q7k+Pt/GK59x
+PkOfPB+XQ5kv3w+tsTuU9brP/m7DwtC+SnG9v2Gsj072i3C4o18n7/usMNad
+77fBLRk+YPLgfuixlv0HvPh+X3uV/fO5vxi9y2Br9HDXfiPz+cr+9imsL/wT
+98ueWtrtKe6Poy9If9nfDB3wKf9AunNq+OD1ctWzHH94LBzWHCH74SJ4S0w0
+19u/CdYq4tn+Rj58tz+R+bcVhzP/ZNf+C3sUcT83ev6L8wW86Pqewb467v/2
+m6fhnBpV9rvLHH/HKtnve2T+V+R7EDWV6ylj3DduKuc74Ko3vKX2dbp16VT2
+f0vG2zaV65Xvnf6UtD/tqidsbPkP4781TGXeTbK+H2B90WWpzy34uN/vrvpO
+G7wmWvT43quts2h1ZK7UG1YKRst5IRXu6B/H9u1W2KbN4nlh9Ifwr725uVJP
+eI/JyvNF15fTuL489vdphKvLi2jvG2yvvQMrbkHPDl6bKv+bK/nC1uhfcqW+
+cGLr75zP43n4clUf4z7rn2U+Y1djPF0ebKsNgh33dsBnKqevZv774fS2pNVc
+XzXnq9nE+KjP4IiWAti5f8ITM0pXsz7fcHztKKx1d8G+RRfZ3nPmdOYXt4b3
+b8503q8XYPvNBHhL7QrY+T2YzvrtYtxv23Su5+wazr8TTrf8BBvcSqczn5uM
+t74F390xai3636iBd2mrYc3/3/CtfttauR/w7JbDjN/7GX4j9vRa5qnM4HXK
+OuY7FI7IjF/HeulncDyV9gqYwXocgp37EXyg7qN1rFc4rC86Tw+Phc0WZT3X
+kyxx3/Ws5yK4KSAUVq+9CNcb4mCb70o4sXUx7Ny/4G8DsqX/xhms5ya2v5EP
+v9C2nXH/4hlcfxH7e5dJvBhWBt54KK51lT/UX207JvWR8X1OwLUVq7ge3afw
++37Mz/n+Sr7Psf1vDfCOmGDYuT9KvUYyH89LcE5Nn9T/GuzcD2DttsfMwWtH
+fzqs9CXBEzNKeP87F4o3wM79Zib7p/H+uq2Zyfwmr2X99sKXqy6uYf1ehz2K
+ND6PN96W+Pt8Xr0/gCMyd9M+jeI5fD51P3C+mGD272qG0y1+9OibsK22l+9L
+y+MRg9dqv1p5v1JhvdsCetQS2MMtFja4L4ebAmby/TNY4YiWMa73O4Lr75L9
+4jzH9690/X0k8cPcj65diWD9y2Q/uh7B+7WN7ns0kutbzP3mt3j4uN9w2Q8X
+wL/2Pir7YZp4CN2WJe3/4H7sXxzJ+b/j98irDjaqR/g9uDF71uA1pyZM2s+d
+xf6T5XucAleXPyN/f70E27RR3P/v7ZjF8fpd5z9YGTifLflHDV7Nlk3Zkn8U
+67nBdT6FHb25jN/MjuJ8y3ie6XtNnJwt9YUNzePYv908G/2rflol9wtuqrq4
+inErbK05DzvP77OZXw3jPo2wVvHOKs6XFM37lwU79485+L2wP0vidEEP7Hx+
+6O3dWTI/rFV2sr1ig/W6q1msdw1sj73A9roZMaznUbYf8DEiT4sZ1m77wgfq
+Utjf+rSR9Utm+8JA2Nw21zUeHJYRBTufD1jvNoHjbTki8fsrZTzT4LWj/2NY
+6x7xHMY3RKzkusbEYn6TtgLjl4yPQz2jF8OK21Nz0T+/1wK/Oi6e+dthY6lf
+AupcY4YdWyYlcjzFwnqFJ6Ff0cfLme+EeVzvy7TX1GTk2zxlOecLep517VAx
+3j3/FORb+QlsuzlhPtbhv9UVX4DxYmNV1mukGfGAYSrnP0JveW8Zrg0jUjFO
+fSJd/yZsLG7L5Dp8FsKmPZmsxz7YFjuNcW34IsRrLr6E3+vK6M8LYUPxiBfw
+e/Rkxk0HaO3HDOS7w/PPyLNnH6xG7RfPyeD6hy1G+7l3XsT9SzhIf/4e7Hx+
+0jBfkQqrtfvTmMfTrng64lGXlnLdB2Ht3qGlXMewJRxvyVLpv4T3x3epzM92
+Mc383f0gfy95B1YjfThPgQU2ntpHFwctkfpmsB6d6TI+1zVQAxt0o1iXyF2w
+o/cIPXd+Oucdmcnr0+mc5y26/tc01uvJZfSpNFnfMuZdmib58zmJXsq61CTK
+cxFM15bSugHUVav8WmU9mxZLfz6Xp96lC1OWc7xtbF9eupzzpjJedIbPbcFk
+xis8LbjWK7xvpkQL4z/iPmsBpRbW5yPe98KzdORe2Ka5470zmnLY3j+J72Gf
+CXYElDB+yp/to8/BtoR7eM4cBq+VrN/3dGWSvPf/hO2mvbQ8l0rBObav3cD2
++UO5j5jMbF+XxH2oJETiJdwXax+HjZnnGO/53yKZn/vs9guLuL4kuuAkrLaU
+ct+N/ivb957lvl2zie9Rqzu/K/XpdHMivxNuUXTmbsajxiziOs/yu/H5kEWS
+P79rJVfx3jqq4ujI8ws5Ton8nVbN97y5ntYdgg0tQ+U7vXWhrJ/uyVwo9ed3
+WBcv8bP8jscGufrznKENl/HjxD2pMj/PKe6tsFpTz3jCWdhePnSN5Md9KiaJ
+5/Kow+xfwHOSZrJx32o+w3htdqrUj+fwhNRU1jeJ5zT3SNig7JX4WI5XeJbx
+4mGc3+TFc2F3l5nzzeM5e+7PZuZXsk7yNcv6eW4sOCnxoTyX1pVz362Yx3Pv
+vd2watlLJ7zs6i/n5AyzzL+B7eNhY+a8DazbNMZjS2Dn/TezPmcZ73uU81kf
+seJ37xsLWI9x9KavYFUfR1vLFzA/C6x4/gV2NBZJ/xTYrh1lXDceVhbW0979
++A6pMe104ffzed90L6P/zmrYsSAQVjbuge3r4+i7K+hOC60Ypf8u9r/tO5/5
+H2V84FaKzM94XiMd2k6/cjyF+T/yCvMphlXvQFpRU2T9dOls9j+RRXs+CRuq
+d9P7/8B32G49BtvuX4AdTQ2MF/9DvtNX6Tt76ALdRlzLsukTgRtZ/9jnWe84
+2iuA4xtWsf2tfpwDnO8H7XaFPnGM7vtM4qdpz8PJXM9VWpeXLPNvwrVkMeMH
+A+m702Bn/enNI2CtMYt275wn64dt+RdgNeYYff/DeezfQHeV0dZ2Om/9POY3
+dDPsnUIrEzezXkGwTYuX+GMcX58j8es4JxlCSxgvPZ8k66fzTiRJ/WlrmcTb
+6fwN0n9oHtvPT+L4E8UhjFfH53G9T8DO87i4M1Hqz/ad3yZyfccY132aKOsX
+H0pkfdrZ/vYWWKtw/wudTjcGworHbNiYGUf3+LP/wSza+ScSrgW72L/zF54r
+9e8yfvcr2N7ZQA/8LUHWT9/ZkyD134L+vbnSfzxtTaH3x8HKa+GwVplFbx6R
+IPOzfVl3POtzjL59GbZpDWxf/AXPwWo7vb0iXta/Fe28dtKVgVtZr1XxvD8J
+dEcC+4cnsr1ngsST6JJ4cTLbvxoXz/Wl0X2R9EA62+sjmG/nUsZLZogzGe+c
+KvkuY3y/uFWl3cPFFrbPD4XVlhV0XgjsaFpJW4PpBVm0N+18nx6yo2kVx/eY
+Em/8P1CE6XY=
+      "],
+      CurveClosed->{0}]}, 
+    {RGBColor[0.8, 0.5019607843137255, 0.10196078431372549`], Thickness[
+     0.011991904155317559`], Opacity[1.], JoinForm[{"Miter", 1.}], 
+     JoinedCurveBox[CompressedData["
+1:eJztxkENwCAABMGDKsESEiqASsYK8OJZA7PJJtPer48nSdnPmhyfam6FmZmZ
+mZmZmZmZmZmZmZmZmfnHC5EkBXs=
+      "], CompressedData["
+1:eJxdmgtcVNX2x0/jCBMSYaKhEh7NZ4qAD5SQZiZAQFAevk3xSAK+oklJMdAZ
+RAREHOlh2pXLTKTmzche5vXS3HO5hujHuFim9jCGy9+4/tWQAHkIeIf1W3M/
+nfrY53y+rL3XXuu3915n7wOjk19OTBkgCMIjjv/tKkFw/Ov/T1QfFHWOp6cq
+Zn3/01L1OfGBqghiueNbYk2ujth0e/BoHfULIrZ/U0ysyRmN/t67x/Q/3/fp
+Xof2JcSZtg5i+aKVOEpqJ3b8hLiu/B6xpbUXPKaJWPxx+9P9T0PlFfQXDWP7
+nzXWj7m/iXjiyo+c4xHf6z2J/n6fEHvmvg97VTvs2WVO/+P6n6d89hPbx+4Z
+D/8vwa4+SHymdCPGbz4+HvqsJ9YF1hAva0yBvXrQhP5n584kZzwTEHc84p10
+ZCLGC4K96W8TEf905O/zw0ToEUAseXpP6n8eCpvsjIc4UzsafK18EnQQ0T74
+M+L4Bt91PH+TkL8PxzP4GbT3XsfzR6yrfxz5zPzzM+jvgfZeFc9gXA9u/zVx
+nejuzHcy/bxcA/YZQWywuaL9g0mT4c8F/kLnEeukgYg/sADtQ1Wc7yFi2fqI
+U2/igBsCz0/1ZMzfwzTy03iT+/cRW7zVUyi/vp405D9kCvIHC9eenoJ8HxBL
+7s9PQXzd8Oe+C/YbneB6M+zJYJOtDP4FsNz6JbElrCON9WF/98ETf0J7I1hq
+egB7Yzv8hbr5kZ5WsEMv4lO+zLWziMUbbejvucwP8TA3phCb9GDH+vVDfG2c
+/xvEAfWtxI714of5Yfb7hNhSCha+fWzq71k303fq79ubvKYquSlk6u/9y9Ux
+U38/vsVnBbEscnwP1k/9ffyO/Yf2ucyBBcRSJcfffJzYpIUejvqE9jmsz9hq
+4gNV7Ty/jYgnCXrrgtvQX2Z2V/mT3mMwX/LF0f6K+RQDiMVcsCjoiP+3HmYm
++SOPLtYjHf2NWD+W1h3sH+vLsd/9MT9Yf6LmJHHADbDux7+ivbWX5/c6sacK
+61uu7QDnYv2LqkEBGP8R5/4KgB4DeX8Hgo0uvB+fJZZLXbl/TAB0fBT7XbOJ
++N5OD64XW4gNNtQDqSkL/X0Ho71HMduHOOsDsWfOcK5PpwOQ/0jUu24b4i1H
+/bGM+Bexrn4U1/N7AZif8eCWaYHkP5Tr4xNhgcjnWY5vYSD00SL/3gziAn0U
+2t/NJpbL5iH+xjziM77znfWT/SciH7cvAjEfK53vI7QvXc316Dr7X8f1uZs4
+PjmD63fItP5nVAPeHxbvcOL3fV536k2syXkL3LCC+ID+CPt7bRry+wv8eZ4h
+1kkXnPpx/69hv1VNXGO9zPlc5fF+YD3aiE222049p1O8jYPXs57ENaIPv88T
+iDt3jieWbhqmI745eJ+P+Ij4XvbG9awXcUHVK3j/t345HfOYif5etWjfuxvs
+cXc6dLUQC6rJMzB/P67n+GbAf+N61nMG4ruD8TSxMxB/L+xe6cR1Y57eQP7U
+W2dg/qYQ27t2EpvkoA2I38zjxWxAfqeID1S9Cvuwv2L8XhOxzr2KeFnyvg3Q
+5zJxpq2cWO5oJY6SvkN7t1kzwREbMV/PERsqFxFbmiOJvXPXEjvq90zWB3af
+14jlsosbMf4utv9ELKqKZkK/e7A3vDMT+T+5ifrfrSR+M2wjsez7FbEmJ2cT
+zwdxbPIh2Lt+nol8zm+CXyEI9ikvIV5X4sqyuS9BL09ik3YN2H0MsbvqbWJH
+/SH+z4OPX4JegcTrKi+Bnwgj9soV0pFPDPGVcu906LkwCPH7E0tNLxAX6MOJ
+Td5rebylxI56RfzNmDTuv4XbZ6D93Wxib/VO2H3ziOfU56K/RzHxosY8YqHv
+TYVdbi1l+w7E03g0CDqxf68KYltZKvJRn+bxlsBft414t/w82t+qJj7j60fs
+qH9BmJ+hiMftGrHjfML6NxHfyT5PLLdrZkHPZcRCTzRxVMMezH9LIrFJTid2
+1JdZ0HMp5le1kVidM2kT9Ns3C/lc2Qj93iDOtP0d6/HuEbafxHr1+JC4xpoH
+9qol1kmhWJ/qq8QH9FPQv/UG8b3skeARzRxvN/ZL/eOzyd5byfsrgfhA1Xzw
+sOWzMZ6eWHRZw/aZ2H+igbhzp69zfxPHN7ZwvbgE/9llzvsL938L9ajpR/gX
+93E9uj0b87Md3PNocP/zevki1Jtbc4kL9J5cD+OCoY+G6+FSZgHcmBKMOHGf
+caw/4kwt6rWjvhBrVG+j/t+d82z/01s9ldtHEE9cOYHft/OJA26IfD9aBa7H
++9dR74id5w+Hf2Kp8UIaxx9CXGlI4/hDoM9G53mSOCApFfbmNGJPYSXOLz2F
+IZi3yDTWN4TjQf+b8XNIX/31VLCBuSYV/czEYu4Z2L1qie0PDqfCf3Qo9JOI
+HfXiOdKhtCOF7cR15W3EjvUCu7WF2LE+iB3vO7QXTM/haU+BvpXE93pr0F4d
+pCV/4hG07/PSwR5FLLd766DHXPQ3PEVssIWhfc44tj/n9Aeun07sWA/ElrBR
+8Jd5mLljLfvTQ9+TxI77yfMUj9WPWNgxKox+Ln72IvnPHx/e/4xPjiIWVCMj
+0P9OMnHW2LnUf4yZWFfkEwl/ocT2zElR1F51ew30Cowm/76laxDvhHnwvwzs
+Pi0G9sFrMN7kWLI3XpbIX5fvfNJb+xaxqXnCAsrLZ4nTHgf7UxL0GhpPHHxu
+NcY/TCwYE4nl6iEJeN5Ooue5QwmYPxOxVOmVSP0jfJOgx35iOeyfq8guP7EQ
+87iS2FRVDFYNIBbzhiyC//KVZNcfINZVxhLbd7otpp9Hdr1A/kLMixGH5QX4
+GbQE8cQTWyJLwD1dKzCu11LyZztOLNnM4OCVTvsyYo07sZxZsgz5Vy2nccMG
+LUd8Wcu5P1gfsJzHX4F2t9HPpYT9WImlYC/EaVyBcc7sfwH5DF/G+lKe8mtX
+lrJ/cO+bxKJ62CrOj9ixL8FqD2KTdijprjt7GXkb3wG7QAcp5MnV0H3xEs5v
+NfL3WcLxS4jrZ+hcGUUsRxwD24qwjs6uh+7Wr8Eh/ou5/xqeH5o3IWc+2PZ3
+zGtpEdapcS/suTXEctcS2MvckpGfSGzSR4H77tA6kccUJSO+01g3ORdgz9pN
+bJJdaN+ZqheivW802DaK2D4mH/tyRzPWaejFF5F/JbFddF8LP3vB1mjs+9dW
+Elv0+7Dvjc8k4nmRWFfZQ/vAnu2KupJbR2ypiga7WNmejzrTm0GsS7oIjpib
+wONznR2OfZUTnYp5aqF9KNUXwW6sIrY/uAB710FiXYML3iMR6eAbUXgvqMLA
+SXtgl0dgn2vx3hG6f47j+HFv6doPLg8HF+rj4Ccf3Hp3AfyfA7tYicV6V7yH
+ty5YwPnjPb2tbz7rD876bD7sF5jXzuf+uCfkjZwP/+Hgzm9jeXycO4rziaXK
+c+BcHbGl1BXn+qy2GOQXDVZ9EAPd9oDd0mLgvwbc9lQM64dzmPGHedA3Gmx+
+nVgU9hGbimLnYX4ugDXuxBa9O87Rbuej4Wcec3404svHuXB7dDTnD3uxK9td
+cQ41XqT3gONejHNqTyGxlLwPdlVMFPeHvXBwFI//MvK/Qu8VXdI8cNERYktY
+PlidGgl9LrB9CrFsGGCgn3t2zoUeY8G5MrHkGQ5uLZ6L+JLBhlXE9tpcA/J+
+htgivwv26KX3oJB4Du09viaWtDfZvwV2Qf0K8eZMYnvcOHB2HLElPZxY0EwB
+tyTDnjeI+++GPe92OOJ/F/ZddcSSVA5++C9iuZk5G2xpeQ+8tRbtPY6/wvGG
+Q68P4H/7BfS3fgp7S1U45we72xfE9jrm/NOIR/oKrAaLSdXgnM/hP70G3Pkp
+xjdfAhd+DLt8hfM/Cbv2O873A8RTq2R73VWw8S+sx3XEm3mC8/2J4z2O+P1v
+wu7+LrhCyRbxF3ChFeP5NoFdwELff+BPsPD4d8BtpbAb28A9h7l9G8cDthja
+lZx+H9x+CP4SOsGeYF1gD+t7EPbaAZsxH6/zfKiJHfuX81eyWD8Q7M7tBQ3Y
+pQT5ie7wl20GlylZ8H8M3LUfHOgB3gq26D3BrcWcjxe4aB/rr2TH+QusYTYO
+U7Bk9garing9+CDenkJer+NgL84HlyhZEMaD3ZhVExRsr5sCfzl56G/zU7BJ
+ngru2w39TgUoWDLPAHfmcvxBCjalz8Z4Gbm8H4KVnPQsz98uXt+hCjbpnwOb
+d/H8PK9gR30Cu4PtcdFKrmUuzGE9lilY8liuaK+TViu5frVyvJIXFSxUpCji
+FU+lKvOxpSnyFRI3KPnyBoVeUv1GBVuaXwJn7eb1k65gx81HOR+emxUsBG4F
+q/dwfGBTPrP/NgVb9JmK9WFJ34n+Wwp4/D+wwQi+X8Dzb1KwZN6lWK/iqT3w
+n1fE9SRfydb8P6z/gj/sj71gj2Kup/sV+89ep2Q5zqzYr/aEA4r9LAa+Dn5o
+Zv0OKuqDZD6oqB+C6m0lC4cU9UdXf5jn7w2e/1LW/yDrdRRsfIfnl1n1J87v
+GDjvT7zejoM1RxC/9QTGM5Ry/f8Qdq6/FvE0j3eM6xdz/jGe7y/AXP8t+jPw
+18zvg8SzYH5fCEYb6/0h61vN+X3K45/n9fYZ14saHp/fd6cucj36guOp5fz+
+xvN3lffDP5mvc/35iuP5gfuf5/X8M6+HS6z/Lzz+FV6vzOqrvF6Z86/y/DSx
+v2tcH27x+vye199dcPfPXI/aWY9bPJ/MD25xPPd5Pv+f9e3g+brD9aWL1+Ov
+/D7q4f3bxvqqtyAPAecjj4HEJpdHwCXMhWC5zAWcMSAC+mrA+S44P9W5gw2P
+4bzkOxT+NT44L1WMA+eFwC6OBxfNgX/rBPAOLY8/iccLI9ZJfmBNLPufifYe
+qzi+cI43h+0R4JZd7B/sqG8c/1zY3fI5/ij2vw/x9sWivdvbPP5izu9Djj91
+C88X/Pumwe7+b7QPXAd73/+hvX4D538b4yWko317J/I1b+X4htB51nH/gL1r
+ATiHeVc8WChAe3Mizr8tzOolfJ7ey/HivCye2s/zsQmcdBB2VRH8VRwFF10i
+NumPgbfWgmWw4HIZ5/Ha4+Cc7zBe/QmnHnx+r+D4fuPxToN7hkciv/Pwn/0y
+OAcsuG/G/aGZOSsD3FKD9pnbcd9ouMj23bhfyLXs/3Ak9LzKelSDPX/h+RhL
+9xfH+s+gfsUduO94DMzA/DwAm13YjvuSY73D7vYksWO9M8+KRv+hGRwfuGQc
+7Pdc58HfeLDLYL7PTeD2w3H/i/MDZ8fB3jeD7Ydx30sPB2+eTfdHiyECnBGG
+73JlUfCvTsV9VI4FZ72J9r6LwX24r8q1KeCcr2IxP6nwV3QpFvoyt3wDrk8D
+59px/21ej/6aHtyPPdPBndPxHVC/FVx8HPftU3vQ3/1duq873r+c3wmwFey4
+fyyAXgWwu/xjAeZrL+yCndiesJ9ZjEM8b/H45cSS9iixrJfikS+zNgXfMxKO
+wX/oBtjjjsP+WkY89D3B81WI7yElH6J92KfEYv3nsBvd8P0lvZpYp64GG87D
+X+blBOhbw/r/hO8tiRdh72gFB9bCrnoa33+av2P/u8AtV8H8nVNXf43t7+D7
+Ue33iE/+BN+LKm4gnrxG9DfcZH3CFsI/s3Eevm8Zf0F7l4SFyLcJ/qpW4XuW
+9RbsIdvwvav2LuyRJxYiv1/BIR8R6xqYtZ/zeM3IN/IfGE/4jfX9Ht/T9Pdh
+rxqI73HyfdZ7ELGk7cD4uZ6LMH+drNfIRdC/G9w9FdwCNlVPJxZzHoDPzcb3
+QGMP2vfo+XtgH+//hWDfhxjPthTtK5g1K+HvlPAq9HwR8WofeRXt08A2sJC3
+Ef0vq15FXpsRf9wAcMRW5FcPljO3c/xq9BdM6K9yZX9F/L2TWb0f/T016M/f
+sSWPR8G9b4JLmLsOIj/RDf1dDnO+gxB/5RGwdRDH92d8Fw90B9vKOH+wHGlF
+PP6PwZ/xXdYLrMsr5++rHuhf+R7isT3O8Rzj+fQEZx8H1zE/ZK4dDP+57yOe
+hicULElDMJ6euZ7Zhv66JC+Ff8d9GPYzGN/SPBR27VFeT8MQb/B7rP+TsIch
+H0HwBp+z8HoCm0LKWP/hiC+nlPUH6zRHeL5GwN4D/SXzCI7/EOs/Ev473uD5
+8uH1UcLr1YfHM7PeT7G/QtZ3FM/fTuSjF8FhWby/RNZnG+s7GuzyCuv3NPtb
+w/qN5fWWxPqDTWeXs37jeD0ksD4TOT4txksHC6oQ1h+syw+Cv/pJaK/143gm
+g0NHcH7+7L8F9UWaxf0Pcj1izj2AepUwm/vvRX3RBjv1QL3yD4G/qhTUOw8t
+76/p/H1/LrjvUiLmax36n/NGPffPBz98Gd+rK46C2yfi+3NdNdeHIfgeXHHT
+WQ9wnvB33UrtDTf4fDKR2HF/5fPaXNizX8b5sTkN9rZVfB/Mh31zJv1e0HG/
+gz3vg+eJ06thz7XT7xUl7U3YzdOIHef5bcRZu3XQbxy44Qf6PaguKRx8q5p+
+TyqVpIBHfoTfyxp3g33OzkH8x8DdNvo9sKWlGux27VnOH3xfA1a5ZkLfGcHo
+Px7sto1+7y6Zw8GjvqK/E5CtKWCN+yweH+ybEgR9jnL/L+jvWExyNfi3J4h1
+0k1w244ZnP924oEN+Dsl6zhwSyKx6B8JbvsSf4dVwdxwdhrs0eC+z5hjwJqT
+aK9aCh62HZzD7LYNLCwDd24B9zGPNkyDfivA99KYk7j/0mnIZzW4YyG4IRnc
+GEEsSS+Ch4SB65ld9cT2urXgX+cwp3I+M6bp/gsFJzIp
+      "],
+      CurveClosed->{0}]}, 
+    {FaceForm[{RGBColor[0., 0.25098039215686274`, 0.4196078431372549], 
+     Opacity[1.]}], 
+     FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
+      0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 
+      0}}}, {{{63.839648524299264`, 146.92886352539062`}, {
+      63.839648524299264`, 209.13433337397873`}, {75.25136747583747, 
+      209.13433337397873`}, {75.25136747583747, 183.8218329269439}, {
+      116.02558694593608`, 183.8218329269439}, {116.02558694593608`, 
+      209.13433337397873`}, {127.43730589747429`, 209.13433337397873`}, {
+      127.43730589747429`, 146.92886352539062`}, {116.02558694593608`, 
+      146.92886352539062`}, {116.02558694593608`, 172.24136397242546`}, {
+      75.25136747583747, 172.24136397242546`}, {75.25136747583747, 
+      146.92886352539062`}, {63.839648524299264`, 146.92886352539062`}}}], 
+     FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 
+      0}}, {{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{
+      136.94417576294245`, 146.92886352539062`}, {136.94417576294245`, 
+      146.92886352539062`}, {136.94417576294245`, 197.0476144105196}, {
+      148.27151971299054`, 197.0476144105196}, {148.27151971299054`, 
+      146.92886352539062`}, {136.94417576294245`, 146.92886352539062`}}, {{
+      136.94417576294245`, 202.04683324880898`}, {136.94417576294245`, 
+      202.04683324880898`}, {136.94417576294245`, 213.45855220034719`}, {
+      148.27151971299054`, 213.45855220034719`}, {148.27151971299054`, 
+      202.04683324880898`}, {136.94417576294245`, 202.04683324880898`}}}], 
+     FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {
+       0, 1, 0}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {1, 3,
+        3}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+       3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}}, {{0, 2, 
+       0}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {
+       1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 
+       3}}}, {CompressedData["
+1:eJx10zFIG2EYBuBTqSKcLg5iKpYiUiyCEEIGC+ayXBENoqQULHJRY3K/RIIh
+VDIFHJxspKVY1NMkg9cIDloRVCzSwYAQL6JYuDoEVFxqFx2qQ7H3Bn74Bh2O
+41n+/3vf++75YLh3uFQQBIf14H0YkNXZMb8kCDtrTfuK9Lhr9d2eAct+ZjpV
+4oN80kWtaeJruNOMeOFFLeeBPab9HZzSprzwhCgPwGnt6i3coCuM2mseRagF
+aat/0LJh3J/5ibeNeJI6Oi/64CNRDsMzxn0T/F5XPsGbJTe/hyzbpNgGPG4o
+3+GErpzDxw55Dk7qu/VDllvnW8bhczPyBu43ksNwc9XlZ+oxqe6UesQdawwS
+f4uusCA57/brs+Ugua8yEz8Lknk8p/anKpk3UZ3tUEkee6YQUknen+67afhP
+yfEinKmeTKukL27+fbgv8q4P1C/L1nMqOe9VWU05I/fFndl2Rua50VZCsC1T
+KM77TwslGMlTsdCyCu9Fc8W8Jtv6wUgf3Lwv7m7zurgf3KNiwFbcB+fkGtwn
+yr98lr84s9Nwh3iZgl8cKmH4iWlX4XUWc8MfI11t8IkWqoC3lwq18N+8coC8
+vk7XlUL64PvP+3r4//gP85lXWw==
+       "], CompressedData["
+1:eJxTTMoPSmViYGCQBWIQfSFt/mydjykODAyst4xOJDtcSEvJvGmWgcQ/e36+
+PTJ/zhwedxDfkvfZKRB/3pwzviC+Ne+yiyD+gjk9ISB+gcPO6yD+wjlvwkF8
+nluX7iPznXjdXiLz0xx/iqYj8c8v3y+XjmTevBIdtXQk+xaUvNEB8TMzd4Ld
+s6hkjTGIP2uOjwOIv7iExzwdyT8wPsy/MH5mxs7nyPxZs30epCCZN2N2z80U
+JPuSMyovg/jZjjfB7knKkLwA4s8pyZFH5sP8A+PD/Avjw8Jj2uwzl0B8W960
+G8lI9sHC8+y5+fdBfLZbk04nI7kXFh+o8QcAV+y/xw==
+       "]}], 
+     FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
+      1, 3, 3}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {1, 3, 
+      3}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {0, 1, 
+      0}}}, CompressedData["
+1:eJxTTMoPSmVmYGBgBGJFIGYC4gZZwz8HX2Y5AJkOO2OTHHDzV5WuWZcF5JtN
+sw7JwcJfwde2MAPIt5lefSIfzj/A55Qazl6AxH/6T0AdxL/m+LMfyO97+++A
+M4hvtOJ+DojfP0MqAcTv4zvmCVJvYJRSDuJLrbgvDeIz/f/QAeJzrqh/lA7k
+XzldOwvEP1pyZiWIb2vkshjE31SyJhOZn+VYqYzMh/mv9BTfnXws/DTHn6Lp
+SPzzy/fLgfglp9bdAPHnleiogfhFp95dBPEXlLzRAfFtp98+DeIvKlljDOLn
+nco7AuIvLuExB/Etpv/ehcwvPulXmoPEt512OxuZn3cyLyUHybyck+tic5Ds
+M582OxzEz3a8CXYPLD7mlOTII/Nh/oHxscc3AJy+w/c=
+      "]], 
+     FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {1, 3, 3}, {
+      0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {0, 1, 0}, {0, 1, 
+      0}}, {{0, 2, 0}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 
+      3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {1, 3, 
+      3}}}, {CompressedData["
+1:eJxTTMoPSmViYGCQBGIQvUA7bhmrcKEDkOmwMzbJAcH3dZqpmAXkb+J9Y1KC
+xA9bzhqBxF8dv1y0AsSvLuURAPFn3zoxFcS/fvvTm0yg+sLlqptBfGOnmyeB
+/NWCjvmnQPxPfG6zQfzHvH9ug/giTpaJIP7WWx1vQXyzUh11EF/O0f8biP/B
+cefzDCT+Cr62hch8Tr5nHWlI/IO3NjmlIZm37tYkpjQk+8xKdI6nAt1Xsfwo
+2D3dt4p6gPzV13lrwO71Wn4/NhXJP8W3iqxB6o/x5oD9m3lrk2QqUnik3LrE
+kYoUXlD+6l88c06CwtNguTwbMh89vCF8AOxcnW4=
+       "], CompressedData["
+1:eJxTTMoPSmViYGCQBWIQvUB75jLVW4UODAwsfGwVaQ4LVq/nrdEpQeJ7LTc1
+ROZLlDiZgvgWjjurgHzthls/LED8BcvlG0Dyzx3W24D4HHxtrSC+3/KtdiD+
+kuXze5H5t24JTUfmX3eMnJyBxOctPTMHyNf2W85qC+LfcbRckoFk3z3Hn6tA
+/PpbM8DuES7l2ZiB5F6R0pwtGUj+gfLh/oXJpxQfuorMn7Zs60UQ/4HjTrB5
+U5eFnitEsu83j89pEH8l3zOQe1b/4plzshDhXjgf5h8YH+ZfGB8WHlOWfT0F
+4l+9ZdSWhmQfLDxh7oGF9z+enKtI8YUWfwAQNLow
+       "]}], 
+     FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
+      0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{363.8273754561842, 
+      146.92886352539062`}, {363.8273754561842, 146.92886352539062`}, {
+      363.8273754561842, 197.6382394209504}, {338.43050000765925`, 
+      197.6382394209504}, {338.43050000765925`, 209.13433337397873`}, {
+      400.63596985624736`, 209.13433337397873`}, {400.63596985624736`, 
+      197.6382394209504}, {375.3234694092125, 197.6382394209504}, {
+      375.3234694092125, 146.92886352539062`}, {363.8273754561842, 
+      146.92886352539062`}}}]}},
+   AspectRatio->Automatic,
+   ImageSize->{415., 257.},
+   PlotRange->{{0., 415.}, {0., 257.}}],
+  StripOnInput->False,
+  Magnification->0.6]],
+ CellMargins->{{70, 5}, {5, 5}},
+ GeneratedCell->True,
+ CellAutoOverwrite->
+  True,ExpressionUUID->"ffa1d7b9-959e-43fe-8ff4-1dc3067b6fd3"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ StyleBox["\<\"Authors: Lukas Allwicher, Darius A. Faroughy, Florentin \
+Jaffredo, Olcyr Sumensari, and Felix Wilsch\"\>",
+  StripOnInput->False,
+  FontSize->14,
+  FontWeight->Bold]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"e8dba6fa-7426-4e17-ad17-da26e8f45374"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"References: \"\>",
+    StripOnInput->False,
+    FontSize->14,
+    FontWeight->Bold], "\[InvisibleSpace]", 
+   StyleBox[
+    TemplateBox[{"\"arXiv:2207.10756\"", {
+       URL["http://arxiv.org/abs/2207.10756"], None}, 
+      "http://arxiv.org/abs/2207.10756", "Hyperlink", {"HyperlinkActive"}, 
+      BaseStyle -> {
+        RGBColor[0.04, 0.22, 0.52]}},
+     "HyperlinkTemplate"],
+    StripOnInput->False,
+    FontSize->14,
+    FontWeight->Bold], "\[InvisibleSpace]", 
+   StyleBox["\<\", \"\>",
+    StripOnInput->False,
+    FontSize->14,
+    FontWeight->Bold], "\[InvisibleSpace]", 
+   StyleBox[
+    TemplateBox[{"\"arXiv:2207.10714\"", {
+       URL["http://arxiv.org/abs/2207.10714"], None}, 
+      "http://arxiv.org/abs/2207.10714", "Hyperlink", {"HyperlinkActive"}, 
+      BaseStyle -> {
+        RGBColor[0.04, 0.22, 0.52]}},
+     "HyperlinkTemplate"],
+    StripOnInput->False,
+    FontSize->14,
+    FontWeight->Bold]}],
+  SequenceForm[
+   Style["References: ", Bold, 14], 
+   Style[
+    Hyperlink[
+    "arXiv:2207.10756", "http://arxiv.org/abs/2207.10756", BaseStyle -> 
+     RGBColor[0.04, 0.22, 0.52]], Bold, 14], 
+   Style[", ", Bold, 14], 
+   Style[
+    Hyperlink[
+    "arXiv:2207.10714", "http://arxiv.org/abs/2207.10714", BaseStyle -> 
+     RGBColor[0.04, 0.22, 0.52]], Bold, 14]],
+  Editable->False]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"14647aa7-fe7e-4c17-a987-05b362c790c8"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"Website: \"\>",
+    StripOnInput->False,
+    FontSize->14,
+    FontWeight->Bold], "\[InvisibleSpace]", 
+   StyleBox[
+    TemplateBox[{"\"https://highpt.github.io\"", {
+       URL["https://highpt.github.io"], None}, "https://highpt.github.io", 
+      "Hyperlink", {"HyperlinkActive"}, BaseStyle -> {
+        RGBColor[0.04, 0.22, 0.52]}},
+     "HyperlinkTemplate"],
+    StripOnInput->False,
+    FontSize->14,
+    FontWeight->Bold]}],
+  SequenceForm[
+   Style["Website: ", Bold, 14], 
+   Style[
+    Hyperlink[
+    "https://highpt.github.io", "https://highpt.github.io", BaseStyle -> 
+     RGBColor[0.04, 0.22, 0.52]], Bold, 14]],
+  Editable->False]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"ce66319e-31da-4c17-b90e-770fd0bab649"],
+
+Cell[BoxData[
+ StyleBox["\<\"HighPT is free software released under the terms of the MIT \
+License.\"\>",
+  StripOnInput->False,
+  FontSize->12]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"19cf40b0-c555-4fb4-9a4b-c7c153b33775"],
+
+Cell[BoxData[
+ StyleBox["\<\"Version: 2.0.0\"\>",
+  StripOnInput->False,
+  FontSize->12]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"d0edb74f-17c5-4f44-8886-9503e74ff79f"],
+
+Cell[BoxData["\<\"____________________________________\"\>"], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"e166b24f-98ab-4380-b486-e89244b6387b"],
+
+Cell[BoxData["\<\"Initialized SMEFT mode:\"\>"], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"f50d4d78-4893-4b15-b945-1489abe1c12b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"  Maximum operator dimension: \"\>", "\[InvisibleSpace]", "6"}],
+  SequenceForm["  Maximum operator dimension: ", 6],
+  Editable->False]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"d19daef7-7826-428a-afbf-81cde8c602d6"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"  EFT series truncation at: \"\>", 
+   "\[InvisibleSpace]", \
+"\<\"\\!\\(\\*SubsuperscriptBox[\\(\[CapitalLambda]\\), \\(NP\\), \
+-4]\\)\"\>"}],
+  SequenceForm[
+  "  EFT series truncation at: ", 
+   "\!\(\*SubsuperscriptBox[\(\[CapitalLambda]\), \(NP\), -4]\)"],
+  Editable->False]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"a7bb8efd-f0ab-4e32-afca-ccdc533ef410"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"  EFT cutoff scale \
+\\!\\(\\*SubscriptBox[\\(\[CapitalLambda]\\), \\(NP\\)]\\): \"\>", 
+   "\[InvisibleSpace]", "1.`", "\[InvisibleSpace]", "\<\" TeV\"\>"}],
+  SequenceForm[
+  "  EFT cutoff scale \!\(\*SubscriptBox[\(\[CapitalLambda]\), \(NP\)]\): ", 
+   1., " TeV"],
+  Editable->False]], "Print",
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"f365e989-a318-4df7-9f36-4bd11824ab78"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Integrated documentation generation", "Section",
+ CellChangeTimes->{{3.935915578457242*^9, 
+  3.935915603737843*^9}},ExpressionUUID->"1d47823b-839e-4370-9799-\
+2d67fce2e55f"],
+
+Cell[CellGroupData[{
+
+Cell["Generate a pre-filled documentation notebook", "Subsection",
+ CellChangeTimes->{{3.9359156437222633`*^9, 
+  3.935915694583455*^9}},ExpressionUUID->"c0df91f9-f02e-487e-bf16-\
+d9935f0811be"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "CreateTemplateDocumentation"}]], "Input",
+ CellChangeTimes->{{3.935915716204668*^9, 3.935915716452244*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"aeca3b8d-ab74-41ba-aca5-1d179eaab437"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = False, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"CreateTemplateDocumentation[func] generates a \
+template documentation notebook for the function func.\"\>", 
+             "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"Definitions\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    
+                    RowBox[{
+                    "CreateTemplateDocumentation", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`function_\
+String", "]"}], ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`create", "=", 
+                    "True"}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{"Needs", "[", "\"DocumentationTools`\"", "]"}], 
+                    ";", 
+                    
+                    RowBox[{"DocumentationTools`DocumentationToolsLoader", 
+                    "[", "]"}], ";", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\"CurrentPaclet\"", "/.", "\[VeryThinSpace]", 
+                    
+                    RowBox[{
+                    "DocumentationTools`SetDocumentationToolsParameters", "[",
+                     "]"}]}], ")"}], "=!=", "\"HighPT\""}], ",", 
+                    RowBox[{
+                    RowBox[{"Print", "[", 
+                    
+                    RowBox[{
+                    "\"Please first add the HighPT paclet to the \
+DocumentationTools. For details see \"", ",", 
+                    RowBox[{"Hyperlink", "[", 
+                    
+                    RowBox[{"\"this link\"", ",", 
+                    "\"https://reference.wolfram.com/language/\
+DocumentationTools/workflow/ConfigureAPacletForUseWithDocumentationTools.html\
+\""}], "]"}]}], "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "\"In case you experience issues with (e.g. a not \
+properly initilaized HighPT Paclet), it might be useful to remove all \
+previously stored information about the documentation of HighPT by using: \
+DocumentationTools`RemovePacletFromInterfaceSettings[\\\"HighPT\\\"]\"", 
+                    "]"}], ";", 
+                    
+                    RowBox[{
+                    "DocumentationTools`OpenDocumentationToolsPalette", "[", 
+                    "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", "\"Then run this command again\"", 
+                    "]"}], ";"}], ",", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"FileExistsQ", "[", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath", ",", "\"English\"", ",", "\"ReferencePages\"", ",", 
+                    "\"Symbols\"", ",", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`function", 
+                    "<>", "\".nb\""}]}], "}"}], "]"}], "]"}], ",", 
+                    RowBox[{"DialogInput", "[", 
+                    RowBox[{"DialogNotebook", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"TextCell", "[", 
+                    RowBox[{
+                    
+                    RowBox[{"\"The function \"", "<>", 
+                    "HighPT`DocumentationUtility`PackagePrivate`function", 
+                    "<>", "\" is already documented. Do you want to overwrite \
+the documentation?\""}], ",", "16"}], "]"}], ",", 
+                    StyleBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEExpressions", "ChoiceButtonsOrder"][{
+                    RowBox[{"Button", "[", 
+                    RowBox[{"\"Overwrite\"", ",", 
+                    RowBox[{"DialogReturn", "[", "Nothing", "]"}], ",", 
+                    RowBox[{"Appearance", "\[Rule]", "\"DefaultButton\""}], 
+                    ",", 
+                    RowBox[{"ImageSize", "\[Rule]", 
+                    RowBox[{"Dynamic", "[", 
+                    
+                    RowBox[{"CurrentValue", "[", "\"DefaultButtonSize\"", 
+                    "]"}], "]"}]}]}], "]"}], 
+                    RowBox[{"Button", "[", 
+                    RowBox[{"\"Cancel\"", ",", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`create", "=", 
+                    "False"}], ";", 
+                    RowBox[{"NotebookClose", "[", "]"}], ";"}], "]"}], ",", 
+                    RowBox[{"Appearance", "\[Rule]", "\"CancelButton\""}], 
+                    ",", 
+                    RowBox[{"ImageSize", "\[Rule]", 
+                    RowBox[{"Dynamic", "[", 
+                    
+                    RowBox[{"CurrentValue", "[", "\"DefaultButtonSize\"", 
+                    "]"}], "]"}]}]}], "]"}]}]], 
+                    ButtonBoxOptions -> {ImageSize -> Dynamic[
+                    CurrentValue["DefaultButtonSize"]], 
+                    ImageMargins -> {{2, 2}, {10, 10}}}, Deployed -> True, 
+                    GridBoxOptions -> {"[", 
+                    RowBox[{"{", 
+                    RowBox[{"{", "Null", "}"}], "}"}], "]"}, DynamicUpdating -> 
+                    True]}], "}"}], "]"}], "]"}]}], "]"}], ";", 
+                    RowBox[{"If", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`create", ",", 
+                    
+                    RowBox[{"DocumentationTools`CreateNewPageDialog", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$pacletName", 
+                    ",", "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletPath", ",", "\"Reference\"", ",", 
+                    "HighPT`DocumentationUtility`PackagePrivate`function"}], 
+                    "]"}], ",", 
+                    RowBox[{
+                    
+                    RowBox[{"Print", "[", 
+                    "\"No documentation was generated.\"", "]"}], ";", 
+                    RowBox[{"Return", "[", "]"}], ";"}]}], "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "\"Please click ok on all notebooks that are opened and \
+then close the template documentation notebook.\"", "]"}], ";", 
+                    RowBox[{"Print", "[", 
+                    
+                    RowBox[{
+                    "\"This will generate a template documentation notebook \
+for the function \"", "<>", 
+                    "HighPT`DocumentationUtility`PackagePrivate`function", 
+                    "<>", "\" in the directory \"", "<>", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$pacletPath", 
+                    ",", "\"Documentation\"", ",", "\"English\"", ",", 
+                    "\"ReferencePages\"", ",", "\"Symbols\"", ",", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`function", 
+                    "<>", "\".nb\""}]}], "}"}], "]"}]}], "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "\"Please use the function \
+CopyDocumentationToSourceDirectory[] next to copy the file to the source \
+directory.\"", "]"}], ";"}]}], "]"}], ";"}]}], "]"}]}]}, {" "}}, 
+                  GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], \
+"\<\"HighPT`PackageScope`CreateTemplateDocumentation\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"]], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"CreateTemplateDocumentation[func] generates a \
+template documentation notebook for the function func.\"\>", 
+             "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{13., {2., 11.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"],
+               ImageSizeCache->{13., {2., 11.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[<|
+   "ObjectType" -> "Symbol", "Usage" -> 
+    "CreateTemplateDocumentation[func] generates a template documentation \
+notebook for the function func.", "Documentation" -> None, "OwnValues" -> 
+    None, "UpValues" -> None, "DownValues" -> 
+    Information`InformationValueForm[
+     DownValues, HighPT`PackageScope`CreateTemplateDocumentation, {
+      HighPT`PackageScope`CreateTemplateDocumentation[
+         Pattern[HighPT`DocumentationUtility`PackagePrivate`function, 
+          Blank[String]]] :> 
+       Module[{HighPT`DocumentationUtility`PackagePrivate`create = True}, 
+         Needs["DocumentationTools`"]; 
+         DocumentationTools`DocumentationToolsLoader[]; 
+         If[ReplaceAll["CurrentPaclet", 
+             DocumentationTools`SetDocumentationToolsParameters[]] =!= 
+           "HighPT", 
+           Print["Please first add the HighPT paclet to the \
+DocumentationTools. For details see ", 
+             Hyperlink[
+             "this link", 
+              "https://reference.wolfram.com/language/DocumentationTools/\
+workflow/ConfigureAPacletForUseWithDocumentationTools.html"]]; 
+           Print["In case you experience issues with (e.g. a not properly \
+initilaized HighPT Paclet), it might be useful to remove all previously \
+stored information about the documentation of HighPT by using: \
+DocumentationTools`RemovePacletFromInterfaceSettings[\"HighPT\"]"]; 
+           DocumentationTools`OpenDocumentationToolsPalette[]; 
+           Print["Then run this command again"]; Null, If[
+             FileExistsQ[
+              
+              FileNameJoin[{
+               HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath, "English", "ReferencePages", "Symbols", 
+                HighPT`DocumentationUtility`PackagePrivate`function <> 
+                ".nb"}]], 
+             DialogInput[
+              DialogNotebook[{
+                TextCell[
+                "The function " <> 
+                 HighPT`DocumentationUtility`PackagePrivate`function <> 
+                 " is already documented. Do you want to overwrite the \
+documentation?", 16], 
+                ChoiceButtons[{"Overwrite", "Cancel"}, {
+                  DialogReturn[Nothing], 
+                  DialogReturn[
+                  HighPT`DocumentationUtility`PackagePrivate`create = False; 
+                   NotebookClose[]; Null]}]}]]]; 
+           If[HighPT`DocumentationUtility`PackagePrivate`create, 
+             DocumentationTools`CreateNewPageDialog[
+             HighPT`DocumentationUtility`PackagePrivate`$pacletName, 
+              HighPT`DocumentationUtility`PackagePrivate`$pacletPath, 
+              "Reference", 
+              HighPT`DocumentationUtility`PackagePrivate`function], 
+             Print["No documentation was generated."]; Return[]; Null]; 
+           Print["Please click ok on all notebooks that are opened and then \
+close the template documentation notebook."]; 
+           Print["This will generate a template documentation notebook for \
+the function " <> HighPT`DocumentationUtility`PackagePrivate`function <> 
+             " in the directory " <> 
+             FileNameJoin[{
+               HighPT`DocumentationUtility`PackagePrivate`$pacletPath, 
+                "Documentation", "English", "ReferencePages", "Symbols", 
+                HighPT`DocumentationUtility`PackagePrivate`function <> 
+                ".nb"}]]; 
+           Print["Please use the function \
+CopyDocumentationToSourceDirectory[] next to copy the file to the source \
+directory."]; Null]; Null]}], "SubValues" -> None, "DefaultValues" -> None, 
+    "NValues" -> None, "FormatValues" -> None, "Options" -> None, 
+    "Attributes" -> {}, "FullName" -> 
+    "HighPT`PackageScope`CreateTemplateDocumentation"|>, False]]], "Output",
+ CellLabel->"Out[3]=",ExpressionUUID->"77fe1eae-361e-4d03-863c-d91fd5eb6033"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"CreateTemplateDocumentation", "[", "\"\<ChiSquareLHC\>\"", 
+  "]"}]], "Input",
+ CellLabel->"In[6]:=",ExpressionUUID->"a3c280df-05ea-4dab-b2d0-2fa954ff3145"],
+
+Cell[TextData[{
+ "This notebook is created in the directory:\[LineSeparator].../",
+ StyleBox["HighPT/Documentation/English/ReferencePages/Symbols\[LineSeparator]\
+", "Code"],
+ "Do not modify the notebook in this directory, but copy it to the source \
+directory. See below."
+}], "Text",ExpressionUUID->"81ba0f0c-336e-4213-88c7-9a30dce8c660"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Copy the documentation notebook just generated to the proper directory\
+\>", "Subsection",
+ CellChangeTimes->{{3.935915728287603*^9, 
+  3.935915758250232*^9}},ExpressionUUID->"b33d5a01-75bd-4823-8e88-\
+fb3186e04ca0"],
+
+Cell["\<\
+This only copies the notebook if no other notebook with the same name already \
+exist in the source directory.\
+\>", "Text",
+ CellChangeTimes->{{3.935915760953026*^9, 3.935915833397272*^9}, {
+  3.936158232883375*^9, 3.936158236691877*^9}, {3.93615859231989*^9, 
+  3.9361586103803453`*^9}},ExpressionUUID->"a09c252c-9fb4-48d2-a62e-\
+454637099078"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "CopyDocumentationToSourceDirectory"}]], "Input",
+ CellChangeTimes->{{3.9359157501262903`*^9, 3.935915751400909*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"e3df2103-71b2-4a7f-8c95-85311bf0d7b8"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = False, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"CopyDocumentationToSourceDirectory[] copies newly \
+generated documentation notebooks to the source directory if it does not yet \
+exsit there.\\nCopyDocumentationToSourceDirectory[\\\"func\\\"] copies the \
+documentation notebooks for the function \\\"func\\\" to the source \
+directory. If the file already exists, it is asked if the file should be \
+overwritten.\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"Definitions\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    RowBox[{"CopyDocumentationToSourceDirectory", "[", "]"}], 
+                    ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`existingDocs",
+                     ",", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`copiedDocs", 
+                    "=", 
+                    RowBox[{"{", "}"}]}]}], "}"}], ",", 
+                    RowBox[{
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`existingDocs",
+                     "=", 
+                    RowBox[{"FileNameTake", "/@", 
+                    RowBox[{"FileNames", "[", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath", ",", "\"English\"", ",", "\"ReferencePages\"",
+                     ",", "\"Symbols\"", ",", "\"*.nb\""}], "}"}], "]"}], 
+                    "]"}]}]}], ";", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"FreeQ", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`existingDocs",
+                     ",", 
+                    
+                    RowBox[{"FileNameTake", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`file", 
+                    "]"}]}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`copiedDocs", 
+                    ",", 
+                    
+                    RowBox[{"FileNameTake", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`file", 
+                    "]"}]}], "]"}], ";", 
+                    RowBox[{"CopyFile", "[", 
+                    
+                    RowBox[{"HighPT`DocumentationUtility`PackagePrivate`file",
+                     ",", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath", ",", "\"English\"", ",", "\"ReferencePages\"",
+                     ",", "\"Symbols\"", ",", 
+                    
+                    RowBox[{"FileNameTake", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`file", 
+                    "]"}]}], "}"}], "]"}]}], "]"}]}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{"HighPT`DocumentationUtility`PackagePrivate`file",
+                     ",", 
+                    RowBox[{"FileNames", "[", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath", ",", "\"English\"", ",", "\"ReferencePages\"", ",", 
+                    "\"Symbols\"", ",", "\"*.nb\""}], "}"}], "]"}], "]"}]}], 
+                    "}"}]}], "]"}], ";", 
+                    RowBox[{"Print", "[", 
+                    
+                    RowBox[{
+                    "\"The following files were copied to the documentation \
+source diractory at \"", "<>", 
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath", "<>", "\":\""}], "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`copiedDocs", 
+                    "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "\"You can now complete the information in this file in \
+the source directory.\"", "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "\"Afterwards please call the function \
+BuildDocumentation[] to rebuild the Matchete documentation.\"", "]"}], 
+                    ";"}]}], "]"}]}]}, {" "}, {
+                    RowBox[{
+                    
+                    RowBox[{
+                    "CopyDocumentationToSourceDirectory", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`func_String", 
+                    "]"}], ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`existing", 
+                    ",", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`overwrite", 
+                    "=", "False"}], ",", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`fileStart", 
+                    "=", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath", ",", "\"English\"", ",", "\"ReferencePages\"", ",", 
+                    "\"Symbols\"", ",", 
+                    
+                    RowBox[{"HighPT`DocumentationUtility`PackagePrivate`func",
+                     "<>", "\".nb\""}]}], "}"}], "]"}]}], ",", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`fileEnd", "=", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath", ",", "\"English\"", ",", "\"ReferencePages\"",
+                     ",", "\"Symbols\"", ",", 
+                    
+                    RowBox[{"HighPT`DocumentationUtility`PackagePrivate`func",
+                     "<>", "\".nb\""}]}], "}"}], "]"}]}]}], "}"}], ",", 
+                    RowBox[{
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`existing", 
+                    "=", 
+                    
+                    RowBox[{"FileExistsQ", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`fileEnd", 
+                    "]"}]}], ";", 
+                    RowBox[{"If", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`existing", 
+                    ",", 
+                    RowBox[{
+                    RowBox[{"DialogInput", "[", 
+                    RowBox[{"DialogNotebook", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"TextCell", "[", 
+                    RowBox[{
+                    
+                    RowBox[{
+                    "\"A documentation source file for the function \"", "<>",
+                     "HighPT`DocumentationUtility`PackagePrivate`func", "<>", 
+                    "\" already exists. Do you want to overwrite the source \
+documentation?\""}], ",", "16"}], "]"}], ",", 
+                    StyleBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEExpressions", "ChoiceButtonsOrder"][{
+                    RowBox[{"Button", "[", 
+                    RowBox[{"\"Overwrite\"", ",", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`overwrite", 
+                    "=", "True"}], ";", 
+                    RowBox[{"NotebookClose", "[", "]"}], ";"}], "]"}], ",", 
+                    RowBox[{"Appearance", "\[Rule]", "\"DefaultButton\""}], 
+                    ",", 
+                    RowBox[{"ImageSize", "\[Rule]", 
+                    RowBox[{"Dynamic", "[", 
+                    
+                    RowBox[{"CurrentValue", "[", "\"DefaultButtonSize\"", 
+                    "]"}], "]"}]}]}], "]"}], 
+                    RowBox[{"Button", "[", 
+                    RowBox[{"\"Cancel\"", ",", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`overwrite", 
+                    "=", "False"}], ";", 
+                    RowBox[{"NotebookClose", "[", "]"}], ";"}], "]"}], ",", 
+                    RowBox[{"Appearance", "\[Rule]", "\"CancelButton\""}], 
+                    ",", 
+                    RowBox[{"ImageSize", "\[Rule]", 
+                    RowBox[{"Dynamic", "[", 
+                    
+                    RowBox[{"CurrentValue", "[", "\"DefaultButtonSize\"", 
+                    "]"}], "]"}]}]}], "]"}]}]], 
+                    ButtonBoxOptions -> {ImageSize -> Dynamic[
+                    CurrentValue["DefaultButtonSize"]], 
+                    ImageMargins -> {{2, 2}, {10, 10}}}, Deployed -> True, 
+                    GridBoxOptions -> {"[", 
+                    RowBox[{"{", 
+                    RowBox[{"{", "Null", "}"}], "}"}], "]"}, DynamicUpdating -> 
+                    True]}], "}"}], "]"}], "]"}], ";", 
+                    RowBox[{"If", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`overwrite", 
+                    ",", 
+                    RowBox[{
+                    
+                    RowBox[{"DeleteFile", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`fileEnd", 
+                    "]"}], ";", 
+                    RowBox[{"CopyFile", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`fileStart", 
+                    ",", "HighPT`DocumentationUtility`PackagePrivate`fileEnd"}\
+], "]"}], ";", 
+                    RowBox[{
+                    "Print", "[", "\"Overwriting existing documentation.\"", 
+                    "]"}], ";"}], ",", 
+                    RowBox[{
+                    
+                    RowBox[{"Print", "[", 
+                    "\"Existing documentation was not overwritten.\"", "]"}], 
+                    ";", 
+                    RowBox[{"Return", "[", "]"}]}]}], "]"}], ";"}], ",", 
+                    RowBox[{
+                    RowBox[{"CopyFile", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`fileStart", 
+                    ",", "HighPT`DocumentationUtility`PackagePrivate`fileEnd"}\
+], "]"}], ";"}]}], "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "\"You can now complete the information in the \
+documentation notebook in the source directory.\"", "]"}], ";", 
+                    
+                    RowBox[{"Print", "[", 
+                    "\"Afterwards please call the function \
+BuildDocumentation[] to rebuild the Matchete documentation.\"", "]"}], 
+                    ";"}]}], "]"}]}]}, {" "}}, 
+                  GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], \
+"\<\"HighPT`PackageScope`CopyDocumentationToSourceDirectory\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"]], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"CopyDocumentationToSourceDirectory[] copies newly \
+generated documentation notebooks to the source directory if it does not yet \
+exsit there.\\nCopyDocumentationToSourceDirectory[\\\"func\\\"] copies the \
+documentation notebooks for the function \\\"func\\\" to the source \
+directory. If the file already exists, it is asked if the file should be \
+overwritten.\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{13., {2., 11.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"],
+               ImageSizeCache->{13., {2., 11.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[<|
+   "ObjectType" -> "Symbol", "Usage" -> 
+    "CopyDocumentationToSourceDirectory[] copies newly generated \
+documentation notebooks to the source directory if it does not yet exsit \
+there.\nCopyDocumentationToSourceDirectory[\"func\"] copies the documentation \
+notebooks for the function \"func\" to the source directory. If the file \
+already exists, it is asked if the file should be overwritten.", 
+    "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
+    "DownValues" -> 
+    Information`InformationValueForm[
+     DownValues, HighPT`PackageScope`CopyDocumentationToSourceDirectory, {
+      HighPT`PackageScope`CopyDocumentationToSourceDirectory[] :> 
+       Module[{HighPT`DocumentationUtility`PackagePrivate`existingDocs, 
+          HighPT`DocumentationUtility`PackagePrivate`copiedDocs = {}}, 
+         HighPT`DocumentationUtility`PackagePrivate`existingDocs = 
+          Map[FileNameTake, 
+            FileNames[
+             
+             FileNameJoin[{
+              HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath, "English", "ReferencePages", "Symbols", 
+               "*.nb"}]]]; Do[
+           If[
+            FreeQ[HighPT`DocumentationUtility`PackagePrivate`existingDocs, 
+             FileNameTake[HighPT`DocumentationUtility`PackagePrivate`file]], 
+            AppendTo[HighPT`DocumentationUtility`PackagePrivate`copiedDocs, 
+              FileNameTake[HighPT`DocumentationUtility`PackagePrivate`file]]; 
+            CopyFile[HighPT`DocumentationUtility`PackagePrivate`file, 
+              
+              FileNameJoin[{
+               HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath, "English", "ReferencePages", "Symbols", 
+                FileNameTake[
+                HighPT`DocumentationUtility`PackagePrivate`file]}]]], {
+           HighPT`DocumentationUtility`PackagePrivate`file, 
+            FileNames[
+             
+             FileNameJoin[{
+              HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath, "English", "ReferencePages", "Symbols", "*.nb"}]]}]; 
+         Print["The following files were copied to the documentation source \
+diractory at " <> 
+           HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath <> ":"]; 
+         Print[HighPT`DocumentationUtility`PackagePrivate`copiedDocs]; 
+         Print["You can now complete the information in this file in the \
+source directory."]; 
+         Print["Afterwards please call the function BuildDocumentation[] to \
+rebuild the Matchete documentation."]; Null], 
+       HighPT`PackageScope`CopyDocumentationToSourceDirectory[
+         Pattern[HighPT`DocumentationUtility`PackagePrivate`func, 
+          Blank[String]]] :> 
+       Module[{HighPT`DocumentationUtility`PackagePrivate`existing, 
+          HighPT`DocumentationUtility`PackagePrivate`overwrite = False, 
+          HighPT`DocumentationUtility`PackagePrivate`fileStart = 
+          FileNameJoin[{
+            HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath, "English", "ReferencePages", "Symbols", 
+             HighPT`DocumentationUtility`PackagePrivate`func <> ".nb"}], 
+          HighPT`DocumentationUtility`PackagePrivate`fileEnd = 
+          FileNameJoin[{
+            HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath, "English", "ReferencePages", "Symbols", 
+             HighPT`DocumentationUtility`PackagePrivate`func <> ".nb"}]}, 
+         HighPT`DocumentationUtility`PackagePrivate`existing = 
+          FileExistsQ[HighPT`DocumentationUtility`PackagePrivate`fileEnd]; 
+         If[HighPT`DocumentationUtility`PackagePrivate`existing, DialogInput[
+             DialogNotebook[{
+               TextCell[
+               "A documentation source file for the function " <> 
+                HighPT`DocumentationUtility`PackagePrivate`func <> 
+                " already exists. Do you want to overwrite the source \
+documentation?", 16], 
+               ChoiceButtons[{"Overwrite", "Cancel"}, {
+                 DialogReturn[
+                 HighPT`DocumentationUtility`PackagePrivate`overwrite = True; 
+                  NotebookClose[]; Null], 
+                 DialogReturn[
+                 HighPT`DocumentationUtility`PackagePrivate`overwrite = False; 
+                  NotebookClose[]; Null]}]}]]; 
+           If[HighPT`DocumentationUtility`PackagePrivate`overwrite, 
+             DeleteFile[HighPT`DocumentationUtility`PackagePrivate`fileEnd]; 
+             CopyFile[
+              HighPT`DocumentationUtility`PackagePrivate`fileStart, 
+               HighPT`DocumentationUtility`PackagePrivate`fileEnd]; 
+             Print["Overwriting existing documentation."]; Null, 
+             Print["Existing documentation was not overwritten."]; Return[]]; 
+           Null, CopyFile[
+            HighPT`DocumentationUtility`PackagePrivate`fileStart, 
+             HighPT`DocumentationUtility`PackagePrivate`fileEnd]; Null]; 
+         Print["You can now complete the information in the documentation \
+notebook in the source directory."]; 
+         Print["Afterwards please call the function BuildDocumentation[] to \
+rebuild the Matchete documentation."]; Null]}], "SubValues" -> None, 
+    "DefaultValues" -> None, "NValues" -> None, "FormatValues" -> None, 
+    "Options" -> None, "Attributes" -> {}, "FullName" -> 
+    "HighPT`PackageScope`CopyDocumentationToSourceDirectory"|>, 
+   False]]], "Output",
+ CellLabel->"Out[8]=",ExpressionUUID->"4298996e-297b-4ca5-adfb-46f21d0cf962"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"CopyDocumentationToSourceDirectory", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.935834920907683*^9, 3.93583492097578*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"2c5a49c2-8e82-4900-acd0-a504b821ec8c"],
+
+Cell["\<\
+If  you  try  to  overwrite  an  existing  documentation  notebook  in the \
+source directory please  use :\
+\>", "Text",
+ CellChangeTimes->{{3.9361582348807087`*^9, 3.936158239819316*^9}, {
+  3.9361586247223387`*^9, 
+  3.936158630587792*^9}},ExpressionUUID->"e5753abf-032a-4466-8d44-\
+c41fe3be84d7"],
+
+Cell[BoxData[
+ RowBox[{"CopyDocumentationToSourceDirectory", "[", "\"\<ChiSquareLHC\>\"", 
+  "]"}]], "Input",ExpressionUUID->"4d69de21-3e81-44b3-afc2-e26c383ff344"],
+
+Cell[TextData[{
+ "Afterwards you can find the documentation source notebook in the directory:\
+\[LineSeparator].../",
+ StyleBox["HighPT/DocumentationSource/Documentation/English/ReferencePages/\
+Symbols/", "Code"],
+ "\[LineSeparator]Please complete/modify the notebook there."
+}], "Text",ExpressionUUID->"84dd9f74-41c3-4345-a166-6c573390df08"],
+
+Cell["\<\
+For modification it can be helpful to use the front end interface for \
+modifying documentation notebooks:\
+\>", "Text",ExpressionUUID->"80b41f4a-9636-4763-8673-a5fdc1855e9b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DocumentationTools`OpenDocumentationToolsPalette", "[", "]"}], 
+  ";"}]], "Input",
+ CellLabel->"In[11]:=",ExpressionUUID->"ae961c78-a47c-4114-b9f3-6b6c369712ef"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Building the documentation", "Subsection",
+ CellChangeTimes->{{3.935917040461609*^9, 
+  3.9359170465611362`*^9}},ExpressionUUID->"15ebbb46-7ff5-4c88-bd35-\
+7bf0a8da6654"],
+
+Cell["\<\
+Once your modifications to the source notebook are finished you can rebuild \
+the HighPT documentation.\
+\>", "Text",ExpressionUUID->"747c33e5-8bd0-4598-a132-f0137dbe710e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "BuildDocumentation"}]], "Input",
+ CellChangeTimes->{{3.935917050608739*^9, 3.935917050923615*^9}},
+ CellLabel->"In[12]:=",ExpressionUUID->"68f83009-3936-4918-85a3-badbdce6cefb"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = False, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"BuildDocumentation[] builds the documentation of \
+Matchete from its source and links it. Takes the Option \\\"HTML\\\" which \
+can be True or False and determines whether to also build the HTML \
+documentation.\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"Definitions\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    RowBox[{"BuildDocumentation", "[", 
+                    RowBox[{"OptionsPattern", "[", "]"}], "]"}], ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`builtPath", 
+                    "=", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$pacletPath", 
+                    ",", "\"built\""}], "}"}], "]"}]}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{"Needs", "[", "\"PacletTools`\"", "]"}], ";", 
+                    RowBox[{"Quiet", "[", 
+                    RowBox[{"DeleteDirectory", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath", ",", 
+                    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}], 
+                    "]"}], ";", 
+                    RowBox[{"CopyDirectory", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath", ",", 
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath"}], "]"}], ";", 
+                    RowBox[{"PacletTools`PacletDocumentationBuild", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$pacletPath", 
+                    ",", "HighPT`DocumentationUtility`PackagePrivate`\
+builtPath"}], "]"}], ";", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"OptionValue", "[", "\"HTML\"", "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PacletTools`PacletDocumentationBuild", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$pacletPath", 
+                    ",", 
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationHTMLPath", ",", "\"HTML\""}], "]"}], ";"}]}], "]"}], ";", 
+                    RowBox[{"DeleteDirectory", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath", ",", 
+                    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}], 
+                    ";", 
+                    RowBox[{"CopyDirectory", "[", 
+                    RowBox[{
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`builtPath", 
+                    ",", "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletName", ",", "\"Documentation\""}], "}"}], "]"}], ",", 
+                    "HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath"}], "]"}], ";", 
+                    RowBox[{"DeleteDirectory", "[", 
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`builtPath", 
+                    ",", 
+                    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}], 
+                    ";", 
+                    RowBox[{"LinkDocumentation", "[", "]"}], ";"}]}], 
+                    "]"}]}]}, {" "}}, 
+                  GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Options\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"Options\"",
+                    TooltipStyle->"TextStyling"],
+                    Annotation[#, "Options", "Tooltip"]& ], 
+                   RowBox[{"\<\"HTML\"\>", "\[Rule]", "False"}]},
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], \
+"\<\"HighPT`PackageScope`BuildDocumentation\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"]], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"BuildDocumentation[] builds the documentation of \
+Matchete from its source and links it. Takes the Option \\\"HTML\\\" which \
+can be True or False and determines whether to also build the HTML \
+documentation.\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{13., {2., 11.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"],
+               ImageSizeCache->{13., {2., 11.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[<|
+   "ObjectType" -> "Symbol", "Usage" -> 
+    "BuildDocumentation[] builds the documentation of Matchete from its \
+source and links it. Takes the Option \"HTML\" which can be True or False and \
+determines whether to also build the HTML documentation.", "Documentation" -> 
+    None, "OwnValues" -> None, "UpValues" -> None, "DownValues" -> 
+    Information`InformationValueForm[
+     DownValues, HighPT`PackageScope`BuildDocumentation, {
+      HighPT`PackageScope`BuildDocumentation[
+         OptionsPattern[]] :> 
+       Module[{HighPT`DocumentationUtility`PackagePrivate`builtPath = 
+          FileNameJoin[{
+            HighPT`DocumentationUtility`PackagePrivate`$pacletPath, 
+             "built"}]}, Needs["PacletTools`"]; Quiet[
+           DeleteDirectory[
+           HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath, DeleteContents -> True]]; 
+         CopyDirectory[
+          HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationSourcePath, 
+           HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath]; 
+         PacletTools`PacletDocumentationBuild[
+          HighPT`DocumentationUtility`PackagePrivate`$pacletPath, 
+           HighPT`DocumentationUtility`PackagePrivate`builtPath]; If[
+           OptionValue["HTML"], 
+           PacletTools`PacletDocumentationBuild[
+            HighPT`DocumentationUtility`PackagePrivate`$pacletPath, 
+             HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationHTMLPath, "HTML"]; Null]; 
+         DeleteDirectory[
+          HighPT`DocumentationUtility`PackagePrivate`$pacletDocumentationPath,
+            DeleteContents -> True]; CopyDirectory[
+           
+           FileNameJoin[{
+            HighPT`DocumentationUtility`PackagePrivate`builtPath, 
+             HighPT`DocumentationUtility`PackagePrivate`$pacletName, 
+             "Documentation"}], 
+           HighPT`DocumentationUtility`PackagePrivate`$\
+pacletDocumentationPath]; 
+         DeleteDirectory[
+          HighPT`DocumentationUtility`PackagePrivate`builtPath, 
+           DeleteContents -> True]; HighPT`PackageScope`LinkDocumentation[]; 
+         Null]}], "SubValues" -> None, "DefaultValues" -> None, "NValues" -> 
+    None, "FormatValues" -> None, "Options" -> {"HTML" -> False}, 
+    "Attributes" -> {}, "FullName" -> 
+    "HighPT`PackageScope`BuildDocumentation"|>, False]]], "Output",
+ CellLabel->"Out[12]=",ExpressionUUID->"46b59248-4719-406b-97db-db15b7dc27bd"]
+}, Open  ]],
+
+Cell["\<\
+Notice that creating HTML documentation does not work properly at the moment.\
+\
+\>", "Text",
+ CellChangeTimes->{{3.935917125874701*^9, 
+  3.935917159142274*^9}},ExpressionUUID->"04bd0ba5-1d5a-4410-9905-\
+b2081d9e7f5c"],
+
+Cell[BoxData[
+ RowBox[{"BuildDocumentation", "[", 
+  RowBox[{"\"\<HTML\>\"", "->", "False"}], "]"}]], "Input",
+ CellChangeTimes->{{3.9359154027565536`*^9, 3.935915411605077*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"5e9d40c5-67fa-41db-84c4-d9468c3bac85"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Linking the documentation", "Subsection",
+ CellChangeTimes->{{3.935917163369442*^9, 
+  3.935917167226656*^9}},ExpressionUUID->"5c8b6851-724f-4c00-a6a7-\
+95ad970ff4a0"],
+
+Cell[TextData[{
+ "This only links the documentation and is currently not required since it is \
+automatically performed by ",
+ StyleBox["BuildDocumentation", "Code"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.935917181039528*^9, 3.935917209301526*^9}, {
+  3.93615872227398*^9, 
+  3.93615875550182*^9}},ExpressionUUID->"e251d2fd-f551-4314-b9de-\
+53f19e04ef72"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LinkDocumentation"}]], "Input",
+ CellChangeTimes->{{3.935917171136399*^9, 3.935917171338835*^9}},
+ CellLabel->"In[14]:=",ExpressionUUID->"961066ec-ab2b-4392-8967-fd088cc2fe5b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = False, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"LinkDocumentation[] links the documentation of \
+Matchete from its build.\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"Definitions\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    RowBox[{"LinkDocumentation", "[", "]"}], ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", 
+                    RowBox[{"PacletFind", "[", "\"Matchete\"", "]"}], "]"}], 
+                    "===", "0"}], ",", 
+                    
+                    RowBox[{"PacletDirectoryLoad", "[", 
+                    "HighPT`DocumentationUtility`PackagePrivate`$pacletPath", 
+                    "]"}]}], "]"}], ";", 
+                    
+                    RowBox[{
+                    "PacletManager`Package`createPacletsFromParentDirs", "[", 
+                    
+                    
+                    RowBox[{
+                    "HighPT`DocumentationUtility`PackagePrivate`$pacletPath", 
+                    ",", "1"}], "]"}], ";"}]}], "]"}]}]}, {" "}}, 
+                  GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], "\<\"HighPT`PackageScope`LinkDocumentation\
+\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"]], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"LinkDocumentation[] links the documentation of \
+Matchete from its build.\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{13., {2., 11.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"],
+               ImageSizeCache->{13., {2., 11.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[<|
+   "ObjectType" -> "Symbol", "Usage" -> 
+    "LinkDocumentation[] links the documentation of Matchete from its build.",
+     "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
+    "DownValues" -> 
+    Information`InformationValueForm[
+     DownValues, HighPT`PackageScope`LinkDocumentation, {
+      HighPT`PackageScope`LinkDocumentation[] :> Module[{}, If[Length[
+             PacletFind["Matchete"]] === 0, 
+           PacletDirectoryLoad[
+           HighPT`DocumentationUtility`PackagePrivate`$pacletPath]]; 
+         PacletManager`Package`createPacletsFromParentDirs[
+          HighPT`DocumentationUtility`PackagePrivate`$pacletPath, 1]; Null]}],
+     "SubValues" -> None, "DefaultValues" -> None, "NValues" -> None, 
+    "FormatValues" -> None, "Options" -> None, "Attributes" -> {}, "FullName" -> 
+    "HighPT`PackageScope`LinkDocumentation"|>, False]]], "Output",
+ CellLabel->"Out[14]=",ExpressionUUID->"d044770e-a07a-4bae-9486-6e1aded10d93"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"LinkDocumentation", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.935914362283115*^9, 3.935914387116494*^9}},
+ CellLabel->"In[15]:=",ExpressionUUID->"ddd7625a-36b0-4bf5-aa29-6a33f6242a35"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1280, 1387},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"14.0 for Mac OS X ARM (64-bit) (December 12, 2023)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"01f8d920-b45d-408f-883b-f05773418a2b"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 178, 3, 123, "Title",ExpressionUUID->"d185cba6-52b9-4271-ac69-0c0616901bd3"],
+Cell[761, 27, 559, 14, 159, "Text",ExpressionUUID->"b24389d1-43bd-4723-81b9-bfe63e3a6482"],
+Cell[CellGroupData[{
+Cell[1345, 45, 112, 0, 67, "Subtitle",ExpressionUUID->"15e64579-1902-47ba-8268-da4973654f0f"],
+Cell[1460, 47, 631, 17, 186, "Code",ExpressionUUID->"128b8f32-a5f1-4e9e-a4cb-27bae616b0a3"],
+Cell[2094, 66, 376, 10, 62, "Text",ExpressionUUID->"f1f87b67-0899-4f62-868f-85d1b745de9d"],
+Cell[CellGroupData[{
+Cell[2495, 80, 1233, 25, 81, "Print",ExpressionUUID->"051cd627-a0e2-4a21-9f14-14e0040c8559"],
+Cell[3731, 107, 178, 3, 29, "Print",ExpressionUUID->"cdf04ab9-2b83-404f-9fd1-3a8655c3aca2"],
+Cell[3912, 112, 168, 3, 29, "Print",ExpressionUUID->"69aff119-1432-4470-9ecf-9da8aeff85f2"],
+Cell[4083, 117, 172, 3, 29, "Print",ExpressionUUID->"56180973-65e0-43df-b438-0f66baf8a908"]
+}, Open  ]],
+Cell[4270, 123, 22887, 389, 166, InheritFromParent,ExpressionUUID->"ffa1d7b9-959e-43fe-8ff4-1dc3067b6fd3"],
+Cell[CellGroupData[{
+Cell[27182, 516, 310, 8, 33, "Print",ExpressionUUID->"e8dba6fa-7426-4e17-ad17-da26e8f45374"],
+Cell[27495, 526, 1486, 45, 35, "Print",ExpressionUUID->"14647aa7-fe7e-4c17-a987-05b362c790c8"],
+Cell[28984, 573, 822, 25, 35, "Print",ExpressionUUID->"ce66319e-31da-4c17-b90e-770fd0bab649"],
+Cell[29809, 600, 259, 7, 29, "Print",ExpressionUUID->"19cf40b0-c555-4fb4-9a4b-c7c153b33775"],
+Cell[30071, 609, 203, 6, 29, "Print",ExpressionUUID->"d0edb74f-17c5-4f44-8886-9503e74ff79f"],
+Cell[30277, 617, 174, 3, 29, "Print",ExpressionUUID->"e166b24f-98ab-4380-b486-e89244b6387b"],
+Cell[30454, 622, 161, 3, 29, "Print",ExpressionUUID->"f50d4d78-4893-4b15-b945-1489abe1c12b"],
+Cell[30618, 627, 300, 7, 29, "Print",ExpressionUUID->"d19daef7-7826-428a-afbf-81cde8c602d6"],
+Cell[30921, 636, 445, 12, 32, "Print",ExpressionUUID->"a7bb8efd-f0ab-4e32-afca-ccdc533ef410"],
+Cell[31369, 650, 451, 11, 29, "Print",ExpressionUUID->"f365e989-a318-4df7-9f36-4bd11824ab78"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[31857, 666, 180, 3, 84, "Section",ExpressionUUID->"1d47823b-839e-4370-9799-2d67fce2e55f"],
+Cell[CellGroupData[{
+Cell[32062, 673, 194, 3, 67, "Subsection",ExpressionUUID->"c0df91f9-f02e-487e-bf16-d9935f0811be"],
+Cell[CellGroupData[{
+Cell[32281, 680, 214, 3, 37, "Input",ExpressionUUID->"aeca3b8d-ab74-41ba-aca5-1d179eaab437"],
+Cell[32498, 685, 21004, 479, 119, "Output",ExpressionUUID->"77fe1eae-361e-4d03-863c-d91fd5eb6033"]
+}, Open  ]],
+Cell[53517, 1167, 180, 3, 37, "Input",ExpressionUUID->"a3c280df-05ea-4dab-b2d0-2fa954ff3145"],
+Cell[53700, 1172, 340, 6, 102, "Text",ExpressionUUID->"81ba0f0c-336e-4213-88c7-9a30dce8c660"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[54077, 1183, 226, 5, 67, "Subsection",ExpressionUUID->"b33d5a01-75bd-4823-8e88-fb3186e04ca0"],
+Cell[54306, 1190, 356, 7, 44, "Text",ExpressionUUID->"a09c252c-9fb4-48d2-a62e-454637099078"],
+Cell[CellGroupData[{
+Cell[54687, 1201, 223, 3, 37, "Input",ExpressionUUID->"e3df2103-71b2-4a7f-8c95-85311bf0d7b8"],
+Cell[54913, 1206, 27076, 607, 177, "Output",ExpressionUUID->"4298996e-297b-4ca5-adfb-46f21d0cf962"]
+}, Open  ]],
+Cell[82004, 1816, 225, 3, 37, "Input",ExpressionUUID->"2c5a49c2-8e82-4900-acd0-a504b821ec8c"],
+Cell[82232, 1821, 310, 7, 44, "Text",ExpressionUUID->"e5753abf-032a-4466-8d44-c41fe3be84d7"],
+Cell[82545, 1830, 164, 2, 37, "Input",ExpressionUUID->"4d69de21-3e81-44b3-afc2-e26c383ff344"],
+Cell[82712, 1834, 343, 6, 102, "Text",ExpressionUUID->"84dd9f74-41c3-4345-a166-6c573390df08"],
+Cell[83058, 1842, 185, 3, 44, "Text",ExpressionUUID->"80b41f4a-9636-4763-8673-a5fdc1855e9b"],
+Cell[83246, 1847, 196, 4, 37, "Input",ExpressionUUID->"ae961c78-a47c-4114-b9f3-6b6c369712ef"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[83479, 1856, 176, 3, 67, "Subsection",ExpressionUUID->"15ebbb46-7ff5-4c88-bd35-7bf0a8da6654"],
+Cell[83658, 1861, 182, 3, 44, "Text",ExpressionUUID->"747c33e5-8bd0-4598-a132-f0137dbe710e"],
+Cell[CellGroupData[{
+Cell[83865, 1868, 206, 3, 37, "Input",ExpressionUUID->"68f83009-3936-4918-85a3-badbdce6cefb"],
+Cell[84074, 1873, 16149, 382, 148, "Output",ExpressionUUID->"46b59248-4719-406b-97db-db15b7dc27bd"]
+}, Open  ]],
+Cell[100238, 2258, 229, 6, 44, "Text",ExpressionUUID->"04bd0ba5-1d5a-4410-9905-b2081d9e7f5c"],
+Cell[100470, 2266, 257, 4, 37, "Input",ExpressionUUID->"5e9d40c5-67fa-41db-84c4-d9468c3bac85"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[100764, 2275, 173, 3, 67, "Subsection",ExpressionUUID->"5c8b6851-724f-4c00-a6a7-95ad970ff4a0"],
+Cell[100940, 2280, 356, 9, 44, "Text",ExpressionUUID->"e251d2fd-f551-4314-b9de-53f19e04ef72"],
+Cell[CellGroupData[{
+Cell[101321, 2293, 205, 3, 37, "Input",ExpressionUUID->"961066ec-ab2b-4392-8967-fd088cc2fe5b"],
+Cell[101529, 2298, 11450, 285, 119, "Output",ExpressionUUID->"d044770e-a07a-4bae-9486-6e1aded10d93"]
+}, Open  ]],
+Cell[112994, 2586, 210, 3, 37, "Input",ExpressionUUID->"ddd7625a-36b0-4bf5-aa29-6a33f6242a35"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
