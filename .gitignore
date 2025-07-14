@@ -6,4 +6,9 @@ notebooks_felix/
 .project
 
 # Ignore Desktop Services Store file for Mac #
-.DS_Store
+**/.DS_Store
+
+# documentation
+DocumentationHTML/
+Documentation/
+!DocumentationSource/Documentation/
