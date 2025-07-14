@@ -3,7 +3,7 @@
 InstallHighPT::version="Warning: `1` has only been tested on Mathematica versions \[GreaterEqual] `2` and you are using Mathematica `3`";
 
 
-InstallHighPT:=Module[{packageName,packageDir,MinVersion,HighPTLink,QuestionOverwrite,tmpFile,unzipDir,zipDir},
+InstallHighPT[]:=Module[{packageName,packageDir,MinVersion,HighPTLink,QuestionOverwrite,tmpFile,unzipDir,zipDir},
 
 	(* Definitions *)
 	packageName="HighPT";
@@ -53,9 +53,26 @@ InstallHighPT:=Module[{packageName,packageDir,MinVersion,HighPTLink,QuestionOver
 
 	(* Delete the extracted archive *)
 	Quiet@DeleteDirectory[unzipDir,DeleteContents->True];
+	
+	(* build documentation *)
+	DialogInput@DialogNotebook[{
+			TextCell["Do you want to build the integrated documentation?",24],
+			TextCell["This may take a few seconds, and your screen may be flashing in the meantime.",14],
+			ChoiceButtons[{"Build documentation","Cancel"},{BuildDocu[packageDir];DialogReturn[NotebookClose[]],DialogReturn[NotebookClose[]]}]
+	}];
+	(*Remove development folders*)
+	Quiet@ DeleteDirectory[FileNameJoin[{packageDir, "DocumentationSource"}], DeleteContents-> True];
+	Quiet@ DeleteDirectory[FileNameJoin[{packageDir, "DevTools"}], DeleteContents-> True];
+	
 	Print["Installation complete!"];
 
 ];
 
 
-InstallHighPT;
+BuildDocu[packageDir_]:=Module[{},
+	Get[FileNameJoin[{packageDir,"Kernel","init.m"}]];
+	HighPT`PackageScope`BuildDocumentation[ "HTML" -> False ];
+]
+
+
+InstallHighPT[];
