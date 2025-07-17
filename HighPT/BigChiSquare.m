@@ -224,7 +224,7 @@ ChiSquarePiece[obs_Association, OptionsPattern[]] := Module[
 		(*Print["Only SMEFT coefficients detected."];*)
 		If[obs["Scale"] < \[Mu]EW, Message[ChiSquarePiece::smeftbelowEWscale]];
 		(*Print["Expanding to order \[CapitalLambda]^-" <>ToString[OptionValue[EFTorder]]<>"..."];*)
-		npSMEFT = EFTTruncate[npatmu, EFTorder->OptionValue[EFTorder], ExpandComplex->True],
+		npSMEFT = EFTTruncate[npatmu, EFTorder->OptionValue[EFTorder], ExpandComplex->False],
 		(* at least one LEFT coefficient present, run to EW scale and match to SMEFT *)
 		(*Print["LEFT coefficients found: ",DeleteDuplicates[Cases[npatmu,_WCL,All]]];*)
 		(*Print["Running in LEFT up to EW scale..."];*)

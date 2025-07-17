@@ -122,7 +122,12 @@ class4WCL= Alternatives[
 
 
 class6WCL= Alternatives[
-	"uuVLL","ddVLL","uuVRR","ddVRR",
+	"uuVLL","ddVLL","uuVRR","ddVRR"(*,
+	"eeSRR","uuS1RR","uuS8RR","ddS1RR","ddS8RR"*)
+];
+
+
+class6pWCL= Alternatives[
 	"eeSRR","uuS1RR","uuS8RR","ddS1RR","ddS8RR"
 ];
 
@@ -172,13 +177,32 @@ WCL[lab:class4WCL,{a_Integer,a_Integer}]:= 0
 (*4 fermion operators - class 6*)
 
 
-WCL[lab:class6WCL,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WCL[lab,{i,j,a,b}] /; ((a<b && i<j && (a>i || b>j)) || (a==b && i<j && a>i) || (a>b && i<j && a>=j) || (a<b && i==j && a>=i && b>j) || (a==b && i==j && a>i))
+(*WCL[lab:class6WCL,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WCL[lab,{i,j,a,b}] /; ((a<b && i<j && (a>i || b>j)) || (a==b && i<j && a>i) || (a>b && i<j && a>=j) || (a<b && i==j && a>=i && b>j) || (a==b && i==j && a>i))*)
 
 
-WCL[lab:class6WCL,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WCL[lab,{b,a,j,i}]\[Conjugate] /; ((a>b && i<j && (a<j || b<i)) || (a>b && i==j && a<=i) || (a==b && i>j && a<i) || (a>b && i>j && a<=i))
+(*WCL[lab:class6WCL,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WCL[lab,{b,a,j,i}]\[Conjugate] /; ((a>b && i<j && (a<j || b<i)) || (a>b && i==j && a<=i) || (a==b && i>j && a<i) || (a>b && i>j && a<=i))*)
 
 
-WCL[lab:class6WCL,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WCL[lab,{j,i,b,a}]\[Conjugate] /; ((a>b && i==j && a>i) || (a<b && i>j && (b>i || a>j)) || (a==b && i>j && a>=i) || (a>b && i>j && a>i))
+(*WCL[lab:class6WCL,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WCL[lab,{j,i,b,a}]\[Conjugate] /; ((a>b && i==j && a>i) || (a<b && i>j && (b>i || a>j)) || (a==b && i>j && a>=i) || (a>b && i>j && a>i))*)
+
+
+WCL[lab:class6WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= WCL[lab,{k,l,i,j}] /; 10i+j>10k+l
+
+
+WCL[lab:class6WCL,{i_Integer,i_Integer,k_Integer,l_Integer}]:= WCL[lab,{i,i,l,k}]\[Conjugate] /; k>l
+
+
+WCL[lab:class6WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= WCL[lab,{j,i,l,k}]\[Conjugate] /; 10l+k<10i+j
+
+
+WCL[lab:class6WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:=WCL[lab,{j,i,l,k}]\[Conjugate] /; i>j
+
+
+(* ::Text:: *)
+(*4 fermion operators - class 6'*)
+
+
+WCL[lab:class6pWCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= WCL[lab,{k,l,i,j}] /; 10i+j>10k+l
 
 
 (* ::Text:: *)
@@ -195,7 +219,25 @@ WCL[lab:class7WCL,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WCL[lab,{b,a,j,i}
 (*4 fermion operators - class 8*)
 
 
-WCL[lab:class8WCL,{1,1,2,1}]:=Conjugate[WCL[lab,{1,1,1,2}]]
+WCL[lab:class8WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= WCL[lab,{k,l,i,j}] /; 10i+j>10k+l
+
+
+WCL[lab:class8WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= WCL[lab,{j,i,l,k}]\[Conjugate] /; i>j
+
+
+WCL[lab:class8WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= WCL[lab,{i,l,k,j}] /; j>l
+
+
+WCL[lab:class8WCL,{i_Integer,j_Integer,j_Integer,i_Integer}]:= WCL[lab,{i,i,j,j}] /; i!=j
+
+
+WCL[lab:class8WCL,{i_Integer,i_Integer,k_Integer,l_Integer}]:= WCL[lab,{i,i,l,k}]\[Conjugate] /; k>l
+
+
+WCL[lab:class8WCL,{i_Integer,j_Integer,k_Integer,i_Integer}]:= WCL[lab,{i,i,k,j}] /; (i<j && i<k)
+
+
+(*WCL[lab:class8WCL,{1,1,2,1}]:=Conjugate[WCL[lab,{1,1,1,2}]]
 WCL[lab:class8WCL,{1,1,3,1}]:=Conjugate[WCL[lab,{1,1,1,3}]]
 WCL[lab:class8WCL,{1,1,3,2}]:=Conjugate[WCL[lab,{1,1,2,3}]]
 WCL[lab:class8WCL,{1,2,1,1}]:=WCL[lab,{1,1,1,2}]
@@ -254,7 +296,24 @@ WCL[lab:class8WCL,{3,3,2,1}]:=Conjugate[WCL[lab,{1,2,3,3}]]
 WCL[lab:class8WCL,{3,3,2,2}]:=WCL[lab,{2,2,3,3}]
 WCL[lab:class8WCL,{3,3,2,3}]:=WCL[lab,{2,3,3,3}]
 WCL[lab:class8WCL,{3,3,3,1}]:=Conjugate[WCL[lab,{1,3,3,3}]]
-WCL[lab:class8WCL,{3,3,3,2}]:=Conjugate[WCL[lab,{2,3,3,3}]]
+WCL[lab:class8WCL,{3,3,3,2}]:=Conjugate[WCL[lab,{2,3,3,3}]]*)
+
+
+(* ::Text:: *)
+(*4 fermion operators - class 9*)
+
+
+WCL[lab:class9WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= WCL[lab,{j,i,l,k}]\[Conjugate]/; i>j
+
+
+(* ::Text:: *)
+(*4 fermion operators - class 10*)
+
+
+WCL[lab:class10WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= -WCL[lab,{j,i,l,k}]\[Conjugate] /; i>j
+
+
+WCL[lab:class10WCL,{i_Integer,i_Integer,k_Integer,l_Integer}]:= 0
 
 
 (* ::Subsubsection:: *)
@@ -265,21 +324,24 @@ WCL[lab:class8WCL,{3,3,3,2}]:=Conjugate[WCL[lab,{2,3,3,3}]]
 (*Remove conjugates*)
 
 
+(* 0 *)
 WCL/:Conjugate[WCL[lab:class0WCL,{}]]:= WCL[lab,{}] 
 
 
+(* 2 *)
 WCL/:Conjugate[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
 
 
+(* 6 *)
 WCL/:Conjugate[WCL[lab:class6WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}] /; a<=i
-
-
 WCL/:Conjugate[WCL[lab:class6WCL,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= WCL[lab,{a,i,i,a}] /; a<i
 
 
+(* 7 *)
 WCL/:Conjugate[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
 
 
+(* 8 *)
 WCL/:Conjugate[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
 
 
@@ -287,21 +349,24 @@ WCL/:Conjugate[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= W
 (*Remove real parts*)
 
 
+(* 0 *)
 WCL/:Re[WCL[lab:class0WCL,{}]]:= WCL[lab,{}] 
 
 
+(* 2 *)
 WCL/:Re[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
 
 
+(* 6 *)
 WCL/:Re[WCL[lab:class6WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}] /; a<=i
-
-
 WCL/:Re[WCL[lab:class6WCL,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= WCL[lab,{a,i,i,a}] /; a<i
 
 
+(* 7 *)
 WCL/:Re[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
 
 
+(* 8 *)
 WCL/:Re[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,{a,a,i,i}]
 
 
@@ -309,21 +374,24 @@ WCL/:Re[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,
 (*Set imaginary parts to zero*)
 
 
+(* 0 *)
 WCL/:Im[WCL[lab:class0WCL,{}]]:= 0 
 
 
+(* 2 *)
 WCL/:Im[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= 0
 
 
+(* 6 *)
 WCL/:Im[WCL[lab:class6WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0 /; a<=i
-
-
 WCL/:Im[WCL[lab:class6WCL,{a_Integer,i_Integer,i_Integer,a_Integer}]]:= 0 /; a<i
 
 
+(* 7 *)
 WCL/:Im[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 
 
+(* 8 *)
 WCL/:Im[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 
 
