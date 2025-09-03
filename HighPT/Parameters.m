@@ -434,11 +434,23 @@ stoGeV=GeVtos^-1;
 
 
 fKplus$default = Around[0.1557,0.0003];
-Info$default[DecayConstant["K+"]] := "FLAG 2024 average, Nf = 2+1+1, ..."
+Info$default[DecayConstant["K+"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
 
 
-fBs$default = Around[228.4,3.7]*10^-3;
-Info$default[DecayConstant["Bs"]] := "Taken from ..."
+fD$default = Around[212.0,0.7]*10^-3;
+Info$default[DecayConstant["D"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+
+
+fDs$default = Around[249.9,0.5]*10^-3;
+Info$default[DecayConstant["Ds"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+
+
+fBs$default = Around[230.3,1.3]*10^-3;
+Info$default[DecayConstant["Bs"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+
+
+fBd$default = Around[190.0,1.3]*10^-3;
+Info$default[DecayConstant["Bd"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
 
 
 (* ::Subsection:: *)
@@ -524,6 +536,15 @@ mn$current = mn$default;
 
 
 fBs$current = fBs$default;
+
+
+fBd$current = fBd$default;
+
+
+fDs$current = fDs$default;
+
+
+fD$current = fD$default;
 
 
 fKplus$current = fKplus$default;
@@ -1287,7 +1308,7 @@ GetParameters[OptionsPattern[]]:= If[MatchQ[OptionValue[Errors],True],
 
 
 Charge[e|_e] = -1;
-Charge[\[Nu]|_\[Nu]] = 0;
+Charge[\[Nu]|_ \[Nu]] = 0;
 Charge[u|_u] = +2/3;
 Charge[d|_d] = -1/3;
 
