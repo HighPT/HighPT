@@ -270,9 +270,13 @@ ExpInfo["Bs->ee"]:=Row[{"From PDG: ", Ref["PDGK"]}]
 
 NumericalInput["Bs->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*RBs/.GetParameters[Errors->True];
 InputDependence["Bs->ee"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
+SMInfo["Bs->ee"] := "f_Bs (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011] rescaled by ratio of lepton masses"
 
 
 NPContribution$default["Bs->ee"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{1,1,3,2}]+Conjugate[WCL["edSRL",{1,1,2,3}]]-WCL["edSRL",{1,1,3,2}]-Conjugate[WCL["edSRR",{1,1,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,1,1}]]-Conjugate[WCL["edVLL",{1,1,2,3}]]-Conjugate[WCL["edVRR",{1,1,2,3}]]+Conjugate[WCL["edVLR",{1,1,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{1,1,3,2}]-Conjugate[WCL["edSRL",{1,1,2,3}]]-WCL["edSRL",{1,1,3,2}]+Conjugate[WCL["edSRR",{1,1,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;
+
+
+NPInfo["Bs->ee"]:="[1303.3820]"
 
 
 (* ::Subsection:: *)
@@ -294,7 +298,7 @@ SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs (with 2+1+1) taken from [2411.04268]; theory p
 NPContribution$default["Bs->\[Mu]\[Mu]"] := NPFromTheoryExpression["Bs->\[Mu]\[Mu]"]
 
 
-NPInfo["Bs->\[Mu]\[Mu]"] := "Ciao Claudia!"
+NPInfo["Bs->\[Mu]\[Mu]"] := "[1303.3820]"
 
 
 (* ::Subsection:: *)
@@ -312,7 +316,7 @@ NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 
 InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 
 
-SMInfo["Bs->\[Tau]\[Tau]"] := "f_Bs taken from ..., theory prediction from ... rescaling for the tau mass"
+SMInfo["Bs->\[Tau]\[Tau]"] := "f_Bs (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011] rescaled by ratio of lepton masses"
 
 
 (*NPContribution$default["Bs->\[Tau]\[Tau]"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{3,3,3,2}]+Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]-Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,3,3}]]-Conjugate[WCL["edVLL",{3,3,2,3}]]-Conjugate[WCL["edVRR",{3,3,2,3}]]+Conjugate[WCL["edVLR",{3,3,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{3,3,3,2}]-Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]+Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;*)
@@ -322,6 +326,9 @@ SMInfo["Bs->\[Tau]\[Tau]"] := "f_Bs taken from ..., theory prediction from ... r
 
 
 NPContribution$default["Bs->\[Tau]\[Tau]"] := NPFromTheoryExpression["Bs->\[Tau]\[Tau]"]
+
+
+NPInfo["Bs->\[Tau]\[Tau]"] := "[1303.3820]"
 
 
 (* ::Section::Closed:: *)
