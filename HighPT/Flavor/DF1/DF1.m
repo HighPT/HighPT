@@ -253,6 +253,10 @@ me={Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]};
 BsToll[l_]:=Lifetime["Bs"]/(128\[Pi]) DecayConstant["Bs"]^2 Mass["Bs"] Sqrt[1-(4me[[l]]^2)/Mass["Bs"]^2]((1-(4me[[l]]^2)/Mass["Bs"]^2)Abs[(WCL["edSRR",{l,l,3,2}]+Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]-Conjugate[WCL["edSRR",{l,l,2,3}]]) Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2+Abs[2me[[l]](WCL["deVLR",{2,3,l,l}]\[Conjugate]-WCL["edVLL",{l,l,2,3}]\[Conjugate]-WCL["edVRR",{l,l,2,3}]\[Conjugate]+WCL["edVLR",{l,l,2,3}]\[Conjugate])+Mass["Bs"]^2/(Mass["b"]+Mass["s"]) (WCL["edSRR",{l,l,3,2}]-Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]+Conjugate[WCL["edSRR",{l,l,2,3}]])]^2)
 
 
+(* comment explaining *)
+RBs := Around[2.1516,0.0455]*10^-6;
+
+
 (* ::Subsection:: *)
 (*Bs -> ee*)
 
@@ -263,7 +267,7 @@ TheoryExpression["Bs->ee"] := BsToll[1];
 ExpValue$default["Bs->ee"] := Around[0,11.2]*10^-9/2;
 
 
-NumericalInput["Bs->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*Around[2.1516,0.0455]*10^-6/.GetParameters[Errors->True];
+NumericalInput["Bs->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*RBs/.GetParameters[Errors->True];
 InputDependence["Bs->ee"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 
 
@@ -301,7 +305,7 @@ TheoryExpression["Bs->\[Tau]\[Tau]"] := BsToll[3];
 ExpValue$default["Bs->\[Tau]\[Tau]"] := Around[0,6.8]*10^-3/2;
 
 
-NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*Around[2.1516,0.0455]*10^-6/.GetParameters[Errors->True];
+NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*RBs/.GetParameters[Errors->True];
 InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
 
 
