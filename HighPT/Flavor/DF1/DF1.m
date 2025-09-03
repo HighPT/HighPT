@@ -75,7 +75,7 @@ wCL["R\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLR",{\[Alpha],\[Beta],i,j}
 };
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*b -> sll (')*)
 
 
@@ -253,7 +253,7 @@ me={Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]};
 BsToll[l_]:=Lifetime["Bs"]/(128\[Pi]) DecayConstant["Bs"]^2 Mass["Bs"] Sqrt[1-(4me[[l]]^2)/Mass["Bs"]^2]((1-(4me[[l]]^2)/Mass["Bs"]^2)Abs[(WCL["edSRR",{l,l,3,2}]+Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]-Conjugate[WCL["edSRR",{l,l,2,3}]]) Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2+Abs[2me[[l]](WCL["deVLR",{2,3,l,l}]\[Conjugate]-WCL["edVLL",{l,l,2,3}]\[Conjugate]-WCL["edVRR",{l,l,2,3}]\[Conjugate]+WCL["edVLR",{l,l,2,3}]\[Conjugate])+Mass["Bs"]^2/(Mass["b"]+Mass["s"]) (WCL["edSRR",{l,l,3,2}]-Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]+Conjugate[WCL["edSRR",{l,l,2,3}]])]^2)
 
 
-(* comment explaining *)
+(* RBs = B((Bs\[Rule]mumu)^SM)/|Subscript[\[Lambda], t]|^2 taken from [1908.07011] *)
 RBs := Around[2.1516,0.0455]*10^-6;
 
 
@@ -265,6 +265,7 @@ TheoryExpression["Bs->ee"] := BsToll[1];
 
 
 ExpValue$default["Bs->ee"] := Around[0,11.2]*10^-9/2;
+ExpInfo["Bs->ee"]:=Row[{"From PDG: ", Ref["PDGK"]}]
 
 
 NumericalInput["Bs->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*RBs/.GetParameters[Errors->True];
@@ -282,11 +283,12 @@ TheoryExpression["Bs->\[Mu]\[Mu]"] := BsToll[2];
 
 
 ExpValue$default["Bs->\[Mu]\[Mu]"] := Around[3.35,0.27]*10^-9;
+ExpInfo["Bs->\[Mu]\[Mu]"]:="Experimental average of [1812.03017], [2108.09283] and [2212.10311], following the approach from [CMS-PAS-BPH-20-003]."
 
 
-NumericalInput["Bs->\[Mu]\[Mu]"] := Around[2.1516,0.0455]*10^-6;
+NumericalInput["Bs->\[Mu]\[Mu]"] := RBs;
 InputDependence["Bs->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
-SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs taken from ..., theory prediction from ..."
+SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011]"
 
 
 NPContribution$default["Bs->\[Mu]\[Mu]"] := NPFromTheoryExpression["Bs->\[Mu]\[Mu]"]
@@ -303,6 +305,7 @@ TheoryExpression["Bs->\[Tau]\[Tau]"] := BsToll[3];
 
 
 ExpValue$default["Bs->\[Tau]\[Tau]"] := Around[0,6.8]*10^-3/2;
+ExpInfo["Bs->\[Tau]\[Tau]"]:=Row[{"From PDG: ", Ref["PDGK"]}]
 
 
 NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*RBs/.GetParameters[Errors->True];
