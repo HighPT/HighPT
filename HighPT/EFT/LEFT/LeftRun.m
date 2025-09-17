@@ -33,7 +33,6 @@ PackageExport["LEFTRun"]
 PackageScope["LEFTAD"]
 
 
-(*Hello*)
 (*PackageScope["LEFTSimplify"]*)
 
 
