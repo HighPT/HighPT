@@ -72,7 +72,7 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 		mode
 	}
 	,
-	If[lowscale>=DsixTools`EWSCALE,Return@expr];
+	If[lowscale>DsixTools`EWSCALE,Return@expr];
 	mode=GetLEFTRGEMode[];
 	Switch[
 		mode,
