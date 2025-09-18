@@ -103,14 +103,6 @@ MassRotate::error="Error in the mass rotation of `1`"
 MassRotate[Conjugate[WC[lab_,flav_]],type_] := Conjugate[MassRotate[WC[lab,flav],type/.{"du"->"ud","ud"->"du","uddu"->"duud","duud"->"uddu"}]]
 
 
-Vckm[1,2]=0;
-Vckm[1,3]=0;
-Vckm[2,3]=0;
-Vckm[2,1]=0;
-Vckm[3,2]=0;
-Vckm[3,2]=0;
-
-
 MassRotate[WC[lab_,flav_],type_]:=Module[
 {
 rot,i,j,k,l,\[Alpha],\[Beta]
@@ -228,6 +220,8 @@ Message[MassRotate::error,WC[lab,flav]];Abort[];
 ];
 Return@rot
 ]
+
+MassRotate[WC[lab_,flav_],type_]:=WC[lab,flav]
 
 
 MassRotate[Conjugate[a_],"du"]:=MassRotate[a,"ud"]\[Conjugate]
