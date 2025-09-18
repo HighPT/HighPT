@@ -75,7 +75,7 @@ wCL["R\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLR",{\[Alpha],\[Beta],i,j}
 };
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*b -> sll (')*)
 
 
@@ -331,7 +331,7 @@ NPContribution$default["Bs->\[Tau]\[Tau]"] := NPFromTheoryExpression["Bs->\[Tau]
 NPInfo["Bs->\[Tau]\[Tau]"] := "[1303.3820]"
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*b -> dll*)
 
 
@@ -344,7 +344,7 @@ ObsTable["b->dll"] := Grid[{{"b->dll",Column[FlavorObservables["b->dll"]]}},Divi
 LowScale[Alternatives@@(FlavorObservables["b->dll"]//Flatten)] := Mass["b"]/.GetParameters[];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Bd->ll*)
 
 
@@ -420,7 +420,10 @@ NPContribution$default["Bd->\[Tau]\[Tau]"] := NPFromTheoryExpression["Bd->\[Tau]
 (*b -> s\[Nu]\[Nu]*)
 
 
-FlavorObservables["b->s\[Nu]\[Nu]"] = {"B+->K+\[Nu]\[Nu]","Bd->K0*\[Nu]\[Nu]"};
+(* Old stuff, to be removed later *)
+
+
+FlavorObservables["b->s\[Nu]\[Nu]"] = {"B+->K+\[Nu]\[Nu]","B0->K0*\[Nu]\[Nu]"};
 
 
 ObsTable["b->s\[Nu]\[Nu]"] := Grid[{{"b->s\[Nu]\[Nu]",Column[FlavorObservables["b->s\[Nu]\[Nu]"]]}},Dividers->All];
@@ -433,14 +436,28 @@ LowScale[Alternatives@@(FlavorObservables["b->s\[Nu]\[Nu]"]//Flatten)] := Mass["
 (*B -> K\[Nu]\[Nu]*)
 
 
-ExpValue$default["B+->K+\[Nu]\[Nu]"] := Around[0,2.6 10^-5]*CL90to95/2;
-
-
+(* OLD
 BK\[Nu]\[Nu]Aux = Around[2.87,0.10]*10^-3;
 SMPrediction$default["B+->K+\[Nu]\[Nu]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BK\[Nu]\[Nu]Aux)/.GetParameters[Errors->True];
+NPContribution$default["B+->K+\[Nu]\[Nu]"] := (Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]/(3Abs[CL\[Nu]SM["Value"]]^2)-1)/.WETToLEFT/.GetParameters[]//Chop;*)
 
 
-NPContribution$default["B+->K+\[Nu]\[Nu]"] := (Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]/(3Abs[CL\[Nu]SM["Value"]]^2)-1)/.WETToLEFT/.GetParameters[]//Chop;
+ExpValue$default["B+->K+\[Nu]\[Nu]"] := Around[2.33,0.67]*CL90to95/2;
+ExpInfo["B+->K+\[Nu]\[Nu]"]:="Belle-II results from 2311.14647"
+
+
+(* BR/|\[Lambda]t|^2, without tree-level annihilation channel*)
+NumericalInput["B+->K+\[Nu]\[Nu]"]:=Around[2.87,0.10]*10^-3;
+InputDependence["B+->K+\[Nu]\[Nu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
+
+
+SMInfo["Bs->\[Tau]\[Tau]"] :="Average of HPQCD and FNAL/MILC form-factors from [2301.06990]"
+
+
+NPContribution$default["B+->K+\[Nu]\[Nu]"] :=0(* TO DO*)
+
+
+NPInfo["B+->K+\[Nu]\[Nu]"] := "[2301.06990]"
 
 
 (* ::Subsection:: *)
