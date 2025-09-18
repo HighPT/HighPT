@@ -221,8 +221,6 @@ Message[MassRotate::error,WC[lab,flav]];Abort[];
 Return@rot
 ]
 
-MassRotate[WC[lab_,flav_],type_]:=WC[lab,flav]
-
 
 MassRotate[Conjugate[a_],"du"]:=MassRotate[a,"ud"]\[Conjugate]
 MassRotate[Conjugate[a_],"ud"]:=MassRotate[a,"du"]\[Conjugate]
