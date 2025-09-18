@@ -404,54 +404,6 @@ InputList=InputList$default;
 
 
 (* ::Section:: *)
-(*Standard Model values for (LEFT) Wilson Coefficients*)
-
-
-(*C10SM  =-4.18869*)
-
-
-(*SMValue[x_WCL] := 0*)
-
-
-(*SMValue[WCL["edVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := 1/(Sqrt[2]\[Pi])Param["\[Alpha]EM"] Param["GF"]*Vckm[3,i]\[Conjugate]Vckm[3,j] KroneckerDelta[\[Alpha],\[Beta]] C10SM;*)
-
-
-(*SMValue[WCL["\[Nu]eduVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := -2*Sqrt[2]Param["GF"]KroneckerDelta[\[Alpha],\[Beta]]Vckm[j,i]\[Conjugate]*)
-
-
-(*returns the SM value of a given Wilson Coefficient at the EW scale. For SMEFT WCs it is 0 by definition*)
-Options[SMValue] = {TreeOnly -> False};
-SMValue[x_WC,OptionsPattern[]] := 0
-SMValue[x_WCL,OptionsPattern[]] := Module[
-	{
-	treematching
-	}
-	,
-	treematching = MatchToSMEFT[x,SMOnly->True,LoopOrder->0]/._WC->0;
-	If[OptionValue[TreeOnly],Return[treematching]];
-	If[!MatchQ[treematching,0],
-		Return[treematching],
-		Return[MatchToSMEFT[x,SMOnly->True,LoopOrder->1]/._WC->0]
-	];
-];
-
-
-SMValue[WCL["gZeL",{i_,j_}]] := -Param["gZ"](*(Param["g2"]/Param["cW"])*)(-(1/2)+Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZeR",{i_,j_}]] := -Param["gZ"](Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZ\[Nu]L",{i_,j_}]] := -Param["gZ"](+(1/2))KroneckerDelta[i,j]
-SMValue[WCL["gZdL",{i_,j_}]] := -Param["gZ"](-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZdR",{i_,j_}]] := -Param["gZ"](1/3 Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZuL",{i_,j_}]] := -Param["gZ"](+(1/2)-2/3 Param["sW"]^2)KroneckerDelta[i,j]
-SMValue[WCL["gZuR",{i_,j_}]] := -Param["gZ"](-(2/3) Param["sW"]^2)KroneckerDelta[i,j]
-
-
-SMValue[WCL["mW",{}]] := 1/2 Param["g2"]Param["vev"]
-SMValue[WCL["gWqL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])Vckm[i,j]
-SMValue[WCL["gWqR",{i_,j_}]] := 0
-SMValue[WCL["gWlL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])KroneckerDelta[i,j]
-
-
-(* ::Section:: *)
 (*SMEFT values of parameters*)
 
 
