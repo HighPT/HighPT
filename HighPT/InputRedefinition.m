@@ -427,11 +427,11 @@ SMValue[x_WCL,OptionsPattern[]] := Module[
 	treematching
 	}
 	,
-	treematching = MatchToSMEFT[x,SM->True,LoopOrder->0]/._WC->0;
+	treematching = MatchToSMEFT[x,SMOnly->True,LoopOrder->0]/._WC->0;
 	If[OptionValue[TreeOnly],Return[treematching]];
 	If[!MatchQ[treematching,0],
 		Return[treematching],
-		Return[MatchToSMEFT[x,SM->True,LoopOrder->1]/._WC->0]
+		Return[MatchToSMEFT[x,SMOnly->True,LoopOrder->1]/._WC->0]
 	];
 ];
 

@@ -308,7 +308,7 @@ TLMatching[WCL["gWlL",{\[Alpha]_,\[Beta]_}]] := -(Param["g2"]/Sqrt[2])WCoupling[
 TLMatching[WCL["mW",{}]] := 1/2 Param["g2"] Param["vev"]+1/16 Param["g2"] Param["vev"]^5 (WC["H61",{}]-WC["H62",{}])
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*(LR)X*)
 
 
@@ -555,7 +555,7 @@ TLMatching[WCL["\[Nu]eduSRR",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["lequ1"
 TLMatching[WCL["\[Nu]eduTRR",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["lequ3",{\[Alpha],\[Beta],i,j}],"d"];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Nonleptonic*)
 
 
@@ -629,7 +629,8 @@ Options[MatchToSMEFT]={
 	MatchingScale -> DsixTools`EWSCALE,
 	Basis :> GetBasisAlignment[],
 	EFTorder :> GetEFTorder[],
-	OperatorDimension :> GetOperatorDimension[]
+	OperatorDimension :> GetOperatorDimension[],
+	SMOnly -> False
 };
 
 
@@ -655,10 +656,13 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 		];
 		var = DeleteDuplicates[Cases[expr,_WCL,All]];
 		disp = Dispatch[Table[
-			i -> If[
-					MatchQ[OptionValue[SM],False],
-					EFTTruncate[TLMatching[i]/.b_Param:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]] - (TLMatching[i]/._WC->0),
-					EFTTruncate[TLMatching[i]/.b_Param:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]]
+			i -> If[MatchQ[OptionValue[SMOnly],False],
+					If[
+						MatchQ[OptionValue[SM],False],
+						EFTTruncate[TLMatching[i]/.b_Param:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]] - (TLMatching[i]/._WC->0),
+						EFTTruncate[TLMatching[i]/.b_Param:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]]
+					],
+					(TLMatching[i]/._WC->0)
 				],
 			{i,var}
 		]];
@@ -682,10 +686,14 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 		currentmasses=Association[Table[i->Mass[i]/.GetParameters[Errors->True],{i,{"u","c","t","d","s","b","e","\[Mu]","\[Tau]"}}]];
 		DefineParameters[EWScaleParameters];
 		If[
-			!OptionValue[SM],
-			res=expr/.a_WCL:>(OneLoopMatching[a]-(OneLoopMatching[a]/._WC->0))/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses,
-			res=expr/.a_WCL->OneLoopMatching[a]/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses
-		];
+			!OptionValue[SMOnly],
+			If[
+				!OptionValue[SM],
+				res=expr/.a_WCL:>(OneLoopMatching[a]-(OneLoopMatching[a]/._WC->0))/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses,
+				res=expr/.a_WCL->OneLoopMatching[a]/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses
+			],
+			res=expr/.a_WCL:>(OneLoopMatching[a]/._WC->0)/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses
+		];	
 		DefineParameters[
 			"mu" -> currentmasses["u"],
 			"mc" -> currentmasses["c"],
