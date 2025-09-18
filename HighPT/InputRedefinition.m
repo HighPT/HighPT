@@ -137,11 +137,11 @@ CR62summed = Sum[Abs[WC["le",{i,j,1,2}]]^2,{i,3},{j,3}] +
 InputRedefinition$default[Param["GF"]] := -(1/(2Sqrt[2]))CL621-Param["vev"]^2/(8Sqrt[2]) CL621^2-Param["vev"]^2/(2Sqrt[2]) Re[CL821+CL6x621]+Param["vev"]^2/(8Sqrt[2]) CL62summed+Param["vev"]^2/(8Sqrt[2]) CR62summed
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*CKM*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Vus*)
 
 
@@ -419,7 +419,9 @@ InputList=InputList$default;
 (*SMValue[WCL["\[Nu]eduVLL",{\[Alpha]_,\[Beta]_,i_,j_}]] := -2*Sqrt[2]Param["GF"]KroneckerDelta[\[Alpha],\[Beta]]Vckm[j,i]\[Conjugate]*)
 
 
+(*returns the SM value of a given Wilson Coefficient at the EW scale. For SMEFT WCs it is 0 by definition*)
 Options[SMValue] = {TreeOnly -> False};
+SMValue[x_WC,OptionsPattern[]] := 0
 SMValue[x_WCL,OptionsPattern[]] := Module[
 	{
 	treematching
