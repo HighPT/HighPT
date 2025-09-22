@@ -420,7 +420,7 @@ NPContribution$default["Bd->\[Tau]\[Tau]"] := NPFromTheoryExpression["Bd->\[Tau]
 (*b -> s\[Nu]\[Nu]*)
 
 
-(* Old stuff, to be removed later *)
+(* Old stuff, to be removed later? *)
 
 
 FlavorObservables["b->s\[Nu]\[Nu]"] = {"B+->K+\[Nu]\[Nu]","B0->K0*\[Nu]\[Nu]"};
@@ -430,6 +430,16 @@ ObsTable["b->s\[Nu]\[Nu]"] := Grid[{{"b->s\[Nu]\[Nu]",Column[FlavorObservables["
 
 
 LowScale[Alternatives@@(FlavorObservables["b->s\[Nu]\[Nu]"]//Flatten)] := Mass["b"]/.GetParameters[];
+
+
+(* Numerical factor for the interference between LH and RH currents [2301.06990]*)
+\[Eta]Kst = Around[3.34,0.04];
+
+
+dBK\[Nu]\[Nu][i_,j_]:=Lifetime["Bp"]/(512\[Pi]^5)*1/3*\[Lambda]K^(3/2)/Mass["Bp"]^3*fp^2*Abs[WCL["\[Nu]dVLL",{i,j,2,3}]+WCL["\[Nu]dVLR",{i,j,2,3}]]^2
+
+
+dBKst\[Nu]\[Nu][i_,j_]:=Lifetime["B0"]/(128\[Pi]^5)*XXX  (* TO DO -- how? *)
 
 
 (* ::Subsection:: *)
@@ -442,6 +452,9 @@ SMPrediction$default["B+->K+\[Nu]\[Nu]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]
 NPContribution$default["B+->K+\[Nu]\[Nu]"] := (Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]/(3Abs[CL\[Nu]SM["Value"]]^2)-1)/.WETToLEFT/.GetParameters[]//Chop;*)
 
 
+TheoryExpression["B+->K+\[Nu]\[Nu]"] := Sum[dBK\[Nu]\[Nu][i,j],{i,1,3},{j,1,3}];
+
+
 ExpValue$default["B+->K+\[Nu]\[Nu]"] := Around[2.33,0.67]*CL90to95/2;
 ExpInfo["B+->K+\[Nu]\[Nu]"]:="Belle-II results from 2311.14647"
 
@@ -451,10 +464,10 @@ NumericalInput["B+->K+\[Nu]\[Nu]"]:=Around[2.87,0.10]*10^-3;
 InputDependence["B+->K+\[Nu]\[Nu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
 
 
-SMInfo["Bs->\[Tau]\[Tau]"] :="Average of HPQCD and FNAL/MILC form-factors from [2301.06990]"
+SMInfo["B+->K+\[Nu]\[Nu]"] :="Average of HPQCD and FNAL/MILC form-factors from [2301.06990]"
 
 
-NPContribution$default["B+->K+\[Nu]\[Nu]"] :=0(* TO DO*)
+NPContribution$default["B+->K+\[Nu]\[Nu]"] :=0(* TO DO -- how?*)
 
 
 NPInfo["B+->K+\[Nu]\[Nu]"] := "[2301.06990]"
@@ -464,15 +477,25 @@ NPInfo["B+->K+\[Nu]\[Nu]"] := "[2301.06990]"
 (*B -> K*\[Nu]\[Nu]*)
 
 
+TheoryExpression["B0->K0*\[Nu]\[Nu]"] := Sum[dBKst\[Nu]\[Nu][i,j],{i,1,3},{j,1,3}];
+
+
 ExpValue$default["B0->K0*\[Nu]\[Nu]"] := Around[0,1.8 10^-5]*CL90to95/2;
+ExpInfo["B0->K0*\[Nu]\[Nu]"]:="PDG"
 
 
-BKst\[Nu]\[Nu]Aux = Around[5.9,0.8]*10^-3;
-SMPrediction$default["B0->K0*\[Nu]\[Nu]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BKst\[Nu]\[Nu]Aux)/.GetParameters[Errors->True];
+(* BR/|\[Lambda]t|^2, without tree-level annihilation channel*)
+NumericalInput["B0->K0*\[Nu]\[Nu]"]:= Around[5.9,0.8]*10^-3;
+InputDependence["B0->K0*\[Nu]\[Nu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
 
 
-\[Eta]Kst = Around[3.34,0.04];
-NPContribution$default["B0->K0*\[Nu]\[Nu]"] := (1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]-\[Eta]Kst["Value"] 1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Re[(CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}])Conjugate[wCL["R\[Nu]",{i,j,2,3}]]],{i,1,3},{j,1,3}]-1)/.WETToLEFT/.GetParameters[]//Chop;
+SMInfo["B0->K0*\[Nu]\[Nu]"] :="Form-factors from [1503.05534]"
+
+
+NPContribution$default["B0->K0*\[Nu]\[Nu]"] := 0(*(1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]-\[Eta]Kst["Value"] 1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Re[(CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}])Conjugate[wCL["R\[Nu]",{i,j,2,3}]]],{i,1,3},{j,1,3}]-1)/.WETToLEFT/.GetParameters[]//Chop;*)
+
+
+NPInfo["B0->K0*\[Nu]\[Nu]"] := "[2301.06990]"
 
 
 (* ::Section::Closed:: *)
