@@ -108,7 +108,7 @@ InterferenceMatrix::usage= "InterferenceMatrix[z, {X,Y}] gives the matrix determ
 ComputeInterferencePattern::usage= "ComputeInterferencePattern[s, t, {X,Y}, {\[Alpha],\[Beta],i,j}] performs the matrix multiplication \!\(\*SuperscriptBox[\(F\), \(\[Dagger]\)]\)(s,t).M(t/s).F(s,t).";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Errors*)
 
 
@@ -146,7 +146,7 @@ FormFactor::unknownindices= "The fifth argument of FormFactor `1` must be a list
 FormFactor[_,_,_,_,x:Except[{_,_,_,_}]]:= (Message[FormFactor::unknownindices, x]; Abort[])
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Formatting*)
 
 
@@ -175,7 +175,7 @@ MakeBoxes[Left, TraditionalForm]  := ToBoxes["L"]
 MakeBoxes[Right, TraditionalForm] := ToBoxes["R"]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*FormFactorVector*)
 
 
@@ -557,7 +557,7 @@ FF[Vector, {"regular",_}, {OrderlessPatternSequence[Right,_]}, {_,_,_u,_d}|{_,_,
 FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Weak basis rotation for form factors*)
 
 
@@ -655,7 +655,7 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Substitute form factors*)
 
 

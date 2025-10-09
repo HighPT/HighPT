@@ -40,14 +40,14 @@ PackageExport["SpinSumAmplitudeSqVH"]
 (*FormFactorVH*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Usage*)
 
 
 FormFactorVH::usage="FormFactorVH[{type, index}, s,t, X, {\!\(\*SubscriptBox[\(q\), \(1\)]\)[i],\!\(\*SubscriptBox[\(q\), \(2\)]\)[j]}]] denotes the form-factor for operators of the given type \[Element] {Scalar, Vector, Tensor}. For each possible lorentz structures there can be more than one form-factor which is denoted by \[IAcute]ndex. The form factor depends on the partonic Mandelstam variables s and t. The chirality in the lepton current is X \[Element] {Left, Right} and in the quark current it is Y \[Element] {Left, Right}. The flavor indices are i, j for the quarks.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Errors*)
 
 
@@ -99,7 +99,7 @@ FormFactorVH::unknownquarkindices = "The fifth element must denoted the quark in
 FormFactorVH[{_, _}, _, _, _, x:Except[{_, _}]] := (Message[FormFactorVH::unknownquarkindices]; Abort[]);
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -129,46 +129,45 @@ FormFactorVectorVH[s_, t_, X_, {i_, j_}] := Transpose[
 (*InterferenceMatrixVH*)
 
 
-InterferenceMatrixVH[s_, t_, mV_] := Module[{u = -s - t + mV^2 + Param["mH"]^2},
+InterferenceMatrixVH[s_, t_, mV_] := 
 	{
-	   {MV11[s, t, u, mV], MV12[s, t, u, mV], 0, 0, 0},
-	   {MV12[s, t, u, mV], MV22[s, t, u, mV], 0, 0, 0},
-	   {0, 0, MST11[s, t, u, mV], MST12[s, t, u, mV], MST13[s, t, u, mV]},
-	   {0, 0, MST12[s, t, u, mV], MST22[s, t, u, mV], MST23[s, t, u, mV]},
-	   {0, 0, MST13[s, t, u, mV], MST23[s, t, u, mV], MST33[s, t, u, mV]}
+	   {MV11[s, t, mV], MV12[s, t, mV], 0, 0, 0},
+	   {MV12[s, t, mV], MV22[s, t, mV], 0, 0, 0},
+	   {0, 0, MST11[s, t, mV], MST12[s, t, mV], MST13[s, t, mV]},
+	   {0, 0, MST12[s, t, mV], MST22[s, t, mV], MST23[s, t, mV]},
+	   {0, 0, MST13[s, t, mV], MST23[s, t, mV], MST33[s, t, mV]}
 	}
-];
 
 
 (* ::Subsection:: *)
 (*Individual entries of the interference matrix*)
 
 
-MV11[s_, t_, u_, mV_] := Param["vev"]^2/s^2 (2 s + t u / mV^2 - Param["mH"]^2)
+MV11[s_, t_, mV_] := 2 s + t -(s t)/mV^2-t^2/mV^2-Mass["Higgs"]^2+(t Mass["Higgs"]^2)/mV^2
 
 
-MV12[s_, t_, u_, mV_] := Param["vev"]^2/s^2 (s + mV^2 - Param["mH"]^2)
+MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2
 
 
-MV22[s_, t_, u_, mV_] := Param["vev"]^2/s^3 (mV^2 (2 s - Param["mH"]^2) + (t^2 + u^2)/2)
+MV22[s_, t_, mV_] := mV^2+ mV^4/(2 s) + s/2 +t -(mV^2 t)/s+ t^2/s-Mass["Higgs"]^2-(t Mass["Higgs"]^2)/s+Mass["Higgs"]^4/(2 s)
 
 
-MST11[s_, t_, u_, mV_]:=0
+MST11[s_, t_, mV_]:=0
 
 
-MST12[s_, t_, u_, mV_]:=0
+MST12[s_, t_, mV_]:=0
 
 
-MST13[s_, t_, u_, mV_]:=0
+MST13[s_, t_, mV_]:=0
 
 
-MST22[s_, t_, u_, mV_]:=0
+MST22[s_, t_, mV_]:=0
 
 
-MST23[s_, t_, u_, mV_]:=0
+MST23[s_, t_, mV_]:=0
 
 
-MST33[s_, t_, u_, mV_]:=0
+MST33[s_, t_, mV_]:=0
 
 
 (* ::Section:: *)
@@ -179,12 +178,13 @@ MST33[s_, t_, u_, mV_]:=0
 ComputeIntPatternVH[s_, t_, mV_, X_, {i_, j_}] := Module[{output, ffVector},
 	ffVector = FormFactorVectorVH[s, t, X, {i, j}];
 	output = ConjugateTranspose@ffVector . InterferenceMatrixVH[s, t, mV] . ffVector;
+	output = First@Flatten[output];
 	Return[output]
 ];
 
 
 SpinSumAmplitudeSqVH[s_, t_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{mV, totalAmpSq, XX},
-	(* Chooses the gauge boson mass acording to the initial state *)
+	(* Choose the gauge boson mass acording to the initial quarks *)
 	mV = If[\[Psi]1 === \[Psi]2, Mass["ZBoson"], Mass["WBoson"]];
 	
 	(* Sum over all possible chiralities *)
@@ -193,5 +193,5 @@ SpinSumAmplitudeSqVH[s_, t_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{mV, totalA
 	];
 	
 	(* differential partonic cross-section *)
-	Return[1/(192 \[Pi] Param["vev"]^4) totalAmpSq]
+	Return[1/(12 Param["vev"]^2) totalAmpSq]
 ];

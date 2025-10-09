@@ -55,7 +55,7 @@ PackageScope["$PDFsets"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton-level cross-section*)
 
 
@@ -118,7 +118,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 (*Phase-space integration*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IntegrateT*)
 
 
@@ -158,7 +158,7 @@ IntegrateT[arg_, t_]:= Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Integrand*)
 
 
@@ -180,7 +180,7 @@ Integrand[Times[a_,b___],t_]:= a*Integrand[Times[b],t]/;FreeQ[a,t]
 Integrand[a_,t_]:= a*Integrand[1,t]/;(FreeQ[a,t] && !MatchQ[a,1])
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*PartialFractioning*)
 
 
@@ -207,7 +207,7 @@ PartialFractioning[t_]:= With[{mediators=GetMediators[]},{
 }]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ReduceIntegrands*)
 
 
@@ -228,7 +228,7 @@ ReduceIntegrands[t_]:= {
 }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ReplaceIntegrals*)
 
 

@@ -62,7 +62,7 @@ PackageScope["Vd"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Usage messages*)
 
 
@@ -75,7 +75,7 @@ Mass::usage= "Mass[\[Phi]] denotes the mass of the particle \[Phi].";
 Width::usage= "Width[\[Phi]] denotes the width of the particle \[Phi].";
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Masses and Widths*)
 
 
@@ -99,7 +99,7 @@ ReplaceMassWidth[]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*ReplaceConstants*)
 
 
@@ -109,7 +109,7 @@ ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Make constants real*)
 
 
@@ -125,7 +125,7 @@ Mass/:Conjugate[Mass[a_]]:= Mass[a]
 Width/:Conjugate[Width[a_]]:= Width[a]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Formatting*)
 
 
@@ -144,11 +144,11 @@ Format[CKM, TraditionalForm]         := Subscript["V","CKM"]
 Format[Vckm[x_,y_], TraditionalForm] := Subscript["V",ToString[x]<>ToString[y]]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Experimental Inputs*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*EW input*)
 
 
@@ -161,6 +161,8 @@ GF$default = 1.16637*10^(-5);
 mZ$default = 91.1876;
 \[CapitalGamma]Z$default = 2.4952;
 \[CapitalGamma]W$default = 2.085;
+(* NEW: Higgs mass *)
+mH$default = 125.20;
 
 
 (* ::Subsection::Closed:: *)
@@ -197,7 +199,7 @@ CKM= {
 };
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Save current values of inputs [separate from default values]*)
 
 
@@ -206,6 +208,7 @@ GF$current = GF$default;
 mZ$current = mZ$default;
 \[CapitalGamma]Z$current = \[CapitalGamma]Z$default;
 \[CapitalGamma]W$current = \[CapitalGamma]W$default;
+mH$current = mH$default;
 
 \[Lambda]Wolfenstein$current    = \[Lambda]Wolfenstein$default;
 AWolfenstein$current    = AWolfenstein$default;
@@ -244,7 +247,7 @@ Vd= {
 }
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*down*)
 
 
@@ -263,7 +266,7 @@ DefineBasisAlignment["down"] := Module[{},
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*up*)
 
 
@@ -279,7 +282,7 @@ DefineBasisAlignment["up"] := Module[{},
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*general*)
 
 
@@ -309,7 +312,7 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3})] := (Message[DefineBasisAlignment::invalidarg,arg/.GetParameters[]];Abort[])
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*DefineParameters*)
 
 
@@ -322,6 +325,7 @@ Options[DefineParameters]= {
 	"\[Alpha]EM"         :> \[Alpha]EM$current,
 	"GF"          :> GF$current,
 	"mZ"          :> mZ$current,
+	"mH"          :> mH$current,
 	"\[CapitalGamma]Z"          :> \[CapitalGamma]Z$current,
 	"\[CapitalGamma]W"          :> \[CapitalGamma]W$current,
 	"Wolfenstein" :> Wolfenstein$current,
@@ -335,6 +339,7 @@ DefineParameters[Default] := DefineParameters[
 	"\[Alpha]EM"         -> \[Alpha]EM$default,
 	"GF"          -> GF$default,
 	"mZ"          -> mZ$default,
+	"mH"          :> mH$default,
 	"\[CapitalGamma]Z"          -> \[CapitalGamma]Z$default,
 	"\[CapitalGamma]W"          -> \[CapitalGamma]W$default,
 	"Wolfenstein" -> Wolfenstein$default,
@@ -349,6 +354,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		$\[Alpha]EM         = OptionValue["\[Alpha]EM"],
 		$GF          = OptionValue["GF"],
 		$mZ          = OptionValue["mZ"],
+		$mH          = OptionValue["mH"],
 		$\[CapitalGamma]Z          = OptionValue["\[CapitalGamma]Z"],
 		$\[CapitalGamma]W          = OptionValue["\[CapitalGamma]W"],
 		$Wolfenstein = OptionValue["Wolfenstein"],
@@ -362,7 +368,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	}
 	,
 	(* OPTION CHECKS *)
-	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "\[CapitalGamma]Z", "\[CapitalGamma]W", "Wolfenstein", Mediators};
+	OptionCheck[#,OptionValue[#]]& /@ {"\[Alpha]EM", "GF", "mZ", "mH", "\[CapitalGamma]Z", "\[CapitalGamma]W", "Wolfenstein", Mediators};
 	(* check that all mediator labels are known *)
 	Do[
 		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
@@ -377,6 +383,7 @@ DefineParameters[OptionsPattern[]] := Module[
 	\[Alpha]EM$current = If[MatchQ[$\[Alpha]EM, Default], $\[Alpha]EM = \[Alpha]EM$default, $\[Alpha]EM];
 	GF$current  = If[MatchQ[$GF,  Default], $GF  = GF$default , $GF ];
 	mZ$current  = If[MatchQ[$mZ,  Default], $mZ  = mZ$default , $mZ ];
+	mH$current  = If[MatchQ[$mH,  Default], $mH  = mH$default , $mH ];
 	\[CapitalGamma]Z$current  = If[MatchQ[$\[CapitalGamma]Z,  Default], $\[CapitalGamma]Z  = \[CapitalGamma]Z$default , $\[CapitalGamma]Z ];
 	\[CapitalGamma]W$current  = If[MatchQ[$\[CapitalGamma]W,  Default], $\[CapitalGamma]W  = \[CapitalGamma]W$default , $\[CapitalGamma]W ];
 	
@@ -450,6 +457,7 @@ DefineParameters[OptionsPattern[]] := Module[
 		Vckm[3,3] -> 1
 		,
 		(* masses & widths *)
+		Mass["Higgs"]          -> $mH,
 		Mass["ZBoson"]         -> $mZ,
 		Width["ZBoson"]        -> $\[CapitalGamma]Z,
 		Mass["WBoson"]         -> $mW,
@@ -467,7 +475,7 @@ ExperimentalParameters= <||>;
 DefineParameters[Default]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*GetParameters*)
 
 
@@ -478,11 +486,11 @@ GetParameters::usage= "GetParameters[] returns an Association of all (B)SM param
 GetParameters[]:= Join[ExperimentalParameters, ReplaceMassWidth[]]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Charge definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*electric charges*)
 
 
@@ -492,7 +500,7 @@ Charge[u|_u] = +2/3;
 Charge[d|_d] = -1/3;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*weak isospin 3rd-component*)
 
 

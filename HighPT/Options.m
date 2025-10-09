@@ -140,6 +140,7 @@ $OptionValueAssociation= <|
 	"\[Alpha]EM"             -> _?((NumericQ[#]&&Positive[#])&) | Default,
 	"GF"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
 	"mZ"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
+	"mH"              -> _?((NumericQ[#]&&Positive[#])&) | Default,
 	"\[CapitalGamma]Z"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"\[CapitalGamma]W"              -> _?((NumericQ[#]&&NonNegative[#])&) | Default,
 	"Wolfenstein"     -> {_,_,_,_}
