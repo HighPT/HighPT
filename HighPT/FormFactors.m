@@ -67,7 +67,7 @@ $SquaredD8=False;
 (*FormFactor*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Usage*)
 
 
@@ -108,7 +108,7 @@ InterferenceMatrix::usage= "InterferenceMatrix[z, {X,Y}] gives the matrix determ
 ComputeInterferencePattern::usage= "ComputeInterferencePattern[s, t, {X,Y}, {\[Alpha],\[Beta],i,j}] performs the matrix multiplication \!\(\*SuperscriptBox[\(F\), \(\[Dagger]\)]\)(s,t).M(t/s).F(s,t).";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Errors*)
 
 
@@ -146,7 +146,7 @@ FormFactor::unknownindices= "The fifth argument of FormFactor `1` must be a list
 FormFactor[_,_,_,_,x:Except[{_,_,_,_}]]:= (Message[FormFactor::unknownindices, x]; Abort[])
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -175,7 +175,7 @@ MakeBoxes[Left, TraditionalForm]  := ToBoxes["L"]
 MakeBoxes[Right, TraditionalForm] := ToBoxes["R"]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*FormFactorVector*)
 
 
@@ -190,7 +190,7 @@ FormFactorVector[s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:= Transpose[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*InterferenceMatrix*)
 
 
@@ -210,7 +210,7 @@ InterferenceMatrix[s_, t_, {X_, Y_}]:=
 }
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Individual entries of the interference matrix*)
 
 
@@ -232,7 +232,7 @@ MST[z_, X_, Y_]:= -KroneckerDelta[X,Y] * (1+2*z)
 MTS[z_, X_, Y_]:= MST[z,X,Y]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Spin-summed amplitude square*)
 
 
@@ -255,7 +255,7 @@ SpinSummedAmplitude2[s_, t_, {\[Alpha]_,\[Beta]_,i_,j_}]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Perform matrix multiplication of FormFactors with the InterferenceMatrix*)
 
 
@@ -272,7 +272,7 @@ ComputeInterferencePattern[s_, t_, {X_,Y_}, {a_,b_,i_,j_}]:= Module[
 (*ExpandFormFactors*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Split FormFactor into regular and singular part*)
 
 
@@ -293,7 +293,7 @@ SplitFF= FormFactor[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> RegularFF[
 RegularFF[DipoleL|DipoleQ, ___]:= 0
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*d=8 treatment*)
 
 
@@ -306,7 +306,7 @@ $d8/:Power[$d8,n_/;n>=2]:= 0
 $d8/:Conjugate[$d8]:= $d8
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand regular form factors*)
 
 
@@ -339,7 +339,7 @@ ExpandRegularFF[OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand singular form factors*)
 
 
@@ -389,7 +389,7 @@ TChannelSum[_,0]:=0
 UChannelSum[_,0]:=0
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand the full FormFactors*)
 
 
@@ -435,7 +435,7 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Basic form factor properties*)
 
 
