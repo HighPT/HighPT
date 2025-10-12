@@ -333,6 +333,7 @@ DefineRedefinitions[OptionsPattern[]] := Module[
 	(*opt = {"GF","\[Alpha]EM","mZ","|Vus|","|Vcb|","|Vub|","\[Gamma]"}*)tmp
 	}
 	,
+	(*Print["Entered DefineRedefinitions"];*)
 	If[!MatchQ[OptionValue["GF"],"current"],
 		InputRedefinition[Param["GF"]] := OptionValue["GF"]
 	];

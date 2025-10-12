@@ -607,15 +607,15 @@ MNu[3]->0
 
 
 EWScaleParameters = {
-	"mu" -> Around[1.27,{0.42,0.50}]*10^-3,
-	"mc" -> Around[0.619,0.084],
-	"mt" -> Around[162.9,2.8],
-	"md" -> Around[2.90,{1.19,1,24}]*10^-3,
-	"ms" -> Around[55,15]*10^-3,
-	"mb" -> Around[2.89,0.09],
-	"me" -> Around[0.486570161,0.000000042]*10^-3,
-	"m\[Mu]" -> Around[102.7181359,0.0000092]*10^-3,
-	"m\[Tau]" -> Around[1746.24,{0.19,0.20}]*10^-3
+	Mass["u"] -> Around[1.27,{0.42,0.50}]*10^-3,
+	Mass["c"] -> Around[0.619,0.084],
+	Mass["t"] -> Around[162.9,2.8],
+	Mass["d"] -> Around[2.90,{1.19,1,24}]*10^-3,
+	Mass["s"] -> Around[55,15]*10^-3,
+	Mass["b"] -> Around[2.89,0.09],
+	Mass["e"] -> Around[0.486570161,0.000000042]*10^-3,
+	Mass["\[Mu]"] -> Around[102.7181359,0.0000092]*10^-3,
+	Mass["\[Tau]"] -> Around[1746.24,{0.19,0.20}]*10^-3
 };
 
 
@@ -695,15 +695,7 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 			res=expr/.a_WCL:>(OneLoopMatching[a]/._WC->0)/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses
 		];	
 		DefineParameters[
-			"mu" -> currentmasses["u"],
-			"mc" -> currentmasses["c"],
-			"mt" -> currentmasses["t"],
-			"md" -> currentmasses["d"],
-			"ms" -> currentmasses["s"],
-			"mb" -> currentmasses["b"],
-			"me" -> currentmasses["e"],
-			"m\[Mu]" -> currentmasses["\[Mu]"],
-			"m\[Tau]" -> currentmasses["\[Tau]"]
+			Table[Mass[i]->currentmasses[i],{i,{"u","c","t","d","s","b","e","\[Mu]","\[Tau]"}}]/.Around[a_,{b_,c_}]:>Around[a,Max[b,c]]/.List->Sequence
 			]
 		];
 	Return@res

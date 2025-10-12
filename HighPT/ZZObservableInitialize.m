@@ -34,15 +34,6 @@ Package["HighPT`"]
 DefineRedefinitions[Default];
 
 
-paramlist = Keys[GetParameters[]];
-Table[
-	If[!MatchQ[Head[Info$default[i]],Info$default],
-		Info[i] := Info$default[i]//Evaluate
-	],
-	{i,paramlist}
-];
-
-
 (*RestoreFlavorObservables[];*)
 
 
@@ -60,10 +51,10 @@ Table[
 ];*)
 
 
-Print["Initializing EW observables..."]
+(*Print["Initializing EW observables..."]
 RestoreObservables[ObservableList["EW"]]
 Print["Initializing Flavor observables..."]
-RestoreObservables[ObservableList["Flavor"]]
+RestoreObservables[ObservableList["Flavor"]]*)
 
 
 selector = SelectObservables[];

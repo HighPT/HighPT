@@ -58,6 +58,13 @@ PackageExport["Yukawa"]
 PackageExport["Errors"]
 
 
+PackageExport["InputParameters"]
+PackageExport["ParameterList"]
+
+
+PackageExport["Without"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -91,6 +98,10 @@ PackageScope["Info$default"]
 
 
 (* ::Section:: *)
+(*Definitions, properties, formatting*)
+
+
+(* ::Subsection::Closed:: *)
 (*Usage messages*)
 
 
@@ -109,7 +120,10 @@ Yukawa::usage="Yukawa[\"label\",{i,j}] denotes the {i,j} entry of the Yukawa mat
 Lifetime::usage="Lifetime[\"label\"] denotes the lifetime of the particle \"label\"";
 
 
-(* ::Section:: *)
+DecayConstant::usage="DecayConstant[\"label\"] denotes the decay constant of the particle \"label\"";
+
+
+(* ::Subsection::Closed:: *)
 (*Masses and Widths*)
 
 
@@ -141,7 +155,7 @@ ReplaceMassWidth[OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section:: *)
+(* ::Subsection::Closed:: *)
 (*ReplaceConstants*)
 
 
@@ -151,7 +165,7 @@ ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Section:: *)
+(* ::Subsection::Closed:: *)
 (*Make constants real*)
 
 
@@ -159,18 +173,31 @@ $realParameters = Alternatives["vev", "\[Alpha]EM", "sW", "cW", "GF", "\[Alpha]S
 
 
 Param/:Conjugate[Param[x:$realParameters]] := Param[x]
+Param/:Re[Param[x:$realParameters]] := Param[x]
+Param/:Im[Param[x:$realParameters]] := 0
 
 
 Mass/:Conjugate[Mass[a_]]:= Mass[a]
+Mass/:Re[Mass[a_]]:= Mass[a]
+Mass/:Im[Mass[a_]]:= 0
 
 
 Width/:Conjugate[Width[a_]]:= Width[a]
+Width/:Re[Width[a_]]:= Width[a]
+Width/:Im[Width[a_]]:= 0
 
 
 Lifetime/:Conjugate[Lifetime[a_]]:= Lifetime[a]
+Lifetime/:Re[Lifetime[a_]]:= Lifetime[a]
+Lifetime/:Im[Lifetime[a_]]:= 0
 
 
-(* ::Section:: *)
+DecayConstant/:Conjugate[DecayConstant[a_]]:= DecayConstant[a]
+DecayConstant/:Re[DecayConstant[a_]]:= DecayConstant[a]
+DecayConstant/:Im[DecayConstant[a_]]:= 0
+
+
+(* ::Subsection::Closed:: *)
 (*Yukawas*)
 
 
@@ -180,7 +207,7 @@ Yukawa[l:Except[Alternatives@@Join[{"u","d","e"}, {_Pattern, _Blank, _Except, _B
 )
 
 
-(* ::Section:: *)
+(* ::Subsection::Closed:: *)
 (*Formatting*)
 
 
@@ -216,7 +243,7 @@ Format[Param["Wolfenstein\[Rho]bar"],TraditionalForm] := OverBar["\[Rho]"]
 Format[Param["Wolfenstein\[Eta]bar"],TraditionalForm] := OverBar["\[Eta]"]
 
 
-(* ::Section:: *)
+(* ::Subsection::Closed:: *)
 (*ComplexAround*)
 
 
@@ -294,8 +321,99 @@ ComplexAround[rz+I*iz,drz+I*diz]
 ]
 
 
+(* ::Subsection::Closed:: *)
+(*CKM parametrization*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*Extracting Wolfenstein from inputs*)
+
+
+WolfensteinExtract[Vus_,Vcb_,Vub_,\[Gamma]_] := Module[
+	{
+		\[Lambda]\[Lambda], AA, \[Rho]\[Rho], \[Eta]\[Eta]
+	}
+	,
+	If[MatchQ[Vus,0],Return[{0,0,0,0}]];
+	\[Lambda]\[Lambda] = Vus;
+	If[MatchQ[Vcb,0],Return[{\[Lambda]\[Lambda],0,0,0}]];
+	AA = Vcb/Vus^2;
+	\[Rho]\[Rho] = Vub/(Vcb Vus (1+Vus^2/2))Cos[\[Gamma]];
+	\[Eta]\[Eta] = Vub/(Vcb Vus (1+Vus^2/2))Sin[\[Gamma]];
+	Return@{\[Lambda]\[Lambda],AA,\[Rho]\[Rho],\[Eta]\[Eta]}
+];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Define CKM matrix*)
+
+
+CKM::usage= "CKM denotes the CKM matrix, with CKM[[n,m]] given by Vckm[n,m].";
+
+
+Vckm::usage= "Vckm[n,m] denotes the element of the CKM matrix in the \!\(\*SuperscriptBox[\(n\), \(th\)]\) row and \!\(\*SuperscriptBox[\(m\), \(th\)]\) column.";
+
+
+CKM= {
+	{Vckm[1,1], Vckm[1,2], Vckm[1,3]},
+	{Vckm[2,1], Vckm[2,2], Vckm[2,3]},
+	{Vckm[3,1], Vckm[3,2], Vckm[3,3]}
+};
+
+
+(* ::Subsubsection::Closed:: *)
+(*Define rotation matrices for left-handed up and down quarks*)
+
+
+(* By default down alignment is assumed *)
+Vu = CKM
+
+Vd= {
+	{1,0,0},
+	{0,1,0},
+	{0,0,1}
+}
+
+
+(* ::Subsection:: *)
+(*Parameter info*)
+
+
+(* Default info for parameters *)
+Info$default[x_:(_Param| _DecayConstant | _Lifetime | _Mass | _Yukawa | _Vckm)] := "No information available"
+
+
+(* ::Subsection:: *)
+(*Allowed parameter values*)
+
+
+$allowedInputValues = <|
+	Mass          -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default,
+	Width         -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default,
+	Lifetime      -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default,
+	DecayConstant -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default,
+	Param         -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default
+|>
+
+
+InputCheck[input_Rule] := If[!MatchQ[input[[2]], $allowedInputValues[Head[input[[1]]]]],
+	Message[InputCheck::inputvalue, input, input[[1]], $allowedInputValues[Head[input[[1]]]]];
+	Abort[]
+];
+
+
+InputCheck::inputvalue= "Invalid format for input: `1`, the allowed values for `2` must match `3`.";
+
+
 (* ::Section:: *)
-(*Other experimental Inputs*)
+(*Experimental (default) Inputs*)
+
+
+$allowedParams = {
+	"\[Alpha]EM", "GF", 
+	"\[Alpha]S",
+	"|Vus|", "|Vcb|", "|Vub|", "\[Gamma]"(*, "CKM"*)
+};
 
 
 (* ::Subsection:: *)
@@ -306,66 +424,106 @@ ComplexAround[rz+I*iz,drz+I*diz]
 (*List of default parameter values*)
 
 
-\[Alpha]EM$default = Around[127.925,0.016]^-1;
+(*\[Alpha]EM$default = Around[127.925,0.016]^-1;
 GF$default = Around[1.1663787*10^(-5),0.0000006*10^(-5)];
 mZ$default = Around[91.1876,0.0026];
 \[CapitalGamma]Z$default = Around[2.4955,0.0023];
-\[CapitalGamma]W$default = Around[2.085,0.042];
+\[CapitalGamma]W$default = Around[2.085,0.042];*)
+
+
+Param["\[Alpha]EM"][Default] := Around[127.925,0.016]^-1;
+Param["GF"][Default] := Around[1.1663787*10^(-5),0.0000006*10^(-5)];
 
 
 (*\[Lambda]$default  = 0.2813;*)
-mH$default = Around[125.25,0.17]; 
-\[CapitalGamma]H$default = Around[4.1,0]*10^-3;
+(*mH$default = Around[125.25,0.17]; 
+\[CapitalGamma]H$default = Around[4.1,0]*10^-3;*)
 
 
 (* ::Subsection:: *)
 (*QCD input*)
 
 
-\[Alpha]S$default = Around[0.1179,0.0010];
+(*\[Alpha]S$default = Around[0.1179,0.0010];*)
+
+
+Param["\[Alpha]S"][Default] := Around[0.1179,0.0010]
 
 
 (* ::Subsection:: *)
-(*Flavor input*)
+(*Masses*)
+
+
+$allowedMasses = {
+	"e","\[Mu]","\[Tau]",
+	"d","s","b",
+	"u","c","t",
+	"\[Pi]+","\[Pi]0",
+	"K+","K0",
+	"\[Eta]","\[Eta]'",
+	"\[Rho]",
+	"\[Phi]",
+	"D+","D0","Ds",
+	"B0","Bs","Bc",
+	"p","n",
+	"ZBoson",
+	"H"
+};
 
 
 (* ::Subsubsection:: *)
-(*Masses (flavour)*)
-
-
-(* ::Text:: *)
 (*Leptons*)
 
 
-me$default = Around[0.510998928 10^-3,0.00000000015 10^-3]
+(*me$default = Around[0.510998928 10^-3,0.00000000015 10^-3]
 m\[Mu]$default = Around[.105658357,0.0000000023];
-m\[Tau]$default = Around[1.77686,0.00012];
+m\[Tau]$default = Around[1.77686,0.00012];*)
 
 
-(* ::Text:: *)
+Mass["e"][Default] := Around[0.510998928 10^-3,0.00000000015 10^-3]
+Mass["\[Mu]"][Default] := Around[.105658357,0.0000000023]
+Mass["\[Tau]"][Default] := Around[1.77686,0.00012]
+
+
+(* ::Subsubsection:: *)
 (*Quarks (MSbar, PDG)*)
 
 
-(* at 2 GeV *)
+(*(* at 2 GeV *)
 md$default = Around[0.00467,{0.00017,0.00048}];
 ms$default = Around[0.093,{0.0034,0.0086}];
 (* at mb *)
-mb$default = Around[4.18,{0.02,0.03}];
+mb$default = Around[4.18,{0.02,0.03}];*)
 
 
 (* at 2 GeV *)
+Mass["d"][Default] := Around[0.00467,{0.00017,0.00048}];
+Mass["s"][Default] := Around[0.093,{0.0034,0.0086}];
+(* at mb *)
+Mass["b"][Default] := Around[4.18,{0.02,0.03}];
+
+
+(*(* at 2 GeV *)
 mu$default = Around[0.00216,{000026,0.00049}];
 (* at mc *)
 mc$default = Around[1.27,0.02];
 (* at mt *)
-mt$default = Around[162.5,{1.5,2.1}];
+mt$default = Around[162.5,{1.5,2.1}];*)
 
 
-(* ::Text:: *)
+(* at 2 GeV *)
+Mass["u"][Default] := Around[0.00216,{000026,0.00049}];
+(* at mc *)
+Mass["c"][Default] := Around[1.27,0.02];
+(* at mt *)
+Mass["t"][Default] := Around[162.5,{1.5,2.1}];
+
+
+(* ::Subsubsection:: *)
 (*Mesons (PDG)*)
 
 
-(* pions *)
+(*(* pions *)
 m\[Pi]plus$default = Around[0.13957039,0.00000018];
 m\[Pi]0$default = Around[0.1349768,0.0000005];
 (* kaons *)
@@ -385,18 +543,84 @@ mDs$default = Around[1.96835,0.00007];
 (* B *)
 mBd$default = Around[5.27966,0.00012];
 mBs$default = Around[5.36692,0.00010];
-mBc$default = Around[6.27447,0.00032];
+mBc$default = Around[6.27447,0.00032];*)
 
 
-(* ::Text:: *)
-(*Baryons (PDG)*)
-
-
-mp$default = Around[938.27208816,0.00000029]*10^-3;
-mn$default = Around[939.5654205,0.000005]*10^-3;
+(* pions *)
+Mass["\[Pi]+"][Default] := Around[0.13957039,0.00000018];
+Mass["\[Pi]0"][Default] := Around[0.1349768,0.0000005];
+(* kaons *)
+Mass["K+"][Default] := Around[0.493677,0.000016];
+Mass["K0"][Default] := Around[0.497611,0.000013];
+(* \[Eta] *)
+Mass["\[Eta]"][Default] := Around[0.547862,0.000017];
+Mass["\[Eta]'"][Default] := Around[0.95778,0.00006];
+(* \[Rho] *)
+Mass["\[Rho]"][Default] := Around[0.77526,0.00023];
+(* \[Phi] *)
+Mass["\[Phi]"][Default] := Around[1.019461,0.000016];
+(* D *)
+Mass["D+"][Default] := Around[1.86966,0.00005];
+Mass["D0"][Default] := Around[1.86484,0.00005];
+Mass["Ds"][Default] := Around[1.96835,0.00007];
+(* B *)
+Mass["B0"][Default] := Around[5.27966,0.00012];
+Mass["Bs"][Default] := Around[5.36692,0.00010];
+Mass["Bc"][Default] := Around[6.27447,0.00032];
 
 
 (* ::Subsubsection:: *)
+(*Baryons (PDG)*)
+
+
+(*mp$default = Around[938.27208816,0.00000029]*10^-3;
+mn$default = Around[939.5654205,0.000005]*10^-3;*)
+
+
+Mass["p"][Default] := Around[938.27208816,0.00000029]*10^-3;
+Mass["n"][Default] := Around[939.5654205,0.000005]*10^-3;
+
+
+(* ::Subsubsection:: *)
+(*Gauge Bosons*)
+
+
+Mass["ZBoson"][Default] := Around[91.1876,0.0026];
+
+
+(* ::Subsubsection:: *)
+(*Higgs*)
+
+
+Mass["H"][Default] := Around[125.25,0.17]; 
+
+
+(* ::Subsection:: *)
+(*Widths*)
+
+
+$allowedWidths = {
+	"ZBoson", "WBoson",
+	"H"
+}
+
+
+(* ::Subsubsection:: *)
+(*Gauge bosons*)
+
+
+Width["ZBoson"][Default] := Around[2.4955,0.0023];
+Width["WBoson"][Default] := Around[2.085,0.042];
+
+
+(* ::Subsubsection:: *)
+(*Higgs*)
+
+
+Width["H"][Default] := Around[4.1,10^-6]*10^-3;
+
+
+(* ::Subsection:: *)
 (*Lifetimes*)
 
 
@@ -404,60 +628,184 @@ GeVtos=6.582*10^-25;
 stoGeV=GeVtos^-1;
 
 
-(* ::Text:: *)
-(*Leptons*)
-
-
-\[Tau]\[Mu]$default = Around[2.1969811,0.0000022]*10^-6*stoGeV;
-
-
-\[Tau]\[Tau]$default = Around[290.3,0.5]*10^-15*stoGeV;
-
-
-(* ::Text:: *)
-(*Mesons*)
-
-
-\[Tau]Kplus$default = Around[1.2380,0.0020]*10^-8*stoGeV;
-\[Tau]KL$default = Around[5.116,0.021]*10^-8*stoGeV;
-
-
-\[Tau]Bs$default = Around[1.520,0.005]*10^-12*stoGeV;
-
-
-\[Tau]B0$default = Around[1.517,0.004]*10^-12*stoGeV;
-\[Tau]Bplus$default = Around[1.638,0.004]*10^-12*stoGeV;
+$allowedLifetimes = {
+	"\[Mu]","\[Tau]",
+	"K+","KL",
+	"B0","B+","Bs"
+};
 
 
 (* ::Subsubsection:: *)
+(*Leptons*)
+
+
+(*\[Tau]\[Mu]$default = Around[2.1969811,0.0000022]*10^-6*stoGeV;
+\[Tau]\[Tau]$default = Around[290.3,0.5]*10^-15*stoGeV;*)
+
+
+Lifetime["\[Mu]"][Default] := Around[2.1969811,0.0000022]*10^-6*stoGeV;
+Lifetime["\[Tau]"][Default] := Around[290.3,0.5]*10^-15*stoGeV;
+
+
+(* ::Subsubsection:: *)
+(*Mesons*)
+
+
+(*\[Tau]Kplus$default = Around[1.2380,0.0020]*10^-8*stoGeV;
+\[Tau]KL$default = Around[5.116,0.021]*10^-8*stoGeV;*)
+
+
+Lifetime["K+"][Default] := Around[1.2380,0.0020]*10^-8*stoGeV;
+Lifetime["KL"][Default] := Around[5.116,0.021]*10^-8*stoGeV;
+
+
+(*\[Tau]B0$default = Around[1.517,0.004]*10^-12*stoGeV;
+\[Tau]Bplus$default = Around[1.638,0.004]*10^-12*stoGeV;
+\[Tau]Bs$default = Around[1.520,0.005]*10^-12*stoGeV;*)
+
+
+Lifetime["B0"][Default] := Around[1.517,0.004]*10^-12*stoGeV;
+Lifetime["B+"][Default] := Around[1.638,0.004]*10^-12*stoGeV;
+Lifetime["Bs"][Default] := Around[1.520,0.005]*10^-12*stoGeV;
+
+
+(* ::Subsection:: *)
 (*Decay constants*)
 
 
-fKplus$default = Around[0.1557,0.0003];
-Info$default[DecayConstant["K+"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+$allowedDecayConstants = {
+	"K+",
+	"D","Ds",
+	"B0","Bs"
+};
 
 
-fD$default = Around[212.0,0.7]*10^-3;
-Info$default[DecayConstant["D"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+(*fKplus$default = Around[0.1557,0.0003];*)
+DecayConstant["K+"][Default] := Around[0.1557,0.0003];
+Info$default[DecayConstant["K+"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
 
 
-fDs$default = Around[249.9,0.5]*10^-3;
-Info$default[DecayConstant["Ds"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+(*fD$default = Around[212.0,0.7]*10^-3;*)
+DecayConstant["D"][Default] := Around[212.0,0.7]*10^-3;
+Info$default[DecayConstant["D"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
 
 
-fBs$default = Around[230.3,1.3]*10^-3;
-Info$default[DecayConstant["Bs"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+(*fDs$default = Around[249.9,0.5]*10^-3;*)
+DecayConstant["Ds"][Default] := Around[249.9,0.5]*10^-3;
+Info$default[DecayConstant["Ds"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
 
 
-fBd$default = Around[190.0,1.3]*10^-3;
-Info$default[DecayConstant["Bd"]] := "FLAG 2024 average, Nf = 2+1+1, 2411.04268"
+(*fBd$default = Around[190.0,1.3]*10^-3;*)
+DecayConstant["B0"][Default] := Around[190.0,1.3]*10^-3;
+Info$default[DecayConstant["Bd"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
+
+
+(*fBs$default = Around[230.3,1.3]*10^-3;*)
+DecayConstant["Bs"][Default] := Around[230.3,1.3]*10^-3;
+Info$default[DecayConstant["Bs"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
+
+
+(* ::Subsection:: *)
+(*CKM*)
+
+
+(* ::Subsubsection:: *)
+(*Vus*)
+
+
+(*Vus$default := Around[0.2217,0.0009];*)
+
+
+Vusplus$default := Sqrt[ExpValue$default["K+->\[Pi]0e\[Nu]"]/((TheoryExpression["K+->\[Pi]0e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["K+"]->Lifetime["K+"][Current]/.Vckm[1,2]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->Param["GF"][Current])]
+
+
+VusL$default := Sqrt[ExpValue$default["KL->\[Pi]-e\[Nu]"]/((TheoryExpression["KL->\[Pi]-e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["KL"]->Lifetime["KL"][Current]/.Vckm[1,2]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->Param["GF"][Current])]
+
+
+Vus$default := 1/2 (Vusplus$default+VusL$default)
+Param["|Vus|"][Default] := Vus$default
+
+
+(* ::Subsubsection:: *)
+(*Vcb*)
+
+
+(*Vcb$default := Around[0.0404,0.0003];*)
+
+
+Vcb$default := Sqrt[ExpValue$default["B->Dl\[Nu]_iso"]/((TheoryExpression["B->Dl\[Nu]_iso"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["B0"]->Lifetime["B0"][Current]/.Vckm[2,3]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->Param["GF"][Current])]
+Param["|Vcb|"][Default] := Vcb$default
+
+
+(* ::Subsubsection:: *)
+(*Vub*)
+
+
+(*Vub$default := Around[0.0039,0.0002];*)
+
+
+Vub$default := Sqrt[ExpValue$default["B0->\[Pi]-l\[Nu]_high"]/((TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["B0"]->Lifetime["B0"][Current]/.Vckm[1,3]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->Param["GF"][Current])]
+Param["|Vub|"][Default] := Vub$default
+
+
+(* ::Subsubsection:: *)
+(*\[Gamma]*)
+
+
+\[Gamma]CKM$default := Around[68.7,4.2] \[Pi]/180;
+Param["\[Gamma]"][Default] := \[Gamma]CKM$default
+
+
+(* ::Subsubsection:: *)
+(*CKM*)
+
+
+CKM$default := {
+	Vus$default,
+	Vcb$default,
+	Vub$default,
+	\[Gamma]CKM$default
+}
+Param["CKM"][Default] := {
+	Param["|Vus|"][Default],
+	Param["|Vcb|"][Default],
+	Param["|Vub|"][Default],
+	Param["\[Gamma]"][Default]
+}
+
+
+(*Param["|Vus|"] = Around[0.2217,0.0009];
+Param["|Vcb|"] = Around[0.0404,0.0003];
+Param["|Vub|"] = Around[0.0039,0.0002];
+Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;*)
+
+
+(* ::Subsection:: *)
+(*List of inputs*)
+
+
+$inputs = Join[
+	Table[Param[i],{i,$allowedParams}],
+	Table[Mass[i],{i,$allowedMasses}],
+	Table[Width[i],{i,$allowedWidths}],
+	Table[Lifetime[i],{i,$allowedLifetimes}],
+	Table[DecayConstant[i],{i,$allowedDecayConstants}]
+];
+
+
+InputParameters[] := $inputs;
+InputParameters[x_] := Cases[$inputs,_x]
+
+
+(* ::Section:: *)
+(*Processing the inputs*)
 
 
 (* ::Subsection:: *)
 (*Save current values of inputs [separate from default values]*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Gauge inputs*)
 
 
@@ -474,7 +822,7 @@ mH$current = mH$default;
 \[Alpha]S$current = \[Alpha]S$default;
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Masses (flavour)*)
 
 
@@ -515,7 +863,7 @@ mp$current = mp$default;
 mn$current = mn$default;
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Lifetimes*)
 
 
@@ -531,7 +879,7 @@ mn$current = mn$default;
 \[Tau]Bplus$current = \[Tau]Bplus$default;
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Decay Constants*)
 
 
@@ -550,142 +898,8 @@ fD$current = fD$default;
 fKplus$current = fKplus$default;
 
 
-(* ::Section:: *)
-(*CKM stuff*)
-
-
-(* ::Subsection:: *)
-(*Vus default*)
-
-
-(*Vus$default := Around[0.2217,0.0009];*)
-
-
-Vusplus$default := Sqrt[ExpValue$default["K+->\[Pi]0e\[Nu]"]/((TheoryExpression["K+->\[Pi]0e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["K+"]->\[Tau]Kplus$current/.Vckm[1,2]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
-
-
-VusL$default := Sqrt[ExpValue$default["KL->\[Pi]-e\[Nu]"]/((TheoryExpression["KL->\[Pi]-e\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["KL"]->\[Tau]KL$current/.Vckm[1,2]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
-
-
-Vus$default := 1/2 (Vusplus$default+VusL$default)
-
-
-(* ::Subsection:: *)
-(*Vcb default*)
-
-
-(*Vcb$default := Around[0.0404,0.0003];*)
-
-
-Vcb$default := Sqrt[ExpValue$default["B->Dl\[Nu]_iso"]/((TheoryExpression["B->Dl\[Nu]_iso"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Vckm[2,3]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
-
-
-(* ::Subsection:: *)
-(*Vub default*)
-
-
-(*Vub$default := Around[0.0039,0.0002];*)
-
-
-Vub$default := Sqrt[ExpValue$default["B0->\[Pi]-l\[Nu]_high"]/((TheoryExpression["B0->\[Pi]-l\[Nu]_high"]/.a_WCL->SMValue[a,TreeOnly->True]/.SubstitutePsi/.Lifetime["B0"]->\[Tau]B0$current/.Vckm[1,3]->1//ParamsAsInputs//FullSimplify)/.Param["GF"]->GF$current)]
-
-
-(* ::Subsection:: *)
-(*\[Gamma] default*)
-
-
-\[Gamma]CKM$default := Around[68.7,4.2] \[Pi]/180;
-
-
-(* ::Subsection:: *)
-(*CKM default*)
-
-
-CKM$default := {
-	Vus$default,
-	Vcb$default,
-	Vub$default,
-	\[Gamma]CKM$default
-}
-
-
-(*Param["|Vus|"] = Around[0.2217,0.0009];
-Param["|Vcb|"] = Around[0.0404,0.0003];
-Param["|Vub|"] = Around[0.0039,0.0002];
-Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;*)
-
-
-(* ::Subsection:: *)
-(*Extracting Wolfenstein from inputs*)
-
-
-WolfensteinExtract[Vus_,Vcb_,Vub_,\[Gamma]_] := Module[
-	{
-		\[Lambda]\[Lambda], AA, \[Rho]\[Rho], \[Eta]\[Eta]
-	}
-	,
-	If[MatchQ[Vus,0],Return[{0,0,0,0}]];
-	\[Lambda]\[Lambda] = Vus;
-	If[MatchQ[Vcb,0],Return[{\[Lambda]\[Lambda],0,0,0}]];
-	AA = Vcb/Vus^2;
-	\[Rho]\[Rho] = Vub/(Vcb Vus (1+Vus^2/2))Cos[\[Gamma]];
-	\[Eta]\[Eta] = Vub/(Vcb Vus (1+Vus^2/2))Sin[\[Gamma]];
-	Return@{\[Lambda]\[Lambda],AA,\[Rho]\[Rho],\[Eta]\[Eta]}
-];
-
-
-(* ::Subsection:: *)
-(*Compute default Wolfenstein parameters*)
-
-
-(*\[Lambda]Wolfenstein$default    = Param["|Vus|"];
-AWolfenstein$default    = Param["|Vcb|"]/Param["|Vus|"]^2;
-\[Rho]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Cos[Param["\[Gamma]CKM"]];
-\[Eta]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Sin[Param["\[Gamma]CKM"]];*)
-
-(*{\[Lambda]Wolfenstein$default,AWolfenstein$default,\[Rho]BarWolfenstein$default,\[Eta]BarWolfenstein$default} := WolfensteinExtract[Vus$default,Vcb$default,Vub$default,\[Gamma]CKM$default];
-
-Wolfenstein$default := {
-	\[Lambda]Wolfenstein$default,
-	AWolfenstein$default,
-	\[Rho]BarWolfenstein$default,
-	\[Eta]BarWolfenstein$default
-}*)
-
-
-(* ::Subsubsection:: *)
-(*Define CKM matrix*)
-
-
-CKM::usage= "CKM denotes the CKM matrix, with CKM[[n,m]] given by Vckm[n,m].";
-
-
-Vckm::usage= "Vckm[n,m] denotes the element of the CKM matrix in the \!\(\*SuperscriptBox[\(n\), \(th\)]\) row and \!\(\*SuperscriptBox[\(m\), \(th\)]\) column.";
-
-
-CKM= {
-	{Vckm[1,1], Vckm[1,2], Vckm[1,3]},
-	{Vckm[2,1], Vckm[2,2], Vckm[2,3]},
-	{Vckm[3,1], Vckm[3,2], Vckm[3,3]}
-};
-
-
-(* ::Subsubsection:: *)
-(*Define rotation matrices for left-handed up and down quarks*)
-
-
-(* By default down alignment is assumed *)
-Vu = CKM
-
-Vd= {
-	{1,0,0},
-	{0,1,0},
-	{0,0,1}
-}
-
-
-(* ::Subsubsection:: *)
-(*Set current CKM*)
+(* ::Subsubsection::Closed:: *)
+(*CKM*)
 
 
 Vus$current  = Vus$default;
@@ -713,12 +927,27 @@ Wolfenstein$current = {
 }*)
 
 
-(* ::Section:: *)
-(*Parameter info*)
+(* ::Section::Closed:: *)
+(*CKM stuff (OLD)*)
 
 
-(* Default info for parameters *)
-Info[x_:(_Param| _DecayConstant | _Lifetime | _Mass | _Yukawa | _Vckm)] := "No information available"
+(* ::Subsection:: *)
+(*Compute default Wolfenstein parameters (OLD)*)
+
+
+(*\[Lambda]Wolfenstein$default    = Param["|Vus|"];
+AWolfenstein$default    = Param["|Vcb|"]/Param["|Vus|"]^2;
+\[Rho]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Cos[Param["\[Gamma]CKM"]];
+\[Eta]BarWolfenstein$default = Param["|Vub|"]/(Param["|Vcb|"] Param["|Vus|"](1+Param["|Vus|"]^2/2)) Sin[Param["\[Gamma]CKM"]];*)
+
+(*{\[Lambda]Wolfenstein$default,AWolfenstein$default,\[Rho]BarWolfenstein$default,\[Eta]BarWolfenstein$default} := WolfensteinExtract[Vus$default,Vcb$default,Vub$default,\[Gamma]CKM$default];
+
+Wolfenstein$default := {
+	\[Lambda]Wolfenstein$default,
+	AWolfenstein$default,
+	\[Rho]BarWolfenstein$default,
+	\[Eta]BarWolfenstein$default
+}*)
 
 
 (* ::Section::Closed:: *)
@@ -811,15 +1040,15 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3})] := (Message[DefineBasisAlignment::invalidarg,arg/.GetParameters[]];Abort[])
 
 
-(* ::Section:: *)
-(*DefineParameters*)
+(* ::Section::Closed:: *)
+(*DefineParameters - OLD*)
 
 
-DefineParameters::usage= "DefineParameters[] defines all SM parameters. The electroweak input scheme \"\[Alpha]EM\", \"GF\", \"mZ\" is used, whereas for the CKM the input is given by the Wolfentein parameters \[Lambda], A, \!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\), \!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\). The allowed Options are \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"\[Lambda]\", \"mH\", \"\[Alpha]S\", \"me\", \"m\[Mu]\", \"m\[Tau]\", \"md\", \"ms\", \"mb\", \"mu\", \"mc\", \"mt\", \"m\[Pi]+\", \"m\[Pi]0\", \"mK+\", \"mK0\", \"mD+\", \"mD0\", \"mDs\", \"mBd\", \"mBs\", \"mBc\", and \"Wolfenstein\", where, e.g., the latter should be given as \"Wolfenstein\" \[Rule] {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}. All other OptionValues must be given as numbers. The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options. The masses and widths of BSM mediators can be modified via the Mediators Option. For example Mediator \[Rule] {\"U1\"\[Rule]{2000,20}} would change the mass of a \!\(\*SubscriptBox[\(U\), \(1\)]\) leptoquark to 2 TeV and its width to 20 GeV. If some parameters are not specified their current value is maintained. To obtain the current values of the parameters the routine GetParameters[] can be used.
-DefineParameters[Default] resets all parameters to the HighPT default values. For BSM mediator masses and widths this corresponds to the value given in the last call of InitializeModel.";
+(*DefineParameters::usage= "DefineParameters[] defines all SM parameters. The electroweak input scheme \"\[Alpha]EM\", \"GF\", \"mZ\" is used, whereas for the CKM the input is given by the Wolfentein parameters \[Lambda], A, \!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\), \!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\). The allowed Options are \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"\[Lambda]\", \"mH\", \"\[Alpha]S\", \"me\", \"m\[Mu]\", \"m\[Tau]\", \"md\", \"ms\", \"mb\", \"mu\", \"mc\", \"mt\", \"m\[Pi]+\", \"m\[Pi]0\", \"mK+\", \"mK0\", \"mD+\", \"mD0\", \"mDs\", \"mBd\", \"mBs\", \"mBc\", and \"Wolfenstein\", where, e.g., the latter should be given as \"Wolfenstein\" \[Rule] {\[Lambda],A,\!\(\*OverscriptBox[\(\[Rho]\), \(_\)]\),\!\(\*OverscriptBox[\(\[Eta]\), \(_\)]\)}. All other OptionValues must be given as numbers. The input scheme uses the parameters \"\[Alpha]EM\", \"GF\", \"mZ\", \"\[CapitalGamma]Z\", \"\[CapitalGamma]W\", \"Wolfenstein\" which can be specified via Options. The masses and widths of BSM mediators can be modified via the Mediators Option. For example Mediator \[Rule] {\"U1\"\[Rule]{2000,20}} would change the mass of a \!\(\*SubscriptBox[\(U\), \(1\)]\) leptoquark to 2 TeV and its width to 20 GeV. If some parameters are not specified their current value is maintained. To obtain the current values of the parameters the routine GetParameters[] can be used.
+DefineParameters[Default] resets all parameters to the HighPT default values. For BSM mediator masses and widths this corresponds to the value given in the last call of InitializeModel.";*)
 
 
-(* keep current values if not specified *)
+(*(* keep current values if not specified *)
 Options[DefineParameters]= {
 	"\[Alpha]EM"         :> \[Alpha]EM$current,
 	"GF"          :> GF$current,
@@ -875,10 +1104,10 @@ Options[DefineParameters]= {
 	
 	"fK+"         :> fKplus$current,
 	"fBs"         :> fBs$current
-};
+};*)
 
 
-(* reset all parameters to their default values *)
+(*(* reset all parameters to their default values *)
 DefineParameters[Default] := DefineParameters[
 	"\[Alpha]EM"         -> \[Alpha]EM$default,
 	"GF"          -> GF$default,
@@ -934,10 +1163,10 @@ DefineParameters[Default] := DefineParameters[
 	
 	"fK+"         :> fKplus$default,
 	"fBs"         :> fBs$default
-]
+]*)
 
 
-DefineParameters[OptionsPattern[]] := Module[
+(*DefineParameters[OptionsPattern[]] := Module[
 	{
 		(* input *)
 		$\[Alpha]EM         = OptionValue["\[Alpha]EM"]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]],
@@ -1270,10 +1499,179 @@ DefineParameters[OptionsPattern[]] := Module[
 	|>,
 	Association[$ckmrep]
 	];
+]*)
+
+
+(*ExperimentalParameters= <||>;*)
+
+
+(*(* initialize the parameters with default values *)
+DefineParameters[Default]*)
+
+
+(* ::Section:: *)
+(*DefineParameters*)
+
+
+(* keep current values if not specified *)
+Options[DefineParameters]= {
+	Mediators     -> {}
+};
+
+
+$derivedParameters = Join[
+	{
+		Param["g1"], Param["g2"], Param["g3"],
+		Param["vev"],
+		Param["sW"], Param["cW"],
+		Param["gZ"],
+		Mass["WBoson"],
+		Param["\[Lambda]"]
+	},
+	Flatten[Table[Yukawa[lab,{i,j}],{lab,{"u","d","e"}},{i,3},{j,3}]],
+	Flatten[Table[Vckm[i,j],{i,3},{j,3}]]
+];
+
+
+ParameterList[] := Join[$inputs, $derivedParameters]
+ParameterList[x_] := Cases[Join[$inputs, $derivedParameters], _x]
+
+
+DefineParameters[Default] := DefineParameters[
+	Table[ii -> Default, {ii, $inputs}]/.List->Sequence,
+	Mediators     :> $defaultMediatorProperties
 ]
 
 
-ExperimentalParameters= <||>;
+DefineParameters[x__Rule, OptionsPattern[]] := Module[
+	{
+		(* input *)
+		$ruleslist = List[x]/.Around[i_,{j_,k_}]->Around[i,Max[j,k]], (* symmetrize errors *)
+		$params = List[x][[;;,1]],
+		
+		(* output *)
+		$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar, $\[Rho], $\[Eta], $ckmrep,
+		$Yu, $Yd, $Ye,
+		
+		$mediator         = OptionValue[Mediators]/.Association->List,
+		mediators$current = GetMediators[]
+	}
+	,
+	
+	(* OPTION CHECKS *)
+	(* check that the specified parameters are allowed *)
+	If[!SubsetQ[$inputs, $params], Print["The following parameters are not allowed: ", Complement[$params,$inputs]/.List->Sequence];Abort[]];
+	
+	(* check that the inputs are in the right format *)
+	InputCheck/@$ruleslist;
+
+	(* check that all mediator labels are known *)
+	Do[
+		If[!MatchQ[med, Alternatives@@Keys[$MediatorList]],
+			Message[InitializeModel::undefmed, med, Keys[$MediatorList]];
+			Abort[]
+		]
+		,
+		{med, Keys@$mediator}
+	];
+	
+	(* save current values of parameters or change to default value if required *)
+	Table[
+		i[[1]][Current] = If[MatchQ[i[[2]],Default], i[[1]][Default], i[[2]]];
+		Info[i[[1]]] = If[MatchQ[i[[2]],Default], Info$default[i[[1]]], "The parameter has been changed by the user."];
+		, 
+		{i,$ruleslist}
+	];
+	
+	Param["CKM", Current] := {
+		Param["|Vus|", Current],
+		Param["|Vcb|", Current],
+		Param["|Vub|", Current],
+		Param["\[Gamma]", Current]
+	};
+	
+	{$\[Lambda], $A, $\[Rho]Bar, $\[Eta]Bar} = WolfensteinExtract[Param["|Vus|"][Current], Param["|Vcb|"][Current], Param["|Vub|"][Current], Param["\[Gamma]"][Current]];
+	
+	
+	(* set the non-bared Wolfentein parameters *)
+	$\[Rho] = $\[Rho]Bar/(1-$\[Lambda]^2/2);
+	$\[Eta] = $\[Eta]Bar/(1-$\[Lambda]^2/2);
+	
+	(* compute the non-input parameters *)
+	Mass["WBoson"][Current] = Sqrt[Mass["ZBoson"][Current]^2/2.+Sqrt[Mass["ZBoson"][Current]^4/4.-(Param["\[Alpha]EM"][Current]*\[Pi]*Mass["ZBoson"][Current]^2)/(Param["GF"][Current]*Sqrt[2])]];
+	Param["sW"][Current] = Sqrt[1. - Mass["WBoson"][Current]^2/Mass["ZBoson"][Current]^2];
+	Param["cW"][Current] = Sqrt[1. - Param["sW"][Current]^2];
+	Param["vev"][Current] = (Mass["WBoson"][Current]*Param["sW"][Current])/Sqrt[\[Pi]*Param["\[Alpha]EM"][Current]];
+	Param["g1"][Current] = Sqrt[4\[Pi] Param["\[Alpha]EM"][Current]]/Sqrt[1-Param["sW"][Current]^2];
+	Param["g2"][Current] = Sqrt[4\[Pi] Param["\[Alpha]EM"][Current]]/Param["sW"][Current];
+	Param["g3"][Current] = Sqrt[4\[Pi] Param["\[Alpha]S"][Current]];
+	Param["gZ"][Current] = Param["g2"][Current]/Param["cW"][Current];
+	Param["\[Lambda]"][Current] = Mass["H"][Current]^2/Param["vev"][Current]^2;
+	
+	$ckmrep=WolfensteinParametrization[{$\[Lambda],$A,$\[Rho],$\[Eta]}/.Around->ComplexAround/.List->Sequence](*/.ComplexAround[a_?Internal`RealValuedNumericQ,da_?Internal`RealValuedNumericQ]:>Around[a,da]//Chop*);
+	Table[
+		Vckm[i,j][Current] = (Vckm[i,j]/.$ckmrep),
+		{i,3},{j,3}
+	];
+	
+	$Yu = ((Sqrt[2]/Param["vev"][Current]*DiagonalMatrix[{Mass["u"][Current], Mass["c"][Current], Mass["t"][Current]}]) . Vu)/.$ckmrep;
+	Table[
+		Yukawa["u",{i,j}][Current] = $Yu[[i,j]],
+		{i,3},{j,3}
+	];
+	
+	$Yd = ((Sqrt[2]/Param["vev"][Current]*DiagonalMatrix[{Mass["d"][Current], Mass["s"][Current], Mass["b"][Current]}]) . Vd)/.$ckmrep;
+	Table[
+		Yukawa["d",{i,j}][Current] = $Yd[[i,j]],
+		{i,3},{j,3}
+	];
+	
+	$Ye = Sqrt[2]/Param["vev"][Current]*DiagonalMatrix[{Mass["e"][Current], Mass["\[Mu]"][Current], Mass["\[Tau]"][Current]}];
+	Table[
+		Yukawa["e",{i,j}][Current] = $Ye[[i,j]],
+		{i,3},{j,3}
+	];
+	
+	(* BSM mediators *)
+	If[$mediator===Default, $mediator=$defaultMediatorProperties];
+	(* built current BSM mediator assoc *)
+	mediators$current = Association@Table[
+		med -> {mediators$current[med][Mass],mediators$current[med][Width]}
+		,
+		{med, Keys@mediators$current}
+	];
+	
+	(* overwrite with new definitions *)
+	AssociateTo[mediators$current, $mediator];
+	AssociateTo[mediators$current, {"ZBoson"->{Mass["ZBoson"][Current],Width["ZBoson"][Current]}, "WBoson"->{Mass["WBoson"][Current],Width["WBoson"][Current]}}];
+	
+	(* check mass and width *)
+	Do[
+		If[!MatchQ[First[mediators$current[mediator]], $AllowedMasses],
+			Message[InitializeModel::undefmass, mediator, First[mediators$current[mediator]], List@@$AllowedMasses];
+		];
+		(* allow for all widths *)
+		(*If[!MatchQ[Last[mediators$current[mediator]], 0],
+			Message[InitializeModel::undefwidth];
+		]*)
+		,
+		{mediator, Keys@KeyDrop[mediators$current,{"Photon","ZBoson","WBoson"}]}
+	];	
+	
+	(* Modify all masses and widths *)
+	ModifyMediator[Mediators->mediators$current];
+	
+	(* Create the appropriate substitution rule *)
+	ExperimentalParameters = Association[
+		Table[
+			i -> Evaluate[i[Current]],
+			{i,Join[$inputs,$derivedParameters]}
+		]
+	];
+]
+
+
+ExperimentalParameters = <||>;
 
 
 (* initialize the parameters with default values *)
@@ -1288,18 +1686,19 @@ GetParameters::usage= "GetParameters[] returns an Association of all (B)SM param
 
 
 Options[GetParameters]={
-	Errors -> False
+	Errors -> False,
+	Without -> {}
 };
 
 
 (* returns the current value of the (B)SM parameters *)
 GetParameters[OptionsPattern[]]:= If[MatchQ[OptionValue[Errors],True],
-	Join[ExperimentalParameters, ReplaceMassWidth[]],
-	Join[ExperimentalParameters, ReplaceMassWidth[]]/.Around[a_,b_]->a/.ComplexAround[a_,da_]->a
+	KeyDrop[Join[ExperimentalParameters, ReplaceMassWidth[]],OptionValue[Without]],
+	KeyDrop[Join[ExperimentalParameters, ReplaceMassWidth[]],OptionValue[Without]]/.Around[a_,b_]->a/.ComplexAround[a_,da_]->a
 	]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Charge definitions*)
 
 
@@ -1313,7 +1712,7 @@ Charge[u|_u] = +2/3;
 Charge[d|_d] = -1/3;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*weak isospin 3rd-component*)
 
 

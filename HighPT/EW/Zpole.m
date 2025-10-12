@@ -27,9 +27,6 @@ Package["HighPT`"]
 (*Internal*)
 
 
-PackageScope["FCCZpoleProjections"]
-
-
 (* ::Chapter:: *)
 (*Private:*)
 

@@ -590,8 +590,8 @@ SelectTerms::usage= "SelectTerms[\[ScriptA]\[ScriptR]\[ScriptG], \[ScriptT]\[Scr
 SelectTerms::conj="Conjugated coefficient given `1`. Probably the Hermitian conjugated version of `2` was specified. Keeping all instances of `2`.";
 
 
-SelectTerms[arg_, termsIN:{(_FF | _WC | _Coupling | Conjugate[_FF] | Conjugate[_WC] | Conjugate[_Coupling])..}]:= Module[
-	{ruleWC, ruleFF, ruleC, conj, terms=termsIN/.Conjugate[x_]:>x}
+SelectTerms[arg_, termsIN:{(_FF | _WC | _WCL | _Coupling | Conjugate[_FF] | Conjugate[_WC] | Conjugate[_WCL]| Conjugate[_Coupling])..}]:= Module[
+	{ruleWC, ruleWCL, ruleFF, ruleC, conj, terms=termsIN/.Conjugate[x_]:>x}
 	,
 	(* check for conjugated coeffs *)
 	conj = Cases[termsIN, _Conjugate, All];
@@ -604,9 +604,10 @@ SelectTerms[arg_, termsIN:{(_FF | _WC | _Coupling | Conjugate[_FF] | Conjugate[_
 	(* create replacement rule *)
 	ruleFF = {Except[Alternatives@@Cases[terms, _FF, All], _FF] :> 0};
 	ruleWC = {Except[Alternatives@@Cases[terms, _WC, All], _WC] :> 0};
+	ruleWCL = {Except[Alternatives@@Cases[terms, _WCL, All], _WCL] :> 0};
 	ruleC = {Except[Alternatives@@Cases[terms, _Coupling, All], _Coupling] :> 0};
 
-	Return[(arg/.ruleFF/.ruleWC/.ruleC)/.{0.->0,Complex[0.,0.]->0}]
+	Return[(arg/.ruleFF/.ruleWC/.ruleWCL/.ruleC)/.{0.->0,Complex[0.,0.]->0}]
 ]
 
 

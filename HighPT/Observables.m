@@ -46,6 +46,9 @@ PackageExport["RemoveObservable"]
 PackageExport["Info"]
 
 
+PackageExport["TheoryExpression"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -63,8 +66,8 @@ PackageScope["SMPrediction$default"]
 PackageScope["SMExpression"] (* Probably outdated, check *)
 
 
-PackageScope["TheoryExpression"]
 PackageScope["NPFromTheoryExpression"]
+PackageScope["CheckTheoryExpression"]
 
 
 PackageScope["NPContribution"]
@@ -199,6 +202,23 @@ $ObsOptionValueAssociation= <|
 |>;
 
 
+CheckTheoryExpression::undefinedparameters = "The following parameters are unknown: `1`"
+CheckTheoryExpression::undefinedsymbols = "The following symbols are undefined: `1`"
+
+
+CheckTheoryExpression[expr_] := Module[
+	{
+	params, coeffs
+	}
+	,
+	params = Cases[expr, _Param | _Mass | _Width | _DecayConstant | _Lifetime | _Vckm | _Yukawa, All]//DeleteDuplicates;
+	If[!MatchQ[params,{}] && !SubsetQ[Keys@GetParameters[],params],Message[CheckTheoryExpression::undefinedparameters, Complement[params,Keys@GetParameters[]]];Abort[]];
+	coeffs = Variables[expr/.GetParameters[]/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
+	If[!MatchQ[coeffs,{}] && !SubsetQ[{WCL,WC},(Head/@coeffs)//DeleteDuplicates],Message[CheckTheoryExpression::undefinedsymbols, DeleteCases[coeffs, _WC | _WCL]];Abort[]];
+	Return[True]
+]
+
+
 (* ::Section:: *)
 (*Change an observable (also used to initialize)*)
 
@@ -290,6 +310,7 @@ Options[NewObservable] = {
 	"Exp"   -> "TBD",
 	"SM"    -> "TBD",
 	"NP"    -> "TBD",
+	"TheoryExpression" -> "TBD",
 	"Scale" -> "TBD"
 	};
 
@@ -303,6 +324,7 @@ and \"Scale\" a number."
 
 
 NewObservable::invalidinput = "Input not valid. \"Exp\" and \"SM\" must be Around[] objects, \"NP\" function of WC and WCL only, \"Scale\" a number"
+NewObservable::incompatibleinput = "New Physics contibution and theory expression are incompatible."
 
 
 NewObservable::existing = "The observable `1` already exists in a default implementation. Please choose another name."
@@ -313,6 +335,7 @@ NewObservable[name_String,OptionsPattern[]] := Module[
 	exp = OptionValue["Exp"],
 	sm = OptionValue["SM"],
 	np = OptionValue["NP"],
+	thexp = OptionValue["TheoryExpression"],
 	scale = OptionValue["Scale"],
 	var
 	}
@@ -320,21 +343,38 @@ NewObservable[name_String,OptionsPattern[]] := Module[
 	
 	(* check if observable is already existing (in the custom list) *)
 	If[MemberQ[Complement[ObservableList[]//Flatten,ObservableList["custom"]],name],
-		Message[AddFlavorObservable::existing,name];Abort[]
+		Message[NewObservable::existing,name];Abort[]
 	];
 	
 	(* check if some required input is missing *)
-	Table[If[i == "TBD",Message[AddFlavorObservable::invalidinput];Abort[]],{i,{exp,sm,np,scale}}];
+	Table[If[i == "TBD",Message[NewObservable::invalidinput];Abort[]],{i,{exp,sm,scale}}];
+	If[MatchQ[np,"TBD"] && MatchQ[thexp,"TBD"],Message[NewObservable::invalidinput];Abort[]];
 	
 	(* check if inputs are in correct form *)
 	ObsOptionCheck["Exp",exp];
 	ObsOptionCheck["SM",sm];
 	ObsOptionCheck["Scale",scale];
-	var = Variables[np/.GetParameters[]/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
+	
+	Switch[np,
+		"TBD",
+			CheckTheoryExpression[thexp];
+			TheoryExpression[name]=thexp;
+			np=NPFromTheoryExpression[name];,
+		_,
+		Switch[thexp,
+			"TBD",
+			Null,
+			_,
+			TheoryExpression[name]=thexp;
+			If[Simplify[NPFromTheoryExpression[name]-np]!=0,Message[NewObservable::incompatibleinput];TheoryExpression[name]=.;Abort[]]
+		]
+	];
+	
+	(*var = Variables[np/.GetParameters[]/.Re->Identity/.Abs->Identity/.Conjugate[a_]->a];
 	If[SubsetQ[{WCL,WC},(Head/@var)//DeleteDuplicates],
 		NPContribution[name] = np,
 		Message[AddFlavorObservable::invalidinput];Abort[]
-	];
+	];*)
 	
 	(* set everything *)
 	If[NumericQ[exp],
