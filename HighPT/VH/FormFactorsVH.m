@@ -19,8 +19,12 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Exported*)
+
+
+(* FFs notation for external use *)
+PackageExport["ff"]
 
 
 (* This has to be made PRIVATE later -- here only for testing implementation *)
@@ -28,26 +32,34 @@ PackageExport["FormFactorVH"]
 PackageExport["SpinSumAmplitudeSqVH"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Internal*)
+
+
+PackageScope["ExpandFormFactorsVH"]
+PackageScope["ReplaceChannelSumsVH"]
+PackageScope["SChannelSumVH"]
 
 
 (* ::Chapter:: *)
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*FormFactorVH*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Usage*)
+
+
+ff::usage="ff[{Lorentz, index}, type, s, t, X, {\!\(\*SubscriptBox[\(q\), \(1\)]\)[i],\!\(\*SubscriptBox[\(q\), \(2\)]\)[j]}]] denotes the form-factor for operators of the given type \[Element] {Scalar, Vector, Tensor}. For each possible lorentz structures there can be more than one form-factor which is denoted by \[IAcute]ndex. The form factor depends on the partonic Mandelstam variables s and t. The chirality in the lepton current is X \[Element] {Left, Right} and in the quark current it is Y \[Element] {Left, Right}. The flavor indices are i, j for the quarks.";
 
 
 FormFactorVH::usage="FormFactorVH[{type, index}, s,t, X, {\!\(\*SubscriptBox[\(q\), \(1\)]\)[i],\!\(\*SubscriptBox[\(q\), \(2\)]\)[j]}]] denotes the form-factor for operators of the given type \[Element] {Scalar, Vector, Tensor}. For each possible lorentz structures there can be more than one form-factor which is denoted by \[IAcute]ndex. The form factor depends on the partonic Mandelstam variables s and t. The chirality in the lepton current is X \[Element] {Left, Right} and in the quark current it is Y \[Element] {Left, Right}. The flavor indices are i, j for the quarks.";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Errors*)
 
 
@@ -99,7 +111,7 @@ FormFactorVH::unknownquarkindices = "The fifth element must denoted the quark in
 FormFactorVH[{_, _}, _, _, _, x:Except[{_, _}]] := (Message[FormFactorVH::unknownquarkindices]; Abort[]);
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Formatting*)
 
 
@@ -107,25 +119,29 @@ MakeBoxes[FormFactorVH[{type_, index_}, s_,t_, X_,{i_,j_}], TraditionalForm] := 
 	RowBox[{"[",SubsuperscriptBox["f", RowBox[{MakeBoxes[type,TraditionalForm], ", ", MakeBoxes[index, TraditionalForm]}], RowBox[{" ",MakeBoxes[X,TraditionalForm]}]],"(",ToString[s],",",ToString[t],")","]"}], RowBox[{ToString[i],ToString[j]}]]
 
 
-(* ::Section:: *)
+MakeBoxes[ff[{lorentz_, index_}, type_, X_,{i_,j_}], TraditionalForm] := SubscriptBox[
+	RowBox[{"[",SubsuperscriptBox["f", RowBox[{MakeBoxes[lorentz, TraditionalForm], ", ", MakeBoxes[index, TraditionalForm],  MakeBoxes[type]}], RowBox[{" ",MakeBoxes[X,TraditionalForm]}]], "]"}], RowBox[{ToString[i],ToString[j]}]]
+
+
+(* ::Section::Closed:: *)
 (*FormFactorVectorVH*)
 
 
 FormFactorVectorVH::usage= "FormFactorVectorVH[s, t, X, {i, j}] returns the vector of all FormFactorsVH with: the partonic Mandestam variables s and t; the chirality X in the quark current and the quark flavor indices i,j.";
 
 
-FormFactorVectorVH[s_, t_, X_, {i_, j_}] := Transpose[
+FormFactorVectorVH[s_, t_, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Transpose[
 	{{
-		FormFactorVH[{Vector, 1}, s, t, X, {i, j}],
-		FormFactorVH[{Vector, 2}, s, t, X, {i, j}],
-		FormFactorVH[{Scalar, 1}, s, t, X, {i, j}],
-		FormFactorVH[{Scalar, 2}, s, t, X, {i, j}],
-		FormFactorVH[{Tensor, 1}, s, t, X, {i, j}]
+		FormFactorVH[{Vector, 1}, s, t, X, {\[Psi]1[i], \[Psi]2[j]}],
+		FormFactorVH[{Vector, 2}, s, t, X, {\[Psi]1[i], \[Psi]2[j]}],
+		FormFactorVH[{Scalar, 1}, s, t, X, {\[Psi]1[i], \[Psi]2[j]}],
+		FormFactorVH[{Scalar, 2}, s, t, X, {\[Psi]1[i], \[Psi]2[j]}],
+		FormFactorVH[{Tensor, 1}, s, t, X, {\[Psi]1[i], \[Psi]2[j]}]
 	}}
 ];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*InterferenceMatrixVH*)
 
 
@@ -170,13 +186,13 @@ MST23[s_, t_, mV_]:=0
 MST33[s_, t_, mV_]:=0
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Spin-summed amplitude square*)
 
 
 (* Matrix multiplication between the form-factors and interference matrix *)
-ComputeIntPatternVH[s_, t_, mV_, X_, {i_, j_}] := Module[{output, ffVector},
-	ffVector = FormFactorVectorVH[s, t, X, {i, j}];
+ComputeIntPatternVH[s_, t_, mV_, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{output, ffVector},
+	ffVector = FormFactorVectorVH[s, t, X, {\[Psi]1[i], \[Psi]2[j]}];
 	output = ConjugateTranspose@ffVector . InterferenceMatrixVH[s, t, mV] . ffVector;
 	output = First@Flatten[output];
 	Return[output]
@@ -195,3 +211,123 @@ SpinSumAmplitudeSqVH[s_, t_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{mV, totalA
 	(* differential partonic cross-section *)
 	Return[1/(12 Param["vev"]^2) totalAmpSq]
 ];
+
+
+(* ::Section:: *)
+(*ExpandFormFactors*)
+
+
+(* ::Subsection:: *)
+(*Split FormFactor into regular and singular part*)
+
+
+RegularFFVH::usage = "RegularFFVH denotes the entire regular part of a form-factor."
+
+
+SingularFFVH::usage = "SingularFFVH denotes the entire singular part of a form-factor."
+
+
+SplitFFVH::usage = "SplitFF returns the rule that splits the FormFactorVH into a RegularFFVH and SingularFFVH."
+
+
+SplitFFVH = FormFactorVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> RegularFFVH[{lorentz, index}, s, t, X, {i, j}] + SingularFFVH[{lorentz, index}, s, t, X, {i, j}];
+
+
+(* ::Subsection::Closed:: *)
+(*Expand regular form factors*)
+
+
+Options[ExpandRegularFFVH] = {OperatorDimension -> GetOperatorDimension[]};
+
+
+ExpandRegularFFVH::dimension8 = "Expansion up to dimension-8 not available for VH production mode.";
+
+
+(* Expands the regular form-factors up to dimension d = 6. *)
+ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
+	(* d=8 not available at the moment *)
+	If[OptionValue[OperatorDimension] === 8,
+		Message[ExpandRegularFFVH::dimension8];
+		Abort[]
+	];
+	
+	If[$RunMode === "SMEFT",
+		rule = {RegularFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> ff[{lorentz, index}, {"regular", {0, 0}}, X, {i, j}]}
+		,
+		rule = {RegularFFVH[___] :> 0}
+	];
+	
+	Return[rule]
+]
+
+
+(* ::Subsection:: *)
+(*Expand singular form factors*)
+
+
+Options[ExpandSingularFFVH] := {OperatorDimension :> GetOperatorDimension[]};
+
+
+ExpandSingularFFVH[OptionsPattern[]] := Module[{rule = {}},
+	(* d=8 not available at the moment *)
+	If[OptionValue[OperatorDimension] === 8,
+		Message[ExpandRegularFFVH::dimension8];
+		Abort[]
+	];
+	
+	(* t- and u-channels not availables at the moment *)
+	rule = {
+		SingulaFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> Plus[
+			(* SM contribution *)
+			If[MatchQ[lorentz, Vector] && index === 1, 
+				SChannelSumVH[s, ff[{lorentz, index}, {"s", SM}, X, {i, j}]],
+				0
+			],
+			SChannelSumVH[s, ff[{lorentz, index}, {"s", 0}, X, {i, j}]]
+		]
+	};	
+
+	Return[rule]
+]
+
+
+(* ::Subsubsection:: *)
+(*Replace channel sums for VH production*)
+
+
+ReplaceChannelSumsVH::usage = "ReplaceChannelSumsVH[] returns a replacement rule with which all SChannelSumVH can be replaced."
+
+
+ReplaceChannelSumsVH[] := {
+	
+
+
+}
+
+
+(* ::Subsection::Closed:: *)
+(*Expand the full form factors*)
+
+
+Options[ExpandFormFactorsVH] = {OperatorDimension :> GetOperatorDimension[]};
+
+
+ExpandFormFactorsVH[arg_, OptionsPattern[]] := Module[
+	{
+		temp = arg,
+		dim = OptionValue[OperatorDimension]
+	},
+
+	(* Splits FFs into regular and singular part *)
+	temp = temp /. SplitFFVH;
+	
+	(* Expand regular part of the FF *)
+	temp = temp /. ExpandRegularFFVH[OperatorDimension -> dim];
+	
+	(* Expand singular part of the FF *)
+	temp = temp /. ExpandSingularFFV[OperatorDimension -> dim];
+	
+	Return[
+		Expand[ExpandConjugate[temp]]
+	]
+]

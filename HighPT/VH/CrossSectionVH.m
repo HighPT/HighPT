@@ -15,7 +15,7 @@ Package["HighPT`"]
 (*Public:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Scoping*)
 
 
@@ -44,13 +44,14 @@ PartonCrossSectionVH::usage="PartonCrossSectionVH[\!\(\*OverscriptBox[\(s\), \(^
 
 Options[PartonicCrossSectionVH]= {
 	PTcuts            -> {0,\[Infinity]},
+	yHcuts            -> {0,\[Infinity]}, (* Cut on the absolute value of rapidity of the Higgs -- In the CM frame *)
 	OperatorDimension :> GetOperatorDimension[]
 };
 
 
 PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Module[
 	{
-		t, t1, t2, t3, t4, pTmin, pTmax, ampSqVH, intAmpSq, \[Lambda], mV, \[Sigma],
+		t, t1, t2, t3, t4, pTmin, pTminYh, pTmax, pTmaxYh, yHmin, yHmax, ampSqVH, intAmpSq, \[Lambda], mV, \[Sigma],
 		factor = 1 / (16 * \[Pi] * s^2)
 	},
 	(* t must be real *)
@@ -58,20 +59,29 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	
 	(* Spin and color avg amplitude squared *)
 	ampSqVH = SpinSumAmplitudeSqVH[s, t, {\[Psi]1[i], \[Psi]2[j]}];
-	
-	(* Treat the form factors as independent of t --- ONLY FOR X-CHECK - TO BE REMOVED LATER *)
-	ampSqVH = ampSqVH /. FormFactorVH[{ty_, ind_}, ss_, t_, ff___] :> FormFactorVH[{ty, ind}, ss, 0, ff];
-	 
-	(* Expand the FormFactors in terms of propagators and WCs *)
-	(* TODO ... *)
+
+	(* Expand the FormFactors *)
+	ampSqVH = ExpandFormFactorsVH[ampSqVH, OperatorDimension -> OptionValue[OperatorDimension]];
 	
 	(* Phase-space integration over t -- does not handle t- and u-channel mediatiors at the moment *)
 	intAmpSq = IntegrateTVH[ampSqVH, t];
 	
-	(* Integration limits *)
+	(* The mass of the fnial gauge boson can be infered from the initial quarks, wheter we have a vanishing or non-vanishing overal charge. *)
 	mV = If[\[Psi]1 === \[Psi]2, Mass["ZBoson"], Mass["WBoson"]];
 	\[Lambda] = \[Lambda]IntLimits[s, mV];
+	
+	(* User pT cuts *)
 	{pTmin, pTmax} = OptionValue[PTcuts];
+	
+	(* User cut on the absolute rapidity of the Higgs *)
+	(* !!!In the CM frame!!! *)
+	{yHmin, yHmax} = OptionValue[yHcuts];
+	(* Equivalent pT cuts *)
+	{pTminYh, pTmaxYh} = {ComputePTCutfromYH[yHmax, mV, s], ComputePTCutfromYH[yHmin, mV, s]};
+	
+	(* Updates the pT cuts if needed *)
+	pTmax = If[pTmaxYh < pTmax, pTmaxYh, pTmax];
+	pTmin = If[pTminYh > pTmin, pTminYh, pTmin];
 	
 	(* Limits *)
 	t1 = -(s/2) (1 - (mV^2 + Mass["Higgs"]^2)/s + Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmin^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
@@ -102,7 +112,33 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 \[Lambda]IntLimits[s_, mV_] := 1 - 2 (mV^2 + Mass["Higgs"]^2)/s + (mV^2 - Mass["Higgs"]^2)^2/s^2
 
 
-(* ::Section:: *)
+(* ::Subsubsection:: *)
+(*Translates a cut on the rapidity to a cut on the pT*)
+
+
+(* When no cut is included *)
+trivialYhCuts = <|0 -> \[Infinity], \[Infinity] -> 0|>;
+
+
+ComputePTCutfromYH[yH_, mV_, s_] := Module[{pTsq, pTCut},
+	If[yH === 0 || yH === \[Infinity], 
+		(* Trivial results *)
+		pTCut = trivialYhCuts[yH]
+		,
+		(* Transverse momentum squared as a function of the rapidity *)
+		pTsq = (s + Mass["Higgs"]^2 - mV^2)^2 / (4 * s * Cosh[Abs[yH]]^2) - Mass["Higgs"]^2;
+		(* Cut must be applied only if the result is positive *)
+		If[pTsq > 0, 
+		  pTCut = Sqrt[pTsq]
+		  ,
+		  pTCut = 0
+		]
+	];
+	Return[pTCut]
+];
+
+
+(* ::Section::Closed:: *)
 (*Phase-space integration*)
 
 
@@ -142,7 +178,7 @@ IntegrateTVH[arg_, t_] := Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ReplaceIntegrals*)
 
 

@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Exported*)
 
 
@@ -36,7 +36,7 @@ PackageExport["DipoleQ"]
 PackageExport["SubstituteFF"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Internal*)
 
 
@@ -146,7 +146,7 @@ FormFactor::unknownindices= "The fifth argument of FormFactor `1` must be a list
 FormFactor[_,_,_,_,x:Except[{_,_,_,_}]]:= (Message[FormFactor::unknownindices, x]; Abort[])
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -169,6 +169,7 @@ MakeBoxes["regular", TraditionalForm] := ToBoxes["reg"]
 MakeBoxes["Photon", TraditionalForm] := ToBoxes["\[Gamma]"]
 MakeBoxes["ZBoson", TraditionalForm] := ToBoxes["Z"]
 MakeBoxes["WBoson", TraditionalForm] := ToBoxes["W"]
+MakeBoxes["Higgs", TraditionalForm] := ToBoxes["h"]
 
 
 MakeBoxes[Left, TraditionalForm]  := ToBoxes["L"]
@@ -190,7 +191,7 @@ FormFactorVector[s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:= Transpose[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*InterferenceMatrix*)
 
 
@@ -232,7 +233,7 @@ MST[z_, X_, Y_]:= -KroneckerDelta[X,Y] * (1+2*z)
 MTS[z_, X_, Y_]:= MST[z,X,Y]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Spin-summed amplitude square*)
 
 
@@ -293,7 +294,7 @@ SplitFF= FormFactor[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> RegularFF[
 RegularFF[DipoleL|DipoleQ, ___]:= 0
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*d=8 treatment*)
 
 
@@ -389,7 +390,7 @@ TChannelSum[_,0]:=0
 UChannelSum[_,0]:=0
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand the full FormFactors*)
 
 
@@ -435,11 +436,11 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Basic form factor properties*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Require neutral form factors*)
 
 
@@ -453,7 +454,7 @@ FF[_,_,{_,_},{_\[Nu],_e,_u,_u}]:=0
 FF[_,_,{_,_},{_\[Nu],_e,_d,_d}]:=0
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Simplifications for Tensor and Scalar form factors*)
 
 
@@ -474,11 +475,11 @@ FF[Tensor,_,{Right,Left},{_,_,_,_}] := 0
 FF[Tensor,_,{Left,Right},{_,_,_,_}] := 0
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Singular form factor constraints*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM form factors are flavor diagonal, except for the W coupling to quarks*)
 
 
@@ -557,7 +558,7 @@ FF[Vector, {"regular",_}, {OrderlessPatternSequence[Right,_]}, {_,_,_u,_d}|{_,_,
 FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Weak basis rotation for form factors*)
 
 
@@ -655,7 +656,7 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Substitute form factors*)
 
 
