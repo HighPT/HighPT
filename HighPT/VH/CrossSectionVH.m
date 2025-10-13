@@ -15,7 +15,7 @@ Package["HighPT`"]
 (*Public:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Scoping*)
 
 
@@ -51,7 +51,7 @@ Options[PartonicCrossSectionVH]= {
 
 PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Module[
 	{
-		t, t1, t2, t3, t4, pTmin, pTminYh, pTmax, pTmaxYh, yHmin, yHmax, ampSqVH, intAmpSq, \[Lambda], mV, \[Sigma],
+		t, t1, t2, t3, t4, pTmin, pTminYh, pTmax, pTmaxYh, yHmin, yHmax, ampSqVH, intAmpSq, \[Lambda], mV, \[Sigma], finalStateV, \[Epsilon], subs,
 		factor = 1 / (16 * \[Pi] * s^2)
 	},
 	(* t must be real *)
@@ -64,10 +64,11 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	ampSqVH = ExpandFormFactorsVH[ampSqVH, OperatorDimension -> OptionValue[OperatorDimension]];
 	
 	(* Phase-space integration over t -- does not handle t- and u-channel mediatiors at the moment *)
-	intAmpSq = IntegrateTVH[ampSqVH, t];
+	finalStateV = If[\[Psi]1 === \[Psi]2, "ZBoson", "WBoson"];
+	intAmpSq = IntegrateTVH[ampSqVH, t, finalStateV];
 	
 	(* The mass of the fnial gauge boson can be infered from the initial quarks, wheter we have a vanishing or non-vanishing overal charge. *)
-	mV = If[\[Psi]1 === \[Psi]2, Mass["ZBoson"], Mass["WBoson"]];
+	mV = Mass[finalStateV];
 	\[Lambda] = \[Lambda]IntLimits[s, mV];
 	
 	(* User pT cuts *)
@@ -97,12 +98,18 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 		],
 		\[Sigma] = (intAmpSq /. t -> t4) - (intAmpSq /. t -> t3) + (intAmpSq /. t -> t2) - (intAmpSq /. t -> t1)
 	];
-
+	
+	(* !!!!!!!!! Test !!!!!!!!!! *)
+	(* list with all replacements in the SMEFT *)
+	subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
+	\[Sigma] = \[Sigma] /. subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]^2 / 1000);
+	(* !!!!!!!!!!!!!!!!!!!!!!!!! *)
+	
 	Return @ Expand[factor * \[Sigma]]
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Auxiliary lambda function for integration boundaries*)
 
 
@@ -112,7 +119,7 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 \[Lambda]IntLimits[s_, mV_] := 1 - 2 (mV^2 + Mass["Higgs"]^2)/s + (mV^2 - Mass["Higgs"]^2)^2/s^2
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Translates a cut on the rapidity to a cut on the pT*)
 
 
@@ -138,7 +145,7 @@ ComputePTCutfromYH[yH_, mV_, s_] := Module[{pTsq, pTCut},
 ];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Phase-space integration*)
 
 
@@ -148,9 +155,9 @@ IntegrateTVH::usage = "IntegrateTVH[arg, t] performs the integration over the Ma
 IntegrateTVH::failed = "The phase-space integration failed. The remaining integrals are: `1`"
 
 
-IntegrateTVH[arg_, t_] := Module[
+IntegrateTVH[arg_, t_, finalStateV_] := Module[
 	{
-		temp
+		temp, channel
 	},
 	(* finds all t integrands, same as for the DY case *)
 	temp = Integrand[arg, t];
@@ -160,13 +167,9 @@ IntegrateTVH[arg_, t_] := Module[
 		ExpandConjugate[temp]/.Conjugate[t]->t
 	]/.Conjugate[t]->t;
 	
-	(* TODO -- Important when we include mediators in the t- and u-channels *)
-	
-	(* replace propagators in the s-/t-/u-channels *)
-	
-	(* apply partial fractioning identities *)
-	
-	(* reduce integrals to the master-integrals - t- and u-channels *)
+	(* Replace the propagators *)	
+	channel = If[finalStateV === "ZBoson", "ZH", "WH"];
+	temp = temp /. ReplaceChannelSumsVH[channel];
 	
 	(* substitute the master integrals *)
 	temp= temp/.ReplaceIntegralsVH[t];
@@ -178,7 +181,7 @@ IntegrateTVH[arg_, t_] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*ReplaceIntegrals*)
 
 

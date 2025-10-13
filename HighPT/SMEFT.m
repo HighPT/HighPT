@@ -134,7 +134,7 @@ WC::usage=
 WC[\"label\",{\[ScriptR],\[ScriptS]}] Wilson coefficient associated to the two-fermion operator denoted by label with flavor indices \[ScriptR],\[ScriptS] which can be either lepton or quark indices.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -166,7 +166,7 @@ Format[WC[label_,{indices__}],TraditionalForm]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Flavor indices*)
 
 
@@ -175,7 +175,7 @@ WC[x_,{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}] := WC[x,{a,b,i,j}]
 WC[x_,{f1_[a_],f2_[b_]}] := WC[x,{a,b}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Hermitian WC*)
 
 
@@ -213,7 +213,12 @@ HermitianWC2= Alternatives[
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+HermitianBosonic = Alternatives[
+	"HD", "Hbox", "HB", "HW", "HBW"
+]
+
+
+(* ::Subsubsection:: *)
 (*Index relabeling redundancies*)
 
 
@@ -234,7 +239,7 @@ WC[herm:HermitianWC4,{a_Integer,b_Integer,i_Integer,j_Integer}]:= WC[herm,{b,a,j
 WC[herm:HermitianWC2,{p_Integer,r_Integer}]:= WC[herm,{r,p}]\[Conjugate] /; p>r
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Real coefficients on diagonal*)
 
 
@@ -244,14 +249,26 @@ WC/:Conjugate[WC[herm:HermitianWC4,{a_Integer,a_Integer,i_Integer,i_Integer}]]:=
 WC/:Conjugate[WC[herm:HermitianWC2,{p_Integer,p_Integer}]]:= WC[herm,{p,p}]
 
 
-(* ::Subsection::Closed:: *)
+WC/:Conjugate[WC[herm:HermitianBosonic, ___]] := WC[herm]
+
+
+(* ::Subsection:: *)
 (*WC argument check*)
 
 
 WC::unknownWClabel= "The label `1` is not an allowed label for Wilson coefficients (WC)."
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
+(*Bosonic*)
+
+
+$WCListBosonic = List[
+	"HD", "Hbox", "HB", "HW", "HBW"
+]
+
+
+(* ::Subsubsection:: *)
 (*\[Psi]^2*)
 
 
@@ -274,7 +291,7 @@ $WCList2=List[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*\[Psi]^4*)
 
 
@@ -299,17 +316,17 @@ $WCList4=List[
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Check WC label*)
 
 
-WC[l:Except[Alternatives@@Join[$WCList2, $WCList4, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+WC[l:Except[Alternatives@@Join[$WCList2, $WCList4, $WCListBosonic, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WC::unknownWClabel,l];
 	Abort[]
 )
 
 
-GetAllWC = Join[$WCList2, $WCList4]
+GetAllWC = Join[$WCList2, $WCList4, $WCListBosonic]
 
 
 (* ::Section:: *)

@@ -32,7 +32,7 @@ PackageExport["FormFactorVH"]
 PackageExport["SpinSumAmplitudeSqVH"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Internal*)
 
 
@@ -45,7 +45,7 @@ PackageScope["SChannelSumVH"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*FormFactorVH*)
 
 
@@ -141,7 +141,7 @@ FormFactorVectorVH[s_, t_, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Transpose[
 ];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*InterferenceMatrixVH*)
 
 
@@ -155,7 +155,7 @@ InterferenceMatrixVH[s_, t_, mV_] :=
 	}
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Individual entries of the interference matrix*)
 
 
@@ -186,7 +186,7 @@ MST23[s_, t_, mV_]:=0
 MST33[s_, t_, mV_]:=0
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Spin-summed amplitude square*)
 
 
@@ -233,7 +233,7 @@ SplitFFVH::usage = "SplitFF returns the rule that splits the FormFactorVH into a
 SplitFFVH = FormFactorVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> RegularFFVH[{lorentz, index}, s, t, X, {i, j}] + SingularFFVH[{lorentz, index}, s, t, X, {i, j}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand regular form factors*)
 
 
@@ -277,7 +277,7 @@ ExpandSingularFFVH[OptionsPattern[]] := Module[{rule = {}},
 	
 	(* t- and u-channels not availables at the moment *)
 	rule = {
-		SingulaFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> Plus[
+		SingularFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> Plus[
 			(* SM contribution *)
 			If[MatchQ[lorentz, Vector] && index === 1, 
 				SChannelSumVH[s, ff[{lorentz, index}, {"s", SM}, X, {i, j}]],
@@ -292,20 +292,66 @@ ExpandSingularFFVH[OptionsPattern[]] := Module[{rule = {}},
 
 
 (* ::Subsubsection:: *)
+(*Channels sum*)
+
+
+SChannelSumVH::usage = "SChannelSumVH[s, ff] denotes the sum of all s-channel mediators multipled by the corresponding FFs.";
+
+
+(* If the FF vanishes the corresponding sum also vanishes *)
+SChannelSumVH[_, 0] := 0
+
+
+(* ::Subsubsection:: *)
 (*Replace channel sums for VH production*)
 
 
-ReplaceChannelSumsVH::usage = "ReplaceChannelSumsVH[] returns a replacement rule with which all SChannelSumVH can be replaced."
+ReplaceChannelSumsVH::usage = "ReplaceChannelSumsVH[channel] returns a replacement rule with which all SChannelSumVH can be replaced for a respective channel."
 
 
-ReplaceChannelSumsVH[] := {
+(* Quick solution. It would be good to changed it to have a better integration with the DY routines *)
+
+(* Association with the mediators in each channel *)
+mediatorsChannel = <|"WH" -> {"WBoson"}, "ZH" -> {"ZBoson"}|>;
+
+(* List with the mediators predicted by the SM *)
+mediatorsSM = {"ZBoson", "WBoson"};
+
+(* Creates the replacement rule for the SM mediators *)
+ReplaceChannelSumsVH[channel_:("WH" | "ZH")] := Module[{mediators, replacementRule},
+	(* Mediators affecting the channel *)
+	mediators = mediatorsChannel[channel];
 	
+	(* Contructs the replacement rule for the channel sums *)
+	replacementRule = {
+		SChannelSumVH[s_, ff[{lorentz_, index_}, {"s", ord_}, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}]] :> Sum[
+			Param["vev"]^2 * If[ord === SM, If[MemberQ[mediatorsSM, med], 1, 0] , 1] *
+			FlavorDiagSMVH[med, ord, {i, j}] *
+			LeftHandedCC[med, ord, X] *
+			ff[{lorentz, index}, {med, ord}, X, {\[Psi]1[i], \[Psi]2[j]}] *
+			Propagator[s, med]
+		,
+			{med, mediators}
+		]
+	};
+	
+	Return[replacementRule]
+]
 
 
-}
+(* ::Subsubsection:: *)
+(*SM properties*)
 
 
-(* ::Subsection::Closed:: *)
+(* SM Z couplings are flavor diagonal *)
+FlavorDiagSMVH[mediator_, ord_, {i_, j_}] := If[mediator === "ZBoson" && ord === SM, KroneckerDelta[i, j], 1];
+
+
+(* SM CC is Left-Handed *)
+LeftHandedCC[mediator_, order_, X_] := If[mediator === "WBoson" && order === SM, KroneckerDelta[X, Left], 1];
+
+
+(* ::Subsection:: *)
 (*Expand the full form factors*)
 
 
@@ -325,7 +371,7 @@ ExpandFormFactorsVH[arg_, OptionsPattern[]] := Module[
 	temp = temp /. ExpandRegularFFVH[OperatorDimension -> dim];
 	
 	(* Expand singular part of the FF *)
-	temp = temp /. ExpandSingularFFV[OperatorDimension -> dim];
+	temp = temp /. ExpandSingularFFVH[OperatorDimension -> dim];
 	
 	Return[
 		Expand[ExpandConjugate[temp]]
