@@ -26,6 +26,9 @@ Package["HighPT`"]
 PackageExport["WC"]
 
 
+PackageExport["WarsawBasis"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -138,7 +141,7 @@ WC::usage=
 WC[\"label\",{\[ScriptR],\[ScriptS]}] Wilson coefficient associated to the two-fermion operator denoted by label with flavor indices \[ScriptR],\[ScriptS] which can be either lepton or quark indices.";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Formatting*)
 
 
@@ -170,7 +173,7 @@ Format[WC[label_,{indices___}],TraditionalForm]:= Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Flavor indices*)
 
 
@@ -179,7 +182,7 @@ WC[x_,{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}] := WC[x,{a,b,i,j}]
 WC[x_,{f1_[a_],f2_[b_]}] := WC[x,{a,b}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*WC classes*)
 
 
@@ -621,6 +624,32 @@ WC[l:Except[Alternatives@@Join[$WCList0, $WCList2, $WCList4, {_Pattern, _Blank, 
 
 
 GetAllWC = Join[$WCList0, $WCList2, $WCList4]
+
+
+(* ::Subsection:: *)
+(*Warsaw Basis *)
+
+
+NindSMEFT[lab_] := If[
+	MemberQ[$WCList4,lab],
+	4,
+	If[
+		MemberQ[$WCList2,lab],
+		2,
+		If[
+			MemberQ[$WCList0,lab],
+			0,
+			Abort[]
+		]
+	]
+]
+
+
+WarsawBasis[] = Join[
+	Table[WC[lab,{i,j,k,l}],{lab,$WCList4d6},{i,3},{j,3},{k,3},{l,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
+	Table[WC[lab,{i,j}],{lab,$WCList2d6},{i,3},{j,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
+	Table[WC[lab,{}],{lab,$WCList0d6}]/.Conjugate[x_]->x//DeleteDuplicates
+]
 
 
 (* ::Section:: *)

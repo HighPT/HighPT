@@ -26,6 +26,9 @@ Package["HighPT`"]
 PackageExport["WCL"]
 
 
+PackageExport["SanDiegoBasis"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -49,7 +52,7 @@ WCL::usage=
 WCL[\"label\",{i,j}] LEFT Wilson coefficient associated to the dimension-five operator with flavor indices i,j."
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Formatting*)
 
 
@@ -94,7 +97,7 @@ Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*WCL classes and redundancies*)
 
 
@@ -581,6 +584,32 @@ WCL[l:Except[Alternatives@@Join[$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $W
 
 
 GetAllWCL = Join[$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4]
+
+
+(* ::Subsection:: *)
+(*San Diego Basis *)
+
+
+NindLEFT[lab_] := If[
+	MemberQ[$WCLList6psi4,lab],
+	4,
+	If[
+		MemberQ[Join[$WCLList3,$WCLList5],lab],
+		2,
+		If[
+			MemberQ[$WCLList6X3,lab],
+			0,
+			Abort[]
+		]
+	]
+]
+
+
+SanDiegoBasis[] = Join[
+	Table[WCL[lab,{i,j,k,l}],{lab,$WCLList6psi4},{i,3},{j,3},{k,3},{l,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
+	Table[WCL[lab,{i,j}],{lab,Join[$WCLList3,$WCLList5]},{i,3},{j,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
+	Table[WCL[lab,{}],{lab,$WCLList6X3}]/.Conjugate[x_]->x//DeleteDuplicates
+]
 
 
 (* ::Section:: *)
