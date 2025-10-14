@@ -123,7 +123,7 @@ MakeBoxes[ff[{lorentz_, index_}, type_, X_,{i_,j_}], TraditionalForm] := Subscri
 	RowBox[{"[",SubsuperscriptBox["f", RowBox[{MakeBoxes[lorentz, TraditionalForm], ", ", MakeBoxes[index, TraditionalForm],  MakeBoxes[type]}], RowBox[{" ",MakeBoxes[X,TraditionalForm]}]], "]"}], RowBox[{ToString[i],ToString[j]}]]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*FormFactorVectorVH*)
 
 
@@ -155,7 +155,7 @@ InterferenceMatrixVH[s_, t_, mV_] :=
 	}
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Individual entries of the interference matrix*)
 
 

@@ -264,7 +264,7 @@ WC::unknownWClabel= "The label `1` is not an allowed label for Wilson coefficien
 
 
 $WCListBosonic = List[
-	"HD", "Hbox", "HB", "HW", "HBW"
+	"HD", "Hbox", "HB", "HW", "HWB"
 ]
 
 

@@ -105,7 +105,7 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	\[Sigma] = \[Sigma] /. subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]^2 / 1000);
 	(* !!!!!!!!!!!!!!!!!!!!!!!!! *)
 	
-	Return @ Expand[factor * \[Sigma]]
+	Return @ Expand[factor * \[Sigma]] (* GeV^-2*)
 ]
 
 
