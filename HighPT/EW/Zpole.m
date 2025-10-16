@@ -425,7 +425,7 @@ NPContribution$default["Ruc"]:=((-3(\[CapitalGamma]ZfSM[u]/(\[CapitalGamma]ZhadS
 TheoryExpression["\[CapitalGamma]ZNEW"] := Mass["ZBoson"]/(24\[Pi]) (Sum[WCL["gZ\[Nu]L",{i,i}]^2,{i,3}]+Sum[WCL["gZeL",{i,i}]^2+WCL["gZeR",{i,i}]^2,{i,3}]+3*Sum[WCL["gZdL",{i,i}]^2+WCL["gZdR",{i,i}]^2,{i,3}]+3*Sum[WCL["gZuL",{i,i}]^2+WCL["gZuR",{i,i}]^2,{i,2}])
 
 
-ExpValue$default["\[CapitalGamma]ZNEW"] := \[CapitalGamma]Z$default;
+ExpValue$default["\[CapitalGamma]ZNEW"] := Width["ZBoson"][Default];
 
 
 SMPrediction$default["\[CapitalGamma]ZNEW"] := Around[2.4941,null];

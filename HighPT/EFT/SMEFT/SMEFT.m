@@ -58,6 +58,11 @@ PackageScope["MassDimension"]
 PackageScope["SMEFTTruncate"]
 
 
+PackageScope["$WCList0d8"]
+PackageScope["$WCList2d8"]
+PackageScope["$WCList4d8"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -667,17 +672,17 @@ SMEFTTruncate[expr_,lambdapower_Integer]:=(Series[DimensionCountingSMEFT[expr],{
 
 
 (* ::Section:: *)
-(*Truncate the (mixed) EFT*)
+(*Truncate the (mixed) EFT - OLD*)
 
 
-Options[EFTTruncate] = {
+(*Options[EFTTruncate] = {
 	EFTorder :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	ExpandComplex -> False
-};
+};*)
 
 
-EFTTruncate[expr_, OptionsPattern[]] := Module[
+(*EFTTruncate[expr_, OptionsPattern[]] := Module[
 	{
 	tmpexpr,
 	exprwithdimensions, eps, ReWC, ImWC,
@@ -707,7 +712,7 @@ EFTTruncate[expr_, OptionsPattern[]] := Module[
 	];
 	expanded = Normal[Series[exprwithdimensions,{eps,0,OptionValue[EFTorder]}]]/.eps->1;
 	Return[expanded(*/.ReWCL[lab_,ind_]:>Re[WCL[lab,ind]]/.ReWC[lab_,ind_]:>Re[WC[lab,ind]]/.ImWCL[lab_,ind_]:>Im[WCL[lab,ind]]/.ImWC[lab_,ind_]:>Im[WC[lab,ind]]*)]
-];
+];*)
 
 
 (* ::Section:: *)

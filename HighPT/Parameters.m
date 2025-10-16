@@ -165,11 +165,11 @@ ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Make constants real*)
 
 
-$realParameters = Alternatives["vev", "\[Alpha]EM", "sW", "cW", "GF", "\[Alpha]S", "|Vus|", "|Vcb|", "|Vub|", "\[Gamma]"]
+$realParameters = Alternatives["vev", "\[Alpha]EM", "sW", "cW", "GF", "\[Alpha]S", "|Vus|", "|Vcb|", "|Vub|", "\[Gamma]", "g1", "g2", "g3"]
 
 
 Param/:Conjugate[Param[x:$realParameters]] := Param[x]

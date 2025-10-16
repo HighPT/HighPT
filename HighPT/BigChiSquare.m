@@ -33,7 +33,6 @@ PackageExport["\[Mu]EW"]
 (*Internal*)
 
 
-PackageScope["EFTTruncate"]
 PackageScope["ExpandComplex"]
 
 
@@ -224,7 +223,7 @@ ChiSquarePiece[obs_Association, OptionsPattern[]] := Module[
 		(*Print["Only SMEFT coefficients detected."];*)
 		If[obs["Scale"] < \[Mu]EW, Message[ChiSquarePiece::smeftbelowEWscale]];
 		(*Print["Expanding to order \[CapitalLambda]^-" <>ToString[OptionValue[EFTorder]]<>"..."];*)
-		npSMEFT = EFTTruncate[npatmu, EFTorder->OptionValue[EFTorder], ExpandComplex->False],
+		npSMEFT = EFTTruncate[npatmu, EFTorder->OptionValue[EFTorder]],
 		(* at least one LEFT coefficient present, run to EW scale and match to SMEFT *)
 		(*Print["LEFT coefficients found: ",DeleteDuplicates[Cases[npatmu,_WCL,All]]];*)
 		(*Print["Running in LEFT up to EW scale..."];*)
@@ -232,7 +231,7 @@ ChiSquarePiece[obs_Association, OptionsPattern[]] := Module[
 		(*Print["Matching to SMEFT (and substituting parameters)..."];*)
 		npatEWSMEFT = MatchToSMEFT[npatEW];
 		(*Print["Expanding to order \[CapitalLambda]^-" <>ToString[OptionValue[EFTorder]]<>"..."];*)
-		npSMEFT = EFTTruncate[MatchToSMEFT@LEFTRun[npatmu, obs["Scale"], \[Mu]EW]/.GetParameters[], EFTorder->OptionValue[EFTorder], OperatorDimension->OptionValue[OperatorDimension](*, ExpandComplex->True*)]
+		npSMEFT = EFTTruncate[MatchToSMEFT@LEFTRun[npatmu, obs["Scale"], \[Mu]EW]/.GetParameters[], EFTorder->OptionValue[EFTorder], OperatorDimension->OptionValue[OperatorDimension]]
 	];
 	(* Run in SMEFT up to the scale \[CapitalLambda] *)
 	(*Print["Running in the SMEFT..."];*)

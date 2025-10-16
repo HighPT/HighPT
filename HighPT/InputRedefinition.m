@@ -360,8 +360,8 @@ DefineRedefinitions[OptionsPattern[]] := Module[
 	];
 	InputRedefinitionAssociation = Association[Table[
 		i -> (<|
-			"d6" -> EFTTruncate[InputRedefinition[i], EFTorder->2, ExpandComplex->True],
-			"d8" -> EFTTruncate[InputRedefinition[i], EFTorder->4, OperatorDimension->8, ExpandComplex->True] - EFTTruncate[InputRedefinition[i], EFTorder->2, ExpandComplex->True]
+			"d6" -> EFTTruncate[InputRedefinition[i], EFTorder->2],
+			"d8" -> EFTTruncate[InputRedefinition[i], EFTorder->4, OperatorDimension->8] - EFTTruncate[InputRedefinition[i], EFTorder->2]
 		|>/.GetParameters[]),
 		{i,InputList}
 	]];

@@ -100,7 +100,7 @@ NPContribution$default["mW"]:=((mWSM \[Delta]mW[])(*/.Replace\[Delta]g*)/.GetPar
 (*\[CapitalGamma]W*)
 
 
-ExpValue$default["\[CapitalGamma]W"]:=\[CapitalGamma]W$default;
+ExpValue$default["\[CapitalGamma]W"]:=Width["WBoson"][Default];
 
 
 SMPrediction$default["\[CapitalGamma]W"]:=Around[2.088,0];
