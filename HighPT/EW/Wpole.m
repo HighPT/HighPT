@@ -266,7 +266,7 @@ Wcouplingsum = (*Sum[Abs[WCL["gWlL",{i,j}]]^2,{i,3},{j,3}]+3*Sum[Abs[WCL["gWqL",
 TheoryExpression["\[CapitalGamma]WNEW"] := (*Mass["WBoson"]*)WCL["mW",{}]/(24\[Pi])*Wcouplingsum(*(Sum[WCL["gWlL",{i,j}]^2,{i,3},{j,3}]+3*Sum[WCL["gWqL",{i,j}]^2+WCL["gWqR",{i,j}]^2,{i,2},{j,3}])*)
 
 
-ExpValue$default["\[CapitalGamma]WNEW"] := \[CapitalGamma]W$default;
+ExpValue$default["\[CapitalGamma]WNEW"] := Width["WBoson"][Default];
 
 
 SMPrediction$default["\[CapitalGamma]WNEW"] := Around[2.088,null];

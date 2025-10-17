@@ -51,10 +51,10 @@ DefineRedefinitions[Default];
 ];*)
 
 
-(*Print["Initializing EW observables..."]
+Print["Initializing EW observables..."]
 RestoreObservables[ObservableList["EW"]]
 Print["Initializing Flavor observables..."]
-RestoreObservables[ObservableList["Flavor"]]*)
+RestoreObservables[ObservableList["Flavor"]]
 
 
 selector = SelectObservables[];

@@ -441,7 +441,7 @@ NPContribution$default["\[CapitalGamma]ZNEW"] := NPFromTheoryExpression["\[Capit
 GeVtonb = (0.389379 10^6);
 
 
-TheoryExpression["\[Sigma]hadNEW"] := GeVtonb*1/HighPT`PackageScope`TheoryExpression["\[CapitalGamma]ZNEW"]^2 (12\[Pi])/Mass["ZBoson"]^2 Mass["ZBoson"]/(24\[Pi]) (WCL["gZeL",{1,1}]^2+WCL["gZeR",{1,1}]^2) Mass["ZBoson"]/(24\[Pi]) 3(Sum[WCL["gZdL",{j,j}]^2+WCL["gZdR",{j,j}]^2,{j,3}]+Sum[WCL["gZuL",{j,j}]^2+WCL["gZuR",{j,j}]^2,{j,2}])
+TheoryExpression["\[Sigma]hadNEW"] := GeVtonb*1/TheoryExpression["\[CapitalGamma]ZNEW"]^2 (12\[Pi])/Mass["ZBoson"]^2 Mass["ZBoson"]/(24\[Pi]) (WCL["gZeL",{1,1}]^2+WCL["gZeR",{1,1}]^2) Mass["ZBoson"]/(24\[Pi]) 3(Sum[WCL["gZdL",{j,j}]^2+WCL["gZdR",{j,j}]^2,{j,3}]+Sum[WCL["gZuL",{j,j}]^2+WCL["gZuR",{j,j}]^2,{j,2}])
 
 
 ExpValue$default["\[Sigma]hadNEW"]:=Around[41.4807,0.0325];
