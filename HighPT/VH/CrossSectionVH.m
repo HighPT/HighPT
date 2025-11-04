@@ -19,12 +19,13 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Exported*)
 
 
 (* This has to be made PRIVATE later -- here only for testing implementation *)
 PackageExport["PartonicCrossSectionVH"]
+PackageExport["yHcuts"]
 
 
 (* ::Chapter:: *)
@@ -59,7 +60,7 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	
 	(* Spin and color avg amplitude squared *)
 	ampSqVH = SpinSumAmplitudeSqVH[s, t, {\[Psi]1[i], \[Psi]2[j]}];
-
+	
 	(* Expand the FormFactors *)
 	ampSqVH = ExpandFormFactorsVH[ampSqVH, OperatorDimension -> OptionValue[OperatorDimension]];
 	
@@ -102,7 +103,7 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	(* !!!!!!!!! Test !!!!!!!!!! *)
 	(* list with all replacements in the SMEFT *)
 	subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
-	\[Sigma] = \[Sigma] /. subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]^2 / 1000);
+	\[Sigma] = \[Sigma] /. subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;
 	(* !!!!!!!!!!!!!!!!!!!!!!!!! *)
 	
 	Return @ Expand[factor * \[Sigma]] (* GeV^-2*)

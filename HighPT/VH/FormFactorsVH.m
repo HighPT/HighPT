@@ -168,22 +168,22 @@ MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2
 MV22[s_, t_, mV_] := mV^2+ mV^4/(2 s) + s/2 +t -(mV^2 t)/s+ t^2/s-Mass["Higgs"]^2-(t Mass["Higgs"]^2)/s+Mass["Higgs"]^4/(2 s)
 
 
-MST11[s_, t_, mV_]:=0
+MST11[s_, t_, mV_]:= (*1/(4 * mV^4) * ((s - mV^2)^2 - 2 Mass["Higgs"]^2 * (s + mV^2) + Mass["Higgs"]^2)*) 0
 
 
-MST12[s_, t_, mV_]:=0
+MST12[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, (u - t)/ (4 * mV^2) * (s + mV^2 - Mass["Higgs"]^2)]*) 0
 
 
-MST13[s_, t_, mV_]:=0
+MST13[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, t - u]*) 0
 
 
-MST22[s_, t_, mV_]:=0
+MST22[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, s + (t - u)^2 / (4 * mV^2)]*) 0
 
 
-MST23[s_, t_, mV_]:=0
+MST23[s_, t_, mV_]:= (*-s + Mass["Higgs"]^2 - mV^2*) 0
 
 
-MST33[s_, t_, mV_]:=0
+MST33[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, 4/s * (mV^2 * (2 Mass["Higgs"]^2 - s) - 2 * t * u)]*) 0
 
 
 (* ::Section:: *)

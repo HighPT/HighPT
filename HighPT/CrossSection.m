@@ -514,7 +514,7 @@ CachedIntegrals[integrand_,{s_,sMin_,sMax_}] := Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Differential cross-section in s (for internal use)*)
 
 
