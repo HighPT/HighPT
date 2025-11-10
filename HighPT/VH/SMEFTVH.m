@@ -45,9 +45,8 @@ SubstituteRulesSMEFTVH[\[Epsilon]_] := Module[{list},
 		ff[{Vector, 1}, {"ZBoson", 0}, Right, {u[i_], u[j_]}] :> (1/2) * Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]^3/(Param["sW"]^3*Param["cW"]^3)* \[Epsilon] * (gZSM[u, Right] WC["HD"] KroneckerDelta[i, j] - (1/2) WC["Hu", {i, j}]),
 		
 		(* Vector, 2 *)		
-		ff[{Vector, 2}, {"regular", {0, 0}}, X_, {\[Psi]_[i_], \[Psi]_[j_]}] :>  \[Epsilon] * ( Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] / (Param["sW"]*Param["cW"]) * gZSM[\[Psi], X] * (Param["cW"]^2 WC["HW"] + Param["sW"]^2 WC["HB"] + Param["sW"]Param["cW"] WC["HWB"]) 
-		+ 2 * Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] * Charge[\[Psi]] * (Param["sW"]^2 * (WC["HW"]- WC["HB"]) - (Param["cW"]^2 - Param["sW"]^2) * WC["HWB"])) * KroneckerDelta[i, j],
-		ff[{Vector, 2}, {"ZBoson", 0}, X_, {\[Psi]_[i_], \[Psi]_[j_]}] :>  \[Epsilon] * ( Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]^3 / (Param["sW"]^3*Param["cW"]^3)) * gZSM[\[Psi], X] * (Param["cW"]^2 WC["HW"] + Param["sW"]^2 WC["HB"] + Param["sW"]Param["cW"] WC["HWB"])* KroneckerDelta[i, j]
+		ff[{Vector, 2}, {"regular", {0, 0}}, X_, {\[Psi]_[i_], \[Psi]_[j_]}] :>  \[Epsilon] * (4 * Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] / (Param["sW"]*Param["cW"]) * gZSM[\[Psi], X] * \[CapitalDelta]\[Kappa]hZZ + 2 * Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] * Charge[\[Psi]] * \[CapitalDelta]\[Kappa]hZ\[Gamma]) * KroneckerDelta[i, j],
+		ff[{Vector, 2}, {"ZBoson", 0}, X_, {\[Psi]_[i_], \[Psi]_[j_]}] :>  \[Epsilon] * ( Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]^3 / (Param["sW"]^3*Param["cW"]^3)) * gZSM[\[Psi], X] * \[CapitalDelta]\[Kappa]hZZ * KroneckerDelta[i, j]
 	};
 	
 	Return[list]
@@ -59,3 +58,9 @@ SubstituteRulesSMEFTVH[\[Epsilon]_] := Module[{list},
 
 
 gZSM[\[Psi]_, X_] := WeakIsospin3[\[Psi], X] - Param["sW"]^2 Charge[\[Psi]];
+
+
+\[CapitalDelta]\[Kappa]hZZ = Param["cW"]^2 WC["HW"] + Param["sW"]^2 WC["HB"] + Param["sW"] * Param["cW"] * WC["HWB"];
+
+
+\[CapitalDelta]\[Kappa]hZ\[Gamma] = 2 * Param["sW"] * Param["cW"] * (WC["HW"] - WC["HB"]) - (Param["cW"]^2 - Param["sW"]^2) * WC["HWB"];

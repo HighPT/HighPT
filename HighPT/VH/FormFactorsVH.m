@@ -45,7 +45,7 @@ PackageScope["SChannelSumVH"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*FormFactorVH*)
 
 
@@ -123,7 +123,7 @@ MakeBoxes[ff[{lorentz_, index_}, type_, X_,{i_,j_}], TraditionalForm] := Subscri
 	RowBox[{"[",SubsuperscriptBox["f", RowBox[{MakeBoxes[lorentz, TraditionalForm], ", ", MakeBoxes[index, TraditionalForm],  MakeBoxes[type]}], RowBox[{" ",MakeBoxes[X,TraditionalForm]}]], "]"}], RowBox[{ToString[i],ToString[j]}]]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*FormFactorVectorVH*)
 
 
@@ -165,25 +165,25 @@ MV11[s_, t_, mV_] := 2 s + t -(s t)/mV^2-t^2/mV^2-Mass["Higgs"]^2+(t Mass["Higgs
 MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2
 
 
-MV22[s_, t_, mV_] := mV^2+ mV^4/(2 s) + s/2 +t -(mV^2 t)/s+ t^2/s-Mass["Higgs"]^2-(t Mass["Higgs"]^2)/s+Mass["Higgs"]^4/(2 s)
+MV22[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 1/s * (mV^2 * (2 * s - Mass["Higgs"]^2) + (t^2 + u^2)/2)]
 
 
-MST11[s_, t_, mV_]:= (*1/(4 * mV^4) * ((s - mV^2)^2 - 2 Mass["Higgs"]^2 * (s + mV^2) + Mass["Higgs"]^2)*) 0
+MST11[s_, t_, mV_]:= Param["vev"]^2 /(4 * mV^4 * s) * ((s - mV^2)^2 - 2 Mass["Higgs"]^2 * (s + mV^2) + Mass["Higgs"]^2)
 
 
-MST12[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, (u - t)/ (4 * mV^2) * (s + mV^2 - Mass["Higgs"]^2)]*) 0
+MST12[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"] * (u - t)/ (4 * mV^2 * s) * (s + mV^2 - Mass["Higgs"]^2)]
 
 
-MST13[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, t - u]*) 0
+MST13[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, 1/2 * Param["vev"]^2 * (t - u) / s]
 
 
-MST22[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, s + (t - u)^2 / (4 * mV^2)]*) 0
+MST22[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 *(1 + (t - u)^2 / (4 * s * mV^2))]
 
 
-MST23[s_, t_, mV_]:= (*-s + Mass["Higgs"]^2 - mV^2*) 0
+MST23[s_, t_, mV_]:= 1/2 * Param["vev"]^2 (-s + Mass["Higgs"]^2 - mV^2)/s
 
 
-MST33[s_, t_, mV_]:= (*Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, 4/s * (mV^2 * (2 Mass["Higgs"]^2 - s) - 2 * t * u)]*) 0
+MST33[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, 4 * Param["vev"]^2 / s^2 * (mV^2 * (2 Mass["Higgs"]^2 - s) - 2 * t * u)]
 
 
 (* ::Section:: *)
