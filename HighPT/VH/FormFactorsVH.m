@@ -45,7 +45,7 @@ PackageScope["SChannelSumVH"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*FormFactorVH*)
 
 
@@ -123,7 +123,7 @@ MakeBoxes[ff[{lorentz_, index_}, type_, X_,{i_,j_}], TraditionalForm] := Subscri
 	RowBox[{"[",SubsuperscriptBox["f", RowBox[{MakeBoxes[lorentz, TraditionalForm], ", ", MakeBoxes[index, TraditionalForm],  MakeBoxes[type]}], RowBox[{" ",MakeBoxes[X,TraditionalForm]}]], "]"}], RowBox[{ToString[i],ToString[j]}]]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*FormFactorVectorVH*)
 
 
@@ -171,7 +171,7 @@ MV22[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 1/s * (mV^2 * 
 MST11[s_, t_, mV_]:= Param["vev"]^2 /(4 * mV^4 * s) * ((s - mV^2)^2 - 2 Mass["Higgs"]^2 * (s + mV^2) + Mass["Higgs"]^2)
 
 
-MST12[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"] * (u - t)/ (4 * mV^2 * s) * (s + mV^2 - Mass["Higgs"]^2)]
+MST12[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 * (u - t)/ (4 * mV^2 * s) * (s + mV^2 - Mass["Higgs"]^2)]
 
 
 MST13[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, 1/2 * Param["vev"]^2 * (t - u) / s]
@@ -252,7 +252,10 @@ ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
 	];
 	
 	If[$RunMode === "SMEFT",
-		rule = {RegularFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> ff[{lorentz, index}, {"regular", {0, 0}}, X, {i, j}]}
+		rule = {
+			RegularFFVH[type_:Except[{Tensor, 1}], s_, t_, X_, {i_, j_}] :> ff[type, {"regular", {0, 0}}, X, {i, j}],
+			RegularFFVH[{Tensor, 1}, s_, t_, X_, {i_, j_}] :> ff[{Tensor, 1}, {"regular", {0, 0}}, X, {i, j}] + (s / Param["vev"]^2) * ff[{Tensor, 1}, {"regular", {1, 0}}, X, {i, j}]
+		}
 		,
 		rule = {RegularFFVH[___] :> 0}
 	];
@@ -291,7 +294,7 @@ ExpandSingularFFVH[OptionsPattern[]] := Module[{rule = {}},
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Channels sum*)
 
 
