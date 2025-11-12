@@ -134,7 +134,8 @@ ComputePTCutfromYH[yH_, mV_, s_] := Module[{pTsq, pTCut},
 		pTCut = trivialYhCuts[yH]
 		,
 		(* Transverse momentum squared as a function of the rapidity *)
-		pTsq = (s + Mass["Higgs"]^2 - mV^2)^2 / (4 * s * Cosh[Abs[yH]]^2) - Mass["Higgs"]^2;
+		pTsq = ((s + Mass["Higgs"]^2 - mV^2)^2 / (4 * s * Cosh[Abs[yH]]^2) - Mass["Higgs"]^2)/.GetParameters[];
+		
 		(* Cut must be applied only if the result is positive *)
 		If[pTsq > 0, 
 		  pTCut = Sqrt[pTsq]
@@ -142,6 +143,7 @@ ComputePTCutfromYH[yH_, mV_, s_] := Module[{pTsq, pTCut},
 		  pTCut = 0
 		]
 	];
+	
 	Return[pTCut]
 ];
 

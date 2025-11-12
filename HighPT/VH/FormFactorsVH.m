@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Exported*)
 
 
@@ -159,13 +159,13 @@ InterferenceMatrixVH[s_, t_, mV_] :=
 (*Individual entries of the interference matrix*)
 
 
-MV11[s_, t_, mV_] := 2 s + t -(s t)/mV^2-t^2/mV^2-Mass["Higgs"]^2+(t Mass["Higgs"]^2)/mV^2
+MV11[s_, t_, mV_] := 2 s + t -(s t)/mV^2-t^2/mV^2-Mass["Higgs"]^2+(t Mass["Higgs"]^2)/mV^2 
 
 
-MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2
+MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2 
 
 
-MV22[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 1/s * (mV^2 * (2 * s - Mass["Higgs"]^2) + (t^2 + u^2)/2)]
+MV22[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 1/s * (mV^2 * (2 * s - Mass["Higgs"]^2) + (t^2 + u^2)/2)] 
 
 
 MST11[s_, t_, mV_]:= Param["vev"]^2 /(4 * mV^4 * s) * ((s - mV^2)^2 - 2 Mass["Higgs"]^2 * (s + mV^2) + Mass["Higgs"]^2)
@@ -174,16 +174,16 @@ MST11[s_, t_, mV_]:= Param["vev"]^2 /(4 * mV^4 * s) * ((s - mV^2)^2 - 2 Mass["Hi
 MST12[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 * (u - t)/ (4 * mV^2 * s) * (s + mV^2 - Mass["Higgs"]^2)]
 
 
-MST13[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, 1/2 * Param["vev"]^2 * (t - u) / s]
+MST13[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 * (u - t) / s] 
 
 
 MST22[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 *(1 + (t - u)^2 / (4 * s * mV^2))]
 
 
-MST23[s_, t_, mV_]:= 1/2 * Param["vev"]^2 (-s + Mass["Higgs"]^2 - mV^2)/s
+MST23[s_, t_, mV_]:= Param["vev"]^2 (s + mV^2 - Mass["Higgs"]^2 )/s
 
 
-MST33[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, 4 * Param["vev"]^2 / s^2 * (mV^2 * (2 Mass["Higgs"]^2 - s) - 2 * t * u)]
+MST33[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, (4 * Param["vev"]^2 / s^2) * (mV^2 * (s - 2 Mass["Higgs"]^2) + 2 * t * u)]
 
 
 (* ::Section:: *)
@@ -217,7 +217,7 @@ SpinSumAmplitudeSqVH[s_, t_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{mV, totalA
 (*ExpandFormFactors*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Split FormFactor into regular and singular part*)
 
 
@@ -233,7 +233,7 @@ SplitFFVH::usage = "SplitFF returns the rule that splits the FormFactorVH into a
 SplitFFVH = FormFactorVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> RegularFFVH[{lorentz, index}, s, t, X, {i, j}] + SingularFFVH[{lorentz, index}, s, t, X, {i, j}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand regular form factors*)
 
 
@@ -253,7 +253,7 @@ ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
 	
 	If[$RunMode === "SMEFT",
 		rule = {
-			RegularFFVH[type_:Except[{Tensor, 1}], s_, t_, X_, {i_, j_}] :> ff[type, {"regular", {0, 0}}, X, {i, j}],
+			RegularFFVH[type:Except[{Tensor, 1}], s_, t_, X_, {i_, j_}] :> ff[type, {"regular", {0, 0}}, X, {i, j}],
 			RegularFFVH[{Tensor, 1}, s_, t_, X_, {i_, j_}] :> ff[{Tensor, 1}, {"regular", {0, 0}}, X, {i, j}] + (s / Param["vev"]^2) * ff[{Tensor, 1}, {"regular", {1, 0}}, X, {i, j}]
 		}
 		,
@@ -264,7 +264,7 @@ ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand singular form factors*)
 
 
@@ -305,7 +305,7 @@ SChannelSumVH::usage = "SChannelSumVH[s, ff] denotes the sum of all s-channel me
 SChannelSumVH[_, 0] := 0
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Replace channel sums for VH production*)
 
 
@@ -342,7 +342,7 @@ ReplaceChannelSumsVH[channel_:("WH" | "ZH")] := Module[{mediators, replacementRu
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*SM properties*)
 
 
@@ -354,7 +354,7 @@ FlavorDiagSMVH[mediator_, ord_, {i_, j_}] := If[mediator === "ZBoson" && ord ===
 LeftHandedCC[mediator_, order_, X_] := If[mediator === "WBoson" && order === SM, KroneckerDelta[X, Left], 1];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand the full form factors*)
 
 
