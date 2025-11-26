@@ -45,7 +45,8 @@ Options[ChiSquareLHC]= {
 	CombineBins       -> Default,
 	EFTscale          :> GetEFTscale[],
 	Luminosity        -> Default,
-	RescaleError      -> True
+	RescaleError      -> True,
+	POPxf             -> False
 };
 
 
@@ -66,15 +67,23 @@ ChiSquareLHC[proc_String, OptionsPattern[]]:= Module[
 		Abort[]
 	];
 	
-	(* compute event yield for all bins subtracting SM prediction*)
-	\[Sigma]Predicted= EventYield[proc,
-		FF                -> OptionValue[FF],
-		Coefficients      -> OptionValue[Coefficients],
-		EFTorder          -> OptionValue[EFTorder],
-		OperatorDimension -> OptionValue[OperatorDimension],
-		SM                -> False,
-		EFTscale          -> OptionValue[EFTscale],
-		Luminosity        -> OptionValue[Luminosity]
+	(* determine event yield by computation of POPxf import *)
+	If[OptionValue[POPxf],
+		(* import event yield from POPxf JSON file *)
+		\[Sigma]Predicted= First@ImportPOPxf[proc]; (* the uncertainties are ignored right now *)
+		(* subtract SM *)
+		\[Sigma]Predicted= \[Sigma]Predicted-(\[Sigma]Predicted/._WC->0);
+		,
+		(* compute event yield for all bins subtracting SM prediction *)
+		\[Sigma]Predicted= EventYield[proc,
+			FF                -> OptionValue[FF],
+			Coefficients      -> OptionValue[Coefficients],
+			EFTorder          -> OptionValue[EFTorder],
+			OperatorDimension -> OptionValue[OperatorDimension],
+			SM                -> False,
+			EFTscale          -> OptionValue[EFTscale],
+			Luminosity        -> OptionValue[Luminosity]
+		];
 	];
 	
 	(* prepare experimental data *)
