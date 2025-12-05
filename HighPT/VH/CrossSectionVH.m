@@ -15,7 +15,7 @@ Package["HighPT`"]
 (*Public:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Scoping*)
 
 
@@ -23,16 +23,25 @@ Package["HighPT`"]
 (*Exported*)
 
 
-(* This has to be made PRIVATE later -- here only for testing implementation *)
-PackageExport["PartonicCrossSectionVH"]
-PackageExport["yHcuts"]
+PackageExport["DifferentialCrossSectionVH"]
+PackageExport["CrossSectionVH"]
+PackageExport["MVHcuts"]
+
+
+(* ::Subsection:: *)
+(*Internal	*)
+
+
+PackageScope["HadronicDifferentialCrossSectionVH"]
+PackageScope["PartonicCrossSectionVH"]
+PackageScope["PartonicCMEnergyIntegration"]
 
 
 (* ::Chapter:: *)
 (*Public:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section for VH production*)
 
 
@@ -102,15 +111,15 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	
 	(* !!!!!!!!! Test !!!!!!!!!! *)
 	(* list with all replacements in the SMEFT *)
-	subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
-	\[Sigma] = \[Sigma] /. subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;
+	(*subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
+	\[Sigma] = \[Sigma] /. subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;*)
 	(* !!!!!!!!!!!!!!!!!!!!!!!!! *)
 	
 	Return @ Expand[factor * \[Sigma]] (* GeV^-2*)
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Auxiliary lambda function for integration boundaries*)
 
 
@@ -120,7 +129,7 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 \[Lambda]IntLimits[s_, mV_] := 1 - 2 (mV^2 + Mass["Higgs"]^2)/s + (mV^2 - Mass["Higgs"]^2)^2/s^2
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Translates a cut on the rapidity to a cut on the pT*)
 
 
@@ -148,7 +157,7 @@ ComputePTCutfromYH[yH_, mV_, s_] := Module[{pTsq, pTCut},
 ];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Phase-space integration*)
 
 
@@ -196,3 +205,257 @@ ReplaceIntegralsVH[t_] := {
 	(* t- and u-channels to be done *)
 	(* ... *)
 }
+
+
+(* ::Section:: *)
+(*Hadron-level cross-section for VH production*)
+
+
+(* ::Subsection::Closed:: *)
+(*Integration over the partonic center of mass energy*)
+
+
+PartonicCMEnergyIntegration::usage = "Performs the integration over the partonic CM energy";
+
+
+PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, arguments_] := Module[
+	{
+		\[Sigma], s, subs, \[Epsilon], MyMin, MyMax, sIntegralList,
+		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse
+	},
+	(* Compute the hadronic cross-section  *)
+	\[Sigma] = \[Sigma]HadFunc[s, arguments];
+	
+	(* 3. Replace Min/Max with proxies to avoid OneIdentity issues *)
+    \[Sigma] = \[Sigma] /. {Min -> MyMin, Max -> MyMax};
+	
+	(* 1. Build the integrand in s *)
+    \[Sigma] = MyTiming[
+        Integrand[\[Sigma], s]
+        , "Integrand (s)"
+    ];
+	
+	(* 4. Collect all s integrals *)
+    sIntegralList = DeleteDuplicates @ Cases[\[Sigma], _Integrand, All];
+    
+    (* 5. Map each distinct integral to a dummy symbol *)
+    integralAssoc = Association[(# -> dummyIntegral[Unique[]]) & /@ sIntegralList];
+    
+    (* 6. Remove redundant conjugate integrals *)
+    Do[
+        If[! MemberQ[nonRedundantIntegarlList, int],
+            With[
+                {conjInt = Conjugate[int] //. {
+                    Conjugate[Sqrt[arg_]] :> Sqrt[Conjugate @ arg],
+                    Conjugate[x_MyMin] :> x,
+                    Conjugate[x_MyMax] :> x
+                }},
+                If[MemberQ[nonRedundantIntegarlList, conjInt],
+                    (* int is conjugate of an existing one *)
+                    AssociateTo[integralAssoc, int -> Conjugate[integralAssoc[conjInt]]],
+                    (* first time we see this pair *)
+                    AppendTo[nonRedundantIntegarlList, int]
+                ]
+            ]
+        ],
+        {int, sIntegralList}
+    ];
+    
+    (* 7. Build rules for the unique integrals *)
+    integralAssocReverse = Table[
+        integralAssoc[int] -> int,
+        {int, nonRedundantIntegarlList}
+    ];
+    
+    integralAssocReverse = integralAssocReverse /. ReplacePropagators;
+    integralAssocReverse = integralAssocReverse /. ReplaceConstants[];
+    integralAssocReverse = integralAssocReverse /. {MyMin -> Min, MyMax -> Max};
+    MyEcho[Length[integralAssocReverse], "# Integrals"];
+   
+    integralAssocReverse = MyTiming[
+        integralAssocReverse /. Integrand[arg_, x_] :> NIntegrate[arg, {x, smin, smax}],
+        "NIntegrate"
+    ];
+    
+	(* 9. Substitute back in \[Sigma] *)
+    \[Sigma] = \[Sigma] /. integralAssoc;
+    \[Sigma] = \[Sigma] /. integralAssocReverse;
+    
+    (* 10. Warn if something is left unintegrated *)
+    If[! FreeQ[\[Sigma], _dummyIntegral],
+        Message[CrossSection::inteval,
+            Length @ DeleteDuplicates @ Cases[\[Sigma], _dummyIntegral, All]
+        ]
+    ];
+	
+	Return[\[Sigma]]
+]
+
+
+(* ::Subsection:: *)
+(*Integrated VH cross-section*)
+
+
+CrossSectionVH::usage = "Cross-section for VH production";
+
+
+Options[CrossSectionVH] = {
+	MVHcuts           -> {300, 13000},
+	PTcuts            -> {0, \[Infinity]},
+	FF                -> False,
+	Coefficients      -> All,
+	EFTorder          :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[],
+	EFTscale          :> GetEFTScale[] 
+}
+
+
+CrossSectionVH[OptionsPattern[]] := Module[
+	{
+		\[Sigma], smin, smax, \[Sigma]Had, s, subs, \[Epsilon], MyMin, MyMax, sIntegralList,
+		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse
+	},
+	(* !!! Only Zh !!! *)
+	(* Check options -- TODO *)
+	
+	(* Min and Max CM energy squared *)
+	{smin, smax} = OptionValue[MVHcuts]^2;
+	
+	(* Performs the integration over the partonic CM energy *)
+	\[Sigma] = PartonicCMEnergyIntegration[
+		HadronicDifferentialCrossSectionVH, 
+		{smin, smax}, 
+		{PTcuts -> OptionValue[PTcuts], OperatorDimension -> OptionValue[OperatorDimension]}
+	];
+	
+	(* !!!!! REPLACE IT BY SubstituteFFVH WHICH STILL NEEDS TO BE IMPLEMENTED !!!!! *)
+	subs = Join[SubstitutionRulesMediatorsVH["ZBoson"], SubstituteRulesSMEFTVH[\[Epsilon]]];
+	\[Sigma] = \[Sigma] /. subs /. \[Epsilon] -> (Param["vev"]/ 1000)^2 /. ReplaceConstants[];
+	(* !!!!!!!!!!!!!!!!!!!!!!!!!!! *)
+	
+	(* Set coefficients to zero *)
+	If[!MatchQ[OptionValue[Coefficients], All],
+		\[Sigma]= SelectTerms[\[Sigma], OptionValue[Coefficients]]
+	];
+	
+	\[Sigma] = \[Sigma] /. ReplacePropagators;
+    \[Sigma] = \[Sigma] /. ReplaceConstants[];
+	
+	\[Sigma] = MyExpand[\[Sigma]];
+	
+	Return[\[Sigma]]
+];
+
+
+(* ::Subsection:: *)
+(*Hadronic differential VH cross-section (for internal use)*)
+
+
+HadronicDifferentialCrossSectionVH::usage= "HadronicDifferentialCrossSectionVH[] computes the differential hadronic cross-section for the Higgs associated production.";
+
+
+Options[HadronicDifferentialCrossSectionVH] = {
+	PTcuts            -> {0, \[Infinity]},
+	OperatorDimension :> GetOperatorDimension[]
+}
+
+
+HadronicDifferentialCrossSectionVH[s_, OptionsPattern[]] := Module[
+	{
+		\[Sigma]PartonLevel, \[Sigma], \[Sigma]HadronDiff,
+		GeV2toPB=(10^9)/(2.56819),
+		f, i, j
+	},
+	(* !!!! Only Zh for the moment !!! *)
+	
+	(* Parton-level cross-section for arbitrary initial flavors *)
+	\[Sigma]PartonLevel = PartonicCrossSectionVH[
+		s, 
+	    {f[i], f[j]},
+	    PTcuts -> OptionValue[PTcuts],
+	    OperatorDimension -> OptionValue[OperatorDimension]
+	];
+	
+	(* Convolute the partonic cross-sections with the parton-parton luminosities *)
+	\[Sigma]["d_dbar"] = 1/s * PartonLuminosity["d_dbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 1, j -> 1};
+	\[Sigma]["d_sbar"] = 1/s * PartonLuminosity["d_sbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 2, j -> 1};
+	\[Sigma]["d_bbar"] = 1/s * PartonLuminosity["d_bbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 3, j -> 1};
+	\[Sigma]["s_dbar"] = 1/s * PartonLuminosity["s_dbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 1, j -> 2};
+	\[Sigma]["s_sbar"] = 1/s * PartonLuminosity["s_sbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 2, j -> 2};
+	\[Sigma]["s_bbar"] = 1/s * PartonLuminosity["s_bbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 3, j -> 2};
+	\[Sigma]["b_dbar"] = 1/s * PartonLuminosity["b_dbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 1, j -> 3};
+	\[Sigma]["b_sbar"] = 1/s * PartonLuminosity["b_sbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 2, j -> 3};
+	\[Sigma]["b_bbar"] = 1/s * PartonLuminosity["b_bbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 3, j -> 3};
+	\[Sigma]["u_ubar"] = 1/s * PartonLuminosity["u_ubar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 1, j -> 1};
+	\[Sigma]["u_cbar"] = 1/s * PartonLuminosity["u_cbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 2, j -> 1};
+	\[Sigma]["c_ubar"] = 1/s * PartonLuminosity["c_ubar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 1, j -> 2};
+	\[Sigma]["c_cbar"] = 1/s * PartonLuminosity["c_cbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 2, j -> 2};
+	
+	\[Sigma]HadronDiff = Plus[
+		\[Sigma]["d_dbar"], \[Sigma]["d_sbar"], \[Sigma]["d_bbar"], \[Sigma]["s_dbar"], \[Sigma]["s_sbar"], \[Sigma]["s_bbar"], \[Sigma]["b_dbar"], 
+		\[Sigma]["b_sbar"], \[Sigma]["b_bbar"], \[Sigma]["u_ubar"], \[Sigma]["u_cbar"], \[Sigma]["c_ubar"], \[Sigma]["c_cbar"]
+	];
+	
+	(* Change units from GeV^-2 to pb *)
+	\[Sigma]HadronDiff = GeV2toPB * \[Sigma]HadronDiff;
+	
+	(* Replace parton luminosity by the interpolated functions *)
+	\[Sigma]HadronDiff = \[Sigma]HadronDiff /. PartonLuminosity -> PartonLuminosityFunction;
+	
+	(* in pb *)
+	Return @ Expand[\[Sigma]HadronDiff] 
+];
+
+
+(* ::Subsection:: *)
+(*Hadronic differential VH cross-section (for external use)*)
+
+
+DifferentialCrossSectionVH::usage = "Differential cross-section for VH production";
+
+
+Options[DifferentialCrossSectionVH] = {
+   FF                 -> False,
+   Coefficients       -> All,
+   EFTorder           :> GetEFTorder[],
+   OperatorDimension  :> GetOperatorDimension[],
+   PTcuts             -> {0, \[Infinity]},
+   EFTscale           :> GetEFTscale[]
+};
+
+
+DifferentialCrossSectionVH[OptionsPattern[]] := Module[
+	{\[Sigma], s, \[Epsilon], subs}
+	,
+	(* !!!!!! Only for Zh at the moment !!!!!!! *)
+	
+	(* Check options *)
+	OptionCheck[#, OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, EFTscale};
+	
+	(* Computes the hadronic cross-section (d\[Sigma]/ds) *)
+	\[Sigma] = HadronicDifferentialCrossSectionVH[
+		s, 
+		PTcuts -> OptionValue[PTcuts],
+		OperatorDimension -> OptionValue[OperatorDimension]
+	];
+	
+	(* Replace propagators and constants *)
+	\[Sigma] = \[Sigma] /. ReplacePropagators ;
+	\[Sigma] = \[Sigma] /. ReplaceConstants[];
+	
+	(* !!!!! REPLACE IT BY SubstituteFFVH WHICH STILL NEEDS TO BE IMPLEMENTED !!!!! *)
+	subs = Join[SubstitutionRulesMediatorsVH["ZBoson"], SubstituteRulesSMEFTVH[\[Epsilon]]];
+	\[Sigma] = \[Sigma] /. subs /. \[Epsilon] -> (Param["vev"]/ 1000)^2 /. ReplaceConstants[];
+	(* !!!!!!!!!!!!!!!!!!!!!!!!!!! *)
+
+	(* Set coefficients to zero *)
+	If[!MatchQ[OptionValue[Coefficients], All],
+		\[Sigma]= SelectTerms[\[Sigma], OptionValue[Coefficients]]
+	];
+
+	\[Sigma] = MyExpand[\[Sigma]];
+	
+	With[{xSec=\[Sigma]},
+		Return@ Function[x,Re[xSec]/.s->x]
+	];
+];

@@ -55,7 +55,7 @@ PackageScope["$PDFsets"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section*)
 
 
@@ -118,7 +118,7 @@ PartonCrossSection[s_,{\[Alpha]_,\[Beta]_,i_,j_}, OptionsPattern[]]:= Module[
 (*Phase-space integration*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IntegrateT*)
 
 
@@ -259,7 +259,7 @@ ReplaceIntegrals[t_]:= {
 }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SimplifySIntegrals*)
 
 
@@ -273,7 +273,7 @@ PartialFractioningSIntegrals[s_]:={
 (*Hadron-level cross-section*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Integrated CrossSection*)
 
 
@@ -514,7 +514,7 @@ CachedIntegrals[integrand_,{s_,sMin_,sMax_}] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Differential cross-section in s (for internal use)*)
 
 
