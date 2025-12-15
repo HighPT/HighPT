@@ -63,6 +63,13 @@ PackageScope["$WCList2d8"]
 PackageScope["$WCList4d8"]
 
 
+(*PackageScope["RelatedIndicesSMEFT"]
+PackageScope["ToRedundantSMEFT"]
+PackageScope["ToNonRedundantSMEFT"]*)
+PackageScope["NonRedundantToSymmetricSMEFT"]
+PackageScope["SymmetricToNonRedundantSMEFT"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -650,11 +657,143 @@ NindSMEFT[lab_] := If[
 ]
 
 
-WarsawBasis[] = Join[
+(*WarsawBasis[] = Join[
 	Table[WC[lab,{i,j,k,l}],{lab,$WCList4d6},{i,3},{j,3},{k,3},{l,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
 	Table[WC[lab,{i,j}],{lab,$WCList2d6},{i,3},{j,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
 	Table[WC[lab,{}],{lab,$WCList0d6}]/.Conjugate[x_]->x//DeleteDuplicates
+]*)
+
+
+WarsawBasis[lab_] := Module[
+	{tab},
+	Switch[NindSMEFT[lab],
+		0,
+		tab = WC[lab,{}],
+		2,
+		tab = Table[WC[lab,{i,j}],{i,3},{j,3}],
+		4,
+		tab = Table[WC[lab,{i,j,k,l}],{i,3},{j,3},{k,3},{l,3}],
+		_,
+		Abort[]
+	];
+	Return[Cases[tab,_WC,All]//DeleteDuplicates]
 ]
+
+
+WarsawBasis[] = Table[WarsawBasis[lab],{lab,Join[$WCList0d6,$WCList2d6,$WCList4d6]}]//Flatten
+
+
+(* ::Subsection:: *)
+(*Map of redundant structures*)
+
+
+indexlist4=Flatten[Table[{i,j,k,l},{i,3},{j,3},{k,3},{l,3}],3];
+indexlist2=Flatten[Table[{i,j},{i,3},{j,3}],1];
+indexlist0={{}};
+
+
+RedundancyAssociation[lab_]:=Module[
+	{
+	tab,
+	tabconj,assconj,
+	tabwc,asswc,
+	indexlist4,indexlist2,indexlist0
+	}
+	,
+	indexlist4=Flatten[Table[{i,j,k,l},{i,3},{j,3},{k,3},{l,3}],3];
+	indexlist2=Flatten[Table[{i,j},{i,3},{j,3}],1];
+	indexlist0={{}};
+	Switch[NindSMEFT[lab],
+		0,
+			Return[
+				Association[
+					"redundant" -> <|WC[lab,{}]->{{}}|>,
+					"conjugate" -> <||>
+				]
+			],
+		2,
+			tab = Table[{i,WC[lab,i]},{i,indexlist2}],
+		4,
+			tab = Table[{i,WC[lab,i]},{i,indexlist4}],
+		_,
+			Abort[]
+	];
+	(* Build Association with all indices related by redundancy *)
+	tabwc=Cases[tab,{_,_WC}];
+	asswc=Association@Table[i->Cases[tabwc,{_,i}][[;;,1]],{i,tabwc[[;;,2]]//DeleteDuplicates}];
+	(* Build Association with all indices related by conjugation *)
+	tabconj=Cases[tab,{_,_Conjugate}]/.Conjugate[a_]:>a;
+	assconj=Association@Table[i->Cases[tabconj,{_,i}][[;;,1]],{i,tabconj[[;;,2]]}];
+	Return[
+		Association[
+			"redundant" -> asswc,
+			"conjugate" -> assconj
+		]
+	]
+]
+
+
+NonRedundantToSymmetricAssociation = Association[
+	Table[
+		Table[
+			i -> Sum[WC[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]+Sum[Conjugate[WC[lab,j]],{j,RedundancyAssociation[lab]["conjugate"][i]/._Missing->0}]
+			,
+			{i,WarsawBasis[lab]}
+		]
+		,
+		{lab,Join[$WCList0d6,$WCList2d6,$WCList4d6]}
+	]//Flatten
+]
+
+
+NonRedundantToSymmetricSMEFT[expr_] := expr/.NonRedundantToSymmetricAssociation
+
+
+SymmetricToNonRedundantAssociation = Association[
+	Table[
+		Table[
+			If[Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["conjugate"][i]/._Missing->{}]] == 1,
+				Nothing[],
+				i->1/Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["conjugate"][i]/._Missing->{}]] i
+			]
+			,
+		{i,WarsawBasis[lab]}
+		]
+		,
+		{lab,Join[$WCList0d6,$WCList2d6,$WCList4d6]}
+	]//Flatten
+]
+
+
+SymmetricToNonRedundantSMEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
+
+
+(*relatedtable = Table[
+	Cases[
+		Join[
+			Flatten[Table[{j,WC[i,j]},{i,$WCList4d6},{j,indexlist4}],1],
+			Flatten[Table[{j,WC[i,j]},{i,$WCList2d6},{j,indexlist2}],1],
+			Flatten[Table[{j,WC[i,j]},{i,$WCList0d6},{j,indexlist0}],1]
+		],
+		{_,i}
+		],
+	{i,WarsawBasis[]}
+];*)
+
+
+(*RelatedIndicesSMEFT = Association@Table[i[[1,2]]->i[[;;,1]],{i,relatedtable}];*)
+
+
+(*replaceredundantSMEFT = Dispatch@Table[i->Sum[WC[i[[1]],j],{j,RelatedIndicesSMEFT[i]}],{i,Keys@RelatedIndicesSMEFT}]*)
+
+
+(*replacenonredundantSMEFT = Dispatch@Table[i->1/Length[RelatedIndicesSMEFT[i]]*i,{i,Keys@RelatedIndicesSMEFT}]*)
+
+
+(*ToRedundantSMEFT[expr_] := expr/.replaceredundantSMEFT*)
+
+
+(*ToNonRedundantSMEFT[expr_] := expr/.replacenonredundantSMEFT*)
 
 
 (* ::Section:: *)

@@ -48,7 +48,7 @@ PackageScope["HighPTToSOLD"]
 (*SMEFT Map*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DsixTools*)
 
 
@@ -123,7 +123,7 @@ SMEFTMap = {
 };
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*SOLD*)
 
 
@@ -198,14 +198,14 @@ SMEFTMapSOLD = {
 };
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*LEFT Map*)
 
 
 LEFTMap = {
 	{"G",DsixTools`LG},
 	{"Gt",DsixTools`LGtilde},
-	(*{"\[Nu]",DsixTools`L},*)
+	{"M\[Nu]",DsixTools`M\[Nu]},
 	{"\[Nu]\[Gamma]",DsixTools`L\[Nu]\[Gamma]},
 	{"e\[Gamma]",DsixTools`Le\[Gamma]},
 	{"u\[Gamma]",DsixTools`Lu\[Gamma]},
@@ -275,7 +275,7 @@ LEFTMap = {
 (*DsixTools -> HighPT*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*SMEFT*)
 
 
@@ -341,7 +341,7 @@ DsixToolsToHighPTSMEFTDispatch = Dispatch[{
 DsixToolsToHighPTSMEFT[expr_]:=DsixToolsToHighPTSM[expr]/.DsixToolsToHighPTSMEFTDispatch/.WC["eq",{\[Alpha]_,\[Beta]_,i_,j_}]->WC["eq",{i,j,\[Alpha],\[Beta]}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*LEFT*)
 
 
@@ -392,11 +392,11 @@ DsixToolsToHighPTLEFTDispatch = Dispatch[{
 	],
 	Table[
 		LEFTMap[[i,2]][a_,b_]->WCL[LEFTMap[[i,1]],{a,b}],
-		{i,3,8}
+		{i,3,9}
 	],
 	Table[
 		LEFTMap[[i,2]][a_,b_,c_,f_]->WCL[LEFTMap[[i,1]],{a,b,c,f}],
-		{i,9,64}
+		{i,9,65}
 	]
 	}//Flatten
 ];
@@ -405,7 +405,7 @@ DsixToolsToHighPTLEFTDispatch = Dispatch[{
 DsixToolsToHighPTLEFT[expr_]:=DsixToolsToHighPTSM[expr]/.DsixToolsToHighPTLEFTDispatch
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Other*)
 
 

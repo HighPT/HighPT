@@ -39,6 +39,10 @@ PackageScope["GetAllWCL"]
 PackageScope["LEFTTruncate"]
 
 
+PackageScope["NonRedundantToSymmetricLEFT"]
+PackageScope["SymmetricToNonRedundantLEFT"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -97,7 +101,7 @@ Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*WCL classes and redundancies*)
 
 
@@ -115,7 +119,7 @@ class2WCL=Alternatives[
 
 
 class3WCL=Alternatives[
-	"\[Nu]"
+	"M\[Nu]"
 ];
 
 
@@ -483,11 +487,21 @@ WCL::unknownWCLlabel= "The label `1` is not an allowed label for LEFT Wilson coe
 
 
 (* ::Subsubsection:: *)
+(*d = 2*)
+
+
+$WCLList2=List[
+	"mW"
+]
+
+
+(* ::Subsubsection:: *)
 (*d = 3*)
 
 
 $WCLList3=List[
-	"\[Nu]"
+	"M\[Nu]","Me",
+	"Mu","Md"
 ]
 
 
@@ -500,7 +514,6 @@ $WCLList4=List[
 	"gZ\[Nu]L",
 	"gZdL","gZdR",
 	"gZuL","gZuR",
-	"mW",
 	"gWqL","gWqR",
 	"gWlL"
 ]
@@ -565,6 +578,15 @@ $WCLList6psi4=List[
 
 
 (* ::Subsubsection:: *)
+(*d=6 (\[Psi]^2D^2V) *)
+
+
+$WCLList6psi2 = List[
+
+]
+
+
+(* ::Subsubsection:: *)
 (*d=7 (operators with gluons, for LFV) *)
 
 
@@ -574,16 +596,25 @@ $WCLList6psi4=List[
 
 
 (* ::Subsubsection:: *)
+(*d=8 (\[Psi]^4D^2) *)
+
+
+$WCLList8psi4D2 = List[
+
+]
+
+
+(* ::Subsubsection:: *)
 (*Check WC label*)
 
 
-WCL[l:Except[Alternatives@@Join[$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4(*,$WCLList7*), {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+WCL[l:Except[Alternatives@@Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4(*,$WCLList7*), {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WCL::unknownWCLlabel,l];
 	Abort[]
 )
 
 
-GetAllWCL = Join[$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4]
+GetAllWCL = Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4]
 
 
 (* ::Subsection:: *)
@@ -605,11 +636,121 @@ NindLEFT[lab_] := If[
 ]
 
 
-SanDiegoBasis[] = Join[
+(*SanDiegoBasis[] = Join[
 	Table[WCL[lab,{i,j,k,l}],{lab,$WCLList6psi4},{i,3},{j,3},{k,3},{l,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
 	Table[WCL[lab,{i,j}],{lab,Join[$WCLList3,$WCLList5]},{i,3},{j,3}]/.Conjugate[x_]->x//Flatten//DeleteDuplicates,
 	Table[WCL[lab,{}],{lab,$WCLList6X3}]/.Conjugate[x_]->x//DeleteDuplicates
+]*)
+
+
+SanDiegoBasis[lab_] := Module[
+	{tab},
+	Switch[NindLEFT[lab],
+		0,
+		tab = WCL[lab,{}],
+		2,
+		tab = Table[WCL[lab,{i,j}],{i,3},{j,3}],
+		4,
+		tab = Table[WCL[lab,{i,j,k,l}],{i,3},{j,3},{k,3},{l,3}],
+		_,
+		Abort[]
+	];
+	Return[Cases[tab,_WCL,All]//DeleteDuplicates]
 ]
+
+
+SanDiegoBasis[] = Table[SanDiegoBasis[lab],{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}]//Flatten
+
+
+(* ::Subsection:: *)
+(*Map of redundant structures*)
+
+
+indexlist4=Flatten[Table[{i,j,k,l},{i,3},{j,3},{k,3},{l,3}],3];
+indexlist2=Flatten[Table[{i,j},{i,3},{j,3}],1];
+indexlist0={{}};
+
+
+RedundancyAssociation[lab_]:=Module[
+	{
+		tab,tabnozeros,
+		tabconj,assconj,
+		tabwcl,asswcl,
+		tabminus,assminus,
+		indexlist4,indexlist2,indexlist0
+	}
+	,
+	indexlist4=Flatten[Table[{i,j,k,l},{i,3},{j,3},{k,3},{l,3}],3];
+	indexlist2=Flatten[Table[{i,j},{i,3},{j,3}],1];
+	indexlist0={{}};
+	Switch[NindLEFT[lab],
+		0,
+			(*Return[
+				Association[
+					"redundant" -> <|WCL[lab,{}]->{{}}|>,
+					"conjugate" -> <||>
+				]
+			]*)tab={{{},WCL[lab,{}]}},
+		2,
+			tab = Table[{i,WCL[lab,i]},{i,indexlist2}],
+		4,
+			tab = Table[{i,WCL[lab,i]},{i,indexlist4}],
+		_,
+			Abort[]
+	];
+	tabnozeros=DeleteCases[tab,{_,0}];
+	(* Build Association with all indices related by redundancy *)
+	tabwcl=Cases[tabnozeros,{_,_WCL}];
+	asswcl=Association@Table[i->Cases[tabwcl,{_,i}][[;;,1]],{i,tabwcl[[;;,2]]//DeleteDuplicates}];
+	(* Build Association with all indices related by conjugation *)
+	tabconj=Cases[tabnozeros,{_,_Conjugate}]/.Conjugate[a_]:>a;
+	assconj=Association@Table[i->Cases[tabconj,{_,i}][[;;,1]],{i,tabconj[[;;,2]]}];
+	(* Build Association with all indices related by a minus sign *)
+	tabminus=Cases[tabnozeros,{_,_Times}]/.Times[ii_Integer,a_WCL]:>a;
+	assminus=Association@Table[i->Cases[tabminus,{_,i}][[;;,1]],{i,tabminus[[;;,2]]}];
+	Return[
+		Association[
+			"redundant" -> asswcl,
+			"conjugate" -> assconj,
+			"minus"     -> assminus
+		]
+	]
+]
+
+
+NonRedundantToSymmetricAssociation = Association[
+	Table[
+		Table[
+			i -> Sum[WCL[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]+Sum[Conjugate[WCL[lab,j]],{j,RedundancyAssociation[lab]["conjugate"][i]/._Missing->0}]-Sum[WCL[lab,j],{j,RedundancyAssociation[lab]["minus"][i]/._Missing->0}]
+			,
+			{i,SanDiegoBasis[lab]}
+		]
+		,
+		{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}
+	]//Flatten
+]
+
+
+NonRedundantToSymmetricLEFT[expr_] := expr/.NonRedundantToSymmetricAssociation
+
+
+SymmetricToNonRedundantAssociation = Association[
+	Table[
+		Table[
+			If[Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["conjugate"][i]/._Missing->{},RedundancyAssociation[lab]["minus"][i]/._Missing->{}]] == 1,
+				Nothing[],
+				i->1/Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["conjugate"][i]/._Missing->{},RedundancyAssociation[lab]["minus"][i]/._Missing->{}]] i
+			]
+			,
+		{i,SanDiegoBasis[lab]}
+		]
+		,
+		{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}
+	]//Flatten
+]
+
+
+SymmetricToNonRedundantLEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
 
 
 (* ::Section:: *)

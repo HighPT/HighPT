@@ -165,7 +165,7 @@ ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Make constants real*)
 
 
@@ -207,7 +207,7 @@ Yukawa[l:Except[Alternatives@@Join[{"u","d","e"}, {_Pattern, _Blank, _Except, _B
 )
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -424,11 +424,11 @@ $allowedParams = {
 (*List of default parameter values*)
 
 
-(*\[Alpha]EM$default = Around[127.925,0.016]^-1;
+\[Alpha]EM$default = Around[127.925,0.016]^-1;
 GF$default = Around[1.1663787*10^(-5),0.0000006*10^(-5)];
 mZ$default = Around[91.1876,0.0026];
 \[CapitalGamma]Z$default = Around[2.4955,0.0023];
-\[CapitalGamma]W$default = Around[2.085,0.042];*)
+\[CapitalGamma]W$default = Around[2.085,0.042];
 
 
 Param["\[Alpha]EM"][Default] := Around[127.925,0.016]^-1;

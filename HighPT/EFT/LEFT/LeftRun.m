@@ -231,19 +231,20 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 	Switch[
 		mode,
 		"LL",
-		Return[expr/.ReplaceRedundantLEFT/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])],
+		Return[SymmetricToNonRedundantLEFT[NonRedundantToSymmetricLEFT[expr]/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])]],
 		"DsixTools",
 		If[NumericQ[lowscale],
 			(*temp=(HighPTToDsixToolsLEFT[expr])//DsixTools`D6Simplify;*)
 			params=DeleteDuplicates@Cases[expr, _WCL, \[Infinity]];
 			(* Deal with the case of a single WCL being evolved *)
 			If[MatchQ[params,{}] && MatchQ[Head@expr,WCL],params={expr}];
+			params=Complement[params,SanDiegoBasis["\[Nu]"]];
 			If[MatchQ[params,{}],Message[LEFTRun::nocoefficients]];
 			evolution=Dispatch[(#1->DsixToolsToHighPTLEFT[DsixTools`LEFTEvolve[HighPTToDsixToolsLEFT[#1],lowscale]]&)/@params];
 			(*params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
 			temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];*)
 			(*Return[DsixToolsToHighPTLEFT[temp]]*)
-			Return[expr/.ReplaceRedundantLEFT/.evolution],
+			Return[SymmetricToNonRedundantLEFT[NonRedundantToSymmetricLEFT[expr]/.evolution]],
 			Message[LEFTRun::nonnumericlowscale];Abort[]
 		];,
 		"Off",
