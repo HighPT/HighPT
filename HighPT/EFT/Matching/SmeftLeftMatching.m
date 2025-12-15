@@ -232,7 +232,7 @@ MassRotate[Conjugate[a_],"dd"]:=MassRotate[a,"dd"]\[Conjugate]
 (*W couplings*)
 
 
-g22onmW2:=(4\[Pi] Param["\[Alpha]EM"])/(Param["sW"]^2 Mass["WBoson"]^2);
+g22onmW2:=(4\[Pi] Param["\[Alpha]EM"])/(Param["sW"]^2 Mass["WBoson"]^2)(1+Param["vev"]^2WC["HW",{}])^2;
 
 
 WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+Param["vev"]^4/2 (WC["l2H4D2",{\[Alpha],\[Beta]}]+I*WC["l2H4D3",{\[Alpha],\[Beta]}]);
@@ -248,7 +248,7 @@ WCoupling["ud",{i_,j_}]:=Param["vev"]^2 WC["Hud",{i,j}] + Param["vev"]^4/2 WC["u
 (*Z couplings*)
 
 
-gZ2onmZ2:=(4\[Pi] Param["\[Alpha]EM"])/(Param["cW"]^2 Param["sW"]^2 Mass["ZBoson"]^2);
+gZ2onmZ2:=(4\[Pi] Param["\[Alpha]EM"])/(Param["cW"]^2 Param["sW"]^2 Mass["ZBoson"]^2)(1+(Param["g1"]^2+Param["g2"]^2)Param["vev"]^2 WC["HWB",{}]/(2Param["g1"]Param["g2"]))^2;
 
 
 ZCoupling["\[Nu]L",{\[Alpha]_,\[Beta]_}]:=1/2 KroneckerDelta[\[Alpha],\[Beta]]-1/2 Param["vev"]^2 (WC["Hl1",{\[Alpha],\[Beta]}]- WC["Hl3",{\[Alpha],\[Beta]}]) - Param["vev"]^4/4 (WC["l2H4D1",{\[Alpha],\[Beta]}]-2 WC["l2H4D2",{\[Alpha],\[Beta]}]);
