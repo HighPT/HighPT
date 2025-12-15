@@ -425,8 +425,8 @@ CHkin = Param["vev"]^2 (WC["HBox",{}]-1/4 WC["HD",{}])
 
 
 (*SMEFTValue[Param["\[Lambda]"]] := *)
-(*SMEFTValue[Param["vev"]] := Param["vev"](1+(3 Param["vev"]^2)/(8 Param["\[Lambda]"])WC["H",{}])
-SMEFTValue[Mass["H"]] := 2 Param["\[Lambda]"] Param["vev"]^2(1 - (3 Param["vev"]^2)/(2 Param["\[Lambda]"])WC["H",{}]+2*CHkin)*)
+SMEFTValue[Param["vev"]] := Param["vev"](1+(3 Param["vev"]^2)/(8 Param["\[Lambda]"])WC["H",{}])
+(*SMEFTValue[Mass["H"]] := 2 Param["\[Lambda]"] Param["vev"]^2(1 - (3 Param["vev"]^2)/(2 Param["\[Lambda]"])WC["H",{}]+2*CHkin)*)
 
 
 (* ::Subsection:: *)
