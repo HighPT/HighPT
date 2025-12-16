@@ -464,7 +464,7 @@ $allowedMasses = {
 	"\[Rho]",
 	"\[Phi]",
 	"D+","D0","Ds",
-	"B0","Bs","Bc",
+	"B+","B0","Bs","Bc",
 	"p","n",
 	"ZBoson",
 	"H"
@@ -481,8 +481,15 @@ m\[Tau]$default = Around[1.77686,0.00012];*)
 
 
 Mass["e"][Default] := Around[0.510998928 10^-3,0.00000000015 10^-3]
+Info$default[Mass["e"]] := Row[{"PDG", Hyperlink["https://pdglive.lbl.gov/Particle.action?node=S003&init=0"]}]
+
+
 Mass["\[Mu]"][Default] := Around[.105658357,0.0000000023]
+Info$default[Mass["\[Mu]"]] := Row[{"PDG", Hyperlink["https://pdglive.lbl.gov/Particle.action?node=S004&init=0"]}]
+
+
 Mass["\[Tau]"][Default] := Around[1.77693,0.00009]
+Info$default[Mass["\[Tau]"]] := Row[{"PDG", Hyperlink["https://pdglive.lbl.gov/Particle.action?node=S035&init=0"]}]
 
 
 (* ::Subsubsection:: *)
@@ -563,10 +570,20 @@ Mass["\[Phi]"][Default] := Around[1.019461,0.000016];
 Mass["D+"][Default] := Around[1.86966,0.00005];
 Mass["D0"][Default] := Around[1.86484,0.00005];
 Mass["Ds"][Default] := Around[1.96835,0.00007];
+
+
 (* B *)
-Mass["B0"][Default] := Around[5.27966,0.00012];
-Mass["Bs"][Default] := Around[5.36692,0.00010];
+Mass["B+"][Default] := Around[5.27942,0.00008];
+Info$default[Mass["B+"]] := Row[{"PDG average", Hyperlink["https://pdglive.lbl.gov/Particle.action?init=0&node=S041"]}]
+
+Mass["B0"][Default] := Around[5.27963,0.00020];
+Info$default[Mass["B0"]] := Row[{"PDG average", Hyperlink["https://pdglive.lbl.gov/Particle.action?init=0&node=S042"]}]
+
+Mass["Bs"][Default] := Around[5.36691,0.00011];
+Info$default[Mass["Bs"]] := Row[{"PDG average", Hyperlink["https://pdglive.lbl.gov/Particle.action?init=0&node=S086"]}]
+
 Mass["Bc"][Default] := Around[6.27447,0.00032];
+Info$default[Mass["Bc"]] := Row[{"PDG average", Hyperlink["https://pdglive.lbl.gov/Particle.action?init=0&node=S091"]}]
 
 
 (* ::Subsubsection:: *)
@@ -620,7 +637,7 @@ Width["WBoson"][Default] := Around[2.085,0.042];
 Width["H"][Default] := Around[4.1,10^-6]*10^-3;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Lifetimes*)
 
 
@@ -671,12 +688,19 @@ Lifetime["Ds"][Default] := Around[5.012,0.022]*10^-13*stoGeV;
 
 
 Lifetime["B0"][Default] := Around[1.517,0.004]*10^-12*stoGeV;
+Info$default[Lifetime["B0"]] := Row[{"HFLAV", Hyperlink["https://hflav-eos.web.cern.ch/hflav-eos/osc/PDG_2025/"]}]
+
 Lifetime["B+"][Default] := Around[1.638,0.004]*10^-12*stoGeV;
-Lifetime["Bs"][Default] := Around[1.520,0.005]*10^-12*stoGeV;
+Info$default[Lifetime["B+"]] := Row[{"HFLAV", Hyperlink["https://hflav-eos.web.cern.ch/hflav-eos/osc/PDG_2025/"]}]
+
+Lifetime["Bs"][Default] := Around[1.516,0.006]*10^-12*stoGeV;
+Info$default[Lifetime["Bs"]] := Row[{"HFLAV", Hyperlink["https://hflav-eos.web.cern.ch/hflav-eos/osc/PDG_2025/"]}]
+
 Lifetime["Bc"][Default] := Around[0.510,0.009]*10^-12*stoGeV;
+Info$default[Lifetime["Bc"]] := Row[{"HFLAV", Hyperlink["https://hflav-eos.web.cern.ch/hflav-eos/osc/PDG_2025/"]}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Decay constants*)
 
 
