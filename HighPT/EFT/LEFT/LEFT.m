@@ -33,6 +33,9 @@ PackageExport["SanDiegoBasis"]
 (*Internal*)
 
 
+PackageScope["WCLS"]
+
+
 PackageScope["GetAllWCL"]
 
 
@@ -721,7 +724,7 @@ RedundancyAssociation[lab_]:=Module[
 NonRedundantToSymmetricAssociation = Association[
 	Table[
 		Table[
-			i -> Sum[WCL[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]+Sum[Conjugate[WCL[lab,j]],{j,RedundancyAssociation[lab]["conjugate"][i]/._Missing->0}]-Sum[WCL[lab,j],{j,RedundancyAssociation[lab]["minus"][i]/._Missing->0}]
+			i -> Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]+Sum[Conjugate[WCLS[lab,j]],{j,RedundancyAssociation[lab]["conjugate"][i]/._Missing->0}]-Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["minus"][i]/._Missing->0}]
 			,
 			{i,SanDiegoBasis[lab]}
 		]

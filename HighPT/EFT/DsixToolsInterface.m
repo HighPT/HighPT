@@ -413,7 +413,7 @@ DsixToolsToHighPTSM[expr_]:=expr/.{
 	DsixTools`gs->Param["g3"],
 	DsixTools`g->Param["g2"],
 	DsixTools`gp->Param["g1"],
-	DsixTools`m2->Mass["H"]^2,
+	DsixTools`m2->1/2 Mass["H"]^2,
 	DsixTools`\[Lambda]->Param["\[Lambda]"],
 	DsixTools`Gu[i_,j_]:>Yukawa["u",{i,j}],
 	DsixTools`Gd[i_,j_]:>Yukawa["d",{i,j}],
