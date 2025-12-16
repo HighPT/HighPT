@@ -240,6 +240,7 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 			If[MatchQ[params,{}] && MatchQ[Head@expr,WCL],params={expr}];
 			params=Complement[params,SanDiegoBasis["\[Nu]"]];
 			If[MatchQ[params,{}],Message[LEFTRun::nocoefficients]];
+			Print[params];
 			evolution=Dispatch[(#1->DsixToolsToHighPTLEFT[DsixTools`LEFTEvolve[HighPTToDsixToolsLEFT[#1],lowscale]]&)/@params];
 			(*params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
 			temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];*)

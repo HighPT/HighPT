@@ -669,7 +669,7 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 				],
 			{i,var}
 		]];
-		res = NonRedundantToSymmetricLEFT[expr]/.disp;
+		res = SymmetricToNonRedundantSMEFT[NonRedundantToSymmetricLEFT[expr]/.disp];
 		(*res=expr/.a_WCL:>EFTTruncate[TLMatching[a]/.b_Param:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]];
 		(*Print[res];*)
 		If[!OptionValue[SM],res = (res - (res/._WC->0))];*)
