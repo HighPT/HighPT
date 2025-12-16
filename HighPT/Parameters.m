@@ -450,7 +450,7 @@ Param["GF"][Default] := Around[1.1663787*10^(-5),0.0000006*10^(-5)];
 Param["\[Alpha]S"][Default] := Around[0.1179,0.0010]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Masses*)
 
 
@@ -482,7 +482,7 @@ m\[Tau]$default = Around[1.77686,0.00012];*)
 
 Mass["e"][Default] := Around[0.510998928 10^-3,0.00000000015 10^-3]
 Mass["\[Mu]"][Default] := Around[.105658357,0.0000000023]
-Mass["\[Tau]"][Default] := Around[1.77686,0.00012]
+Mass["\[Tau]"][Default] := Around[1.77693,0.00009]
 
 
 (* ::Subsubsection:: *)
