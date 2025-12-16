@@ -165,7 +165,7 @@ ReplaceConstants::usage= "ReplaceConstants[] returns a list of replacement rules
 ReplaceConstants[]:= Join[GetParameters[], ReplaceMassWidth[]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Make constants real*)
 
 
@@ -375,7 +375,7 @@ Vd= {
 }
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Parameter info*)
 
 
@@ -383,7 +383,7 @@ Vd= {
 Info$default[x_:(_Param| _DecayConstant | _Lifetime | _Mass | _Yukawa | _Vckm)] := "No information available"
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Allowed parameter values*)
 
 
@@ -416,7 +416,7 @@ $allowedParams = {
 };
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*EW input*)
 
 
@@ -440,7 +440,7 @@ Param["GF"][Default] := Around[1.1663787*10^(-5),0.0000006*10^(-5)];
 \[CapitalGamma]H$default = Around[4.1,0]*10^-3;*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*QCD input*)
 
 
@@ -450,7 +450,7 @@ Param["GF"][Default] := Around[1.1663787*10^(-5),0.0000006*10^(-5)];
 Param["\[Alpha]S"][Default] := Around[0.1179,0.0010]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Masses*)
 
 
@@ -595,7 +595,7 @@ Mass["ZBoson"][Default] := Around[91.1876,0.0026];
 Mass["H"][Default] := Around[125.25,0.17]; 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Widths*)
 
 
@@ -620,7 +620,7 @@ Width["WBoson"][Default] := Around[2.085,0.042];
 Width["H"][Default] := Around[4.1,10^-6]*10^-3;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Lifetimes*)
 
 
@@ -631,7 +631,8 @@ stoGeV=GeVtos^-1;
 $allowedLifetimes = {
 	"\[Mu]","\[Tau]",
 	"K+","KL",
-	"B0","B+","Bs"
+	"D+","D0","Ds",
+	"B0","B+","Bs","Bc"
 };
 
 
@@ -664,19 +665,25 @@ Lifetime["KL"][Default] := Around[5.116,0.021]*10^-8*stoGeV;
 \[Tau]Bs$default = Around[1.520,0.005]*10^-12*stoGeV;*)
 
 
+Lifetime["D+"][Default] := Around[1.033,0.005]*10^-12*stoGeV;
+Lifetime["D0"][Default] := Around[4.103,0.010]*10^-13*stoGeV;
+Lifetime["Ds"][Default] := Around[5.012,0.022]*10^-13*stoGeV;
+
+
 Lifetime["B0"][Default] := Around[1.517,0.004]*10^-12*stoGeV;
 Lifetime["B+"][Default] := Around[1.638,0.004]*10^-12*stoGeV;
 Lifetime["Bs"][Default] := Around[1.520,0.005]*10^-12*stoGeV;
+Lifetime["Bc"][Default] := Around[0.510,0.009]*10^-12*stoGeV;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Decay constants*)
 
 
 $allowedDecayConstants = {
 	"K+",
 	"D","Ds",
-	"B0","Bs"
+	"B0","Bs","Bc"
 };
 
 
@@ -705,11 +712,15 @@ DecayConstant["Bs"][Default] := Around[230.3,1.3]*10^-3;
 Info$default[DecayConstant["Bs"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
 
 
-(* ::Subsection:: *)
+DecayConstant["Bc"][Default] := Around[427,6]*10^-3;
+Info$default[DecayConstant["Bc"]] := Row[{"McNeile et al., ", Hyperlink["1207.0994","https://arxiv.org/pdf/1207.0994"]}]
+
+
+(* ::Subsection::Closed:: *)
 (*CKM*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vus*)
 
 
@@ -726,7 +737,7 @@ Vus$default := 1/2 (Vusplus$default+VusL$default)
 Param["|Vus|"][Default] := Vus$default
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vcb*)
 
 
@@ -737,7 +748,7 @@ Vcb$default := Sqrt[ExpValue$default["B->Dl\[Nu]_iso"]/((TheoryExpression["B->Dl
 Param["|Vcb|"][Default] := Vcb$default
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vub*)
 
 
@@ -748,7 +759,7 @@ Vub$default := Sqrt[ExpValue$default["B0->\[Pi]-l\[Nu]_high"]/((TheoryExpression
 Param["|Vub|"][Default] := Vub$default
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*\[Gamma]*)
 
 
@@ -756,7 +767,7 @@ Param["|Vub|"][Default] := Vub$default
 Param["\[Gamma]"][Default] := \[Gamma]CKM$default
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*CKM*)
 
 
@@ -780,7 +791,7 @@ Param["|Vub|"] = Around[0.0039,0.0002];
 Param["\[Gamma]CKM"] = Around[68.7,4.2] \[Pi]/180;*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*List of inputs*)
 
 
@@ -797,7 +808,7 @@ InputParameters[] := $inputs;
 InputParameters[x_] := Cases[$inputs,_x]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Processing the inputs*)
 
 
@@ -1509,7 +1520,7 @@ DefineParameters[Default] := DefineParameters[
 DefineParameters[Default]*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*DefineParameters*)
 
 
@@ -1678,7 +1689,7 @@ ExperimentalParameters = <||>;
 DefineParameters[Default]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*GetParameters*)
 
 
