@@ -61,8 +61,8 @@ EFTTruncate[expr_, OptionsPattern[]] := Module[
 	(* Kill dimension-eight operators if needed *)
 	If[
 		MatchQ[OptionValue[OperatorDimension],6],
-		tmpexpr = Together[expr/.WC[l:Alternatives@@Join[$WCList0d8,$WCList2d8,$WCList4d8],_]:>0],
-		tmpexpr = Together[expr]
+		tmpexpr = expr/.WC[l:Alternatives@@Join[$WCList0d8,$WCList2d8,$WCList4d8],_]:>0,
+		tmpexpr = expr
 	];
 	
 	(* Extract all the variables (and their conjugates) *)
