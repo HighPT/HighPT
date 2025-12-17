@@ -646,8 +646,12 @@ NindLEFT[lab_] := If[
 ]*)
 
 
+SanDiegoBasis::WrongLabel = "The label `1` is not a San Diego label"
+
+
 SanDiegoBasis[lab_] := Module[
 	{tab},
+	If[!MemberQ[Join[$WCLList3,$WCLList5,$WCLList6X3,$WCLList6psi4],lab],Message[SanDiegoBasis::WrongLabel,lab];Abort[]];
 	Switch[NindLEFT[lab],
 		0,
 		tab = WCL[lab,{}],

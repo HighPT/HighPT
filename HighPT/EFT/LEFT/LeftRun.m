@@ -204,6 +204,19 @@ WCL["uuS8RR",{1,2,2,2}]:>WCL["uuS8RR",{1,2,2,2}]+WCL["uuS8RR",{2,2,1,2}]
 (*LEFTRun*)
 
 
+safebasis=Complement[SanDiegoBasis[],
+	SanDiegoBasis["Me"],
+	SanDiegoBasis["M\[Nu]"],
+	SanDiegoBasis["Md"],
+	SanDiegoBasis["Mu"],
+	SanDiegoBasis["eeSRR"],
+	SanDiegoBasis["ddS1RR"],
+	SanDiegoBasis["ddS8RR"],
+	SanDiegoBasis["uuS1RR"],
+	SanDiegoBasis["uuS8RR"]
+];
+
+
 Get@FileNameJoin[{Global`$DirectoryHighPT,"EFT","LEFT","LEFTAD.dat"}];
 
 
@@ -234,13 +247,12 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 		Return[SymmetricToNonRedundantLEFT[NonRedundantToSymmetricLEFT[expr]/.WCLS->WCL/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])]],
 		"DsixTools",
 		If[NumericQ[lowscale],
-			(*temp=(HighPTToDsixToolsLEFT[expr])//DsixTools`D6Simplify;*)
 			params=DeleteDuplicates@Cases[expr, _WCL, \[Infinity]];
 			(* Deal with the case of a single WCL being evolved *)
 			If[MatchQ[params,{}] && MatchQ[Head@expr,WCL],params={expr}];
-			params=Complement[params,SanDiegoBasis["\[Nu]"]];
+			(* Eliminate parameters for which the running is wrong/absent *)
+			params=Intersection[params,safebasis];
 			If[MatchQ[params,{}],Message[LEFTRun::nocoefficients]];
-			Print[params];
 			evolution=Dispatch[(#1->DsixToolsToHighPTLEFT[DsixTools`LEFTEvolve[HighPTToDsixToolsLEFT[#1],lowscale]]&)/@params];
 			(*params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
 			temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];*)
