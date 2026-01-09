@@ -640,7 +640,7 @@ Options[MatchToSMEFT]={
 MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 	{
 	res,
-	var, disp,
+	var, disp, tmp,
 	currentmasses,
 	currentVd = IdentityMatrix@3,
 	currentBasis = "custom",
@@ -660,10 +660,11 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 		var = DeleteDuplicates[Cases[NonRedundantToSymmetricLEFT[expr],_WCLS,All]];
 		disp = Dispatch[Table[
 			i -> If[MatchQ[OptionValue[SMOnly],False],
+					tmp = RedefineSMEFTCouplings[TLMatching[i], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]];
 					If[
 						MatchQ[OptionValue[SM],False],
-						EFTTruncate[TLMatching[i]/.b_Param:>SMEFTValue[b]/.b_Mass:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]] - (TLMatching[i]/._WC->0),
-						EFTTruncate[TLMatching[i]/.b_Param:>SMEFTValue[b]/.b_Mass:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]]
+						tmp - (tmp/._WC->0),
+						tmp
 					],
 					(TLMatching[i]/._WC->0)
 				],

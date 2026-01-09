@@ -37,14 +37,23 @@ PackageScope["RedefineSMEFTCouplings"]
 (*list of parameters that do not get redefined in the SMEFT*)
 SMEFTInputParameterList$default=Flatten[{Mass["ZBoson"],Param["\[Alpha]EM"],Mass["H"],Param["\[Alpha]S"],Table[Yukawa[lab,{i,j}],{lab,{"u","d","e"}},{i,1,3},{j,1,3}],Param["vev"]}];
 (*list of the parameters that get redefined*)
-DimensionSixReplacements$default = Association[{Param["g1"]-> -(1/(4 (Param["g1"]^2-Param["g2"]^2)))(Param["g1"]^3 Param["vev"]^2 WC["HD",{}]+2 Param["g1"]^3 Param["vev"]^2 WC["Hl3",{1,1}]+2 Param["g1"]^3 Param["vev"]^2 WC["Hl3",{2,2}]+4 Param["g1"]^2 Param["g2"] Param["vev"]^2 WC["HWB",{}]-Param["g1"]^3 Param["vev"]^2 WC["ll",{1,2,2,1}]),
-Param["g2"]-> -(1/(4 (Param["g1"]^2-Param["g2"]^2)))(-Param["g2"]^3 Param["vev"]^2 WC["HD",{}]-2 Param["g2"]^3 Param["vev"]^2 WC["Hl3",{1,1}]-2 Param["g2"]^3 Param["vev"]^2 WC["Hl3",{2,2}]-4 Param["g1"] Param["g2"]^2 Param["vev"]^2 WC["HWB",{}]+Param["g2"]^3 Param["vev"]^2 WC["ll",{1,2,2,1}]),
-Mass["WBoson"]-> (Param["g2"]^2 Param["vev"]^2)/4}];
+DimensionSixReplacements$default = Association[{
+	(*Param["g1"]-> -(1/(4 (Param["g1"]^2-Param["g2"]^2)))(Param["g1"]^3 Param["vev"]^2 WC["HD",{}]+2 Param["g1"]^3 Param["vev"]^2 WC["Hl3",{1,1}]+2 Param["g1"]^3 Param["vev"]^2 WC["Hl3",{2,2}]+4 Param["g1"]^2 Param["g2"] Param["vev"]^2 WC["HWB",{}]-Param["g1"]^3 Param["vev"]^2 WC["ll",{1,2,2,1}]),*)
+	Param["g1"]->-((Param["g1"]^2 Param["vev"]^2 (Param["g1"] WC["HD",{}]+4 Param["g2"] WC["HWB",{}]))/(4 (Param["g1"]^2-Param["g2"]^2))),
+	(*Param["g2"]-> -(1/(4 (Param["g1"]^2-Param["g2"]^2)))(-Param["g2"]^3 Param["vev"]^2 WC["HD",{}]-2 Param["g2"]^3 Param["vev"]^2 WC["Hl3",{1,1}]-2 Param["g2"]^3 Param["vev"]^2 WC["Hl3",{2,2}]-4 Param["g1"] Param["g2"]^2 Param["vev"]^2 WC["HWB",{}]+Param["g2"]^3 Param["vev"]^2 WC["ll",{1,2,2,1}]),*)
+	Param["g2"]->(Param["g2"]^2 Param["vev"]^2 (Param["g2"] WC["HD",{}]+4 Param["g1"] WC["HWB",{}]))/(4 (Param["g1"]^2-Param["g2"]^2)),
+	Mass["WBoson"]-> (Param["g2"]^2 Param["vev"]^2)/4
+}];
 AllParamsAsAFunctionOfSMEFTInputs$default = Association[Table[param-> param +DimensionSixReplacements$default[param] ,{param,Keys[DimensionSixReplacements$default]}]];
 
 
+SMEFTInputParameterList$current = SMEFTInputParameterList$default;
+AllParamsAsAFunctionOfSMEFTInputs$current = AllParamsAsAFunctionOfSMEFTInputs$default;
+SMEFTInputScheme$current = {SMEFTInputParameterList$current,AllParamsAsAFunctionOfSMEFTInputs$current};
+
+
 Options[RedefineSMEFTCouplings]={
-SMEFTInputScheme -> {SMEFTInputParameterList$default,AllParamsAsAFunctionOfSMEFTInputs$default}, 
+SMEFTInputScheme -> (*{SMEFTInputParameterList$default,AllParamsAsAFunctionOfSMEFTInputs$default}*)SMEFTInputScheme$current, 
 EFTorder :> GetEFTorder[],
 OperatorDimension :> GetOperatorDimension[]
 };
