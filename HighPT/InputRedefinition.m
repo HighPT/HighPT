@@ -471,7 +471,7 @@ SMEFTValue[Param["cW"]] := EFTTruncate[Sqrt[1-SMEFTValue[Param["sW"]]^2], EFTord
 (*Gauge boson masses*)
 
 
-SMEFTValue[Mass["WBoson"]] := 1/2 Param["g2"] Param["vev"]+(3 Param["g2"] Param["vev"]^3 WC["H",{}])/(8 \[Lambda])+1/16 Param["g2"] Param["vev"] (Param["vev"]^4 WC["H61",{}]-Param["vev"]^4 WC["H62",{}])
+SMEFTValue[Mass["WBoson"]] := 1/2 Param["g2"] Param["vev"]+1/16 Param["g2"] Param["vev"]^5 (WC["H61",{}]-WC["H62",{}])
 
 
 (*SMEFTValue[Mass["ZBoson"]] := 1/2 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"]+(Param["vev"]^3 (Param["g1"]^2 WC["HD",{}]+Param["g2"]^2 WC["HD",{}]+4 Param["g1"] Param["g2"] WC["HWB",{}]))/(8 Sqrt[Param["g1"]^2+Param["g2"]^2])+1/8 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"] (-((8 (1/8 (Param["g1"]^2+Param["g2"]^2) Param["vev"]^4 WC["HD",{}]+1/2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HWB",{}])^2)/((Param["g1"]^2+Param["g2"]^2)^2 Param["vev"]^4))+1/((Param["g1"]^2+Param["g2"]^2) Param["vev"]^2) 8 (1/16 (Param["g1"]^2+Param["g2"]^2) (Param["vev"]^6 WC["H61",{}]+Param["vev"]^6 WC["H62",{}])+1/4 Param["g1"] Param["g2"] Param["vev"]^6 WC["HD",{}] WC["HWB",{}]+1/4 Param["vev"]^2 (2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HW",{}] WC["HWB",{}]+Param["g1"]^2 Param["vev"]^4 WC["HWB",{}]^2+Param["g2"]^2 Param["vev"]^4 WC["HWB",{}]^2+Param["g1"] Param["g2"] Param["vev"]^4 WC["WBH41",{}])))*)

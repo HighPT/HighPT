@@ -96,7 +96,7 @@ GetMatchingOrder[]:=If[MatchingOrder==0,Print["Tree-level matching"],Print["One-
 (*Auxiliary definitions*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Mass rotation*)
 
 
@@ -231,7 +231,7 @@ MassRotate[Conjugate[a_],"uu"]:=MassRotate[a,"uu"]\[Conjugate]
 MassRotate[Conjugate[a_],"dd"]:=MassRotate[a,"dd"]\[Conjugate]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*W couplings*)
 
 
@@ -273,6 +273,16 @@ ZCoupling["dL",{i_,j_}]:=(-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param
 
 
 ZCoupling["dR",{i_,j_}]:=(1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 WC["Hd",{i,j}]-Param["vev"]^4/4 WC["d2H4D",{i,j}];
+
+
+(* ::Subsection:: *)
+(*Masses*)
+
+
+TLMatching[WCLS["M\[Nu]",{\[Alpha]_,\[Beta]_}]] := 1/2 Param["vev"]^2 WC["\[Nu]\[Nu]",{\[Alpha],\[Beta]}];
+TLMatching[WCLS["Me",{\[Alpha]_,\[Beta]_}]] := Param["vev"]/Sqrt[2] (Yukawa["e",{\[Alpha],\[Beta]}]-1/2 Param["vev"]^2 WC["eH",{\[Beta],\[Alpha]}]\[Conjugate]);
+TLMatching[WCLS["Mu",{\[Alpha]_,\[Beta]_}]] := Param["vev"]/Sqrt[2] (Yukawa["u",{\[Alpha],\[Beta]}]-1/2 Param["vev"]^2 WC["uH",{\[Beta],\[Alpha]}]\[Conjugate]);
+TLMatching[WCLS["Md",{\[Alpha]_,\[Beta]_}]] := Param["vev"]/Sqrt[2] (Yukawa["d",{\[Alpha],\[Beta]}]-1/2 Param["vev"]^2 WC["dH",{\[Beta],\[Alpha]}]\[Conjugate]);
 
 
 (* ::Subsection:: *)

@@ -35,6 +35,9 @@ PackageScope["ExpandAbsolutes"]
 PackageScope["ExpandEverything"]
 
 
+PackageScope["GetVariables"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -79,3 +82,12 @@ ExpandAbsolutes[expr_] := expr/.Abs[x_]^2->AbsExpand[x]/.Abs[x_]:>Power[AbsExpan
 
 
 ExpandEverything[expr_]:=expr/.Re[x_]:>1/2 (x+Conjugate[x])/.Im[x_]:>-(I/2)(x-Conjugate[x])//ExpandAbsolutes//ExpandConjugates
+
+
+GetVariables[expr_]:=Module[
+	{varlist,var}
+	,
+	varlist=Variables/@(Level[expr,Depth[expr]]//.Conjugate[a_]:>a//.Re[a_]:>a//.Im[a_]:>a);
+	var=DeleteDuplicates[Join@@varlist];
+	Return[DeleteCases[var,_String]]
+]

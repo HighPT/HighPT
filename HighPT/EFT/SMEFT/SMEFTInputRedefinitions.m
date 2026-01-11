@@ -69,14 +69,14 @@ RedefineSMEFTCouplings[expr_,OptionsPattern[]]:= Module[
 (*store some useful information*)
 inputparams =OptionValue[SMEFTInputScheme][[1]];
 paramstorewriteintermsoftheinputs = Keys[OptionValue[SMEFTInputScheme][[2]]];
-checklist= Join[inputparams,paramstorewriteintermsoftheinputs];
+checklist= Join[inputparams,paramstorewriteintermsoftheinputs,Table[Vckm[i,j],{i,3},{j,3}]]//Flatten;
 replacements = Values[OptionValue[SMEFTInputScheme][[2]]];
-variables = DeleteDuplicates[DeleteCases[Variables[expr]/.{Re[x_]:> x,Conjugate[a_]:> a,Im[a_]:> a},_WC]];
+variables = DeleteCases[GetVariables[expr],_WC];
 smeftvalues =SMEFTValue/@Complement[variables,inputparams];
 
 (*first substitute the smeftvalue of all parameters that are not input parameters*)
 tmp = expr /. Thread[Complement[variables,inputparams]-> smeftvalues];
-VariablesAfterSubstitutingSMEFTValues = DeleteDuplicates[DeleteCases[Variables[tmp]/.{Re[x_]:> x,Conjugate[a_]:> a,Im[a_]:> a},_WC]];
+VariablesAfterSubstitutingSMEFTValues = DeleteCases[GetVariables[tmp],_WC];
 
 (*check that once this is done the expression has the right form, specifically*)
 (*1) that it does not contain Param["GF"]*)

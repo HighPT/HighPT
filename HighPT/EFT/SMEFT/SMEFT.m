@@ -194,7 +194,7 @@ WC[x_,{l1_[a_],l2_[b_],q1_[i_],q2_[j_]}] := WC[x,{a,b,i,j}]
 WC[x_,{f1_[a_],f2_[b_]}] := WC[x,{a,b}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*WC classes*)
 
 
@@ -218,6 +218,11 @@ class2WC= Alternatives[
 	"q2H2D31","q2H2D32","q2H2D33","q2H2D34",
 	"u2H2D31","u2H2D32",
 	"d2H2D31","d2H2D32"
+];
+
+
+class3WC= Alternatives[
+	"\[Nu]\[Nu]"
 ];
 
 
@@ -260,6 +265,13 @@ class8WC= Alternatives[
 
 
 WC[lab:class2WC,{p_Integer,r_Integer}]:= WC[lab,{r,p}]\[Conjugate] /; p>r
+
+
+(* ::Text:: *)
+(*2 fermion operators -class 3*)
+
+
+WC[lab:class3WC,{p_Integer,r_Integer}]:= WC[lab,{r,p}] /; p>r
 
 
 (* ::Text:: *)
@@ -462,6 +474,11 @@ $WCList0=Join[$WCList0d6,$WCList0d8]
 (*\[Psi]^2*)
 
 
+$WCList2d5=List[
+	"\[Nu]\[Nu]"
+]
+
+
 $WCList2d6=List[
 	(* Psi^2 H^2 D *)
 	"Hl1", "Hl3", "He", "Hq1", "Hq3", "Hu", "Hd",
@@ -511,7 +528,7 @@ $WCList2d8=List[
 	(* Psi^2 H^3 *)
 	"uH","dH","eH"
 ]*)
-$WCList2=Join[$WCList2d6,$WCList2d8]
+$WCList2=Join[$WCList2d5,$WCList2d6,$WCList2d8]
 
 
 (*$WCList2=List[
@@ -800,6 +817,7 @@ SymmetricToNonRedundantSMEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
 (*SMEFT Truncation*)
 
 
+MassDimension[Alternatives@@$WCList2d5] := 5
 MassDimension[Alternatives@@Join[$WCList0d6,$WCList2d6,$WCList4d6]] := 6
 MassDimension[Alternatives@@Join[$WCList0d8,$WCList2d8,$WCList4d8]] := 8
 
