@@ -159,7 +159,7 @@ InterferenceMatrixVH[s_, t_, mV_] :=
 (*Individual entries of the interference matrix*)
 
 
-MV11[s_, t_, mV_] := 2 s + t -(s t)/mV^2-t^2/mV^2-Mass["Higgs"]^2+(t Mass["Higgs"]^2)/mV^2 
+MV11[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 2 * s + t * u / mV^2 - Mass["Higgs"]^2]  (*2 s + t -(s t)/mV^2-t^2/mV^2-Mass["Higgs"]^2+(t Mass["Higgs"]^2)/mV^2 *)
 
 
 MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2 
@@ -264,7 +264,7 @@ ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand singular form factors*)
 
 
@@ -305,7 +305,7 @@ SChannelSumVH::usage = "SChannelSumVH[s, ff] denotes the sum of all s-channel me
 SChannelSumVH[_, 0] := 0
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Replace channel sums for VH production*)
 
 
@@ -342,7 +342,7 @@ ReplaceChannelSumsVH[channel_:("WH" | "ZH")] := Module[{mediators, replacementRu
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM properties*)
 
 
@@ -351,10 +351,13 @@ FlavorDiagSMVH[mediator_, ord_, {i_, j_}] := If[mediator === "ZBoson" && ord ===
 
 
 (* SM CC is Left-Handed *)
-LeftHandedCC[mediator_, order_, X_] := If[mediator === "WBoson" && order === SM, KroneckerDelta[X, Left], 1];
+LeftHandedCC[mediator_, order_, X_] := Module[{temp = 1},
+	If[order === SM, temp = KroneckerDelta[X, Left]];
+	Return[temp /. KroneckerDelta[OrderlessPatternSequence[Right, Left]] -> 0]
+];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand the full form factors*)
 
 

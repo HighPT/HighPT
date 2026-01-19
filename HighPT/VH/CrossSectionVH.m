@@ -15,7 +15,7 @@ Package["HighPT`"]
 (*Public:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Scoping*)
 
 
@@ -26,6 +26,10 @@ Package["HighPT`"]
 PackageExport["DifferentialCrossSectionVH"]
 PackageExport["CrossSectionVH"]
 PackageExport["MVHcuts"]
+PackageExport["FinalBoson"]
+PackageExport["Z"]
+PackageExport["W"]
+PackageExport["PartonicCrossSectionVH"]
 
 
 (* ::Subsection:: *)
@@ -33,7 +37,8 @@ PackageExport["MVHcuts"]
 
 
 PackageScope["HadronicDifferentialCrossSectionVH"]
-PackageScope["PartonicCrossSectionVH"]
+(*PackageScope["PartonicCrossSectionVH"]*)
+PackageScope["PDFConvCrossSection"]
 PackageScope["PartonicCMEnergyIntegration"]
 
 
@@ -54,7 +59,6 @@ PartonCrossSectionVH::usage="PartonCrossSectionVH[\!\(\*OverscriptBox[\(s\), \(^
 
 Options[PartonicCrossSectionVH]= {
 	PTcuts            -> {0,\[Infinity]},
-	yHcuts            -> {0,\[Infinity]}, (* Cut on the absolute value of rapidity of the Higgs -- In the CM frame *)
 	OperatorDimension :> GetOperatorDimension[]
 };
 
@@ -84,16 +88,6 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	(* User pT cuts *)
 	{pTmin, pTmax} = OptionValue[PTcuts];
 	
-	(* User cut on the absolute rapidity of the Higgs *)
-	(* !!!In the CM frame!!! *)
-	{yHmin, yHmax} = OptionValue[yHcuts];
-	(* Equivalent pT cuts *)
-	{pTminYh, pTmaxYh} = {ComputePTCutfromYH[yHmax, mV, s], ComputePTCutfromYH[yHmin, mV, s]};
-	
-	(* Updates the pT cuts if needed *)
-	pTmax = If[pTmaxYh < pTmax, pTmaxYh, pTmax];
-	pTmin = If[pTminYh > pTmin, pTminYh, pTmin];
-	
 	(* Limits *)
 	t1 = -(s/2) (1 - (mV^2 + Mass["Higgs"]^2)/s + Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmin^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
 	t2 = -(s/2) (1 - (mV^2 + Mass["Higgs"]^2)/s + Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmax^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
@@ -111,8 +105,8 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	
 	(* !!!!!!!!! Test !!!!!!!!!! *)
 	(* list with all replacements in the SMEFT *)
-	(*subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
-	\[Sigma] = \[Sigma] /. subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;*)
+	subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
+	\[Sigma] = \[Sigma] /. CanonizeFFVH /.subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;
 	(* !!!!!!!!!!!!!!!!!!!!!!!!! *)
 	
 	Return @ Expand[factor * \[Sigma]] (* GeV^-2*)
@@ -193,7 +187,7 @@ IntegrateTVH[arg_, t_, finalStateV_] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*ReplaceIntegrals*)
 
 
@@ -207,7 +201,7 @@ ReplaceIntegralsVH[t_] := {
 }
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Hadron-level cross-section for VH production*)
 
 
@@ -218,15 +212,15 @@ ReplaceIntegralsVH[t_] := {
 PartonicCMEnergyIntegration::usage = "Performs the integration over the partonic CM energy";
 
 
-PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, arguments_] := Module[
+PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_:(Z|W), arguments_] := Module[
 	{
 		\[Sigma], s, subs, \[Epsilon], MyMin, MyMax, sIntegralList,
 		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse
 	},
 	(* Compute the hadronic cross-section  *)
-	\[Sigma] = \[Sigma]HadFunc[s, arguments];
+	\[Sigma] = \[Sigma]HadFunc[s, V, arguments];
 	
-	(* 3. Replace Min/Max with proxies to avoid OneIdentity issues *)
+	(* Replace Min/Max with proxies to avoid OneIdentity issues *)
     \[Sigma] = \[Sigma] /. {Min -> MyMin, Max -> MyMax};
 	
 	(* 1. Build the integrand in s *)
@@ -235,13 +229,13 @@ PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, arguments_] := Mod
         , "Integrand (s)"
     ];
 	
-	(* 4. Collect all s integrals *)
+	(* Collect all s integrals *)
     sIntegralList = DeleteDuplicates @ Cases[\[Sigma], _Integrand, All];
     
-    (* 5. Map each distinct integral to a dummy symbol *)
+    (* Map each distinct integral to a dummy symbol *)
     integralAssoc = Association[(# -> dummyIntegral[Unique[]]) & /@ sIntegralList];
     
-    (* 6. Remove redundant conjugate integrals *)
+    (* Remove redundant conjugate integrals *)
     Do[
         If[! MemberQ[nonRedundantIntegarlList, int],
             With[
@@ -261,7 +255,7 @@ PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, arguments_] := Mod
         {int, sIntegralList}
     ];
     
-    (* 7. Build rules for the unique integrals *)
+    (* Build rules for the unique integrals *)
     integralAssocReverse = Table[
         integralAssoc[int] -> int,
         {int, nonRedundantIntegarlList}
@@ -277,11 +271,11 @@ PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, arguments_] := Mod
         "NIntegrate"
     ];
     
-	(* 9. Substitute back in \[Sigma] *)
+	(* Substitute back in \[Sigma] *)
     \[Sigma] = \[Sigma] /. integralAssoc;
     \[Sigma] = \[Sigma] /. integralAssocReverse;
     
-    (* 10. Warn if something is left unintegrated *)
+    (* Warn if something is left unintegrated *)
     If[! FreeQ[\[Sigma], _dummyIntegral],
         Message[CrossSection::inteval,
             Length @ DeleteDuplicates @ Cases[\[Sigma], _dummyIntegral, All]
@@ -302,6 +296,7 @@ CrossSectionVH::usage = "Cross-section for VH production";
 Options[CrossSectionVH] = {
 	MVHcuts           -> {300, 13000},
 	PTcuts            -> {0, \[Infinity]},
+	FinalBoson        -> Z,
 	FF                -> False,
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
@@ -315,7 +310,6 @@ CrossSectionVH[OptionsPattern[]] := Module[
 		\[Sigma], smin, smax, \[Sigma]Had, s, subs, \[Epsilon], MyMin, MyMax, sIntegralList,
 		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse
 	},
-	(* !!! Only Zh !!! *)
 	(* Check options -- TODO *)
 	
 	(* Min and Max CM energy squared *)
@@ -324,12 +318,12 @@ CrossSectionVH[OptionsPattern[]] := Module[
 	(* Performs the integration over the partonic CM energy *)
 	\[Sigma] = PartonicCMEnergyIntegration[
 		HadronicDifferentialCrossSectionVH, 
-		{smin, smax}, 
+		{smin, smax}, OptionValue[FinalBoson],
 		{PTcuts -> OptionValue[PTcuts], OperatorDimension -> OptionValue[OperatorDimension]}
 	];
 	
 	(* !!!!! REPLACE IT BY SubstituteFFVH WHICH STILL NEEDS TO BE IMPLEMENTED !!!!! *)
-	subs = Join[SubstitutionRulesMediatorsVH["ZBoson"], SubstituteRulesSMEFTVH[\[Epsilon]]];
+	subs = Join[SubstitutionRulesMediatorsVH["ZBoson"], SubstitutionRulesMediatorsVH["WBoson"], SubstituteRulesSMEFTVH[\[Epsilon]]];
 	\[Sigma] = \[Sigma] /. subs /. \[Epsilon] -> (Param["vev"]/ 1000)^2 /. ReplaceConstants[];
 	(* !!!!!!!!!!!!!!!!!!!!!!!!!!! *)
 	
@@ -347,7 +341,7 @@ CrossSectionVH[OptionsPattern[]] := Module[
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Hadronic differential VH cross-section (for internal use)*)
 
 
@@ -360,41 +354,23 @@ Options[HadronicDifferentialCrossSectionVH] = {
 }
 
 
-HadronicDifferentialCrossSectionVH[s_, OptionsPattern[]] := Module[
+HadronicDifferentialCrossSectionVH[s_, V_:(Z|W), OptionsPattern[]] := Module[
 	{
 		\[Sigma]PartonLevel, \[Sigma], \[Sigma]HadronDiff,
-		GeV2toPB=(10^9)/(2.56819),
-		f, i, j
+		GeV2toPB=(10^9)/(2.56819), \[Sigma]ConvFunc,
+		fbar, f, i, j
 	},
-	(* !!!! Only Zh for the moment !!! *)
 	
-	(* Parton-level cross-section for arbitrary initial flavors *)
-	\[Sigma]PartonLevel = PartonicCrossSectionVH[
+	(* Function to convolute the parton luminosity with the PDF *)
+	\[Sigma]ConvFunc = PDFConvCrossSection[
 		s, 
-	    {f[i], f[j]},
-	    PTcuts -> OptionValue[PTcuts],
+		V, 
+		PTcuts -> OptionValue[PTcuts],
 	    OperatorDimension -> OptionValue[OperatorDimension]
 	];
 	
-	(* Convolute the partonic cross-sections with the parton-parton luminosities *)
-	\[Sigma]["d_dbar"] = 1/s * PartonLuminosity["d_dbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 1, j -> 1};
-	\[Sigma]["d_sbar"] = 1/s * PartonLuminosity["d_sbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 2, j -> 1};
-	\[Sigma]["d_bbar"] = 1/s * PartonLuminosity["d_bbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 3, j -> 1};
-	\[Sigma]["s_dbar"] = 1/s * PartonLuminosity["s_dbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 1, j -> 2};
-	\[Sigma]["s_sbar"] = 1/s * PartonLuminosity["s_sbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 2, j -> 2};
-	\[Sigma]["s_bbar"] = 1/s * PartonLuminosity["s_bbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 3, j -> 2};
-	\[Sigma]["b_dbar"] = 1/s * PartonLuminosity["b_dbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 1, j -> 3};
-	\[Sigma]["b_sbar"] = 1/s * PartonLuminosity["b_sbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 2, j -> 3};
-	\[Sigma]["b_bbar"] = 1/s * PartonLuminosity["b_bbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> d, i -> 3, j -> 3};
-	\[Sigma]["u_ubar"] = 1/s * PartonLuminosity["u_ubar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 1, j -> 1};
-	\[Sigma]["u_cbar"] = 1/s * PartonLuminosity["u_cbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 2, j -> 1};
-	\[Sigma]["c_ubar"] = 1/s * PartonLuminosity["c_ubar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 1, j -> 2};
-	\[Sigma]["c_cbar"] = 1/s * PartonLuminosity["c_cbar"][Sqrt[s]] * \[Sigma]PartonLevel/.{f -> u, i -> 2, j -> 2};
-	
-	\[Sigma]HadronDiff = Plus[
-		\[Sigma]["d_dbar"], \[Sigma]["d_sbar"], \[Sigma]["d_bbar"], \[Sigma]["s_dbar"], \[Sigma]["s_sbar"], \[Sigma]["s_bbar"], \[Sigma]["b_dbar"], 
-		\[Sigma]["b_sbar"], \[Sigma]["b_bbar"], \[Sigma]["u_ubar"], \[Sigma]["u_cbar"], \[Sigma]["c_ubar"], \[Sigma]["c_cbar"]
-	];
+	(* Hadronic differential x-section including all possible flavors *)
+	\[Sigma]HadronDiff = Plus @@ ( \[Sigma]ConvFunc /@ ListInitialQuarkFlavors[V] );
 	
 	(* Change units from GeV^-2 to pb *)
 	\[Sigma]HadronDiff = GeV2toPB * \[Sigma]HadronDiff;
@@ -407,7 +383,97 @@ HadronicDifferentialCrossSectionVH[s_, OptionsPattern[]] := Module[
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsubsection::Closed:: *)
+(*Convoluted PDF with the partonic cross-section for ZH and WH production*)
+
+
+Options[PDFConvCrossSection] = {
+	PTcuts            -> {0, \[Infinity]},
+	OperatorDimension :> GetOperatorDimension[]
+}
+
+
+PDFConvCrossSection[s_, Z, OptionsPattern[]] := Module[
+	{
+		\[Sigma]Conv, \[Sigma]PartonLevel, f, i, j, dummyReplList
+	},
+	(* Parton level cross-section for ZH production - same fermion *)
+	\[Sigma]PartonLevel = PartonicCrossSectionVH[
+		s, 
+	    {f[i], f[j]},
+	    PTcuts -> OptionValue[PTcuts],
+	    OperatorDimension -> OptionValue[OperatorDimension]
+	];
+	
+	(* PDF x Partonic x-section *)
+	\[Sigma]Conv = \[Sigma]PartonLevel /. {f -> dummyReplList["type"], i -> dummyReplList["\[Psi]bar"], j -> dummyReplList["\[Psi]"]};
+	\[Sigma]Conv = 1/s * PartonLuminosity[dummyReplList["PDF"]][Sqrt[s]] * \[Sigma]Conv;
+	
+	Return @ Function[x, \[Sigma]Conv /. dummyReplList -> x]
+]
+
+
+PDFConvCrossSection[s_, W, OptionsPattern[]] := Module[
+	{
+		\[Sigma]Conv, \[Sigma]PartonLevel, fbar, f, i, j, dummyReplList
+	},
+	(* Parton level cross-section for WH production *)
+	\[Sigma]PartonLevel = PartonicCrossSectionVH[
+		s, 
+	    {fbar[i], f[j]},
+	    PTcuts -> OptionValue[PTcuts],
+	    OperatorDimension -> OptionValue[OperatorDimension]
+	];
+	
+	(* PDF x Partonic x-section *)
+	\[Sigma]Conv = \[Sigma]PartonLevel /. {fbar -> dummyReplList["\[Psi]bar"], i -> dummyReplList["\[Psi]barI"], f -> dummyReplList["\[Psi]"], j -> dummyReplList["\[Psi]J"]};
+	\[Sigma]Conv = 1/s * PartonLuminosity[dummyReplList["PDF"]][Sqrt[s]] * \[Sigma]Conv;
+	
+	Return @ Function[x, \[Sigma]Conv /. dummyReplList -> x]
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*List of the different quark flavors and their Parton Luminosities for ZH and WH production*)
+
+
+ListInitialQuarkFlavors::usage = "Creates a list with the initial quark flavors that must be considered in the computation of the hadronic diff. x-section"
+
+
+ListInitialQuarkFlavors[Z] = {
+	<|"PDF" -> "d_dbar", "type" -> d, "\[Psi]bar" -> 1, "\[Psi]" -> 1|>,
+	<|"PDF" -> "d_sbar", "type" -> d, "\[Psi]bar" -> 2, "\[Psi]" -> 1|>,
+	<|"PDF" -> "d_bbar", "type" -> d, "\[Psi]bar" -> 3, "\[Psi]" -> 1|>,
+	<|"PDF" -> "s_dbar", "type" -> d, "\[Psi]bar" -> 1, "\[Psi]" -> 2|>,
+	<|"PDF" -> "s_sbar", "type" -> d, "\[Psi]bar" -> 2, "\[Psi]" -> 2|>,
+	<|"PDF" -> "s_bbar", "type" -> d, "\[Psi]bar" -> 3, "\[Psi]" -> 2|>,
+	<|"PDF" -> "b_dbar", "type" -> d, "\[Psi]bar" -> 1, "\[Psi]" -> 3|>,
+	<|"PDF" -> "b_sbar", "type" -> d, "\[Psi]bar" -> 2, "\[Psi]" -> 3|>,
+	<|"PDF" -> "b_bbar", "type" -> d, "\[Psi]bar" -> 3, "\[Psi]" -> 3|>,
+	<|"PDF" -> "u_ubar", "type" -> u, "\[Psi]bar" -> 1, "\[Psi]" -> 1|>,
+	<|"PDF" -> "u_cbar", "type" -> u, "\[Psi]bar" -> 2, "\[Psi]" -> 1|>,
+	<|"PDF" -> "c_ubar", "type" -> u, "\[Psi]bar" -> 1, "\[Psi]" -> 2|>,
+	<|"PDF" -> "c_cbar", "type" -> u, "\[Psi]bar" -> 2, "\[Psi]" -> 2|>
+};
+
+
+ListInitialQuarkFlavors[W] = {
+	<|"PDF" -> "d_ubar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 1, "\[Psi]J" -> 1|>,
+	<|"PDF" -> "d_cbar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 2, "\[Psi]J" -> 1|>,
+	<|"PDF" -> "s_ubar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 1, "\[Psi]J" -> 2|>,
+	<|"PDF" -> "s_cbar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 2, "\[Psi]J" -> 2|>,
+	<|"PDF" -> "b_ubar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 1, "\[Psi]J" -> 3|>,
+	<|"PDF" -> "b_cbar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 2, "\[Psi]J" -> 3|>,
+	<|"PDF" -> "u_dbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 1, "\[Psi]J" -> 1|>,
+	<|"PDF" -> "u_sbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 2, "\[Psi]J" -> 1|>,
+	<|"PDF" -> "u_bbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 3, "\[Psi]J" -> 1|>,
+	<|"PDF" -> "c_dbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 1, "\[Psi]J" -> 2|>,
+	<|"PDF" -> "c_sbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 2, "\[Psi]J" -> 2|>,
+	<|"PDF" -> "c_bbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 3, "\[Psi]J" -> 2|>
+};
+
+
+(* ::Subsection::Closed:: *)
 (*Hadronic differential VH cross-section (for external use)*)
 
 
@@ -417,6 +483,7 @@ DifferentialCrossSectionVH::usage = "Differential cross-section for VH productio
 Options[DifferentialCrossSectionVH] = {
    FF                 -> False,
    Coefficients       -> All,
+   FinalBoson        -> Z,
    EFTorder           :> GetEFTorder[],
    OperatorDimension  :> GetOperatorDimension[],
    PTcuts             -> {0, \[Infinity]},
@@ -427,14 +494,13 @@ Options[DifferentialCrossSectionVH] = {
 DifferentialCrossSectionVH[OptionsPattern[]] := Module[
 	{\[Sigma], s, \[Epsilon], subs}
 	,
-	(* !!!!!! Only for Zh at the moment !!!!!!! *)
 	
-	(* Check options *)
-	OptionCheck[#, OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, EFTscale};
+	(* Check options - TODO *)
+	(*OptionCheck[#, OptionValue[#]]& /@ {FF, Coefficients, EFTorder, OperatorDimension, PTcuts, EFTscale};*)
 	
 	(* Computes the hadronic cross-section (d\[Sigma]/ds) *)
 	\[Sigma] = HadronicDifferentialCrossSectionVH[
-		s, 
+		s, OptionValue[FinalBoson],
 		PTcuts -> OptionValue[PTcuts],
 		OperatorDimension -> OptionValue[OperatorDimension]
 	];

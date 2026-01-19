@@ -45,3 +45,12 @@ PackageScope["SubstitutionRulesMediatorsVH"]
 SubstitutionRulesMediatorsVH["ZBoson"] = {
 	ff[{Vector, 1}, {"ZBoson", SM}, X_, {\[Psi]_[i_], \[Psi]_[j_]}] :> Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]^3/(2 * Param["sW"]^3 * Param["cW"]^3) * (WeakIsospin3[\[Psi], X] - Param["sW"]^2 * Charge[\[Psi]]) * KroneckerDelta[i, j]
 }
+
+
+(* ::Subsubsection:: *)
+(*W*)
+
+
+SubstitutionRulesMediatorsVH["WBoson"] = {
+	ff[{Vector, 1}, {"WBoson", SM}, X_, {q1_[i_], q2_[j_]}] :> (1/(2*Sqrt[2])) * Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]^3 / Param["sW"]^3 * KroneckerDelta[i, j] 
+}
