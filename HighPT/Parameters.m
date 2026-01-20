@@ -321,11 +321,11 @@ ComplexAround[rz+I*iz,drz+I*diz]
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*CKM parametrization*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Extracting Wolfenstein from inputs*)
 
 
@@ -383,7 +383,7 @@ Vd= {
 Info$default[x_:(_Param| _DecayConstant | _Lifetime | _Mass | _Yukawa | _Vckm)] := "No information available"
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Allowed parameter values*)
 
 
@@ -392,7 +392,7 @@ $allowedInputValues = <|
 	Width         -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default,
 	Lifetime      -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default,
 	DecayConstant -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default,
-	Param         -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default
+	Param         -> Around[_?((NumericQ[#]&&NonNegative[#])&),_?((NumericQ[#]&&NonNegative[#])&)]| Default | 0
 |>
 
 
@@ -405,7 +405,7 @@ InputCheck[input_Rule] := If[!MatchQ[input[[2]], $allowedInputValues[Head[input[
 InputCheck::inputvalue= "Invalid format for input: `1`, the allowed values for `2` must match `3`.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Experimental (default) Inputs*)
 
 
@@ -450,7 +450,7 @@ Param["GF"][Default] := Around[1.1663787*10^(-5),0.0000006*10^(-5)];
 Param["\[Alpha]S"][Default] := Around[0.1179,0.0010]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Masses*)
 
 
@@ -637,7 +637,7 @@ Width["WBoson"][Default] := Around[2.085,0.042];
 Width["H"][Default] := Around[4.1,10^-6]*10^-3;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Lifetimes*)
 
 
@@ -700,7 +700,7 @@ Lifetime["Bc"][Default] := Around[0.510,0.009]*10^-12*stoGeV;
 Info$default[Lifetime["Bc"]] := Row[{"HFLAV", Hyperlink["https://hflav-eos.web.cern.ch/hflav-eos/osc/PDG_2025/"]}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Decay constants*)
 
 
@@ -832,7 +832,7 @@ InputParameters[] := $inputs;
 InputParameters[x_] := Cases[$inputs,_x]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Processing the inputs*)
 
 
@@ -962,7 +962,7 @@ Wolfenstein$current = {
 }*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*CKM stuff (OLD)*)
 
 
@@ -1075,7 +1075,7 @@ DefineBasisAlignment[matrix_ /; (Dimensions[matrix]==={3,3})] := Module[{},
 DefineBasisAlignment[arg:Except["up"|"down"]/;(Dimensions[arg]=!={3,3})] := (Message[DefineBasisAlignment::invalidarg,arg/.GetParameters[]];Abort[])
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*DefineParameters - OLD*)
 
 
@@ -1544,7 +1544,7 @@ DefineParameters[Default] := DefineParameters[
 DefineParameters[Default]*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*DefineParameters*)
 
 

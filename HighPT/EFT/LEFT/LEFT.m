@@ -29,6 +29,9 @@ PackageExport["WCL"]
 PackageExport["SanDiegoBasis"]
 
 
+PackageExport["LEFTBasis"]
+
+
 (* ::Subsection:: *)
 (*Internal*)
 
@@ -628,10 +631,10 @@ NindLEFT[lab_] := If[
 	MemberQ[$WCLList6psi4,lab],
 	4,
 	If[
-		MemberQ[Join[$WCLList3,$WCLList5],lab],
+		MemberQ[Join[$WCLList3,$WCLList5,$WCLList4],lab],
 		2,
 		If[
-			MemberQ[$WCLList6X3,lab],
+			MemberQ[Join[$WCLList6X3,$WCLList2],lab],
 			0,
 			Abort[]
 		]
@@ -667,6 +670,31 @@ SanDiegoBasis[lab_] := Module[
 
 
 SanDiegoBasis[] = Table[SanDiegoBasis[lab],{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}]//Flatten
+
+
+(* ::Subsection:: *)
+(*Full LEFT basis*)
+
+
+LEFTBasis::WrongLabel = "The label `1` is not a LEFT label"
+
+
+LEFTBasis[lab_] := Module[
+	{tab},
+	If[MemberQ[Join[$WCLList3,$WCLList5,$WCLList6X3,$WCLList6psi4],lab],Return[SanDiegoBasis[lab]]];
+	If[!MemberQ[Join[$WCLList2,$WCLList4],lab],Message[LEFTBasis::WrongLabel,lab];Abort[]];
+	Switch[NindLEFT[lab],
+		0,
+		tab = WCL[lab,{}],
+		2,
+		tab = Table[WCL[lab,{i,j}],{i,3},{j,3}],
+		4,
+		tab = Table[WCL[lab,{i,j,k,l}],{i,3},{j,3},{k,3},{l,3}],
+		_,
+		Abort[]
+	];
+	Return[Cases[tab,_WCL,All]//DeleteDuplicates]
+]
 
 
 (* ::Subsection:: *)
@@ -730,10 +758,10 @@ NonRedundantToSymmetricAssociation = Association[
 		Table[
 			i -> Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]+Sum[Conjugate[WCLS[lab,j]],{j,RedundancyAssociation[lab]["conjugate"][i]/._Missing->0}]-Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["minus"][i]/._Missing->0}]
 			,
-			{i,SanDiegoBasis[lab]}
+			{i,LEFTBasis[lab]}
 		]
 		,
-		{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}
+		{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4,$WCLList4,$WCLList2]}
 	]//Flatten
 ]
 
@@ -749,7 +777,7 @@ SymmetricToNonRedundantAssociation = Association[
 				i->1/Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["conjugate"][i]/._Missing->{},RedundancyAssociation[lab]["minus"][i]/._Missing->{}]] i
 			]
 			,
-		{i,SanDiegoBasis[lab]}
+		{i,LEFTBasis[lab]}
 		]
 		,
 		{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}

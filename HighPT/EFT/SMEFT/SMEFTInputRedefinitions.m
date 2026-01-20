@@ -4,7 +4,7 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPT`InputRedefinitions`*)
+(*HighPT`SMEFTInputRedefinitions`*)
 
 
 (* ::Subtitle:: *)
@@ -35,16 +35,20 @@ PackageScope["RedefineSMEFTCouplings"]
 
 
 (*list of parameters that do not get redefined in the SMEFT*)
-SMEFTInputParameterList$default=Flatten[{Mass["ZBoson"],Param["\[Alpha]EM"],Mass["H"],Param["\[Alpha]S"],Table[Yukawa[lab,{i,j}],{lab,{"u","d","e"}},{i,1,3},{j,1,3}],Param["vev"]}];
+SMEFTInputParameterList$default=Flatten[{(*Mass["WBoson"],*)Mass["ZBoson"],Param["\[Alpha]EM"],Mass["H"],Param["\[Alpha]S"],Table[Yukawa[lab,{i,j}],{lab,{"u","d","e"}},{i,1,3},{j,1,3}],Param["vev"]}];
+
 (*list of the parameters that get redefined*)
 DimensionSixReplacements$default = Association[{
-	(*Param["g1"]-> -(1/(4 (Param["g1"]^2-Param["g2"]^2)))(Param["g1"]^3 Param["vev"]^2 WC["HD",{}]+2 Param["g1"]^3 Param["vev"]^2 WC["Hl3",{1,1}]+2 Param["g1"]^3 Param["vev"]^2 WC["Hl3",{2,2}]+4 Param["g1"]^2 Param["g2"] Param["vev"]^2 WC["HWB",{}]-Param["g1"]^3 Param["vev"]^2 WC["ll",{1,2,2,1}]),*)
 	Param["g1"]->-((Param["g1"]^2 Param["vev"]^2 (Param["g1"] WC["HD",{}]+4 Param["g2"] WC["HWB",{}]))/(4 (Param["g1"]^2-Param["g2"]^2))),
-	(*Param["g2"]-> -(1/(4 (Param["g1"]^2-Param["g2"]^2)))(-Param["g2"]^3 Param["vev"]^2 WC["HD",{}]-2 Param["g2"]^3 Param["vev"]^2 WC["Hl3",{1,1}]-2 Param["g2"]^3 Param["vev"]^2 WC["Hl3",{2,2}]-4 Param["g1"] Param["g2"]^2 Param["vev"]^2 WC["HWB",{}]+Param["g2"]^3 Param["vev"]^2 WC["ll",{1,2,2,1}]),*)
-	Param["g2"]->(Param["g2"]^2 Param["vev"]^2 (Param["g2"] WC["HD",{}]+4 Param["g1"] WC["HWB",{}]))/(4 (Param["g1"]^2-Param["g2"]^2)),
-	Mass["WBoson"]-> (Param["g2"]^2 Param["vev"]^2)/4
+	Param["g2"]->(Param["vev"]^2 (Param["g2"]^3 WC["HD",{}]+4 Param["g1"] Param["g2"]^2 WC["HWB",{}]))/(4 (Param["g1"]^2-Param["g2"]^2))
 }];
-AllParamsAsAFunctionOfSMEFTInputs$default = Association[Table[param-> param +DimensionSixReplacements$default[param] ,{param,Keys[DimensionSixReplacements$default]}]];
+
+DimensionEightReplacements$default = Association[{
+	Param["g1"]->-(1/(32 (Param["g1"]^2-Param["g2"]^2)^3)) Param["g1"]^2 Param["vev"]^4 (4 Param["g1"] (Param["g1"]^2-Param["g2"]^2)^2 WC["H61",{}]+4 Param["g1"] (Param["g1"]^2-Param["g2"]^2)^2 WC["H62",{}]-3 Param["g1"]^5 WC["HD",{}]^2+7 Param["g1"]^3 Param["g2"]^2 WC["HD",{}]^2+32 Param["g1"]^4 Param["g2"] WC["HB",{}] WC["HWB",{}]-64 Param["g1"]^2 Param["g2"]^3 WC["HB",{}] WC["HWB",{}]+32 Param["g2"]^5 WC["HB",{}] WC["HWB",{}]+24 Param["g1"]^2 Param["g2"]^3 WC["HD",{}] WC["HWB",{}]+8 Param["g2"]^5 WC["HD",{}] WC["HWB",{}]+32 Param["g1"]^4 Param["g2"] WC["HW",{}] WC["HWB",{}]-64 Param["g1"]^2 Param["g2"]^3 WC["HW",{}] WC["HWB",{}]+32 Param["g2"]^5 WC["HW",{}] WC["HWB",{}]+16 Param["g1"]^5 WC["HWB",{}]^2-16 Param["g1"]^3 Param["g2"]^2 WC["HWB",{}]^2+64 Param["g1"] Param["g2"]^4 WC["HWB",{}]^2+16 Param["g1"]^4 Param["g2"] WC["WBH41",{}]-32 Param["g1"]^2 Param["g2"]^3 WC["WBH41",{}]+16 Param["g2"]^5 WC["WBH41",{}]),
+	Param["g2"]->-(1/(32 (-Param["g1"]^2+Param["g2"]^2)^3)) Param["g2"]^2 Param["vev"]^4 (4 Param["g2"] (Param["g1"]^2-Param["g2"]^2)^2 WC["H61",{}]+4 Param["g2"] (Param["g1"]^2-Param["g2"]^2)^2 WC["H62",{}]+7 Param["g1"]^2 Param["g2"]^3 WC["HD",{}]^2-3 Param["g2"]^5 WC["HD",{}]^2+32 Param["g1"]^5 WC["HB",{}] WC["HWB",{}]-64 Param["g1"]^3 Param["g2"]^2 WC["HB",{}] WC["HWB",{}]+32 Param["g1"] Param["g2"]^4 WC["HB",{}] WC["HWB",{}]+8 Param["g1"]^5 WC["HD",{}] WC["HWB",{}]+24 Param["g1"]^3 Param["g2"]^2 WC["HD",{}] WC["HWB",{}]+32 Param["g1"]^5 WC["HW",{}] WC["HWB",{}]-64 Param["g1"]^3 Param["g2"]^2 WC["HW",{}] WC["HWB",{}]+32 Param["g1"] Param["g2"]^4 WC["HW",{}] WC["HWB",{}]+64 Param["g1"]^4 Param["g2"] WC["HWB",{}]^2-16 Param["g1"]^2 Param["g2"]^3 WC["HWB",{}]^2+16 Param["g2"]^5 WC["HWB",{}]^2+16 Param["g1"]^5 WC["WBH41",{}]-32 Param["g1"]^3 Param["g2"]^2 WC["WBH41",{}]+16 Param["g1"] Param["g2"]^4 WC["WBH41",{}])
+}];
+
+AllParamsAsAFunctionOfSMEFTInputs$default = Association[Table[param-> param +DimensionSixReplacements$default[param]+DimensionEightReplacements$default[param] ,{param,Keys[DimensionSixReplacements$default]}]];
 
 
 SMEFTInputParameterList$current = SMEFTInputParameterList$default;
@@ -53,7 +57,7 @@ SMEFTInputScheme$current = {SMEFTInputParameterList$current,AllParamsAsAFunction
 
 
 Options[RedefineSMEFTCouplings]={
-SMEFTInputScheme -> (*{SMEFTInputParameterList$default,AllParamsAsAFunctionOfSMEFTInputs$default}*)SMEFTInputScheme$current, 
+SMEFTInputScheme :> (*{SMEFTInputParameterList$default,AllParamsAsAFunctionOfSMEFTInputs$default}*)SMEFTInputScheme$current, 
 EFTorder :> GetEFTorder[],
 OperatorDimension :> GetOperatorDimension[]
 };
@@ -73,6 +77,7 @@ checklist= Join[inputparams,paramstorewriteintermsoftheinputs,Table[Vckm[i,j],{i
 replacements = Values[OptionValue[SMEFTInputScheme][[2]]];
 variables = DeleteCases[GetVariables[expr],_WC];
 smeftvalues =SMEFTValue/@Complement[variables,inputparams];
+(*Print[Complement[variables,inputparams]];*)
 
 (*first substitute the smeftvalue of all parameters that are not input parameters*)
 tmp = expr /. Thread[Complement[variables,inputparams]-> smeftvalues];

@@ -96,7 +96,7 @@ GetMatchingOrder[]:=If[MatchingOrder==0,Print["Tree-level matching"],Print["One-
 (*Auxiliary definitions*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Mass rotation*)
 
 
@@ -201,9 +201,9 @@ i=flav[[1]];j=flav[[2]];k=flav[[3]];l=flav[[4]];
 Switch[
 		type,
 		"u",
-		rot=Sum[Vu[[i,p]]Vd[[j,s]]WC[lab,{p,j,s,l}],{p,3},{s,3}],
+		rot=Sum[Vu[[i,p]]Vd[[k,s]]WC[lab,{p,j,s,l}],{p,3},{s,3}],
 		"d",
-		rot=Sum[Vd[[i,p]]Vu[[j,s]]WC[lab,{p,j,s,l}],{p,3},{s,3}],
+		rot=Sum[Vd[[i,p]]Vu[[k,s]]WC[lab,{p,j,s,l}],{p,3},{s,3}],
 	_,
 	Message[MassRotate::error,WC[lab,flav]];Abort[];
 	],
@@ -231,11 +231,11 @@ MassRotate[Conjugate[a_],"uu"]:=MassRotate[a,"uu"]\[Conjugate]
 MassRotate[Conjugate[a_],"dd"]:=MassRotate[a,"dd"]\[Conjugate]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*W couplings*)
 
 
-g22onmW2:=(4\[Pi] Param["\[Alpha]EM"])/(Param["sW"]^2 Mass["WBoson"]^2)(1+Param["vev"]^2WC["HW",{}])^2;
+g22onmW2:=(*(4\[Pi] Param["\[Alpha]EM"])/(Param["sW"]^2 Mass["WBoson"]^2)(1+Param["vev"]^2WC["HW",{}])^2*)Param["g2"]^2/Mass["WBoson"]^2;
 
 
 WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+Param["vev"]^4/2 (WC["l2H4D2",{\[Alpha],\[Beta]}]+I*WC["l2H4D3",{\[Alpha],\[Beta]}]);
@@ -244,7 +244,7 @@ WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev
 WCoupling["q",{i_,j_}]:=Vckm[i,j]+Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"ud"]+Param["vev"]^4/2 (MassRotate[WC["q2H4D2",{i,j}],"ud"]+I*MassRotate[WC["q2H4D3",{i,j}],"ud"]);
 
 
-WCoupling["ud",{i_,j_}]:=Param["vev"]^2 WC["Hud",{i,j}] + Param["vev"]^4/2 WC["udH4D",{i,j}];
+WCoupling["ud",{i_,j_}]:=1/2 Param["vev"]^2 WC["Hud",{i,j}] + Param["vev"]^4/2 WC["udH4D",{i,j}];
 
 
 (* ::Subsubsection:: *)
@@ -512,7 +512,7 @@ TLMatching[WCLS["ddV1LR",{i_,j_,k_,l_}]]:=MassRotate[WC["qd1",{i,j,k,l}],"dd"]-g
 TLMatching[WCLS["ddV8LR",{i_,j_,k_,l_}]]:=MassRotate[WC["qd8",{i,j,k,l}],"dd"];
 
 
-TLMatching[WCLS["udduV1LR",{i_,j_,k_,l_}]]:=-(g22onmW2/2)WCoupling["q",{i,j}]WCoupling["ud",{j,i}]\[Conjugate];
+TLMatching[WCLS["udduV1LR",{i_,j_,k_,l_}]]:=-(g22onmW2/2)WCoupling["q",{i,j}]WCoupling["ud",{l,k}]\[Conjugate];
 
 
 TLMatching[WCLS["udduV8LR",{i_,j_,k_,l_}]]:=0;
