@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Exported*)
 
 
@@ -36,7 +36,7 @@ PackageExport["DipoleQ"]
 PackageExport["SubstituteFF"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Internal*)
 
 
@@ -475,11 +475,11 @@ FF[Tensor,_,{Right,Left},{_,_,_,_}] := 0
 FF[Tensor,_,{Left,Right},{_,_,_,_}] := 0
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Singular form factor constraints*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*SM form factors are flavor diagonal, except for the W coupling to quarks*)
 
 
@@ -558,7 +558,7 @@ FF[Vector, {"regular",_}, {OrderlessPatternSequence[Right,_]}, {_,_,_u,_d}|{_,_,
 FF[Vector, _, {Right,_},{OrderlessPatternSequence[_\[Nu],_],_,_}]:= 0
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Weak basis rotation for form factors*)
 
 
@@ -656,7 +656,7 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Substitute form factors*)
 
 

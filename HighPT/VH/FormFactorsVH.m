@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Exported*)
 
 
@@ -32,7 +32,7 @@ PackageExport["FormFactorVH"]
 PackageExport["SpinSumAmplitudeSqVH"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Internal*)
 
 
@@ -123,7 +123,7 @@ MakeBoxes[ff[{lorentz_, index_}, type_, X_,{i_,j_}], TraditionalForm] := Subscri
 	RowBox[{"[",SubsuperscriptBox["f", RowBox[{MakeBoxes[lorentz, TraditionalForm], ", ", MakeBoxes[index, TraditionalForm],  MakeBoxes[type]}], RowBox[{" ",MakeBoxes[X,TraditionalForm]}]], "]"}], RowBox[{ToString[i],ToString[j]}]]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*FormFactorVectorVH*)
 
 
@@ -141,7 +141,7 @@ FormFactorVectorVH[s_, t_, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Transpose[
 ];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*InterferenceMatrixVH*)
 
 
@@ -159,7 +159,7 @@ InterferenceMatrixVH[s_, t_, mV_] :=
 (*Individual entries of the interference matrix*)
 
 
-MV11[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 2 * s + t * u / mV^2 - Mass["Higgs"]^2]  (*2 s + t -(s t)/mV^2-t^2/mV^2-Mass["Higgs"]^2+(t Mass["Higgs"]^2)/mV^2 *)
+MV11[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 2 * s + t * u / mV^2 - Mass["Higgs"]^2]
 
 
 MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2 
@@ -186,7 +186,7 @@ MST23[s_, t_, mV_]:= Param["vev"]^2 (s + mV^2 - Mass["Higgs"]^2 )/s
 MST33[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, (4 * Param["vev"]^2 / s^2) * (mV^2 * (s - 2 Mass["Higgs"]^2) + 2 * t * u)]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Spin-summed amplitude square*)
 
 
@@ -213,7 +213,7 @@ SpinSumAmplitudeSqVH[s_, t_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{mV, totalA
 ];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*ExpandFormFactors*)
 
 
@@ -264,7 +264,7 @@ ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand singular form factors*)
 
 
@@ -357,7 +357,7 @@ LeftHandedCC[mediator_, order_, X_] := Module[{temp = 1},
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand the full form factors*)
 
 

@@ -15,11 +15,11 @@ Package["HighPT`"]
 (*Public:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Scoping*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Exported*)
 
 
@@ -32,7 +32,7 @@ PackageExport["W"]
 PackageExport["PartonicCrossSectionVH"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Internal	*)
 
 
@@ -43,10 +43,10 @@ PackageScope["PartonicCMEnergyIntegration"]
 
 
 (* ::Chapter:: *)
-(*Public:*)
+(*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton-level cross-section for VH production*)
 
 
@@ -105,8 +105,8 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	
 	(* !!!!!!!!! Test !!!!!!!!!! *)
 	(* list with all replacements in the SMEFT *)
-	subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
-	\[Sigma] = \[Sigma] /. CanonizeFFVH /.subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;
+	(*subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
+	\[Sigma] = \[Sigma] /. CanonizeFFVH /.subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;*)
 	(* !!!!!!!!!!!!!!!!!!!!!!!!! *)
 	
 	Return @ Expand[factor * \[Sigma]] (* GeV^-2*)
@@ -121,34 +121,6 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 
 
 \[Lambda]IntLimits[s_, mV_] := 1 - 2 (mV^2 + Mass["Higgs"]^2)/s + (mV^2 - Mass["Higgs"]^2)^2/s^2
-
-
-(* ::Subsubsection::Closed:: *)
-(*Translates a cut on the rapidity to a cut on the pT*)
-
-
-(* When no cut is included *)
-trivialYhCuts = <|0 -> \[Infinity], \[Infinity] -> 0|>;
-
-
-ComputePTCutfromYH[yH_, mV_, s_] := Module[{pTsq, pTCut},
-	If[yH === 0 || yH === \[Infinity], 
-		(* Trivial results *)
-		pTCut = trivialYhCuts[yH]
-		,
-		(* Transverse momentum squared as a function of the rapidity *)
-		pTsq = ((s + Mass["Higgs"]^2 - mV^2)^2 / (4 * s * Cosh[Abs[yH]]^2) - Mass["Higgs"]^2)/.GetParameters[];
-		
-		(* Cut must be applied only if the result is positive *)
-		If[pTsq > 0, 
-		  pTCut = Sqrt[pTsq]
-		  ,
-		  pTCut = 0
-		]
-	];
-	
-	Return[pTCut]
-];
 
 
 (* ::Section::Closed:: *)
@@ -201,7 +173,7 @@ ReplaceIntegralsVH[t_] := {
 }
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Hadron-level cross-section for VH production*)
 
 
@@ -324,7 +296,7 @@ CrossSectionVH[OptionsPattern[]] := Module[
 	
 	(* !!!!! REPLACE IT BY SubstituteFFVH WHICH STILL NEEDS TO BE IMPLEMENTED !!!!! *)
 	subs = Join[SubstitutionRulesMediatorsVH["ZBoson"], SubstitutionRulesMediatorsVH["WBoson"], SubstituteRulesSMEFTVH[\[Epsilon]]];
-	\[Sigma] = \[Sigma] /. subs /. \[Epsilon] -> (Param["vev"]/ 1000)^2 /. ReplaceConstants[];
+	\[Sigma] = \[Sigma] /. CanonizeFFVH /. subs /. \[Epsilon] -> (Param["vev"]/ 1000)^2 /. ReplaceConstants[];
 	(* !!!!!!!!!!!!!!!!!!!!!!!!!!! *)
 	
 	(* Set coefficients to zero *)
@@ -341,7 +313,7 @@ CrossSectionVH[OptionsPattern[]] := Module[
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Hadronic differential VH cross-section (for internal use)*)
 
 
@@ -361,7 +333,7 @@ HadronicDifferentialCrossSectionVH[s_, V_:(Z|W), OptionsPattern[]] := Module[
 		fbar, f, i, j
 	},
 	
-	(* Function to convolute the parton luminosity with the PDF *)
+	(* Function to convolute the parton luminosity with the partonic cross-section *)
 	\[Sigma]ConvFunc = PDFConvCrossSection[
 		s, 
 		V, 
@@ -369,7 +341,7 @@ HadronicDifferentialCrossSectionVH[s_, V_:(Z|W), OptionsPattern[]] := Module[
 	    OperatorDimension -> OptionValue[OperatorDimension]
 	];
 	
-	(* Hadronic differential x-section including all possible flavors *)
+	(* Sums the contribution of all possible initial flavor that contributes to the process *)
 	\[Sigma]HadronDiff = Plus @@ ( \[Sigma]ConvFunc /@ ListInitialQuarkFlavors[V] );
 	
 	(* Change units from GeV^-2 to pb *)
@@ -383,8 +355,8 @@ HadronicDifferentialCrossSectionVH[s_, V_:(Z|W), OptionsPattern[]] := Module[
 ];
 
 
-(* ::Subsubsection::Closed:: *)
-(*Convoluted PDF with the partonic cross-section for ZH and WH production*)
+(* ::Subsubsection:: *)
+(*Convoluted parton luminosity functions with the partonic cross-section for ZH and WH production*)
 
 
 Options[PDFConvCrossSection] = {
@@ -433,7 +405,7 @@ PDFConvCrossSection[s_, W, OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*List of the different quark flavors and their Parton Luminosities for ZH and WH production*)
 
 
