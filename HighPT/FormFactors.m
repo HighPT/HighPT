@@ -233,7 +233,7 @@ MST[z_, X_, Y_]:= -KroneckerDelta[X,Y] * (1+2*z)
 MTS[z_, X_, Y_]:= MST[z,X,Y]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Spin-summed amplitude square*)
 
 
@@ -294,14 +294,14 @@ SplitFF= FormFactor[type_,s_,t_,{X_,Y_},{\[Alpha]_,\[Beta]_,i_,j_}]:> RegularFF[
 RegularFF[DipoleL|DipoleQ, ___]:= 0
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*d=8 treatment*)
 
 
 $d8::usage= "$d8 is an auxiliary variable to count powers of d=8 operators. With the property \!\(\*SuperscriptBox[\($d8\), \(2\)]\)=0.";
 
 
-$d8/:Power[$d8,n_/;n>=2]:= 0
+$d8/:Power[$d8,n_/;n>2]:= 0
 
 
 $d8/:Conjugate[$d8]:= $d8
@@ -425,10 +425,7 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 		UChannelSum[uu_, FF[type_,{"u",0},rest___]]:> ($aux * UChannelSum[uu, FF[type,{"u",0},rest]]), (* if u_ is used as pattern here a new variables are exported in the HighPT` context. *)
 		FF[Vector,{"regular",pow:({1,0}|{0,1})}, rest___]:> ($aux^2 * FF[Vector,{"regular",pow}, rest])
 	};
-	temp= (Expand@ExpandConjugate@Expand[temp]);
-	If[!$SquaredD8,
-		temp= temp/.Power[$aux,n_/;n>=3]:>0;
-	];
+	temp= (Expand@ExpandConjugate@Expand[temp])/.Power[$aux,n_/;n>=5]:>0;
 	
 	Return[
 		Expand[ExpandConjugate[temp]]/.{$d8->1, $aux->1}

@@ -1,0 +1,2142 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     80787,       2132]
+NotebookOptionsPosition[     76494,       2045]
+NotebookOutlinePosition[     79298,       2108]
+CellTagsIndexPosition[     79212,       2103]
+WindowTitle->ChiSquareLHC
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["HIGH P T SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "22f40f9b-ed13-41c2-bbdd-ac9199a7c71a"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "7091067f-ffa1-4c9f-8ae6-89ecc422314a"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[Cell[BoxData[
+     TagBox[
+      ActionMenuBox[
+       FrameBox[Cell[TextData[{
+         "URL",
+         " ",
+         Cell[BoxData[
+          GraphicsBox[
+           {GrayLevel[0.66667], Thickness[0.13], 
+            LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+           AspectRatio->1,
+           ImageSize->20,
+           PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+          "4918d667-5262-42c9-aaa8-1331573d69d2"]
+        }],ExpressionUUID->"b8820efe-3311-4905-9190-158e67b1fd48"],
+        StripOnInput->False], {"\<\"HighPT/ref/ChiSquareLHC\"\>":>
+       None, "\<\"Copy Wolfram Documentation Center URL\"\>":>
+       Module[{DocumentationSearch`Private`nb$}, 
+        DocumentationSearch`Private`nb$ = NotebookPut[
+           Notebook[{
+             Cell["HighPT/ref/ChiSquareLHC"]}, Visible -> False]]; 
+        SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+        FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+        NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+       Delimiter, "\<\"Copy web URL\"\>":>
+       Module[{DocumentationSearch`Private`nb$}, 
+        DocumentationSearch`Private`nb$ = NotebookPut[
+           Notebook[{
+             Cell[
+              BoxData[
+               MakeBoxes[
+                Hyperlink[
+                "http://reference.wolfram.com/language/HighPT/ref/\
+ChiSquareLHC.html"], StandardForm]], "Input", TextClipboardType -> 
+              "PlainText"]}, Visible -> False]]; 
+        SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+        FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+        NotebookClose[DocumentationSearch`Private`nb$]; 
+        Null], "\<\"Go to web URL\"\>":>FrontEndExecute[{
+         NotebookLocate[{
+           URL[
+            StringJoin[
+             If[
+              TrueQ[DocumentationBuild`Make`Private`wsmlinkQ$414166], 
+              "http://reference.wolfram.com/system-modeler/", 
+              "http://reference.wolfram.com/language/"], 
+             "HighPT/ref/ChiSquareLHC", ".html"]], None}]}]},
+       Appearance->None,
+       MenuAppearance->Automatic,
+       MenuStyle->"URLMenu"],
+      MouseAppearanceTag["LinkHand"]]],
+     LineSpacing->{1.4, 0},ExpressionUUID->
+     "bc8eb80e-de90-4fe0-addc-1dc89fbf4908"]], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "12017b0e-319a-4743-9780-3401522b08c1"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"a20fa5bf-23a9-4637-81ab-62d8a3285615"],
+
+Cell["HighPT`", "ContextNameCell",ExpressionUUID->"29804ea5-8248-4159-b462-a736a0c03165"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "ChiSquareLHC", "ObjectName",ExpressionUUID->
+      "e1a55fd3-dfe3-4ea1-8c8b-6a807e31829f"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"535864d3-816e-4556-b20d-e3feb959d14c"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "4f2d2197-3a9b-4294-8527-411613d5ee9c"]
+    }],ExpressionUUID->"a1bfbe66-e235-40bd-93c9-7ae323ba45ba"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"5266291e-5ee7-4562-b5c6-\
+ca0e8b9b1d7d"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell["\<\
+ChiSquareLHC[\"proc\"] computes the \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) \
+likelihood for the process specified by the string \"proc\". The \
+\!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) is computed for each bin of the \
+experimental search individually. Returned is a list of the \
+\!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) for all the experimental bins. The \
+combined \!\(\*SuperscriptBox[\(\[Chi]\), \(2\)]\) can be obtained by \
+Total[ChiSquareLHC[\"proc\"]]. The binning and all other relevant information \
+is printed on the screen when evaluating ChiSquareLHC[\"proc\"]. The options \
+and their default values are: FF \[Rule] False; Coefficients \[Rule] All; \
+EFTorder \[RuleDelayed] GetEFTorder[]; OperatorDimension \[RuleDelayed] \
+GetOperatorDimension[]; CombineBins \[Rule] Default; Luminosity \[Rule] \
+Default; RescaleError \[Rule] True.\
+\>",ExpressionUUID->"895569bb-90e8-4d26-af1a-b956785e010f"]}
+  }]], "Usage",
+ CellID->1939673948,ExpressionUUID->"96e4b0cf-563f-455e-bd55-3dceee0023df"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{14., {0.45000000000000107`, 13.549999999999999`}}]],
+    ExpressionUUID->"a4e8076f-50f9-4060-8816-2b79d8d44d76"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"1e4a1c67-1603-44cc-8e35-9ea94ff376ff"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"d6d777cc-015f-4b80-b321-34bb29b36bf8"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"f0e4d40d-0302-4b01-ac05-b9c0be542148"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->1585660976,ExpressionUUID->"5e3db57d-9fe3-481f-b203-9b894f536418"],
+
+Cell[TextData[Cell[BoxData[
+ TemplateBox[{
+   Cell[
+    TextData["Nothing"]], "paclet:ref/Nothing"},
+  "RefLink",
+  BaseStyle->{"InlineFormula"}]], "InlineFormula",
+ FontFamily->
+  "Source Sans Pro",ExpressionUUID->"91d60bae-f1df-4389-b17a-f3863e7f8f0e"]], \
+"Input",
+ CellID->460469386,ExpressionUUID->"e444628a-d654-4ee7-b687-0fd65f9a264c"],
+
+Cell["The following options can be given: ", "Notes",
+ CellID->1298282576,ExpressionUUID->"49769b34-1fbd-4200-91c1-1c941ffebd99"],
+
+Cell[BoxData[GridBox[{
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "1a31d5e6-7728-4deb-a08a-ca65ec07fc88"], 
+    TemplateBox[{
+      Cell[
+       TextData["FF"]], "paclet:HighPT/ref/FF", "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    TemplateBox[{
+      Cell[
+       TextData["False"]], "paclet:ref/False"},
+     "RefLink",
+     BaseStyle->{"3ColumnTableMod"}], Cell[TextData[{
+     "FF[lorentz, type, {",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "12e5f32d-ac3a-49c6-b8ec-d8e75067c0f8"],
+     ", \(\[ScriptL]\)]\),",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f2308eb0-879e-409d-8020-5300bb4d2bb0"],
+     ", \(q\)]\)}, {\[Alpha],\[Beta],i,j}] represents a form factor with \
+Lorentz structure lorentz \[Element] {Scalar, Vector, Tensor, DipoleL, \
+DipoleQ}. The chirality of the lepton (quark) current is ",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6cd8b169-ea52-476a-97d0-5771d1abaa41"],
+     ", \(\[ScriptL]\)]\) (",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "173ca4cb-9498-4427-a609-f85aaa098a08"],
+     ", \(q\)]\)). The field content of the corresponding operator is (",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "bdd2b125-5516-469d-862e-09736d8ce712"],
+     ", \(1\)], \(_\)]\)",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c9ccf3da-96db-48e5-959f-559bd5f959ba"],
+     ", \(2\)]\))(",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "03fec80c-3487-4ddd-a2f6-9670ed500571"],
+     ", \(1\)], \(_\)]\)",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c1ae2cbb-2076-465e-9852-63434207c8a6"],
+     ", \(2\)]\)) with ",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6f7c6d80-4b98-4734-9bd0-dc1ef3631d34"],
+     ", \(1, 2\)]\)\[Element]{e,\[Nu]}, ",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "097d65c7-3057-43d0-85aa-be099f5f6588"],
+     ", \(1, 2\)]\)\[Element]{u,d} and \[Alpha],\[Beta],i,j\[Element]{1,2,3} \
+are the corresponding flavor indices. The type of the form factors are \
+divided into regular and singular: {\"regular\",{",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "da4a29a9-58ab-41c9-8ea3-454af69c06e7"],
+     ", \(s\)]\),",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "37f2b2d2-a932-45c5-8ee0-133ae98bda84"],
+     ", \(t\)]\)}} is the form factor for an EFT contact interaction with the \
+scaling ",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "839ac9d0-fa79-4623-a5ac-a2ede9c9df99"],
+     ", \(^\)], SubscriptBox[\(n\), \(s\)]]\)",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6706e61c-077e-4106-be27-4060b54fcaed"],
+     ", \(^\)], SubscriptBox[\(n\), \(t\)]]\) in the partonic Mandelstam \
+variables, whereas {mediator, 0 | SM} is the form factor for a non-local \
+interaction through the specified mediator \[Element] {\"Photon\", \
+\"ZBoson\", \"WBoson\", ...}. The singular form factors are divided into \
+Standard Model contributions (SM) and NP contributions (0).\nFF \[Rule] bool \
+is an option that specifies whether the output should be given in terms of \
+form factors (bool=True) or in terms of Wilson coefficients or coupling \
+constants (bool=False), where the latter is the default. This option can be \
+used with: DifferentialCrossSection, CrossSection, EventYield, ChiSquareLHC."
+    }], "TableText",ExpressionUUID->"fb172982-a703-4141-8e22-deb866ba2550"]},
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "c64838c9-f85c-44df-98aa-96a50971ecc7"], 
+    TemplateBox[{
+      Cell[
+       TextData["Coefficients"]], "paclet:HighPT/ref/Coefficients", 
+      "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    TemplateBox[{
+      Cell[
+       TextData["All"]], "paclet:ref/All"},
+     "RefLink",
+     BaseStyle->{"3ColumnTableMod"}], Cell[TextData[{
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["Coefficients"]], "paclet:HighPT/ref/Coefficients", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d2319ab1-3948-4842-a0b9-18797969dc70"],
+     " \[Rule] {\[ScriptC]\[ScriptO]\[ScriptE]\[ScriptF]1, \[ScriptC]\
+\[ScriptO]\[ScriptE]\[ScriptF]2, ...} is an option sp",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "bd712748-1880-4ee9-a884-36b55c3ee1d5"],
+     "cifying which form factors (",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["FF"]], "paclet:HighPT/ref/FF", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4cf159d4-5168-4546-a974-a1168be19e0b"],
+     "), Wilson co",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "690a189a-c165-4765-8b56-edc16362c41e"],
+     "ffici",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "7f166a31-9951-4e65-b389-6d00a569552e"],
+     "nts (",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["WC"]], "paclet:HighPT/ref/WC", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2876b2ba-1f90-4c22-8e2c-b7a122339e00"],
+     ") or co",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ab3923f5-7ebe-4608-99fe-0cae6bcfd41c"],
+     "pling constants (Co",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "7d458014-395e-41cc-956a-e8923787fbe4"],
+     "ling), that m",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "0497884f-165e-4145-9340-42c23d5fb7a9"],
+     "st b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "faf643b4-ba2f-46b0-bc8b-9bf1a9e626bc"],
+     " giv",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8edbbef0-6948-44da-94cf-1afd09ec5142"],
+     "n as \[ScriptC]\[ScriptO]\[ScriptE]\[ScriptF]n, sho",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ec69b694-27f7-47f2-8a5c-936a5ad34488"],
+     "l",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "3b1182a5-a60d-49de-900e-d44b1073b13f"],
+     " b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d08c1fd0-7232-4dd0-9ed5-b8d6a2800796"],
+     " consi",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "eba72075-1c45-4db8-ab6b-c6f168c23050"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d50559e2-ed6c-4ff3-b5db-a3fae8ca0ca7"],
+     "r",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "3db0ea2b-835d-41e0-a37f-e1869a57aa36"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "448ec411-4453-4b75-9197-8782fed8876a"],
+     ". ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["All"]], "paclet:ref/All"},
+       "RefLink",
+       BaseStyle->{"3ColumnTableMod"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "04b56f83-8737-4c55-a517-5e44ed8ff513"],
+     " co",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "bd33a81f-510b-4546-882b-44727cd8b561"],
+     "ffici",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "63237636-dd2d-4fe5-b410-492618d22537"],
+     "nts not matching any of th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f5f9ee71-96b1-46f8-b44a-ab7067ddf4b9"],
+     " \[ScriptC]\[ScriptO]\[ScriptE]\[ScriptF]n ar",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "35986c58-53c9-46f5-b092-8d37aad5b6c6"],
+     " s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "743f9da5-7623-43ad-96f3-1e097f19c21a"],
+     "t to z",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "60f822f4-0b48-4a89-bc71-9c95af4746f7"],
+     "ro. Th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "550a73b6-7190-4750-823f-643cd33c6cd2"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "99215d08-6956-486b-ab6d-0d30a68469e2"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "408f8b70-5cb0-4f87-b12f-fc67822690d4"],
+     "fa",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "27e2152b-1a0d-473b-84a4-f501e9f9d934"],
+     "lt val",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f1f806b0-dfb7-4fc0-b640-0f6415bb6c59"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "38c30fd3-a319-4119-8fff-1a503b006c20"],
+     " is ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["Coefficients"]], "paclet:HighPT/ref/Coefficients", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "37f8a668-8105-44a9-bdf9-1d80a948fd88"],
+     "\[Rule]",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["All"]], "paclet:ref/All"},
+       "RefLink",
+       BaseStyle->{"3ColumnTableMod"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8ccfdcd0-09e4-4b56-a818-9af347f56ca7"],
+     ", co",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d83ced59-e586-4275-ab97-1469e951effc"],
+     "ffici",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "53b5f2a3-2ab4-4534-88db-cc3eec07da17"],
+     "nts sho",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f7443e77-6280-4112-80bd-826177a65c59"],
+     "l",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "e1d21125-8b85-4c4a-9f37-c6f000ad316f"],
+     " b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8cc4c17e-7de0-42c7-82c5-261146d21c89"],
+     " k",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "01ee522c-c4eb-484e-82e3-4d237ba1243f"],
+     "pt. This option can b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "86eaeac7-4c94-4866-9ab0-9cdca0d260b7"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "36365a8e-00d9-4c03-a41a-c39f667ef2e8"],
+     "s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "54fb2229-1a15-4574-9d3f-6f12fedf122a"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2cb9088a-3f83-4371-aa1f-f21cdb62bcac"],
+     " with: ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["DifferentialCrossSection"]], 
+        "paclet:HighPT/ref/DifferentialCrossSection", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "373bd2a2-87e0-4838-ae40-ffdf874749eb"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["CrossSection"]], "paclet:HighPT/ref/CrossSection", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "5947aa57-1b69-48ed-9788-3a7893b26656"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["EventYield"]], "paclet:HighPT/ref/EventYield", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "cba8652c-82ee-4a47-a685-a32fa831991b"],
+     ", ",
+     Cell[BoxData["ChiSquareLHC"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d8a4092e-34e6-4309-951d-033406844caf"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["SubstituteFF"]], "paclet:HighPT/ref/SubstituteFF", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ffa5e719-9e92-483f-8d08-f8dc3f275bae"],
+     "."
+    }], "TableText",ExpressionUUID->"01c7d082-224a-48be-8bc5-ce692c35f086"]},
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "e5fc0e66-9f56-44ec-90de-f34d17fc7fc2"], 
+    TemplateBox[{
+      Cell[
+       TextData["EFTorder"]], "paclet:HighPT/ref/EFTorder", 
+      "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    RowBox[{"GetEFTorder", "[", "]"}], Cell[TextData[{
+     "EFTorder \[Rule] \[ScriptN] is an option specifying that the result of \
+the computation should be truncated at order (",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "bdca01bf-ba68-4552-96c5-3ea741289386"],
+     ", \(NP\)]\)",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "46b6b614-2d0a-45d2-be41-cc28d9ba53b8"],
+     ", \(-\[ScriptN]\)]\). The deault value is determined by the last call \
+of InitializeModel. This option can be used with: InitializeModel, \
+DifferentialCrossSection, CrossSection, EventYield, ChiSquareLHC, \
+SubstituteFF, and is omitted in the mediator mode."
+    }], "TableText",ExpressionUUID->"926ef77a-9538-42fc-8638-1bc26aa75f48"]},
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "5f2e5452-c7d0-4153-994c-a28b8bda11e0"], 
+    TemplateBox[{
+      Cell[
+       TextData["OperatorDimension"]], "paclet:HighPT/ref/OperatorDimension", 
+      "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    RowBox[{"GetOperatorDimension", "[", "]"}], Cell[TextData[{
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["OperatorDimension"]], 
+        "paclet:HighPT/ref/OperatorDimension", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "55cd2251-8b44-4f8f-92cb-02b875ddf8f2"],
+     " \[Rule] \[ScriptD] is an option sp",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "141891da-d75e-4180-abc2-d5b8d6ec9ab9"],
+     "cifying that EFT op",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "7b29f1b1-9a2d-47db-b17c-d7ea76adc0ce"],
+     "rators ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "7c21e47f-588d-4b8c-bd10-6e66f04c3784"],
+     "p to mass ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ba96a6c7-bfda-4368-8b28-7001d7b23d06"],
+     "im",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8e6b8aa4-fc99-42ce-88d5-db7eb716bd96"],
+     "nsion \[ScriptD] sho",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d503b060-e65e-4ac5-9a3b-785bbb4ad4c4"],
+     "l",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "36da0a57-5310-40bb-850f-28c4ad983da7"],
+     " b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "e3a8bc7d-c78c-4bc4-836a-e2375fe92483"],
+     " consi",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "054ee740-106a-401a-b393-5da719257ebb"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "98c53258-bfba-4092-a5fe-4f7ac9dac595"],
+     "r",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4bb32afa-4503-4123-ba43-566750d785f7"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "0bbff210-a57b-4da0-a279-37a8c3b06bdd"],
+     ". Th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "36b7f5e7-bbba-4719-83c9-57b391f25fd4"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ac62ce44-5f29-4c32-8986-64673c3676ed"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "79a625b9-0fc1-43fe-8f9a-efd6b6ae4d1e"],
+     "a",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f1241554-5b58-485c-a89b-d1b1d254fd10"],
+     "lt val",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "119bc71d-80a1-4fa2-92ee-8dcd8828ee9b"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6f06cf21-2c00-47ad-a01b-d2c67bfecaa7"],
+     " is ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "dc55dc5b-451d-4c81-a344-8af64c89db8a"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8003f5b8-cf1a-4601-8f5c-672b726ec4e7"],
+     "t",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "077f75f2-32ed-4a87-8a18-266c5713e987"],
+     "rmi",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "660c08b8-95b0-4599-bc0a-8d35be31b2c3"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "dbf68f16-cef7-4289-b17f-1bc7f3611fbb"],
+     " by th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4fa856fa-54ac-4d0a-b611-3c08c0798390"],
+     " last call ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["InitializeModel"]], "paclet:HighPT/ref/InitializeModel", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "46499fb6-5989-4dce-9039-41f8e0586523"],
+     ". This option can b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "02a5cced-0b53-4672-bff5-6c12ac3fdd00"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "5f54b35d-aa8b-4112-8ff4-588653c3ebfa"],
+     "s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b2e254cf-eb8d-4a53-a391-3f002fdbbea1"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "3973f14c-d1e2-481f-a97f-7b2f8d71a1a8"],
+     " with: ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["InitializeModel"]], "paclet:HighPT/ref/InitializeModel", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4f960377-5ee5-48b0-b52f-8c6c798926e2"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["DifferentialCrossSection"]], 
+        "paclet:HighPT/ref/DifferentialCrossSection", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c2fe55f8-6de1-40b4-82fc-a98da70f13f6"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["CrossSection"]], "paclet:HighPT/ref/CrossSection", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6c05b2d2-05ff-4ac1-9d1a-375632dce2d6"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["EventYield"]], "paclet:HighPT/ref/EventYield", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c966e287-39c4-497b-82ec-7523c2cb4a35"],
+     ", ",
+     Cell[BoxData["ChiSquareLHC"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b8ec353d-2bc3-426c-86f1-5f2a6b610e77"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["SubstituteFF"]], "paclet:HighPT/ref/SubstituteFF", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ccbcb782-2a0d-43a2-94f4-e826a4c76cb8"],
+     "."
+    }], "TableText",ExpressionUUID->"dc33ef5d-7e6b-4348-91bd-0540ee660925"]},
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "7d7830fd-3854-4e2f-8d49-006328522b81"], 
+    TemplateBox[{
+      Cell[
+       TextData["CombineBins"]], "paclet:HighPT/ref/CombineBins", 
+      "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    TemplateBox[{
+      Cell[
+       TextData["Default"]], "paclet:ref/Default"},
+     "RefLink",
+     BaseStyle->{"3ColumnTableMod"}], Cell[TextData[{
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["CombineBins"]], "paclet:HighPT/ref/CombineBins", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "12237b6c-5696-43f4-b869-51143bbffa44"],
+     " is an Option of ",
+     Cell[BoxData["ChiSquareLHC"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "5f0e300c-c3bd-4628-8168-8ecbe15f7481"],
+     " that allows to combin",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c907b3d6-05e9-4721-996d-89b67ec344f4"],
+     " s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "42498a2f-d74b-414f-a1cc-d6095b3f82eb"],
+     "v",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2d1a1396-f46c-462d-8905-ab2bb190d1db"],
+     "ral bins of th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "0a207cbf-f595-4b5e-9528-2248e2531618"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "346f7469-bc57-44bd-b334-10b77d20e1a7"],
+     "x",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f059bfd0-8d1c-451e-9ab4-c73209559098"],
+     "rpim",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ce3f2263-01c3-44ff-8198-a8493e6e5d96"],
+     "ntal s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "3b1f9c6d-7d03-424e-b3ed-b2f74bb172f4"],
+     "arch. Th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "e3e46b73-f1d7-4214-af62-7fa184d6dbd8"],
+     " bins ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6ea03d77-3239-4a62-bba5-8720fb6ee235"],
+     "s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "38e592fc-fc11-40a5-9690-084959ff5113"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "10a3e6fb-77ae-4c80-9132-e35a17624ab4"],
+     " in a giv",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f8f035dc-0f35-4235-abed-ca01dafb8a34"],
+     "n \"\[ScriptS]\[ScriptE]\[ScriptA]\[ScriptR]\[ScriptC]\[ScriptH]\" an",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b242273f-0500-4731-8bc7-5afb12518f95"],
+     " th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "9350cb66-b618-4ab7-888e-e97e0ed017c0"],
+     " corr",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8a650d19-f504-468a-8514-076ca17009f4"],
+     "spon",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "0ccae7db-c7d7-42f6-b500-ee1fa1214320"],
+     "ing ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2241e6eb-c4f2-4e93-b393-ea847ec325b7"],
+     "v",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "a2453479-4ef1-4d36-9780-8d931b5b7796"],
+     "nt co",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "aaa6a987-ab31-4031-a39f-1acb8664a095"],
+     "nt p",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f1563e63-a6de-4d1e-bcfc-fcd02cbd8d6a"],
+     "r bin can b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "27cfbf68-36bc-4e9e-bae2-cba69d827f01"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "10f9eb66-daac-427c-a791-88f68e0f5363"],
+     "isplay",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b5aa37fb-f39d-4dca-aae2-cad12ac4d3c7"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "96da0d94-0282-4a11-a982-ea89a4c71876"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "bb513af7-f37b-46ac-acbb-dcf029e3e5ac"],
+     "sing ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["LHCSearch"]], "paclet:HighPT/ref/LHCSearch", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "492dab4d-9a11-46ca-9de0-f26ca3261dcd"],
+     "[\"\[ScriptS]\[ScriptE]\[ScriptA]\[ScriptR]\[ScriptC]\[ScriptH]\"]. For \
+",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4cc4b087-b1e0-4d07-985f-7c218e53a014"],
+     "xampl",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6243b2b9-e5e7-4863-b5f6-c6ecb76c8abd"],
+     " to combin",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "9ef3be97-8adf-495b-9e24-490e60e3055d"],
+     " th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "3ed399bd-79a1-4b93-b70f-71d4d834077f"],
+     " 2n",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b41ec9ed-bbb6-4411-846b-8d18a5a09898"],
+     " an",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2be1d708-5d23-4ba7-ba02-ade574236f4e"],
+     " 3r",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "5264e097-3915-413b-8fe0-6fcd3ac9bb1f"],
+     " bin as w",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "3eb172aa-80db-440e-9475-313874dd313a"],
+     "ll as th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8e732c85-ebf8-4761-9adb-95e37ce25c48"],
+     " bins 7 to 9 on",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "e5d56752-6db6-432a-afc5-233e7478f2d2"],
+     " sho",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8a933b5e-9fa3-4cbb-898b-e9e850608820"],
+     "l",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "035aa5cd-67ec-4037-9eb7-f0f7029e1876"],
+     " sp",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2f83a59a-830b-49ee-b54a-cccd3b3eaa7e"],
+     "cify ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["CombineBins"]], "paclet:HighPT/ref/CombineBins", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b4874774-6e81-4e44-9efa-48b39b5981fe"],
+     "->{{2,3},{7,8,9}}. By ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "aaf0abcb-e9d3-4371-8e77-9748075ae4b2"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "aad7ca34-068e-4fac-88c9-a0041a469cd9"],
+     "fa",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2e3941c7-bf1b-49a5-af6e-7902bb23d624"],
+     "lt bins ar",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "659158c7-1edb-44b8-85d7-6d2adf05010c"],
+     " m",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4132ba9a-e0f9-4bd9-a815-ee2020ed29f1"],
+     "rg",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "807711d5-216d-4c2a-88e8-29c808421e71"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "798f8e36-7e12-45e9-9425-b43dc44ee0da"],
+     " s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "477bd769-4c64-4958-84ab-194b576369e1"],
+     "ch that at l",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "fddbd6ae-7cfc-4b97-b288-214ef72ecab5"],
+     "ast 10 ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6f875b1f-d405-466b-91ec-f5c3999fcb97"],
+     "v",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "61d23a36-942b-4c01-9cd6-c6bd8127a694"],
+     "nts ar",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "fc06c5fd-9b75-42c5-9626-2dba69250efc"],
+     " in all r",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "077a81bb-073c-490f-83a0-aeb6e86436f6"],
+     "s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "e69ab8cc-f4f0-4e7d-957c-457ad86eddd5"],
+     "lting bins."
+    }], "TableText",ExpressionUUID->"788d81c8-6afd-4a65-85d7-4714e7b79345"]},
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "8c7c0467-0425-4e5c-85d6-815556b08d5a"], 
+    TemplateBox[{
+      Cell[
+       TextData["EFTscale"]], "paclet:HighPT/ref/EFTscale", 
+      "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    RowBox[{"GetEFTscale", "[", "]"}], Cell[TextData[{
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["EFTscale"]], "paclet:HighPT/ref/EFTscale", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ebe3f510-0c75-445e-a197-0b336b527d91"],
+     " \[Rule] \[CapitalLambda] is an option sp",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "cce3a3ba-0ac2-428b-8557-06edbb8b1de3"],
+     "cifying th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8dbd17fa-0ee7-4b60-8840-e3122e8f8926"],
+     " EFT c",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "a0300146-378d-42da-8557-a0bf7ed96506"],
+     "toff scal",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "aa400d7c-6e30-4e1d-8923-c053eaa8219b"],
+     " \[CapitalLambda]. Th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c23b17ae-2967-4d68-bb70-ef207abd193a"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "7445bc73-91ef-4dca-8224-ca4e33e097de"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "531668ab-b142-415c-9021-7e032ad16b1d"],
+     "a",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ecab0899-9a9e-4a93-9c09-a8b49206532f"],
+     "lt val",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d76ca9dd-4c13-45fe-a904-dbe287a48b64"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "7389b344-f506-4964-8141-c16a9a9cef8d"],
+     " is ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "46e1017b-6de7-437d-935d-3aaed0c3f731"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4a19397b-ca2a-4274-a127-e271efff992d"],
+     "t",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "39c9d58a-5969-4489-8cbd-e70b4be60362"],
+     "rmin",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "7e1fb96a-7284-46c4-98cd-3be447029647"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "0cfc4ea4-4384-4a30-8a17-c1f9ed6b5aa1"],
+     " by th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "de3383e7-2099-48c4-96e4-b953da921e19"],
+     " last call of ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["InitializeModel"]], "paclet:HighPT/ref/InitializeModel", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "a52eff80-ffa2-4ddd-96b7-a96ef6c2a836"],
+     ". This option can b",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c2f5379d-3fe5-4fc7-af71-7de0493bab9c"],
+     " ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["u"]], "paclet:HighPT/ref/u", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "1396fb25-31f4-4e63-b64a-b35e86e486a2"],
+     "s",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ab822e4c-ece7-450c-9a50-768ac7d9301b"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "5b66778e-c646-4bd4-aa4c-55faedd8a700"],
+     " with: ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["InitializeModel"]], "paclet:HighPT/ref/InitializeModel", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8baa5ad6-a4e0-4a0c-a202-5a86c80076dd"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["DifferentialCrossSection"]], 
+        "paclet:HighPT/ref/DifferentialCrossSection", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "f83df704-d56d-4f35-8dca-64ea98a8f2fd"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["CrossSection"]], "paclet:HighPT/ref/CrossSection", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "fc5e5c7c-940b-4da2-b194-99bbdb5cb219"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["EventYield"]], "paclet:HighPT/ref/EventYield", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b40a3315-f5e2-4cb8-b78f-0df1640fe5a7"],
+     ", ",
+     Cell[BoxData["ChiSquareLHC"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "b9a369d8-ed26-4b81-b40b-5f848eaef4da"],
+     ", ",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["SubstituteFF"]], "paclet:HighPT/ref/SubstituteFF", 
+        "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "1881cb43-ddf6-485c-bcb8-94eac34f9f1c"],
+     ", an",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "4ca0e7bf-4352-47e4-a885-53098e0f7a40"],
+     " is omitt",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "88a4d029-31c1-4968-beb8-2e76215340d3"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c6d8f7d1-ab78-4912-a9da-98ab7bef9e8b"],
+     " in th",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "bf2b9f1c-9fa9-430f-afbc-2df2a709a6e3"],
+     " m",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "047f1967-a7e6-4467-b966-4802f78163d2"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ee320592-ae34-4a41-a7f1-bfb0c271585e"],
+     "iator mo",
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["d"]], "paclet:HighPT/ref/d", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "8d01e6c4-6879-460d-ba92-9b5bcb2db94c"],
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["e"]], "paclet:HighPT/ref/e", "HighPT Package Symbol"},
+       "PackageLink",
+       BaseStyle->"3ColumnTableMod"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "cd8f9bb2-f580-46f9-a6dc-4616ec880b8d"],
+     "."
+    }], "TableText",ExpressionUUID->"88402f01-b493-42b8-9e24-474d603170c0"]},
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "89776d2d-8b2f-4ee5-b2e0-3db1ddcd2a66"], 
+    TemplateBox[{
+      Cell[
+       TextData["Luminosity"]], "paclet:HighPT/ref/Luminosity", 
+      "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    TemplateBox[{
+      Cell[
+       TextData["Default"]], "paclet:ref/Default"},
+     "RefLink",
+     BaseStyle->{"3ColumnTableMod"}], Cell[TextData[{
+     "Luminosity \[Rule] \[ScriptL]\[ScriptU]\[ScriptM] is an option, that \
+can be used for projections, that determines the integrated Luminosity (in ",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "83549d7c-6cbb-431a-8997-a2ae34fe79ce"],
+     ", \(-1\)]\)) used for computing EventYield and ChiSquareLHC. The \
+default value is \[ScriptL]\[ScriptU]\[ScriptM]=Default corresponding to the \
+actual experimental luminosity of the specified search. This option can be \
+used with: EventYield, ChiSquareLHC."
+    }], "TableText",ExpressionUUID->"0db252d4-8e29-45a6-9069-1cd9dc176195"]},
+   {Cell["      ", "TableRowIcon",ExpressionUUID->
+     "c3070dec-e8cf-440f-b060-02dce2d2152a"], 
+    TemplateBox[{
+      Cell[
+       TextData["RescaleError"]], "paclet:HighPT/ref/RescaleError", 
+      "HighPT Package Symbol"},
+     "PackageLink",
+     BaseStyle->"3ColumnTableMod"], 
+    TemplateBox[{
+      Cell[
+       TextData["True"]], "paclet:ref/True"},
+     "RefLink",
+     BaseStyle->{"3ColumnTableMod"}], Cell[TextData[{
+     "RescaleError \[Rule] \[ScriptB]\[ScriptO]\[ScriptO]\[ScriptL] is an \
+option that determines whether the background uncertainty should be rescaled \
+when changing the default luminosity. The default value is \[ScriptB]\
+\[ScriptO]\[ScriptO]\[ScriptL]=True, for which the error is scaled as \
+\[CapitalDelta]BKG \[Rule] ",
+     Cell[BoxData["$Failed"], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c7f45f6a-2c95-4558-b789-aa4b865621c1"],
+     ", \(projection\)]/\*SubscriptBox[\(L\), \(search\)]\)]\) \
+\[CapitalDelta]BKG. If \[ScriptB]\[ScriptO]\[ScriptO]\[ScriptL]=False, the \
+relative error for the background, i.e. \[CapitalDelta]BKG/BKG, is kept \
+constant. This option can be used with: ChiSquareLHC."
+    }], "TableText",ExpressionUUID->"3d9575f4-38a3-4f2f-a247-fea39c81b2c8"]}
+  }]], "3ColumnTableMod",
+ GridBoxOptions->{
+ GridBoxBackground->{
+  "Columns" -> {{None}}, 
+   "Rows" -> {None, None, None, None, None, None, None, {None}}},
+ GridBoxDividers->{
+  "Rows" -> {{True, True, True, True, True, True, True, True, True}}}},
+ CellID->1801401312,ExpressionUUID->"59d575eb-5941-4f67-a3e0-c09fd4b3437a"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{14., {5., 9.}}]],ExpressionUUID->
+  "471d0e6e-4105-4d83-8b95-627a4065b110"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"5ed9c598-684d-4968-9077-80750d5fde75"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(0)", "ExampleCount",ExpressionUUID->
+  "54f9f2f6-0a13-4a3d-96cc-d27c45b85b46"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->2079448009,ExpressionUUID->"24c205bd-93da-40f3-95d7-6c26b51a0bb7"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<HighPT`\>\"", "]"}]], "Input", "ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->139342385,ExpressionUUID->"f0071b4c-3251-4999-905e-ae88e438f604"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[" ", "FooterCell",ExpressionUUID->"b0796de1-4943-4221-8cc0-95e3b2010b6f"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"ChiSquareLHC",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "HasOptions" -> True, "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "RootCaptions" -> 
+  "", "Metadata" -> {
+   "built" -> "{2025, 7, 17, 15, 32, 56.949239}", 
+    "history" -> {"XX", "", "", ""}, "context" -> "HighPT`", "keywords" -> {},
+     "specialkeywords" -> {}, "tutorialcollectionlinks" -> {}, "index" -> 
+    True, "label" -> "High P T Symbol", "language" -> "en", "paclet" -> 
+    "HighPT", "status" -> "None", "summary" -> 
+    "ChiSquareLHC[\"proc\"] computes the SuperscriptBox[\\[Chi], 2] \
+likelihood for the process specified by the string \"proc\". The \
+SuperscriptBox[\\[Chi], 2] is computed for each bin of the experimental \
+search individually. Returned is a list of the SuperscriptBox[\\[Chi], 2] for \
+all the experimental bins. The combined SuperscriptBox[\\[Chi], 2] can be \
+obtained by Total[ChiSquareLHC[\"proc\"]]. The binning and all other relevant \
+information is printed on the screen when evaluating ChiSquareLHC[\"proc\"]. \
+The options and their default values are: FF -> False; Coefficients -> All; \
+EFTorder :> GetEFTorder[]; OperatorDimension :> GetOperatorDimension[]; \
+CombineBins -> Default; Luminosity -> Default; RescaleError -> True.", 
+    "synonyms" -> {}, "tabletags" -> {}, "title" -> "ChiSquareLHC", 
+    "titlemodifier" -> "", "windowtitle" -> "ChiSquareLHC", "type" -> 
+    "Symbol", "uri" -> "HighPT/ref/ChiSquareLHC", "WorkflowDockedCell" -> ""},
+   "SearchTextTranslated" -> ""},
+CellContext->"Global`",
+FrontEndVersion->"12.3 for Mac OS X x86 (64-bit) (July 9, 2021)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[
+    StyleDefinitions -> FrontEnd`FileName[{"Wolfram"}, "Reference.nb"]]], 
+   Cell[
+    StyleData["Input"], CellContext -> "Global`"], 
+   Cell[
+    StyleData["Output"], CellContext -> "Global`"]}, Visible -> False, 
+  FrontEndVersion -> "12.3 for Mac OS X x86 (64-bit) (July 9, 2021)", 
+  StyleDefinitions -> "Default.nb"],
+ExpressionUUID->"8e673a13-4e8d-4062-bd67-1ed15c83ff8f"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[74706, 1996, 1390, 37, 36, "PrimaryExamplesSection",ExpressionUUID->"24c205bd-93da-40f3-95d7-6c26b51a0bb7",
+   CellTags->"PrimaryExamplesSection",
+   CellID->2079448009]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 79010, 2096}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[584, 21, 3335, 78, 57, "AnchorBarGrid",ExpressionUUID->"a20fa5bf-23a9-4637-81ab-62d8a3285615",
+ CellID->1],
+Cell[3922, 101, 89, 0, 23, "ContextNameCell",ExpressionUUID->"29804ea5-8248-4159-b462-a736a0c03165"],
+Cell[CellGroupData[{
+Cell[4036, 105, 555, 14, 60, "ObjectNameGrid",ExpressionUUID->"5266291e-5ee7-4562-b5c6-ca0e8b9b1d7d"],
+Cell[4594, 121, 1049, 16, 198, "Usage",ExpressionUUID->"96e4b0cf-563f-455e-bd55-3dceee0023df",
+ CellID->1939673948]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5680, 142, 1899, 47, 37, "NotesSection",ExpressionUUID->"5e3db57d-9fe3-481f-b203-9b894f536418",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->1585660976],
+Cell[7582, 191, 342, 9, 70, "Input",ExpressionUUID->"e444628a-d654-4ee7-b687-0fd65f9a264c",
+ CellID->460469386],
+Cell[7927, 202, 129, 1, 70, "Notes",ExpressionUUID->"49769b34-1fbd-4200-91c1-1c941ffebd99",
+ CellID->1298282576],
+Cell[8059, 205, 66520, 1785, 70, "3ColumnTableMod",ExpressionUUID->"59d575eb-5941-4f67-a3e0-c09fd4b3437a",
+ CellID->1801401312]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[74706, 1996, 1390, 37, 36, "PrimaryExamplesSection",ExpressionUUID->"24c205bd-93da-40f3-95d7-6c26b51a0bb7",
+ CellTags->"PrimaryExamplesSection",
+ CellID->2079448009],
+Cell[76099, 2035, 195, 3, 29, "Input",ExpressionUUID->"f0071b4c-3251-4999-905e-ae88e438f604",
+ CellID->139342385]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[76412, 2043, 78, 0, 40, "FooterCell",ExpressionUUID->"b0796de1-4943-4221-8cc0-95e3b2010b6f"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

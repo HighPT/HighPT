@@ -1,0 +1,520 @@
+(* ::Package:: *)
+
+Package["HighPT`"]
+
+
+(* ::Title:: *)
+(*HighPT`DF1`*)
+
+
+(* ::Subtitle:: *)
+(*\[CapitalDelta]F=1 observables*)
+
+
+(* ::Chapter:: *)
+(*Public:*)
+
+
+(* ::Section:: *)
+(*Scoping*)
+
+
+(* ::Subsection:: *)
+(*Exported*)
+
+
+(* ::Subsection:: *)
+(*Internal*)
+
+
+(* ::Chapter:: *)
+(*Private:*)
+
+
+$\[CapitalDelta]F1Sectors={"b->sll","b->s\[Nu]\[Nu]","b->s\[Gamma]","b->dll"(*,"leptonic"*)};
+
+
+FlavorObservables["\[CapitalDelta]F=1"] = FlavorObservables/@$\[CapitalDelta]F1Sectors
+
+
+ObsTable["\[CapitalDelta]F=1"] := Grid[{{"\[CapitalDelta]F=1",Column[ObsTable/@$\[CapitalDelta]F1Sectors]}},Dividers->All];
+
+
+CL90to95=3.09/2.3;
+
+
+C10SM=-4.18869;
+CL\[Nu]SM=2*Around[-6.32,0.07];
+
+
+ObservableSectors["\[CapitalDelta]F=1"] := {"b->sll"}
+ObservableList["\[CapitalDelta]F=1"] := ObservableList/@ObservableSectors["\[CapitalDelta]F=1"]
+
+
+(* ::Section::Closed:: *)
+(*Basis change (WET to LEFT)*)
+
+
+DownQuarkMasses={Mass["d"],Mass["s"],Mass["b"]};
+
+
+WETToLEFT={
+wCL["7",{i_,j_}]:>WCL["d\[Gamma]",{i,j}]*Sqrt[4\[Pi] Param["\[Alpha]EM"]]/DownQuarkMasses[[Max[i,j]]] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["7p",{i_,j_}]:>WCL["d\[Gamma]",{j,i}]\[Conjugate]*Sqrt[4\[Pi] Param["\[Alpha]EM"]]/DownQuarkMasses[[Max[i,j]]] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]\[Conjugate]Vckm[3,j] Param["GF"]),
+wCL["8",{i_,j_}]:>WCL["dG",{i,j}]*1/DownQuarkMasses[[Max[i,j]]] 1/Param["g3"] (4 \[Pi]^2 Sqrt[2])/(Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["9",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edVLL",{\[Alpha],\[Beta],i,j}]+WCL["deVLR",{i,j,\[Alpha],\[Beta]}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["9p",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edVLR",{\[Alpha],\[Beta],i,j}]+WCL["edVRR",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["10",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edVLL",{\[Alpha],\[Beta],i,j}]+WCL["deVLR",{i,j,\[Alpha],\[Beta]}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["10p",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edVLR",{\[Alpha],\[Beta],i,j}]+WCL["edVRR",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["S",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Alpha],\[Beta],i,j}]+WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["Sp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["P",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (WCL["edSRR",{\[Alpha],\[Beta],i,j}]-WCL["edSRL",{\[Beta],\[Alpha],j,i}]\[Conjugate]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["Pp",{\[Alpha]_,\[Beta]_,i_,j_}]:>1/2 (-WCL["edSRR",{\[Beta],\[Alpha],j,i}]\[Conjugate]+WCL["edSRL",{\[Alpha],\[Beta],i,j}]) (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["L\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLL",{\[Alpha],\[Beta],i,j}] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"]),
+wCL["R\[Nu]",{\[Alpha]_,\[Beta]_,i_,j_}]:>WCL["\[Nu]dVLR",{\[Alpha],\[Beta],i,j}] (\[Pi] Sqrt[2])/(Param["\[Alpha]EM"]Vckm[3,i]Vckm[3,j]\[Conjugate] Param["GF"])
+};
+
+
+(* ::Section::Closed:: *)
+(*b -> sll (')*)
+
+
+FlavorObservables["b->sll"] = {"B+->K+\[Tau]\[Tau]","B0->K0*\[Tau]\[Tau]","Bs->ee","Bs->\[Mu]\[Mu]","Bs->\[Tau]\[Tau]"};
+
+
+ObservableList["b->sll"] := {"Bs->\[Tau]\[Tau]","Bs->\[Mu]\[Mu]"}
+
+
+ObsTable["b->sll"] := Grid[{{"b->sll",Column[FlavorObservables["b->sll"]]}},Dividers->All];
+
+
+LowScale[Alternatives@@(FlavorObservables["b->sll"]//Flatten)] := Mass["b"]/.GetParameters[];
+
+
+LowScale$default[Alternatives@@(ObservableList["b->sll"]//Flatten)] := Mass["b"]/.GetParameters[];
+
+
+(* ::Text:: *)
+(*Numerical inputs from 2301.06990*)
+
+
+(* 
+   1 -> VV
+   2 -> VA
+   3 -> AV
+   4 -> AA
+*)
+
+
+(* B -> Kll *)
+aK[1] = Around[0.2430,0.0001];
+aK[2] = Around[-0.260,0.001];
+aK[3] = Around[0,0];
+aK[4] = Around[0,0];
+bK[1] = Around[0.0316,0.0002];
+bK[2] = Around[0.0317,0.0002];
+bK[3] = Around[0,0];
+bK[4] = Around[0,0];
+
+
+(* B -> K*ll *)
+aKst[1] = Around[0.0012,0.0048];
+aKst[2] = Around[-0.038,0.008];
+aKst[3] = Around[-0.191,0.010];
+aKst[4] = Around[0.255,0.006];
+bKst[1] = Around[0.0048,0.0010];
+bKst[2] = Around[0.0047,0.0010];
+bKst[3] = Around[0.0312,0.0007];
+bKst[4] = Around[0.0311,0.0007];
+
+
+(* VV *)
+cll[1][i_] := wCL["9p",{i,i,2,3}] + wCL["9",{i,i,2,3}]
+(* AV *)
+cll[2][i_] := wCL["9p",{i,i,2,3}] - wCL["9",{i,i,2,3}]
+(* VA *)
+cll[3][i_] := wCL["10p",{i,i,2,3}] + wCL["10",{i,i,2,3}]
+(* AA *)
+cll[4][i_] := wCL["10p",{i,i,2,3}] - wCL["10",{i,i,2,3}] 
+
+
+(* ::Subsection::Closed:: *)
+(*B -> K\[Mu]\[Mu]*)
+
+
+(*ExpValue$default["B0->KS\[Mu]\[Mu]"] := Around[];*)
+
+
+NumericalInput["B0->KS\[Mu]\[Mu]"] := Around[0.507,0.024]*10^-4;
+InputDependence["B0->KS\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
+
+
+NPContribution$default["B0->KS\[Mu]\[Mu]"] := (Sum[aK[i]*Re[cll[i][2]],{i,4}] + Sum[bK[i]*Abs[cll[i][2]]^2,{i,4}])/.WETToLEFT/.GetParameters[]//Chop;
+
+
+(* ::Subsection::Closed:: *)
+(*B -> K*\[Mu]\[Mu]*)
+
+
+(*ExpValue$default["B0->K0*\[Mu]\[Mu]"] := Around[];*)
+
+
+NumericalInput["B0->K0*\[Mu]\[Mu]"] := Around[1.46,0.21]*10^-4;
+InputDependence["B0->K0*\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
+
+
+NPContribution$default["B0->K0*\[Mu]\[Mu]"] := (Sum[aKst[i]*Re[cll[i][2]],{i,4}] + Sum[bKst[i]*Abs[cll[i][2]]^2,{i,4}])/.WETToLEFT/.GetParameters[]//Chop;
+
+
+(* ::Subsection::Closed:: *)
+(*B -> K\[Tau]\[Tau]*)
+
+
+ExpValue$default["B+->K+\[Tau]\[Tau]"] := Around[0,2.25]*10^-3*CL90to95/2;
+
+
+(*BK\[Tau]\[Tau]Aux = Around[0.0001003548981731836`,2.140854596647234`*^-6];
+SMPrediction$default["B+->K+\[Tau]\[Tau]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BK\[Tau]\[Tau]Aux)/.GetParameters[Errors->True];*)
+
+
+NumericalInput["B+->K+\[Tau]\[Tau]"] := Around[0.0001003548981731836`,2.140854596647234`*^-6]
+InputDependence["B+->K+\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
+
+
+vecWC["B+->K+\[Tau]\[Tau]"]={
+Abs[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]]^2,
+Re[(wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]) (wCL["9",ind]+wCL["9p",ind])],
+Re[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]],
+Abs[wCL["9",ind]+wCL["9p",ind]]^2,
+Re[wCL["9",ind]+wCL["9p",ind]],
+Abs[wCL["10",ind]+wCL["10p",ind]]^2,
+Re[(wCL["10",ind]+wCL["10p",ind])(wCL["P",ind]+wCL["Pp",ind])],
+Re[wCL["10",ind]+wCL["10p",ind]],
+Abs[wCL["S",ind]+wCL["Sp",ind]]^2,
+Abs[wCL["P",ind]+wCL["Pp",ind]]^2,
+Re[wCL["P",ind]+wCL["Pp",ind]],
+1}/.ind->{3,3,2,3}/.ind\[Gamma]->{2,3};
+
+
+Mlow["B+->K+\[Tau]\[Tau]"]={0.042677,0.058631,0.22883,0.020142,0.15723,0.040812,0.090806,-0.33491,0.017016,0.051602,-0.37258,1.0000};
+\[Sigma]low["B+->K+\[Tau]\[Tau]"]={0.0013050,0.0010772,0.0038506,0.00024070,0.0019078,0.00023528,0.00067924,0.0019307,0.00014741,0.00039434,0.0027869,0.};
+
+
+NPContribution$default["B+->K+\[Tau]\[Tau]"]:=(Mlow["B+->K+\[Tau]\[Tau]"] . vecWC["B+->K+\[Tau]\[Tau]"]-1)/.WETToLEFT/.GetParameters[]//Chop;
+
+
+(* ::Subsection:: *)
+(*B -> K*\[Tau]\[Tau]*)
+
+
+ExpValue$default["B0->K0*\[Tau]\[Tau]"] := Around[0,3.1]*10^-3*CL90to95/2
+
+
+BKst\[Tau]\[Tau]Aux = Around[0.00008685752993621607`,8.059815071523753`*^-6];
+SMPrediction$default["B0->K0*\[Tau]\[Tau]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BKst\[Tau]\[Tau]Aux)/.GetParameters[Errors->True];
+
+
+vecWC["B0->K0*\[Tau]\[Tau]"]={
+Abs[wCL["7",ind\[Gamma]]-wCL["7p",ind\[Gamma]]]^2,Re[(wCL["7",ind\[Gamma]]-wCL["7p",ind\[Gamma]]) (wCL["9",ind]-wCL["9p",ind])],Re[wCL["7",ind\[Gamma]]-wCL["7p",ind\[Gamma]]],
+Abs[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]]^2,Re[(wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]) (wCL["9",ind]+wCL["9p",ind])],Re[wCL["7",ind\[Gamma]]+wCL["7p",ind\[Gamma]]],
+Abs[wCL["9",ind]-wCL["9p",ind]]^2,Re[(wCL["9",ind]-wCL["9p",ind])],Abs[wCL["9",ind]+wCL["9p",ind]]^2,Re[(wCL["9",ind]+wCL["9p",ind])],
+Abs[wCL["10",ind]-wCL["10p",ind]]^2,Re[(wCL["10",ind]-wCL["10p",ind])(wCL["P",ind]-wCL["Pp",ind])],Re[(wCL["10",ind]-wCL["10p",ind])],
+Abs[wCL["10",ind]+wCL["10p",ind]]^2,Re[(wCL["10",ind]+wCL["10p",ind])],Abs[wCL["S",ind]-wCL["Sp",ind]]^2,Abs[wCL["P",ind]-wCL["Pp",ind]]^2,Re[(wCL["P",ind]-wCL["Pp",ind])],
+1
+}/.ind->{3,3,2,3}/.ind\[Gamma]->{2,3}
+
+
+Mlow["B0->K0*\[Tau]\[Tau]"]={0.2239991353378814`,0.20166956894989807`,0.7301450070314232`,0.06253060500528816`,0.04445169134368732`,0.15152411248859088`,0.04641285151351181`,0.33762161934640134`,0.007992531113793727`,0.05460943550943313`,0.015467923729101812`,0.01708305933879282`,-0.12692978212100947`,0.0010028453100097308`,-0.008229348613939853`,0.0015180859450262697`,0.008618324891073956`,-0.07009179246706694`,1.`};
+\[Sigma]low["B0->K0*\[Tau]\[Tau]"]={0.024765195431317402`,0.01264699404033608`,0.0376454389137068`,0.007816515020742971`,0.00469125626579789`,0.015445662339033873`,0.0009688822371818457`,0.006406885023162325`,0.0008060555501686212`,0.005635237531279601`,0.0005169645043084875`,0.0010798294628409462`,0.004242210722355448`,0.00010874266623710754`,0.0008923423191417047`,0.00010254491888324721`,0.0005504826464761921`,0.004430540286036402`,0.`};
+
+
+NPContribution$default["B0->K0*\[Tau]\[Tau]"]:=(Mlow["B0->K0*\[Tau]\[Tau]"] . vecWC["B0->K0*\[Tau]\[Tau]"]-1)/.WETToLEFT/.GetParameters[]//Chop;
+
+
+(* ::Subsection:: *)
+(*B -> K\[Mu]\[Tau]*)
+
+
+(* ::Subsection:: *)
+(*B -> K*\[Mu]-\[Tau]+*)
+
+
+(* ::Subsection:: *)
+(*B -> K*\[Mu]+\[Tau]-*)
+
+
+(* ::Section:: *)
+(*Bs->ll*)
+
+
+me={Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]};
+
+
+BsToll[l_]:=Lifetime["Bs"]/(128\[Pi]) DecayConstant["Bs"]^2 Mass["Bs"] Sqrt[1-(4me[[l]]^2)/Mass["Bs"]^2]((1-(4me[[l]]^2)/Mass["Bs"]^2)Abs[(WCL["edSRR",{l,l,3,2}]+Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]-Conjugate[WCL["edSRR",{l,l,2,3}]]) Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2+Abs[2me[[l]](WCL["deVLR",{2,3,l,l}]\[Conjugate]-WCL["edVLL",{l,l,2,3}]\[Conjugate]-WCL["edVRR",{l,l,2,3}]\[Conjugate]+WCL["edVLR",{l,l,2,3}]\[Conjugate])+Mass["Bs"]^2/(Mass["b"]+Mass["s"]) (WCL["edSRR",{l,l,3,2}]-Conjugate[WCL["edSRL",{l,l,2,3}]]-WCL["edSRL",{l,l,3,2}]+Conjugate[WCL["edSRR",{l,l,2,3}]])]^2)
+
+
+(* RBs = B((Bs\[Rule]\[Mu]\[Mu])^SM)/|Subscript[\[Lambda], t]|^2 taken from [1908.07011] *)
+RBs := Around[2.1516,0.0455]*10^-6;
+
+
+(* ::Subsection:: *)
+(*Bs -> ee*)
+
+
+TheoryExpression["Bs->ee"] := BsToll[1];
+
+
+ExpValue$default["Bs->ee"] := Around[0,11.2]*10^-9/2;
+ExpInfo["Bs->ee"]:=Row[{"From PDG: ", Ref["PDGK"]}]
+
+
+NumericalInput["Bs->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*RBs/.GetParameters[Errors->True];
+InputDependence["Bs->ee"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
+SMInfo["Bs->ee"] := "f_Bs (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011] rescaled by ratio of lepton masses"
+
+
+NPContribution$default["Bs->ee"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{1,1,3,2}]+Conjugate[WCL["edSRL",{1,1,2,3}]]-WCL["edSRL",{1,1,3,2}]-Conjugate[WCL["edSRR",{1,1,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,1,1}]]-Conjugate[WCL["edVLL",{1,1,2,3}]]-Conjugate[WCL["edVRR",{1,1,2,3}]]+Conjugate[WCL["edVLR",{1,1,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{1,1,3,2}]-Conjugate[WCL["edSRL",{1,1,2,3}]]-WCL["edSRL",{1,1,3,2}]+Conjugate[WCL["edSRR",{1,1,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;
+
+
+NPInfo["Bs->ee"]:="[1303.3820]"
+
+
+(* ::Subsection:: *)
+(*Bs->\[Mu]\[Mu]*)
+
+
+TheoryExpression["Bs->\[Mu]\[Mu]"] := BsToll[2];
+
+
+ExpValue$default["Bs->\[Mu]\[Mu]"] := Around[3.35,0.27]*10^-9;
+ExpInfo["Bs->\[Mu]\[Mu]"]:="Experimental average of [1812.03017], [2108.09283] and [2212.10311], following the approach from [CMS-PAS-BPH-20-003]."
+
+
+NumericalInput["Bs->\[Mu]\[Mu]"] := RBs;
+InputDependence["Bs->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
+SMInfo["Bs->\[Mu]\[Mu]"] := "f_Bs (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011]"
+
+
+NPContribution$default["Bs->\[Mu]\[Mu]"] := NPFromTheoryExpression["Bs->\[Mu]\[Mu]"]
+
+
+NPInfo["Bs->\[Mu]\[Mu]"] := "[1303.3820]"
+
+
+(* ::Subsection:: *)
+(*Bs->\[Tau]\[Tau]*)
+
+
+TheoryExpression["Bs->\[Tau]\[Tau]"] := BsToll[3];
+
+
+ExpValue$default["Bs->\[Tau]\[Tau]"] := Around[0,6.8]*10^-3/2;
+ExpInfo["Bs->\[Tau]\[Tau]"]:=Row[{"From PDG: ", Ref["PDGK"]}]
+
+
+NumericalInput["Bs->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bs"]^2]/Sqrt[1-4 Mass["\[Mu]"]^2/Mass["Bs"]^2]*RBs/.GetParameters[Errors->True];
+InputDependence["Bs->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2
+
+
+SMInfo["Bs->\[Tau]\[Tau]"] := "f_Bs (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011] rescaled by ratio of lepton masses"
+
+
+(*NPContribution$default["Bs->\[Tau]\[Tau]"] := Lifetime["Bs"]DecayConstant["Bs"]^2Mass["Bs"]Sqrt[1-4Mass["\[Tau]"]^2/Mass["Bs"]^2]/(128\[Pi])((1-4Mass["\[Tau]"]^2/Mass["Bs"]^2)Abs[(WCL["edSRR",{3,3,3,2}]+Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]-Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2 +Abs[(-Param["\[Alpha]EM"]Sqrt[2]Param["GF"]Conjugate[Vckm[3,3]]Vckm[3,2]C10SM/\[Pi] + Conjugate[WCL["deVLR",{2,3,3,3}]]-Conjugate[WCL["edVLL",{3,3,2,3}]]-Conjugate[WCL["edVRR",{3,3,2,3}]]+Conjugate[WCL["edVLR",{3,3,2,3}]])2Mass["\[Tau]"]+(WCL["edSRR",{3,3,3,2}]-Conjugate[WCL["edSRL",{3,3,2,3}]]-WCL["edSRL",{3,3,3,2}]+Conjugate[WCL["edSRR",{3,3,2,3}]])Mass["Bs"]^2/(Mass["b"]+Mass["s"])]^2)/.GetParameters[]//Chop;*)
+
+
+(*NPContribution$default["Bs->\[Tau]\[Tau]"] := 1/SMPrediction$default["Bs->\[Tau]\[Tau]"]["Value"] ((TheoryExpression["Bs->\[Tau]\[Tau]"]/.a_WCL->(SMValue[a]+a))-(TheoryExpression["Bs->\[Tau]\[Tau]"]/.a_WCL->SMValue[a]))/.GetParameters[]*)
+
+
+NPContribution$default["Bs->\[Tau]\[Tau]"] := NPFromTheoryExpression["Bs->\[Tau]\[Tau]"]
+
+
+NPInfo["Bs->\[Tau]\[Tau]"] := "[1303.3820]"
+
+
+(* ::Section::Closed:: *)
+(*b -> dll*)
+
+
+FlavorObservables["b->dll"] = {"Bd->ee","Bd->\[Mu]\[Mu]","Bd->\[Tau]\[Tau]"};
+
+
+ObsTable["b->dll"] := Grid[{{"b->dll",Column[FlavorObservables["b->dll"]]}},Dividers->All];
+
+
+LowScale[Alternatives@@(FlavorObservables["b->dll"]//Flatten)] := Mass["b"]/.GetParameters[];
+
+
+(* ::Section::Closed:: *)
+(*Bd->ll*)
+
+
+BdToll[l_]:=Lifetime["Bd"]/(128\[Pi]) DecayConstant["Bd"]^2 Mass["Bd"] Sqrt[1-(4me[[l]]^2)/Mass["Bd"]^2]((1-(4me[[l]]^2)/Mass["Bd"]^2)Abs[(WCL["edSRR",{l,l,3,1}]+Conjugate[WCL["edSRL",{l,l,1
+1,3}]]-WCL["edSRL",{l,l,3,1}]-Conjugate[WCL["edSRR",{l,l,1,3}]]) Mass["Bd"]^2/(Mass["b"]+Mass["d"])]^2+Abs[2me[[l]](WCL["deVLR",{1,3,l,l}]\[Conjugate]-WCL["edVLL",{l,l,1,3}]\[Conjugate]-WCL["edVRR",{l,l,1,3}]\[Conjugate]+WCL["edVLR",{l,l,1,3}]\[Conjugate])+Mass["Bs"]^2/(Mass["b"]+Mass["d"]) (WCL["edSRR",{l,l,3,1}]-Conjugate[WCL["edSRL",{l,l,1,3}]]-WCL["edSRL",{l,l,3,1}]+Conjugate[WCL["edSRR",{l,l,1,3}]])]^2)
+
+
+(* RBd = B((Bd\[Rule]\[Mu]\[Mu])^SM)/|Subscript[\[Lambda], t]|^2 taken from [1908.07011] *)
+RBd := Around[1.3569,0.0302]*10^-6;
+
+
+(* ::Subsection:: *)
+(*Bd->ee*)
+
+
+TheoryExpression["Bd->ee"] := BdToll[1];
+
+
+ExpValue$default["Bd->ee"] := Around[0,3.0]*10^-9/2;
+ExpInfo["Bd->ee"]:=Row[{"From PDG: ", Ref["PDGK"]}];
+
+
+NumericalInput["Bd->ee"] := Mass["e"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["e"]^2/Mass["Bd"]^2]/Sqrt[1-4 Mass["e"]^2/Mass["Bd"]^2]*RBd/.GetParameters[Errors->True];
+InputDependence["Bd->ee"] := Abs[Vckm[3,3]Vckm[3,1]\[Conjugate]]^2
+SMInfo["Bd->ee"] := "f_Bd (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011] rescaled by ratio of lepton masses"
+
+
+NPContribution$default["Bd->ee"] := NPFromTheoryExpression["Bd->ee"](*(Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bd"]^2/(2 Mass["e"] (Mass["b"]+Mass["d"]))]^2+(1-4 Mass["e"]^2/Mass["Bd"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bd"]^2/(2 Mass["e"] (Mass["b"]+Mass["d"]))]^2)/Abs[C10SM]^2-1/.ind->{1,1,1,3}/.WETToLEFT/.GetParameters[]//Expand*)
+
+
+NPInfo["Bd->ee"]:="[1303.3820]"
+
+
+(* ::Subsection:: *)
+(*Bd->\[Mu]\[Mu]*)
+
+
+TheoryExpression["Bd->\[Mu]\[Mu]"] := BdToll[2];
+
+
+ExpValue$default["Bd->\[Mu]\[Mu]"] := Around[0.5,0.5]*10^-10;
+ExpInfo["Bs->\[Mu]\[Mu]"]:="Experimental average of [1812.03017], [2108.09283] and [2212.10311], following the approach from [CMS-PAS-BPH-20-003]."
+
+
+NumericalInput["Bd->\[Mu]\[Mu]"] := Around[1.35685,0.030188]*10^-6;
+InputDependence["Bd->\[Mu]\[Mu]"] := Abs[Vckm[3,3]Vckm[3,1]\[Conjugate]]^2;
+SMInfo["Bd->\[Mu]\[Mu]"] := "f_Bd (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011]"
+
+
+NPContribution$default["Bd->\[Mu]\[Mu]"] := NPFromTheoryExpression["Bd->\[Mu]\[Mu]"](*(Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bd"]^2/(2 Mass["\[Mu]"] (Mass["b"]+Mass["d"]))]^2+(1-4 Mass["\[Mu]"]^2/Mass["Bd"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bd"]^2/(2 Mass["\[Mu]"] (Mass["b"]+Mass["d"]))]^2)/Abs[C10SM]^2-1/.ind->{2,2,1,3}/.WETToLEFT/.GetParameters[]//Expand*)
+
+
+(* ::Subsection:: *)
+(*Bd->\[Tau]\[Tau]*)
+
+
+TheoryExpression["Bd->\[Tau]\[Tau]"] := BdToll[3];
+
+
+ExpValue$default["Bd->\[Tau]\[Tau]"] := Around[0,2.1]*10^-3/2;
+ExpInfo["Bd->\[Tau]\[Tau]"]:=Row[{"From PDG: ", Ref["PDGK"]}]
+
+
+NumericalInput["Bd->\[Tau]\[Tau]"] := Mass["\[Tau]"]^2/Mass["\[Mu]"]^2 Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bd"]^2]/Sqrt[1-4 Mass["\[Tau]"]^2/Mass["Bd"]^2]*RBd/.GetParameters[Errors->True];
+InputDependence["Bd->\[Tau]\[Tau]"] := Abs[Vckm[3,3]Vckm[3,1]\[Conjugate]]^2;
+SMInfo["Bd->\[Tau]\[Tau]"] := "f_Bd (with 2+1+1) taken from [2411.04268]; theory prediction from [1908.07011] rescaled by ratio of lepton masses"
+
+
+NPContribution$default["Bd->\[Tau]\[Tau]"] := NPFromTheoryExpression["Bd->\[Tau]\[Tau]"](* (Abs[C10SM+wCL["10",ind]-wCL["10p",ind]+(wCL["P",ind]-wCL["Pp",ind]) Mass["Bd"]^2/(2 Mass["\[Tau]"] (Mass["b"]+Mass["d"]))]^2+(1-4 Mass["\[Tau]"]^2/Mass["Bd"]^2)Abs[(wCL["S",ind]-wCL["Sp",ind]) Mass["Bd"]^2/(2 Mass["\[Tau]"] (Mass["b"]+Mass["d"]))]^2)/Abs[C10SM]^2-1/.ind->{3,3,1,3}/.WETToLEFT/.GetParameters[]//Expand*)
+
+
+(* ::Section:: *)
+(*b -> s\[Nu]\[Nu]*)
+
+
+(* Old stuff, to be removed later? *)
+
+
+FlavorObservables["b->s\[Nu]\[Nu]"] = {"B+->K+\[Nu]\[Nu]","B0->K0*\[Nu]\[Nu]"};
+
+
+ObsTable["b->s\[Nu]\[Nu]"] := Grid[{{"b->s\[Nu]\[Nu]",Column[FlavorObservables["b->s\[Nu]\[Nu]"]]}},Dividers->All];
+
+
+LowScale[Alternatives@@(FlavorObservables["b->s\[Nu]\[Nu]"]//Flatten)] := Mass["b"]/.GetParameters[];
+
+
+(* Numerical factor for the interference between LH and RH currents [2301.06990]*)
+\[Eta]Kst = Around[3.34,0.04];
+
+
+dBK\[Nu]\[Nu][i_,j_]:=Lifetime["Bp"]/(512\[Pi]^5)*1/3*\[Lambda]K^(3/2)/Mass["Bp"]^3*fp^2*Abs[WCL["\[Nu]dVLL",{i,j,2,3}]+WCL["\[Nu]dVLR",{i,j,2,3}]]^2
+
+
+dBKst\[Nu]\[Nu][i_,j_]:=Lifetime["B0"]/(128\[Pi]^5)*XXX  (* TO DO -- how? *)
+
+
+(* ::Subsection:: *)
+(*B -> K\[Nu]\[Nu]*)
+
+
+(* OLD
+BK\[Nu]\[Nu]Aux = Around[2.87,0.10]*10^-3;
+SMPrediction$default["B+->K+\[Nu]\[Nu]"] := (Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2*BK\[Nu]\[Nu]Aux)/.GetParameters[Errors->True];
+NPContribution$default["B+->K+\[Nu]\[Nu]"] := (Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]/(3Abs[CL\[Nu]SM["Value"]]^2)-1)/.WETToLEFT/.GetParameters[]//Chop;*)
+
+
+TheoryExpression["B+->K+\[Nu]\[Nu]"] := Sum[dBK\[Nu]\[Nu][i,j],{i,1,3},{j,1,3}];
+
+
+ExpValue$default["B+->K+\[Nu]\[Nu]"] := Around[2.33,0.67]*CL90to95/2;
+ExpInfo["B+->K+\[Nu]\[Nu]"]:="Belle-II results from 2311.14647"
+
+
+(* BR/|\[Lambda]t|^2, without tree-level annihilation channel*)
+NumericalInput["B+->K+\[Nu]\[Nu]"]:=Around[2.87,0.10]*10^-3;
+InputDependence["B+->K+\[Nu]\[Nu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
+
+
+SMInfo["B+->K+\[Nu]\[Nu]"] :="Average of HPQCD and FNAL/MILC form-factors from [2301.06990]"
+
+
+NPContribution$default["B+->K+\[Nu]\[Nu]"] :=0(* TO DO -- how?*)
+
+
+NPInfo["B+->K+\[Nu]\[Nu]"] := "[2301.06990]"
+
+
+(* ::Subsection:: *)
+(*B -> K*\[Nu]\[Nu]*)
+
+
+TheoryExpression["B0->K0*\[Nu]\[Nu]"] := Sum[dBKst\[Nu]\[Nu][i,j],{i,1,3},{j,1,3}];
+
+
+ExpValue$default["B0->K0*\[Nu]\[Nu]"] := Around[0,1.8 10^-5]*CL90to95/2;
+ExpInfo["B0->K0*\[Nu]\[Nu]"]:="PDG"
+
+
+(* BR/|\[Lambda]t|^2, without tree-level annihilation channel*)
+NumericalInput["B0->K0*\[Nu]\[Nu]"]:= Around[5.9,0.8]*10^-3;
+InputDependence["B0->K0*\[Nu]\[Nu]"] := Abs[Vckm[3,3]Vckm[3,2]\[Conjugate]]^2;
+
+
+SMInfo["B0->K0*\[Nu]\[Nu]"] :="Form-factors from [1503.05534]"
+
+
+NPContribution$default["B0->K0*\[Nu]\[Nu]"] := 0(*(1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Abs[CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}]+wCL["R\[Nu]",{i,j,2,3}]]^2,{i,1,3},{j,1,3}]-\[Eta]Kst["Value"] 1/(3Abs[CL\[Nu]SM["Value"]]^2) Sum[Boole[i<=j]Re[(CL\[Nu]SM["Value"] KroneckerDelta[i,j]+wCL["L\[Nu]",{i,j,2,3}])Conjugate[wCL["R\[Nu]",{i,j,2,3}]]],{i,1,3},{j,1,3}]-1)/.WETToLEFT/.GetParameters[]//Chop;*)
+
+
+NPInfo["B0->K0*\[Nu]\[Nu]"] := "[2301.06990]"
+
+
+(* ::Section::Closed:: *)
+(*b -> s\[Gamma]*)
+
+
+FlavorObservables["b->s\[Gamma]"] = {"B->Xs\[Gamma]"};
+
+
+ObsTable["b->s\[Gamma]"] := Grid[{{"b->s\[Gamma]",Column[FlavorObservables["b->s\[Gamma]"]]}},Dividers->All];
+
+
+LowScale["B->Xs\[Gamma]"] = 160;
+
+
+ExpValue$default["B->Xs\[Gamma]"] := Around[3.32,0.15]*10^-4;
+
+
+SMPrediction$default["B->Xs\[Gamma]"] := Around[3.39,0.17]*10^-4;
+
+
+NPContribution$default["B->Xs\[Gamma]"] := (1/SMPrediction$default["B->Xs\[Gamma]"]["Value"] (2.1*Re[3.93*wCL["7",{2,3}]+wCL["8",{2,3}]])*10^-4)/.WETToLEFT/.GetParameters[]//Chop;
