@@ -418,7 +418,7 @@ RemoveObservable[name_String] := Module[
 (*Computing NP part from theory expressions*)
 
 
-NPFromTheoryExpression[obs_] := 1/SMPrediction$default[obs]["Value"] ((TheoryExpression[obs]/.a_WCL:>(SMValue[a]+a))-(TheoryExpression[obs]/.a_WCL:>SMValue[a]/._WC->0))/.GetParameters[]
+NPFromTheoryExpression[obs_] := 1/SMPrediction$default[obs]["Value"] ((TheoryExpression[obs]/.PhiPPpl\[Nu]Rep[obs]/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>(SMValue[a,TreeOnly->True]+a))-(TheoryExpression[obs]/.PhiPPpl\[Nu]Rep[obs]/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>SMValue[a,TreeOnly->True]/._WC->0))/.GetParameters[]
 
 
 (* ::Section:: *)
