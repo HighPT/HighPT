@@ -44,7 +44,7 @@ PackageExport["ToDownBasis"]
 PackageExport["MatchingScale"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Internal*)
 
 
@@ -88,7 +88,7 @@ SetMatchingOrder[ord_]:=If[MatchQ[ord,0]||MatchQ[ord,1],MatchingOrder=ord;,Messa
 GetMatchingOrder[]:=If[MatchingOrder==0,Print["Tree-level matching"],Print["One-loop matching"]];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Tree - level matching conditions*)
 
 
@@ -96,7 +96,7 @@ GetMatchingOrder[]:=If[MatchingOrder==0,Print["Tree-level matching"],Print["One-
 (*Auxiliary definitions*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Mass rotation*)
 
 

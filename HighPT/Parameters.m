@@ -207,7 +207,7 @@ Yukawa[l:Except[Alternatives@@Join[{"u","d","e"}, {_Pattern, _Blank, _Except, _B
 )
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Formatting*)
 
 
@@ -361,14 +361,26 @@ CKM= {
 };
 
 
-(* ::Subsubsection::Closed:: *)
-(*Define rotation matrices for left-handed up and down quarks*)
+(* ::Subsubsection:: *)
+(*Define rotation matrices for left- and right- handed up and down quarks*)
 
 
 (* By default down alignment is assumed *)
 Vu = CKM
 
 Vd= {
+	{1,0,0},
+	{0,1,0},
+	{0,0,1}
+}
+
+Uu= {
+	{1,0,0},
+	{0,1,0},
+	{0,0,1}
+}
+
+Ud= {
 	{1,0,0},
 	{0,1,0},
 	{0,0,1}
@@ -985,7 +997,7 @@ Wolfenstein$default := {
 }*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Define alignment of mass basis and flavor basis*)
 
 
