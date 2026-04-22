@@ -210,7 +210,7 @@ SMEFTRun[expr_,lowscale_, highscale_,OptionsPattern[]]:=Module[
 			Message[SMEFTRun::custombasisdsixtools];Abort[]];*)
 		(*If[MatchQ[OptionValue[Basis],"up"],temp=expr(*ToDownBasis[expr]*),temp=expr];*)
 		If[NumericQ[lowscale]&&NumericQ[highscale],
-			params=DeleteDuplicates@Cases[expr, _WC, \[Infinity]];
+			params=Intersection[DeleteDuplicates@Cases[expr, _WC, \[Infinity]],WarsawBasis[]];
 			(* Deal with the case of a single WC being evolved *)
 			If[MatchQ[params,{}] && MatchQ[Head@expr,WC],params={expr}];
 			If[MatchQ[params,{}],Message[SMEFTRun::nocoefficients]];

@@ -158,7 +158,7 @@ SMPrediction$default["B0->D+\[Tau]\[Nu]Olcyr"] := Lifetime["B0"]*SEW*\[CapitalGa
 SMInfo["B0->D+\[Tau]\[Nu]Olcyr"] := "FLAG 2+1 average"
 
 
-NPContribution$default["B0->D+\[Tau]\[Nu]Olcyr"] := NPFromTheoryExpression["B0->D+\[Tau]\[Nu]Olcyr"]/.SubstitutePsi
+NPContribution$default["B0->D+\[Tau]\[Nu]Olcyr"] := NPFromTheoryExpression["B0->D+\[Tau]\[Nu]Olcyr"](*/.SubstitutePsi*)
 
 
 LowScale$default["B0->D+\[Tau]\[Nu]Olcyr"] := Mass["b"]/.GetParameters[]
