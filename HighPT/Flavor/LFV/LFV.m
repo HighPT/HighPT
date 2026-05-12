@@ -932,13 +932,13 @@ ObservableList["\[Tau]->3l"] = {"\[Tau]->\[Mu]\[Mu]\[Mu]","\[Tau]->e\[Mu]\[Mu]",
 leptons={"e","\[Mu]","\[Tau]"}
 
 
-Brlj3li[j_,i_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^5)/(1536 \[Pi]^3) (2*Abs[WCL["eeVLL",{i,i,i,j}]]^2+2*Abs[WCL["eeVRR",{i,i,i,j}]]^2+Abs[WCL["eeVLR",{i,j,i,i}]]^2+Abs[WCL["eeVLR",{i,i,i,j}]]^2 + 64*4\[Pi]*Param["\[Alpha]EM"](Log[Mass[leptons[[j]]]/Mass[leptons[[i]]]]-11/8) 1/Mass[leptons[[j]]]^2 (Abs[WCL["d\[Gamma]",{j,i}]]^2+Abs[WCL["d\[Gamma]",{i,j}]]^2) + 8*Sqrt[4\[Pi]*Param["\[Alpha]EM"]]*1/Mass[leptons[[j]]]*(Re[WCL["d\[Gamma]",{i,j}](2*WCL["eeVLL",{i,i,i,j}]\[Conjugate]+WCL["eeVLR",{i,j,i,i}]\[Conjugate])] +Re[WCL["d\[Gamma]",{j,i}]\[Conjugate](2*WCL["eeVRR",{i,i,i,j}]\[Conjugate]+WCL["eeVLR",{i,i,i,j}]\[Conjugate])]))
+Brlj3li[j_,i_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^5)/(1536 \[Pi]^3) (2*Abs[WCL["eeVLL",{i,i,i,j}]]^2+2*Abs[WCL["eeVRR",{i,i,i,j}]]^2+Abs[WCL["eeVLR",{i,j,i,i}]]^2+Abs[WCL["eeVLR",{i,i,i,j}]]^2 + 64*4\[Pi]*Param["\[Alpha]EM"](Log[Mass[leptons[[j]]]/Mass[leptons[[i]]]]-11/8) 1/Mass[leptons[[j]]]^2 (Abs[WCL["e\[Gamma]",{j,i}]]^2+Abs[WCL["e\[Gamma]",{i,j}]]^2) + 8*Sqrt[4\[Pi]*Param["\[Alpha]EM"]]*1/Mass[leptons[[j]]]*(Re[WCL["e\[Gamma]",{i,j}](2*WCL["eeVLL",{i,i,i,j}]\[Conjugate]+WCL["eeVLR",{i,j,i,i}]\[Conjugate])] +Re[WCL["e\[Gamma]",{j,i}]\[Conjugate](2*WCL["eeVRR",{i,i,i,j}]\[Conjugate]+WCL["eeVLR",{i,i,i,j}]\[Conjugate])]))
 
 
 (* lj -> li lk lk *)
 
 
-Brljlilk[j_,i_,k_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^5)/(1536 \[Pi]^3) (Abs[WCL["eeVLL",{i,j,k,k}]]^2+Abs[WCL["eeVRR",{i,j,k,k}]]^2+Abs[WCL["eeVLR",{i,j,k,k}]]^2+Abs[WCL["eeVLR",{k,k,i,j}]]^2 + 64*4\[Pi]*Param["\[Alpha]EM"](Log[Mass[leptons[[j]]]/Mass[leptons[[k]]]]-3/2) 1/Mass[leptons[[j]]]^2 (Abs[WCL["d\[Gamma]",{j,i}]]^2+Abs[WCL["d\[Gamma]",{i,j}]]^2) + 8*Sqrt[4\[Pi]*Param["\[Alpha]EM"]]*1/Mass[leptons[[j]]]*(Re[WCL["d\[Gamma]",{i,j}](WCL["eeVLL",{i,j,k,k}]\[Conjugate]+WCL["eeVLR",{i,j,k,k}]\[Conjugate])] +Re[WCL["d\[Gamma]",{j,i}]\[Conjugate](WCL["eeVRR",{k,k,i,j}]\[Conjugate]+WCL["eeVLR",{k,k,i,j}]\[Conjugate])]))
+Brljlilk[j_,i_,k_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^5)/(1536 \[Pi]^3) (Abs[WCL["eeVLL",{i,j,k,k}]]^2+Abs[WCL["eeVRR",{i,j,k,k}]]^2+Abs[WCL["eeVLR",{i,j,k,k}]]^2+Abs[WCL["eeVLR",{k,k,i,j}]]^2 + 64*4\[Pi]*Param["\[Alpha]EM"](Log[Mass[leptons[[j]]]/Mass[leptons[[k]]]]-3/2) 1/Mass[leptons[[j]]]^2 (Abs[WCL["e\[Gamma]",{j,i}]]^2+Abs[WCL["e\[Gamma]",{i,j}]]^2) + 8*Sqrt[4\[Pi]*Param["\[Alpha]EM"]]*1/Mass[leptons[[j]]]*(Re[WCL["e\[Gamma]",{i,j}](WCL["eeVLL",{i,j,k,k}]\[Conjugate]+WCL["eeVLR",{i,j,k,k}]\[Conjugate])] +Re[WCL["e\[Gamma]",{j,i}]\[Conjugate](WCL["eeVRR",{k,k,i,j}]\[Conjugate]+WCL["eeVLR",{k,k,i,j}]\[Conjugate])]))
 
 
 (* ::Subsubsection:: *)
@@ -1036,7 +1036,7 @@ LowScale$default["\[Tau]->eee"] := Mass["\[Tau]"]/.GetParameters[]
 ObservableList["\[Tau]->l\[Gamma]"] = {"\[Tau]->\[Mu]\[Gamma]","\[Tau]->e\[Gamma]"};
 
 
-Brljli\[Gamma][j_,i_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^3)/(4\[Pi]) (Abs[WCL["d\[Gamma]",{i,j}]]^2+Abs[WCL["d\[Gamma]",{j,i}]]^2)
+Brljli\[Gamma][j_,i_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^3)/(4\[Pi]) (Abs[WCL["e\[Gamma]",{i,j}]]^2+Abs[WCL["e\[Gamma]",{j,i}]]^2)
 
 
 (* ::Subsubsection:: *)
