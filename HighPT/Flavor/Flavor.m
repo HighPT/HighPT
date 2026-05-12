@@ -70,7 +70,7 @@ FlavorObservables["custom"] := $CustomObservables;
 $CustomObservables = {};
 
 
-ObservableSectors["Flavor"] := {"ChargedCurrents","\[CapitalDelta]F=1","ChargedCurrentsOlcyr"(*,"\[CapitalDelta]F=2","LFV","\[Tau]LFU"*)};
+ObservableSectors["Flavor"] := {"ChargedCurrents","\[CapitalDelta]F=1","ChargedCurrentsOlcyr","LFV"(*,"\[CapitalDelta]F=2","\[Tau]LFU"*)};
 ObservableList["Flavor"] := ObservableList/@ObservableSectors["Flavor"]
 
 

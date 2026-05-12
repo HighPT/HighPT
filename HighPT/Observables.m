@@ -423,16 +423,20 @@ RemoveObservable[name_String] := Module[
 
 NPFromTheoryExpression[obs_] := Module[
 	{
-	expr,withsm, smonly
+	expr,
+	withsm, smonly
 	}
 	,
 	If[FreeQ[TheoryExpression[obs],Phi],
 		expr = TheoryExpression[obs],
 		expr = TheoryExpression[obs]/.PhiPPpl\[Nu]Rep[obs]/.SubstitutePsi/.Around[a_,b_]:>a/._Phi->0
 	];
-	withsm = (expr(*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>(SMValue[a,TreeOnly->True]+a));
-	smonly = (expr(*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>SMValue[a,TreeOnly->True]/._WC->0);
-	Return[1/SMPrediction$default[obs]["Value"] (withsm - smonly)/.GetParameters[]]
+	If[MatchQ[SMPrediction$default[obs]["Value"],0],
+		Return[expr/.GetParameters[]],
+		withsm = (expr(*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>(SMValue[a,TreeOnly->True]+a));
+		smonly = (expr(*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>SMValue[a,TreeOnly->True]/._WC->0);
+		Return[1/SMPrediction$default[obs]["Value"] (withsm - smonly)/.GetParameters[]]
+	]
 ]
 
 

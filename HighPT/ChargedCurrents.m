@@ -352,7 +352,7 @@ LowScale$default["KL->\[Pi]-\[Mu]\[Nu]"] := Mass["K0"]/.GetParameters[]
 me = {Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]};
 
 
-Ktol\[Nu][lep_] := Lifetime["K+"]/(64 \[Pi]) DecayConstant["K+"]^2 Mass["K+"]me[[lep]]^2 (1-me[[lep]]^2/Mass["K+"]^2)^2 Sum[Abs[WCL["\[Nu]eduVLL",{j,lep,2,1}]-WCL["\[Nu]eduVLR",{j,lep,2,1}]-Mass["K+"]^2/(Mass["u"]+Mass["s"]) (WCL["\[Nu]eduSRR",{j,lep,2,1}]-WCL["\[Nu]eduSRL",{j,lep,2,1}])]^2,{j,3}]
+Ktol\[Nu][lep_] := Lifetime["K+"]/(64 \[Pi]) DecayConstant["K"]^2 Mass["K+"]me[[lep]]^2 (1-me[[lep]]^2/Mass["K+"]^2)^2 Sum[Abs[WCL["\[Nu]eduVLL",{j,lep,2,1}]-WCL["\[Nu]eduVLR",{j,lep,2,1}]-Mass["K+"]^2/(Mass["u"]+Mass["s"]) (WCL["\[Nu]eduSRR",{j,lep,2,1}]-WCL["\[Nu]eduSRL",{j,lep,2,1}])]^2,{j,3}]
 
 
 (* ::Subsubsection:: *)
@@ -367,7 +367,7 @@ ExpInfo["K+->\[Mu]\[Nu]"] := Row[{"From PDG: ", Ref["PDGK"]}]
 
 
 \[Delta]K = Around[0.0107,0.0021];
-SMPrediction$default["K+->\[Mu]\[Nu]"] := Lifetime["K+"]Param["GF"]^2/(8\[Pi]) DecayConstant["K+"]^2 Mass["\[Mu]"]^2 Mass["K+"](1-Mass["\[Mu]"]^2/Mass["K+"]^2)^2 Abs[Vckm[1,2]]^2 (1+\[Delta]K)/.GetParameters[Errors->True]
+SMPrediction$default["K+->\[Mu]\[Nu]"] := Lifetime["K+"]Param["GF"]^2/(8\[Pi]) DecayConstant["K"]^2 Mass["\[Mu]"]^2 Mass["K+"](1-Mass["\[Mu]"]^2/Mass["K+"]^2)^2 Abs[Vckm[1,2]]^2 (1+\[Delta]K)/.GetParameters[Errors->True]
 SMInfo["K+->\[Mu]\[Nu]"] := Row[{"Rosner et al. ", Hyperlink["1509.02220","https://arxiv.org/pdf/1509.02220"]}]
 
 
@@ -388,7 +388,7 @@ ExpValue$default["K+->e\[Nu]"] := Around[1.582,0.007]*10^-5
 ExpInfo["K+->e\[Nu]"] := Row[{"From PDG: ", Ref["PDGK"]}]
 
 
-SMPrediction$default["K+->e\[Nu]"] := Lifetime["K+"]Param["GF"]^2/(8\[Pi]) DecayConstant["K+"]^2 Mass["e"]^2 Mass["K+"](1-Mass["e"]^2/Mass["K+"]^2)^2 Abs[Vckm[1,2]]^2 (1+\[Delta]K)/.GetParameters[Errors->True]
+SMPrediction$default["K+->e\[Nu]"] := Lifetime["K+"]Param["GF"]^2/(8\[Pi]) DecayConstant["K"]^2 Mass["e"]^2 Mass["K+"](1-Mass["e"]^2/Mass["K+"]^2)^2 Abs[Vckm[1,2]]^2 (1+\[Delta]K)/.GetParameters[Errors->True]
 SMInfo["K+->e\[Nu]"] := Row[{"Rosner et al. ", Hyperlink["1509.02220","https://arxiv.org/pdf/1509.02220"]}]
 
 

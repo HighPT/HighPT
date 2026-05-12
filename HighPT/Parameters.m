@@ -417,7 +417,7 @@ InputCheck[input_Rule] := If[!MatchQ[input[[2]], $allowedInputValues[Head[input[
 InputCheck::inputvalue= "Invalid format for input: `1`, the allowed values for `2` must match `3`.";
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Experimental (default) Inputs*)
 
 
@@ -712,20 +712,20 @@ Lifetime["Bc"][Default] := Around[0.510,0.009]*10^-12*stoGeV;
 Info$default[Lifetime["Bc"]] := Row[{"HFLAV", Hyperlink["https://hflav-eos.web.cern.ch/hflav-eos/osc/PDG_2025/"]}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Decay constants*)
 
 
 $allowedDecayConstants = {
-	"K+",
+	"K",
 	"D","Ds",
-	"B0","Bs","Bc"
+	"B","Bs","Bc"
 };
 
 
 (*fKplus$default = Around[0.1557,0.0003];*)
-DecayConstant["K+"][Default] := Around[0.1557,0.0003];
-Info$default[DecayConstant["K+"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
+DecayConstant["K"][Default] := Around[0.1557,0.0003];
+Info$default[DecayConstant["K"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
 
 
 (*fD$default = Around[212.0,0.7]*10^-3;*)
@@ -739,8 +739,8 @@ Info$default[DecayConstant["Ds"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyp
 
 
 (*fBd$default = Around[190.0,1.3]*10^-3;*)
-DecayConstant["B0"][Default] := Around[190.0,1.3]*10^-3;
-Info$default[DecayConstant["Bd"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
+DecayConstant["B"][Default] := Around[190.0,1.3]*10^-3;
+Info$default[DecayConstant["B"]] := Row[{"FLAG 2024 average, Nf = 2+1+1, ", Hyperlink["2411.04268","https://arxiv.org/pdf/2411.04268"]}]
 
 
 (*fBs$default = Around[230.3,1.3]*10^-3;*)
@@ -926,7 +926,7 @@ mn$current = mn$default;
 \[Tau]Bplus$current = \[Tau]Bplus$default;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Decay Constants*)
 
 
@@ -942,7 +942,7 @@ fDs$current = fDs$default;
 fD$current = fD$default;
 
 
-fKplus$current = fKplus$default;
+fK$current = fK$default;
 
 
 (* ::Subsubsection::Closed:: *)

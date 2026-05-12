@@ -533,8 +533,8 @@ $WCLList5=List[
 	(* (\[Nu]\[Nu])X *)
 	"\[Nu]\[Gamma]",
 	(* (LR)X *)
-	"e\[Gamma]",
-	"u\[Gamma]","d\[Gamma]",
+	"e\[Gamma]","eZ",
+	"u\[Gamma]","d\[Gamma]","uZ","dZ",
 	"uG","dG"
 ]
 
@@ -654,7 +654,7 @@ SanDiegoBasis::WrongLabel = "The label `1` is not a San Diego label"
 
 SanDiegoBasis[lab_] := Module[
 	{tab},
-	If[!MemberQ[Join[$WCLList3,$WCLList5,$WCLList6X3,$WCLList6psi4],lab],Message[SanDiegoBasis::WrongLabel,lab];Abort[]];
+	If[!MemberQ[Join[$WCLList3,Complement[$WCLList5,{"eZ","uZ","dZ"}],$WCLList6X3,$WCLList6psi4],lab],Message[SanDiegoBasis::WrongLabel,lab];Abort[]];
 	Switch[NindLEFT[lab],
 		0,
 		tab = WCL[lab,{}],
@@ -669,7 +669,7 @@ SanDiegoBasis[lab_] := Module[
 ]
 
 
-SanDiegoBasis[] = Table[SanDiegoBasis[lab],{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}]//Flatten
+SanDiegoBasis[] = Table[SanDiegoBasis[lab],{lab,Join[$WCLList6X3,$WCLList3,Complement[$WCLList5,{"eZ","uZ","dZ"}],$WCLList6psi4]}]//Flatten
 
 
 (* ::Subsection:: *)
@@ -681,8 +681,8 @@ LEFTBasis::WrongLabel = "The label `1` is not a LEFT label"
 
 LEFTBasis[lab_] := Module[
 	{tab},
-	If[MemberQ[Join[$WCLList3,$WCLList5,$WCLList6X3,$WCLList6psi4],lab],Return[SanDiegoBasis[lab]]];
-	If[!MemberQ[Join[$WCLList2,$WCLList4],lab],Message[LEFTBasis::WrongLabel,lab];Abort[]];
+	If[MemberQ[Join[$WCLList3,Complement[$WCLList5,{"eZ","uZ","dZ"}],$WCLList6X3,$WCLList6psi4],lab],Return[SanDiegoBasis[lab]]];
+	If[!MemberQ[Join[$WCLList2,$WCLList4,{"eZ","uZ","dZ"}],lab],Message[LEFTBasis::WrongLabel,lab];Abort[]];
 	Switch[NindLEFT[lab],
 		0,
 		tab = WCL[lab,{}],
