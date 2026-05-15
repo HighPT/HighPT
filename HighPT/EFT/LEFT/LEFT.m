@@ -62,7 +62,7 @@ WCL::usage=
 WCL[\"label\",{i,j}] LEFT Wilson coefficient associated to the dimension-five operator with flavor indices i,j."
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -105,6 +105,14 @@ Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
 		]
 	]
 ]
+
+
+(* ::Subsection:: *)
+(*Flavor indices*)
+
+
+(* remove unwanted indices *)
+WCL[x_, {f1_[i_], f2_[j_]}] := WCL[x, {i, j}]
 
 
 (* ::Subsection:: *)
@@ -158,19 +166,57 @@ class8WCL= Alternatives[
 ];
 
 
+(* ::Text:: *)
+(* BEGIN definition of NEW classes below (coefficients that affect Vh production)  {*)
+
+
+(* class needed for Vh production - Vff *)
+class9WCL = Alternatives[
+	"\[Beta]ZuR", "\[Beta]ZdR", "\[Beta]ZuL", "\[Beta]ZdL", "\[Beta]WqL", "\[Beta]WqR"
+];
+
+
+(* class needed for Zh production *)
+class10WCL = Alternatives[
+	"gZHuL", "gZHuR", "gZHdL", "gZHdR"
+];
+
+
+(* class needed for Wh production *)
+class11WCL = Alternatives[
+	"gWHqL", "gWHqR"
+];
+
+
+(* class needed for Vh production *)
+class12WCL = Alternatives[
+	"\[Beta]ZHuR", "\[Beta]ZHdR", "\[Beta]ZHuL", "\[Beta]ZHdL", "\[Beta]WHqR", "\[Beta]WHqL"
+];
+
+
+(* class needed for Vh production *)
+class13WCL = Alternatives[
+	"1Z", "1W", "2Z", "2A", "2W"
+];
+
+
+(* ::Text:: *)
+(*} END *)
+
+
 (* ::Subsubsection:: *)
 (*Index relabeling redundancies*)
 
 
 (* ::Text:: *)
-(*2 fermion operators -class 2*)
+(*2 fermion operators -class 2 & 10 (UPDATED - VH)*)
 
 
-WCL[lab:class2WCL,{p_Integer,r_Integer}]:= WCL[lab,{r,p}]\[Conjugate] /; p>r
+WCL[lab:Join[class2WCL, class10WCL],{p_Integer,r_Integer}]:= WCL[lab,{r,p}]\[Conjugate] /; p>r
 
 
 (* ::Text:: *)
-(*2 fermion operators -class 3*)
+(*2 fermion operators -class 3 *)
 
 
 WCL[lab:class3WCL,{p_Integer,r_Integer}]:= WCL[lab,{r,p}] /; p>r
@@ -184,6 +230,13 @@ WCL[lab:class4WCL,{a_Integer,b_Integer}]:= -WCL[lab,{b,a}] /; a>b
 
 
 WCL[lab:class4WCL,{a_Integer,a_Integer}]:= 0
+
+
+(* ::Text:: *)
+(*2 fermion operators - class 9 & 12 (NEW - VH)*)
+
+
+WCL[lab:Alternatives["\[Beta]ZuL", "\[Beta]ZdL", "\[Beta]ZHuL", "\[Beta]ZHdL"], {p_Integer, r_Integer}] := WCL[StringJoin[StringTake[lab, {1, -2}], "R"], {r, p}]\[Conjugate]
 
 
 (* ::Text:: *)
@@ -337,12 +390,14 @@ WCL[lab:class10WCL,{i_Integer,i_Integer,k_Integer,l_Integer}]:= 0
 (*Remove conjugates*)
 
 
-(* 0 *)
-WCL/:Conjugate[WCL[lab:class0WCL,{}]]:= WCL[lab,{}] 
+(* !!! UPDATED !!!*)
+(* 0 & 13 *)
+WCL/:Conjugate[WCL[lab:Join[class0WCL, class13WCL],{}]]:= WCL[lab,{}] 
 
 
-(* 2 *)
-WCL/:Conjugate[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
+(* !!! UPDATED !!!*)
+(* 2 & 10  *)
+WCL/:Conjugate[WCL[lab:Join[class2WCL, class10WCL],{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
 
 
 (* 6 *)
@@ -366,8 +421,9 @@ WCL/:Conjugate[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= W
 WCL/:Re[WCL[lab:class0WCL,{}]]:= WCL[lab,{}] 
 
 
-(* 2 *)
-WCL/:Re[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
+(* !!! UPDATED !!!*)
+(* 2 & 10 *)
+WCL/:Re[WCL[lab:Join[class2WCL, class10WCL],{p_Integer,p_Integer}]]:= WCL[lab,{p,p}]
 
 
 (* 6 *)
@@ -391,8 +447,9 @@ WCL/:Re[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= WCL[lab,
 WCL/:Im[WCL[lab:class0WCL,{}]]:= 0 
 
 
-(* 2 *)
-WCL/:Im[WCL[lab:class2WCL,{p_Integer,p_Integer}]]:= 0
+(* !!! UPDATED !!! *)
+(* 2 & 10 *)
+WCL/:Im[WCL[lab:Join[class2WCL, class10WCL],{p_Integer,p_Integer}]]:= 0
 
 
 (* 6 *)
@@ -408,7 +465,7 @@ WCL/:Im[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 WCL/:Im[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Set coefficients with top quark to zero*)
 
 
@@ -492,7 +549,7 @@ WCL[lab:zeroWCLclass6,{OrderlessPatternSequence[3,b_Integer,i_Integer,j_Integer]
 WCL::unknownWCLlabel= "The label `1` is not an allowed label for LEFT Wilson coefficients (WCL)."
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d = 2*)
 
 
@@ -501,7 +558,7 @@ $WCLList2=List[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d = 3*)
 
 
@@ -511,7 +568,7 @@ $WCLList3=List[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d = 4*)
 
 
@@ -525,7 +582,7 @@ $WCLList4=List[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d = 5*)
 
 
@@ -539,7 +596,7 @@ $WCLList5=List[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d=6 X^3*)
 
 
@@ -548,7 +605,7 @@ $WCLList6X3=List[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d=6 (\[Psi]^4) *)
 
 
@@ -583,7 +640,7 @@ $WCLList6psi4=List[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d=6 (\[Psi]^2D^2V) *)
 
 
@@ -592,7 +649,7 @@ $WCLList6psi2 = List[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d=7 (operators with gluons, for LFV) *)
 
 
@@ -601,29 +658,74 @@ $WCLList6psi2 = List[
 ]*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d=8 (\[Psi]^4D^2) *)
 
 
 $WCLList8psi4D2 = List[
-
+	
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
+(*d = 5 (\[Psi]^2 V - tensor)*)
+
+
+$WCList9 = List[
+	"\[Beta]ZuR", "\[Beta]ZdR", "\[Beta]ZuL", "\[Beta]ZdL", "\[Beta]WqL", "\[Beta]WqR"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 5 (\[Psi]^2 V h)*)
+
+
+$WCList10 = List[
+	"gZHuL", "gZHuR", "gZHdL", "gZHdR", "gWHqL", "gWHqR"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 6 (\[Psi]^2 V h - tensor)*)
+
+
+$WCList12 = List[
+	"\[Beta]ZHuR", "\[Beta]ZHdR", "\[Beta]ZHuL", "\[Beta]ZHdL", "\[Beta]WHqL", "\[Beta]WHqR"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 3 (hVV)*)
+
+
+$WCList13a = List[
+	"1Z", "1W"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 5 (hVV)*)
+
+
+$WCList13b = List[
+	"2Z", "2W", "2A"
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*Check WC label*)
 
 
-WCL[l:Except[Alternatives@@Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4(*,$WCLList7*), {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+WCL[l:Except[Alternatives@@Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4, $WCList9, $WCList10, $WCList12, $WCList13a, $WCList13b, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WCL::unknownWCLlabel,l];
 	Abort[]
 )
 
 
-GetAllWCL = Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4]
+GetAllWCL = Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4, $WCList9, $WCList10, $WCList12, $WCList13a, $WCList13b]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*San Diego Basis *)
 
 
@@ -672,7 +774,7 @@ SanDiegoBasis[lab_] := Module[
 SanDiegoBasis[] = Table[SanDiegoBasis[lab],{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}]//Flatten
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Full LEFT basis*)
 
 
@@ -697,7 +799,7 @@ LEFTBasis[lab_] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Map of redundant structures*)
 
 
@@ -789,12 +891,13 @@ SymmetricToNonRedundantLEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
 
 
 (* ::Section:: *)
-(*LEFT Truncation*)
+(*LEFT Truncation (updated)*)
 
 
+MassDimension[Alternatives@@$WCList13a] := 3
 MassDimension[Alternatives@@$WCLList4] := 4
-MassDimension[Alternatives@@$WCLList5] := 5
-MassDimension[Alternatives@@Join[$WCLList6X3,$WCLList6psi4]] := 6
+MassDimension[Alternatives@@Join[$WCLList5, $WCList9, $WCList10, $WCList13b]] := 5
+MassDimension[Alternatives@@Join[$WCLList6X3, $WCLList6psi4, $WCList12]] := 6
 
 
 DimensionCountingLEFT[expr_]:=expr/.WCL[lab_,ind_]:>WCL[lab,ind]*Power[eps,MassDimension[lab]-4]/.Conjugate[WC[lab_,ind_]]:>Conjugate[WC[lab,ind]]*Power[eps,MassDimension[lab]-4]

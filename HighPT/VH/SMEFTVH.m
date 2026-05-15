@@ -4,11 +4,11 @@ Package["HighPT`"]
 
 
 (* ::Title:: *)
-(*HighPT`SMEFT`for VH*)
+(*HighPT`LEFT-prime`for VH*)
 
 
 (* ::Subtitle:: *)
-(*Matching of the form-factors for VH production in the SMEFT*)
+(*Matching of the form-factors for VH production in the LEFT'*)
 
 
 (* ::Section:: *)
@@ -19,12 +19,102 @@ Package["HighPT`"]
 (*Internal*)
 
 
-PackageScope["SubstituteRulesSMEFTVH"]
-PackageScope["CanonizeFFVH"]
+PackageExport["SubstituteRulesLEFTVH"]
+(*PackageScope["SubstituteRulesSMEFTVH"]*)
+PackageExport["CanonizeFFVH"]
 
 
 (* ::Section:: *)
-(*Matching the form factors to the SMEFT*)
+(*Matching the form factors to the LEFT*)
+
+
+(* ::Text:: *)
+(*Form-Factors for Zh production in terms of the LEFT' couplings*)
+
+
+SubstituteRulesLEFTZH = {
+	(* Regular Vector (V, 1) Form-Factors *)
+	ff[{Vector, 1}, {"regular", {0, 0}}, Left,  {i_u, j_u}] :> - Param["vev"] WCL["gZHuL", {i, j}] ,
+	ff[{Vector, 1}, {"regular", {0, 0}}, Right, {i_u, j_u}] :> - Param["vev"] WCL["gZHuR", {i, j}] ,
+	ff[{Vector, 1}, {"regular", {0, 0}}, Left,  {i_d, j_d}] :> - Param["vev"] WCL["gZHdL", {i, j}] ,
+	ff[{Vector, 1}, {"regular", {0, 0}}, Right, {i_d, j_d}] :> - Param["vev"] WCL["gZHdR", {i, j}] ,
+	
+	(* Singular Vector (V, 1) Form-Factors *)
+	ff[{Vector, 1}, {"ZBoson", 0}, Left,  {i_u, j_u}] :> - 2 WCL["gZuL", {i, j}] WCL["1Z", {}] / Param["vev"] ,
+	ff[{Vector, 1}, {"ZBoson", 0}, Right, {i_u, j_u}] :> - 2 WCL["gZuR", {i, j}] WCL["1Z", {}] / Param["vev"] ,
+	ff[{Vector, 1}, {"ZBoson", 0}, Left,  {i_d, j_d}] :> - 2 WCL["gZdL", {i, j}] WCL["1Z", {}] / Param["vev"] ,
+	ff[{Vector, 1}, {"ZBoson", 0}, Right, {i_d, j_d}] :> - 2 WCL["gZdR", {i, j}] WCL["1Z", {}] / Param["vev"] ,
+	
+	(* Regular Vector (V, 2) Form-Factors *)
+	ff[{Vector, 2}, {"regular", {0, 0}}, Left,  {u[i_], u[j_]}] :> - 4 Param["vev"] WCL["gZuL", {i, j}] WCL["2Z", {}] + 2 Param["vev"] Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] Charge[u] WCL["2A", {}] KroneckerDelta[i, j] ,
+	ff[{Vector, 2}, {"regular", {0, 0}}, Right, {u[i_], u[j_]}] :> - 4 Param["vev"] WCL["gZuR", {i, j}] WCL["2Z", {}] + 2 Param["vev"] Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] Charge[u] WCL["2A", {}] KroneckerDelta[i, j] ,
+	ff[{Vector, 2}, {"regular", {0, 0}}, Left,  {d[i_], d[j_]}] :> - 4 Param["vev"] WCL["gZdL", {i, j}] WCL["2Z", {}] + 2 Param["vev"] Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] Charge[d] WCL["2A", {}] KroneckerDelta[i, j] ,
+	ff[{Vector, 2}, {"regular", {0, 0}}, Right, {d[i_], d[j_]}] :> - 4 Param["vev"] WCL["gZdR", {i, j}] WCL["2Z", {}] + 2 Param["vev"] Sqrt[4*\[Pi]*Param["\[Alpha]EM"]] Charge[d] WCL["2A", {}] KroneckerDelta[i, j] ,
+	
+	(* Singular Vector (V, 2) Form-Factors *)
+	ff[{Vector, 2}, {"ZBoson", 0}, Left,  {i_u, j_u}] :> - 4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) Param["vev"] WCL["gZuL", {i, j}] WCL["2Z", {}] ,
+	ff[{Vector, 2}, {"ZBoson", 0}, Right, {i_u, j_u}] :> - 4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) Param["vev"] WCL["gZuR", {i, j}] WCL["2Z", {}] ,
+	ff[{Vector, 2}, {"ZBoson", 0}, Left,  {i_d, j_d}] :> - 4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) Param["vev"] WCL["gZdL", {i, j}] WCL["2Z", {}] ,
+	ff[{Vector, 2}, {"ZBoson", 0}, Right, {i_d, j_d}] :> - 4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) Param["vev"] WCL["gZdR", {i, j}] WCL["2Z", {}] ,
+	
+	(* Regular Scalar (S, 2) Form-Factors *)
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_u, j_u}] :> 4 WCL["\[Beta]ZuR", {i, j}] WCL["1Z", {}] , 
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_d, j_d}] :> 4 WCL["\[Beta]ZdR", {i, j}] WCL["1Z", {}] , 
+	
+	(* Singular Scalar (S, 2) Form-Factors *)
+	ff[{Scalar, 2}, {"ZBoson", 0}, Right, {i_u, j_u}] :>  4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) WCL["\[Beta]ZuR", {i, j}] WCL["1Z", {}] , 
+	ff[{Scalar, 2}, {"ZBoson", 0}, Right, {i_d, j_d}] :>  4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) WCL["\[Beta]ZdR", {i, j}] WCL["1Z", {}] , 
+	
+	(* Tensor Form-Factors *)
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_u, j_u}] :> Param["vev"]^2 WCL["\[Beta]ZHuR", {i, j}] , 
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_d, j_d}] :> Param["vev"]^2 WCL["\[Beta]ZHdR", {i, j}] 
+};
+
+
+(* ::Text:: *)
+(*Form-Factors for Wh production in terms of the LEFT' couplings*)
+
+
+SubstituteRulesLEFTWH = {
+	(* Reegular Vector (V, 1) Form-Factors *)
+	ff[{Vector, 1}, {"regular", {0, 0}}, Left,  {i_u, j_d}] :> - Param["vev"] WCL["gWHqL", {i, j}] , 
+	ff[{Vector, 1}, {"regular", {0, 0}}, Right, {i_u, j_d}] :> - Param["vev"] WCL["gWHqR", {i, j}] , 
+	
+	(* Singular Vector (V, 1) Form-Factors *)
+	ff[{Vector, 1}, {"WBoson", 0}, Left,  {i_u, j_d}] :> - WCL["gWqL", {i, j}] WCL["1W", {}] / Param["vev"] , 
+	ff[{Vector, 1}, {"WBoson", 0}, Right, {i_u, j_d}] :> - WCL["gWqR", {i, j}] WCL["1W", {}] / Param["vev"] , 
+	
+	(* Regular Vector (V, 2) Form-Factors *) 
+	ff[{Vector, 2}, {"regular", {0, 0}}, Left,  {i_u, j_d}] :> - 2 Param["vev"] WCL["gWqL", {i, j}] WCL["2W", {}] , 
+	ff[{Vector, 2}, {"regular", {0, 0}}, Right, {i_u, j_d}] :> - 2 Param["vev"] WCL["gWqR", {i, j}] WCL["2W", {}] , 
+	
+	(* Singular Vector (V, 2) Form-Factors *)
+	ff[{Vector, 2}, {"WBoson", 0}, Left,  {i_u, j_d}] :> - 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 Param["vev"] WCL["gWqL", {i, j}] WCL["2W", {}] ,
+	ff[{Vector, 2}, {"WBoson", 0}, Right, {i_u, j_d}] :> - 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 Param["vev"] WCL["gWqR", {i, j}] WCL["2W", {}] ,
+	
+	(* Regular Scalar (S, 2) Form-Factors *)
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Left,  {i_u, j_d}] :> 2 WCL["\[Beta]WqL", {i, j}] WCL["1W", {}] , 
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_u, j_d}] :> 2 WCL["\[Beta]WqR", {i, j}] WCL["1W", {}] , 
+	
+	(* Singular Scalar (S, 2) Form-Factors *)
+	ff[{Scalar, 2}, {"WBoson", 0}, Left,  {i_u, j_d}] :> 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 WCL["\[Beta]WqL", {i, j}] WCL["1W", {}] , 
+	ff[{Scalar, 2}, {"WBoson", 0}, Right, {i_u, j_d}] :> 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 WCL["\[Beta]WqR", {i, j}] WCL["1W", {}] , 
+	
+	(* Regular Tensor (T, 1) Form-Factors *)
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Left,  {i_u, j_d}] :> Param["vev"]^2 WCL["\[Beta]WHqL", {i, j}] ,
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_u, j_d}] :> Param["vev"]^2 WCL["\[Beta]WHqR", {i, j}]
+};
+
+
+(* ::Text:: *)
+(*Replacement rules for ZH and WH production*)
+
+
+SubstituteRulesLEFTVH = Dispatch[Join[SubstituteRulesLEFTZH, SubstituteRulesLEFTWH]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*OBSOLETE*)
 
 
 (* Matching of the form-factors in the SMEFT to the d <= 6 SMEFT *)
@@ -89,7 +179,11 @@ SubstituteRulesSMEFTVH[\[Epsilon]_] := Module[{list},
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Text:: *)
+(*OBSOLETE*)
+
+
+(* ::Subsubsubsection:: *)
 (*Z couplings*)
 
 
@@ -112,24 +206,15 @@ gZSM[\[Psi]_, X_] := WeakIsospin3[\[Psi], X] - Param["sW"]^2 Charge[\[Psi]];
 (*Canonize FF*)
 
 
-(* Rule to remove redundancies in the form-factors due to hermiticity *)
-
-
-CanonizeFFVH = Dispatch[
-	{
-	    (* WH *)
-        (* Vector *)
-		ff[{Vector, 1}, {"WBoson", 0}, X_, {qbar_d, q_u}] :> ff[{Vector, 1}, {"WBoson", 0}, X, {q, qbar}]\[Conjugate],
-		ff[{Vector, 1}, {"regular", {0,0}}, X_, {qbar_d, q_u}] :> ff[{Vector, 1}, {"regular", {0,0}}, X, {q, qbar}]\[Conjugate],
-	    ff[{Vector, 2}, {"WBoson", 0}, X_, {qbar_d, q_u}] :> ff[{Vector, 2}, {"WBoson", 0}, X, {q, qbar}]\[Conjugate],
-		ff[{Vector, 2}, {"regular", {0, 0}}, X_, {qbar_d, q_u}] :> ff[{Vector, 2}, {"regular", {0, 0}}, X, {q, qbar}]\[Conjugate],
-		(* Scalar *)
-        ff[{Scalar, 2}, {"WBoson", 0}, Right, {qbar_d, q_u}] :> ff[{Scalar, 2}, {"WBoson", 0}, Left, {q, qbar}]\[Conjugate],
-		ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {qbar_d, q_u}] :> ff[{Scalar, 2}, {"regular", {0, 0}}, Left, {q, qbar}]\[Conjugate],
-        ff[{Scalar, 2}, {"WBoson", 0}, Left, {qbar_d, q_u}] :> ff[{Scalar, 2}, {"WBoson", 0}, Right, {q, qbar}]\[Conjugate],
-        ff[{Scalar, 2}, {"regular", {0, 0}}, Left, {qbar_d, q_u}] :> ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {q, qbar}]\[Conjugate],
-		(* Tensor *)
-		ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {qbar_d, q_u}] :> ff[{Tensor, 1}, {"regular", {1, 0}}, Left, {q, qbar}]\[Conjugate],
-		ff[{Tensor, 1}, {"regular", {1, 0}}, Left, {qbar_d, q_u}] :> ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {q, qbar}]\[Conjugate]
-	}
-];
+(* Remove redundancies in the Form-Factors due to hermiticity *)
+CanonizeFFVH = Dispatch[{
+	(* WH Vector (V, 1 & 2) Form-Factors *)
+	ff[{Vector, I_}, type_, X_, {i_d, j_u}] :> Conjugate[ff[{Vector, I}, type, X, {j, i}]],
+	
+	(* ZH Scalar & Tensor Form-Factors *)
+	ff[lorentz:Except[{Vector, __}], type_, Left, {q_[i_], q_[j_]}] :> Conjugate[ff[lorentz, type, Right, {q[j], q[i]}]], 
+	
+	(* WH Scalar & Tensor Form-Factors *)
+	ff[lorentz:Except[{Vector, __}], type_, Left,  {i_d, j_u}] :> Conjugate[ff[lorentz, type, Right, {j, i}]] ,
+	ff[lorentz:Except[{Vector, __}], type_, Right, {i_d, j_u}] :> Conjugate[ff[lorentz, type, Left,  {j, i}]]
+}];

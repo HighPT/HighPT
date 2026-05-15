@@ -19,12 +19,13 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Exported*)
 
 
 (* FFs notation for external use *)
 PackageExport["ff"]
+PackageExport["SubstituteFFVH"]
 
 
 (* This has to be made PRIVATE later -- here only for testing implementation *)
@@ -45,11 +46,11 @@ PackageScope["SChannelSumVH"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*FormFactorVH*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Usage*)
 
 
@@ -141,7 +142,7 @@ FormFactorVectorVH[s_, t_, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Transpose[
 ];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*InterferenceMatrixVH*)
 
 
@@ -159,31 +160,31 @@ InterferenceMatrixVH[s_, t_, mV_] :=
 (*Individual entries of the interference matrix*)
 
 
-MV11[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 2 * s + t * u / mV^2 - Mass["Higgs"]^2]
+MV11[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["H"]^2}, 2 * s + t * u / mV^2 - Mass["H"]^2]
 
 
-MV12[s_, t_, mV_] := s + mV^2 - Mass["Higgs"]^2 
+MV12[s_, t_, mV_] := s + mV^2 - Mass["H"]^2 
 
 
-MV22[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["Higgs"]^2}, 1/s * (mV^2 * (2 * s - Mass["Higgs"]^2) + (t^2 + u^2)/2)] 
+MV22[s_, t_, mV_] := Module[{u = -s -t + mV^2 + Mass["H"]^2}, 1/s * (mV^2 * (2 * s - Mass["H"]^2) + (t^2 + u^2)/2)] 
 
 
-MST11[s_, t_, mV_]:= Param["vev"]^2 /(4 * mV^4 * s) * ((s - mV^2)^2 - 2 Mass["Higgs"]^2 * (s + mV^2) + Mass["Higgs"]^2)
+MST11[s_, t_, mV_]:= Param["vev"]^2 /(4 * mV^4 * s) * ((s - mV^2)^2 - 2 Mass["H"]^2 * (s + mV^2) + Mass["H"]^2)
 
 
-MST12[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 * (u - t)/ (4 * mV^2 * s) * (s + mV^2 - Mass["Higgs"]^2)]
+MST12[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["H"]^2}, Param["vev"]^2 * (u - t)/ (4 * mV^2 * s) * (s + mV^2 - Mass["H"]^2)]
 
 
-MST13[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 * (u - t) / s] 
+MST13[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["H"]^2}, Param["vev"]^2 * (u - t) / s] 
 
 
-MST22[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, Param["vev"]^2 *(1 + (t - u)^2 / (4 * s * mV^2))]
+MST22[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["H"]^2}, Param["vev"]^2 *(1 + (t - u)^2 / (4 * s * mV^2))]
 
 
-MST23[s_, t_, mV_]:= Param["vev"]^2 (s + mV^2 - Mass["Higgs"]^2 )/s
+MST23[s_, t_, mV_]:= Param["vev"]^2 (s + mV^2 - Mass["H"]^2 )/s
 
 
-MST33[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["Higgs"]^2}, (4 * Param["vev"]^2 / s^2) * (mV^2 * (s - 2 Mass["Higgs"]^2) + 2 * t * u)]
+MST33[s_, t_, mV_]:= Module[{u = -s - t + mV^2 + Mass["H"]^2}, (4 * Param["vev"]^2 / s^2) * (mV^2 * (s - 2 Mass["H"]^2) + 2 * t * u)]
 
 
 (* ::Section::Closed:: *)
@@ -213,11 +214,11 @@ SpinSumAmplitudeSqVH[s_, t_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{mV, totalA
 ];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*ExpandFormFactors*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Split FormFactor into regular and singular part*)
 
 
@@ -233,7 +234,7 @@ SplitFFVH::usage = "SplitFF returns the rule that splits the FormFactorVH into a
 SplitFFVH = FormFactorVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> RegularFFVH[{lorentz, index}, s, t, X, {i, j}] + SingularFFVH[{lorentz, index}, s, t, X, {i, j}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand regular form factors*)
 
 
@@ -264,7 +265,7 @@ ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand singular form factors*)
 
 
@@ -280,14 +281,17 @@ ExpandSingularFFVH[OptionsPattern[]] := Module[{rule = {}},
 	
 	(* t- and u-channels not availables at the moment *)
 	rule = {
-		SingularFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> Plus[
+		(*SingularFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> Plus[
 			(* SM contribution *)
 			If[MatchQ[lorentz, Vector] && index === 1, 
 				SChannelSumVH[s, ff[{lorentz, index}, {"s", SM}, X, {i, j}]],
 				0
 			],
 			SChannelSumVH[s, ff[{lorentz, index}, {"s", 0}, X, {i, j}]]
-		]
+		]*)
+		
+		(* SM contribution absorbed in singular, 0 form-factors now *) 
+		SingularFFVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> SChannelSumVH[s, ff[{lorentz, index}, {"s", 0}, X, {i, j}]]
 	};	
 
 	Return[rule]
@@ -326,11 +330,22 @@ ReplaceChannelSumsVH[channel_:("WH" | "ZH")] := Module[{mediators, replacementRu
 	mediators = mediatorsChannel[channel];
 	
 	(* Contructs the replacement rule for the channel sums *)
-	replacementRule = {
+	(*replacementRule = {
 		SChannelSumVH[s_, ff[{lorentz_, index_}, {"s", ord_}, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}]] :> Sum[
-			Param["vev"]^2 * If[ord === SM, If[MemberQ[mediatorsSM, med], 1, 0] , 1] *
+			Param["vev"]^2 * 
+			If[ord === SM, If[MemberQ[mediatorsSM, med], 1, 0] , 1] *
 			FlavorDiagSMVH[med, ord, {i, j}] *
 			LeftHandedCC[med, ord, X] *
+			ff[{lorentz, index}, {med, ord}, X, {\[Psi]1[i], \[Psi]2[j]}] *
+			Propagator[s, med]
+		,
+			{med, mediators}
+		]
+	};*)
+	
+	replacementRule = {
+		SChannelSumVH[s_, ff[{lorentz_, index_}, {"s", ord_}, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}]] :> Sum[
+			Param["vev"]^2 * 
 			ff[{lorentz, index}, {med, ord}, X, {\[Psi]1[i], \[Psi]2[j]}] *
 			Propagator[s, med]
 		,
@@ -342,8 +357,8 @@ ReplaceChannelSumsVH[channel_:("WH" | "ZH")] := Module[{mediators, replacementRu
 ]
 
 
-(* ::Subsubsection:: *)
-(*SM properties*)
+(* ::Subsubsection::Closed:: *)
+(*SM properties (OBSOLETE)*)
 
 
 (* SM Z couplings are flavor diagonal *)
@@ -357,7 +372,7 @@ LeftHandedCC[mediator_, order_, X_] := Module[{temp = 1},
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand the full form factors*)
 
 
@@ -383,3 +398,48 @@ ExpandFormFactorsVH[arg_, OptionsPattern[]] := Module[
 		Expand[ExpandConjugate[temp]]
 	]
 ]
+
+
+(* ::Section:: *)
+(*Substitute form factors VH*)
+
+
+SubstituteFFVH::remainingFFVH= "Not all form factors have been replaced. The remaining FF are: `1`. Setting them to zero."
+
+
+Options[SubstituteFFVH]= {
+	EFTorder          :> GetEFTorder[],
+	OperatorDimension :> GetOperatorDimension[],
+	EFTscale          -> 1000
+};
+
+
+SubstituteFFVH[expr_, OptionsPattern[]] := Module[
+	{
+		truncexpr, canonizedExpr, subsExpr, finalExpr, finaExpr2, finalExpr3
+	},
+	(* obs: no mediator rules for the moment *)
+	
+	(* Apply the subs rules - FFs in terms of the LEFT' coefficients *)
+	canonizedExpr = expr /. CanonizeFFVH;
+	subsExpr = canonizedExpr /. SubstituteRulesLEFTVH;
+	
+	(* Check if there's no ff left *)
+	(*If[!FreeQ[expr,_ff], Message[SubstituteFFVH::remainingFFVH, DeleteDuplicates@Cases[expr,_ff,All]]];	
+	*)
+	(* Sets remaining ffs to zero *)
+	finalExpr = subsExpr /. ff[___] :> 0;
+ 
+	(* Write down LEFT WCs in terms of SMEFT WCs *)
+	(* to do ... *)
+	
+	(* Replace constatns by their numerical values *)
+	finaExpr2 = finalExpr /. ReplaceConstants[];
+	finalExpr3 = ExpandConjugate[finaExpr2];
+	
+	(* Truncate the expression *)
+	truncexpr = EFTTruncate[finalExpr3, EFTorder -> OptionValue[EFTorder], OperatorDimension -> OptionValue[OperatorDimension]];
+	
+	(* Return results *)
+	Return[truncexpr/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}/.{0.->0}]
+];

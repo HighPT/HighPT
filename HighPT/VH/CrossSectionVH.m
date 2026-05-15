@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Exported*)
 
 
@@ -32,7 +32,7 @@ PackageExport["W"]
 PackageExport["PartonicCrossSectionVH"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Internal	*)
 
 
@@ -46,7 +46,7 @@ PackageScope["PartonicCMEnergyIntegration"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section for VH production*)
 
 
@@ -89,10 +89,10 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	{pTmin, pTmax} = OptionValue[PTcuts];
 	
 	(* Limits *)
-	t1 = -(s/2) (1 - (mV^2 + Mass["Higgs"]^2)/s + Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmin^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
-	t2 = -(s/2) (1 - (mV^2 + Mass["Higgs"]^2)/s + Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmax^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
-	t3 = -(s/2) (1 - (mV^2 + Mass["Higgs"]^2)/s - Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmax^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
-	t4 = -(s/2) (1 - (mV^2 + Mass["Higgs"]^2)/s - Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmin^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
+	t1 = -(s/2) (1 - (mV^2 + Mass["H"]^2)/s + Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmin^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
+	t2 = -(s/2) (1 - (mV^2 + Mass["H"]^2)/s + Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmax^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
+	t3 = -(s/2) (1 - (mV^2 + Mass["H"]^2)/s - Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmax^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
+	t4 = -(s/2) (1 - (mV^2 + Mass["H"]^2)/s - Sqrt[\[Lambda]] * Sqrt[1 - Min[1, 4 * pTmin^2 / (s * \[Lambda])]])/.{Sign[s] -> 1, Sign[\[Lambda]] -> 1};
 	
 	(* Appropriated boundaries for the integral *)
 	If[t2 === t3,
@@ -103,24 +103,18 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 		\[Sigma] = (intAmpSq /. t -> t4) - (intAmpSq /. t -> t3) + (intAmpSq /. t -> t2) - (intAmpSq /. t -> t1)
 	];
 	
-	(* !!!!!!!!! Test !!!!!!!!!! *)
-	(* list with all replacements in the SMEFT *)
-	(*subs = Join[SubstitutionRulesMediatorsVH[finalStateV], SubstituteRulesSMEFTVH[\[Epsilon]]];
-	\[Sigma] = \[Sigma] /. CanonizeFFVH /.subs /. ReplacePropagators /. \[Epsilon] -> (Param["vev"]/ 1000)^2;*)
-	(* !!!!!!!!!!!!!!!!!!!!!!!!! *)
-	
-	Return @ Expand[factor * \[Sigma]] (* GeV^-2*)
+	Return @ Expand[factor * \[Sigma] ] (* GeV^-2*)
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Auxiliary lambda function for integration boundaries*)
 
 
 \[Lambda]IntLimits::usage = "\[Lambda]IntLimits[s, t] denotes the \[Lambda] function that enters in the boundary limits of the phase-space integration";
 
 
-\[Lambda]IntLimits[s_, mV_] := 1 - 2 (mV^2 + Mass["Higgs"]^2)/s + (mV^2 - Mass["Higgs"]^2)^2/s^2
+\[Lambda]IntLimits[s_, mV_] := 1 - 2 (mV^2 + Mass["H"]^2)/s + (mV^2 - Mass["H"]^2)^2/s^2
 
 
 (* ::Section::Closed:: *)
@@ -159,7 +153,7 @@ IntegrateTVH[arg_, t_, finalStateV_] := Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ReplaceIntegrals*)
 
 
@@ -187,13 +181,16 @@ PartonicCMEnergyIntegration::usage = "Performs the integration over the partonic
 PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_:(Z|W), arguments_] := Module[
 	{
 		\[Sigma], s, subs, \[Epsilon], MyMin, MyMax, sIntegralList,
-		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse
+		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse, replaceMasses
 	},
 	(* Compute the hadronic cross-section  *)
 	\[Sigma] = \[Sigma]HadFunc[s, V, arguments];
 	
 	(* Replace Min/Max with proxies to avoid OneIdentity issues *)
     \[Sigma] = \[Sigma] /. {Min -> MyMin, Max -> MyMax};
+	
+	(* List with mass replacements *)
+	replaceMasses = Mass[#] -> GetParameters[][Mass[#]]& /@ {"H", "ZBoson", "WBoson"};
 	
 	(* 1. Build the integrand in s *)
     \[Sigma] = MyTiming[
@@ -234,7 +231,7 @@ PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_:(Z|W), argument
     ];
     
     integralAssocReverse = integralAssocReverse /. ReplacePropagators;
-    integralAssocReverse = integralAssocReverse /. ReplaceConstants[];
+    integralAssocReverse = integralAssocReverse /. ReplaceConstants[] /. replaceMasses;
     integralAssocReverse = integralAssocReverse /. {MyMin -> Min, MyMax -> Max};
     MyEcho[Length[integralAssocReverse], "# Integrals"];
    
@@ -245,7 +242,7 @@ PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_:(Z|W), argument
     
 	(* Substitute back in \[Sigma] *)
     \[Sigma] = \[Sigma] /. integralAssoc;
-    \[Sigma] = \[Sigma] /. integralAssocReverse;
+    \[Sigma] = \[Sigma] /. integralAssocReverse /. replaceMasses;
     
     (* Warn if something is left unintegrated *)
     If[! FreeQ[\[Sigma], _dummyIntegral],
@@ -290,22 +287,25 @@ CrossSectionVH[OptionsPattern[]] := Module[
 	(* Performs the integration over the partonic CM energy *)
 	\[Sigma] = PartonicCMEnergyIntegration[
 		HadronicDifferentialCrossSectionVH, 
-		{smin, smax}, OptionValue[FinalBoson],
+		{smin, smax}, 
+		OptionValue[FinalBoson],
 		{PTcuts -> OptionValue[PTcuts], OperatorDimension -> OptionValue[OperatorDimension]}
 	];
 	
-	(* !!!!! REPLACE IT BY SubstituteFFVH WHICH STILL NEEDS TO BE IMPLEMENTED !!!!! *)
-	subs = Join[SubstitutionRulesMediatorsVH["ZBoson"], SubstitutionRulesMediatorsVH["WBoson"], SubstituteRulesSMEFTVH[\[Epsilon]]];
-	\[Sigma] = \[Sigma] /. CanonizeFFVH /. subs /. \[Epsilon] -> (Param["vev"]/ 1000)^2 /. ReplaceConstants[];
-	(* !!!!!!!!!!!!!!!!!!!!!!!!!!! *)
+	(* Replace FFs by WCs if required - Here we may define it do be only in terms of SMEFT coefs *)
+	If[!OptionValue[FF],
+		\[Sigma] = SubstituteFFVH[
+			\[Sigma],
+			EFTorder          -> OptionValue[EFTorder],
+			OperatorDimension -> OptionValue[OperatorDimension],
+			EFTscale          -> OptionValue[EFTscale]
+		]
+	];
 	
 	(* Set coefficients to zero *)
 	If[!MatchQ[OptionValue[Coefficients], All],
 		\[Sigma]= SelectTerms[\[Sigma], OptionValue[Coefficients]]
 	];
-	
-	\[Sigma] = \[Sigma] /. ReplacePropagators;
-    \[Sigma] = \[Sigma] /. ReplaceConstants[];
 	
 	\[Sigma] = MyExpand[\[Sigma]];
 	
@@ -445,7 +445,7 @@ ListInitialQuarkFlavors[W] = {
 };
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Hadronic differential VH cross-section (for external use)*)
 
 
