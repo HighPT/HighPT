@@ -43,8 +43,12 @@ ObsTable["LFV"] := Grid[{{"LFV",Column[ObsTable/@$LFVSectors]}},Dividers->All];
 CL90to95=3.09/2.3;
 
 
-(* ::Section:: *)
-(*Basis change*)
+ObservableSectors["LFV"] := {"ZLFV","\[Tau]LFV"};
+ObservableList["LFV"] := ObservableList/@ObservableSectors["LFV"]
+
+
+(* ::Section::Closed:: *)
+(*Basis change - OLD*)
 
 
 repRot={
@@ -144,8 +148,8 @@ wCL["TRd",{\[Alpha]_,\[Beta]_,i_,j_}] :> Param["vev"]^2WCL["edTRR",{i,j,\[Alpha]
 };
 
 
-(* ::Section:: *)
-(*Leptonic*)
+(* ::Section::Closed:: *)
+(*Leptonic - OLD*)
 
 
 $leptonicLFVSectors={"l->l'\[Gamma]","l->3l'","l->l'P","l->l'V","lN->l'N"};
@@ -305,7 +309,7 @@ NPContribution$default["\[Tau]->\[Mu]\[Mu]\[Mu]"] := (Lifetime["\[Tau]"]Mass["\[
 LowScale["\[Tau]->\[Mu]\[Mu]\[Mu]"] := Mass["\[Tau]"]/.GetParameters[];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*l -> l' P*)
 
 
@@ -438,7 +442,7 @@ AR["\[Tau]->\[Mu]\[Eta]'"]=DecayConstant["\[Eta]'q"] (CAAuu+CAAdd)/Sqrt[2]+Decay
 NPContribution$default["\[Tau]->\[Mu]\[Eta]'"] := Lifetime["\[Tau]"] Mass["\[Tau]"]^3/(256 \[Pi] Param["vev"]^4) (1-Mass["\[Eta]'"]^2/Mass["\[Tau]"]^2)^2 (Abs[AL["\[Tau]->\[Mu]\[Eta]'"]]^2+Abs[AR["\[Tau]->\[Mu]\[Eta]'"]]^2)/.rep\[Tau]lP[2,3]/.repRot/.OlcyrtoLEFT/.GetParameters[]/.Around[a_,b_]->a;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*l -> l' V*)
 
 
@@ -463,7 +467,7 @@ CTbar["\[Phi]"]:=CTss-Sqrt[4\[Pi] Param["\[Alpha]EM"]](-1/3) Mass["\[Tau]"]/Mass
 CT5bar["\[Phi]"]:=CT5ss-Sqrt[4\[Pi] Param["\[Alpha]EM"]](-1/3) (Mass["\[Tau]"]/Mass["\[Phi]"]) (CDR-CDL)(*(fVT/fV)*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*\[Tau] -> e\[Rho]*)
 
 
@@ -620,7 +624,7 @@ Sn["Al"] = 0.0167;
 
 
 (* ::Section:: *)
-(*Higgs and Z*)
+(*Higgs and Z - OLD*)
 
 
 $EWLFVSectors={"HLFV","ZLFV"};
@@ -757,8 +761,8 @@ Abs[Param["cW"]WC["eW",{3,2}]+Param["sW"]WC["eB",{3,2}]]^2)/.GetParameters[];
 LowScale["Z->\[Mu]\[Tau]"] := Mass["ZBoson"]/.GetParameters[];
 
 
-(* ::Section::Closed:: *)
-(*\[CapitalDelta]F = 1*)
+(* ::Section:: *)
+(*\[CapitalDelta]F = 1 - to do*)
 
 
 (* ::Subsection:: *)
@@ -799,3 +803,285 @@ LowScale["Z->\[Mu]\[Tau]"] := Mass["ZBoson"]/.GetParameters[];
 
 (* ::Subsubsection:: *)
 (*Subscript[K, L]->\[Mu]e*)
+
+
+(* ::Section:: *)
+(*Z LFV decays - WIP*)
+
+
+ObservableList["ZLFV"] = {"Z->\[Tau]\[Mu]"};
+
+
+BrZlilj[i_,j_] := 1/Width["ZBoson"] Mass["ZBoson"]/(24\[Pi]) (Abs[WCL["gZeL",{i,j}]]^2+Abs[WCL["gZeR",{i,j}]]^2+ 2*Mass["ZBoson"]^2 Abs[WCL["eZ",{i,j}]]^2+ 2*Mass["ZBoson"]^2 Abs[WCL["eZ",{j,i}]]^2)
+
+
+(* ::Subsubsection:: *)
+(*Z -> \[Tau]\[Mu]*)
+
+
+TheoryExpression["Z->\[Tau]\[Mu]"] := BrZlilj[2,3]+BrZlilj[3,2]
+
+
+ExpValue$default["Z->\[Tau]\[Mu]"] := Around[0,6.5]*10^-6/2
+ExpInfo["Z->\[Tau]\[Mu]"] := Row[{"ATLAS 2021: ", Hyperlink["2105.12491","https://arxiv.org/pdf/2105.12491"]}]
+
+
+SMPrediction$default["Z->\[Tau]\[Mu]"] := Around[0,null]
+SMInfo["Z->\[Tau]\[Mu]"] := "Forbidden in the SM."
+
+
+NPContribution$default["Z->\[Tau]\[Mu]"] := NPFromTheoryExpression["Z->\[Tau]\[Mu]"]
+NPInfo["Z->\[Tau]\[Mu]"] := "Lepton masses neglected."
+
+
+LowScale$default["Z->\[Tau]\[Mu]"] := Mass["ZBoson"]/.GetParameters[]
+
+
+(* ::Section:: *)
+(*\[Tau] LFV decays - WIP*)
+
+
+ObservableSectors["\[Tau]LFV"] := {"\[Tau]->lP","\[Tau]->3l","\[Tau]->l\[Gamma]"}
+ObservableList["\[Tau]LFV"] := ObservableList/@ObservableSectors["\[Tau]LFV"]
+
+
+(* ::Subsection:: *)
+(*Wilson coefficient combinations (from 2312.14070)*)
+
+
+cVAd[i_,j_,k_,l_] := WCL["edVRR",{i,j,k,l}]-WCL["deVLR",{i,j,k,l}]-WCL["edVLL",{i,j,k,l}]+WCL["edVLR",{i,j,k,l}]
+cSPd[i_,j_,k_,l_] := WCL["edSRR",{i,j,k,l}]-WCL["edSRL",{i,j,k,l}]-WCL["edSRR",{j,i,l,k}]\[Conjugate]+WCL["edSRL",{j,i,l,k}]\[Conjugate]
+cAAd[i_,j_,k_,l_] := WCL["edVRR",{i,j,k,l}]-WCL["deVLR",{i,j,k,l}]+WCL["edVLL",{i,j,k,l}]-WCL["edVLR",{i,j,k,l}]
+cPPd[i_,j_,k_,l_] := WCL["edSRR",{i,j,k,l}]-WCL["edSRL",{i,j,k,l}]+WCL["edSRR",{j,i,l,k}]\[Conjugate]-WCL["edSRL",{j,i,l,k}]\[Conjugate]
+
+
+(* ::Subsection:: *)
+(*\[Tau] -> lP - WIP*)
+
+
+ObservableList["\[Tau]->lP"] = {"\[Tau]->\[Mu]KS"};
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> KS l*)
+
+
+Br\[Tau]KSl[lep_] := Lifetime["\[Tau]"] (DecayConstant["K"]^2 Mass["\[Tau]"]^3)/(512 \[Pi]) (1-Mass["K0"]^2/Mass["\[Tau]"]^2)^2 (Abs[cVAd[lep,3,1,2]-cVAd[lep,3,2,1]+Mass["K0"]^2/(Mass["\[Tau]"](Mass["s"]+Mass["d"])) (cSPd[lep,3,1,2]-cSPd[lep,3,2,1])]^2+Abs[cAAd[lep,3,1,2]-cAAd[lep,3,2,1]-Mass["K0"]^2/(Mass["\[Tau]"](Mass["s"]+Mass["d"])) (cPPd[lep,3,1,2]-cPPd[lep,3,2,1])]^2)
+
+
+TheoryExpression["\[Tau]->\[Mu]KS"] := Br\[Tau]KSl[2]
+
+
+ExpValue$default["\[Tau]->\[Mu]KS"] := Around[0,2.3]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->\[Mu]KS"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->\[Mu]KS"] := Around[0,null]
+SMInfo["\[Tau]->\[Mu]KS"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->\[Mu]KS"] := NPFromTheoryExpression["\[Tau]->\[Mu]KS"]
+NPInfo["\[Tau]->\[Mu]KS"] := "Light lepton masses neglected."
+
+
+LowScale$default["\[Tau]->\[Mu]KS"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Pi] l*)
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Eta]l*)
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Eta]' l*)
+
+
+(* ::Subsection::Closed:: *)
+(*\[Tau] -> Vl - to do*)
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> K* l*)
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Phi] l*)
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Omega]l*)
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Rho] l*)
+
+
+(* ::Subsection:: *)
+(*\[Tau] -> 3 l - to xcheck*)
+
+
+ObservableList["\[Tau]->3l"] = {"\[Tau]->\[Mu]\[Mu]\[Mu]","\[Tau]->e\[Mu]\[Mu]","\[Tau]->\[Mu]ee","\[Tau]->eee"};
+
+
+(* lj -> 3li *)
+
+
+leptons={"e","\[Mu]","\[Tau]"}
+
+
+Brlj3li[j_,i_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^5)/(1536 \[Pi]^3) (2*Abs[WCL["eeVLL",{i,i,i,j}]]^2+2*Abs[WCL["eeVRR",{i,i,i,j}]]^2+Abs[WCL["eeVLR",{i,j,i,i}]]^2+Abs[WCL["eeVLR",{i,i,i,j}]]^2 + 64*4\[Pi]*Param["\[Alpha]EM"](Log[Mass[leptons[[j]]]/Mass[leptons[[i]]]]-11/8) 1/Mass[leptons[[j]]]^2 (Abs[WCL["e\[Gamma]",{j,i}]]^2+Abs[WCL["e\[Gamma]",{i,j}]]^2) + 8*Sqrt[4\[Pi]*Param["\[Alpha]EM"]]*1/Mass[leptons[[j]]]*(Re[WCL["e\[Gamma]",{i,j}](2*WCL["eeVLL",{i,i,i,j}]\[Conjugate]+WCL["eeVLR",{i,j,i,i}]\[Conjugate])] +Re[WCL["e\[Gamma]",{j,i}]\[Conjugate](2*WCL["eeVRR",{i,i,i,j}]\[Conjugate]+WCL["eeVLR",{i,i,i,j}]\[Conjugate])]))
+
+
+(* lj -> li lk lk *)
+
+
+Brljlilk[j_,i_,k_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^5)/(1536 \[Pi]^3) (Abs[WCL["eeVLL",{i,j,k,k}]]^2+Abs[WCL["eeVRR",{i,j,k,k}]]^2+Abs[WCL["eeVLR",{i,j,k,k}]]^2+Abs[WCL["eeVLR",{k,k,i,j}]]^2 + 64*4\[Pi]*Param["\[Alpha]EM"](Log[Mass[leptons[[j]]]/Mass[leptons[[k]]]]-3/2) 1/Mass[leptons[[j]]]^2 (Abs[WCL["e\[Gamma]",{j,i}]]^2+Abs[WCL["e\[Gamma]",{i,j}]]^2) + 8*Sqrt[4\[Pi]*Param["\[Alpha]EM"]]*1/Mass[leptons[[j]]]*(Re[WCL["e\[Gamma]",{i,j}](WCL["eeVLL",{i,j,k,k}]\[Conjugate]+WCL["eeVLR",{i,j,k,k}]\[Conjugate])] +Re[WCL["e\[Gamma]",{j,i}]\[Conjugate](WCL["eeVRR",{k,k,i,j}]\[Conjugate]+WCL["eeVLR",{k,k,i,j}]\[Conjugate])]))
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Mu]\[Mu]\[Mu]*)
+
+
+TheoryExpression["\[Tau]->\[Mu]\[Mu]\[Mu]"] := Brlj3li[3,2]
+
+
+ExpValue$default["\[Tau]->\[Mu]\[Mu]\[Mu]"] := Around[0,1.9]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->\[Mu]\[Mu]\[Mu]"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->\[Mu]\[Mu]\[Mu]"] := Around[0,null]
+SMInfo["\[Tau]->\[Mu]\[Mu]\[Mu]"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->\[Mu]\[Mu]\[Mu]"] := NPFromTheoryExpression["\[Tau]->\[Mu]\[Mu]\[Mu]"]
+NPInfo["\[Tau]->\[Mu]\[Mu]\[Mu]"] := ""
+
+
+LowScale$default["\[Tau]->\[Mu]\[Mu]\[Mu]"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Mu]ee*)
+
+
+TheoryExpression["\[Tau]->\[Mu]ee"] := Brljlilk[3,2,1]
+
+
+ExpValue$default["\[Tau]->\[Mu]ee"] := Around[0,1.8]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->\[Mu]ee"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->\[Mu]ee"] := Around[0,null]
+SMInfo["\[Tau]->\[Mu]ee"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->\[Mu]ee"] := NPFromTheoryExpression["\[Tau]->\[Mu]ee"]
+NPInfo["\[Tau]->\[Mu]ee"] := ""
+
+
+LowScale$default["\[Tau]->\[Mu]ee"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> e\[Mu]\[Mu]*)
+
+
+TheoryExpression["\[Tau]->e\[Mu]\[Mu]"] := Brljlilk[3,1,2]
+
+
+ExpValue$default["\[Tau]->e\[Mu]\[Mu]"] := Around[0,2.7]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->e\[Mu]\[Mu]"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->e\[Mu]\[Mu]"] := Around[0,null]
+SMInfo["\[Tau]->e\[Mu]\[Mu]"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->e\[Mu]\[Mu]"] := NPFromTheoryExpression["\[Tau]->e\[Mu]\[Mu]"]
+NPInfo["\[Tau]->e\[Mu]\[Mu]"] := ""
+
+
+LowScale$default["\[Tau]->e\[Mu]\[Mu]"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> eee*)
+
+
+TheoryExpression["\[Tau]->eee"] := Brlj3li[3,1]
+
+
+ExpValue$default["\[Tau]->eee"] := Around[0,2.7]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->eee"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->eee"] := Around[0,null]
+SMInfo["\[Tau]->eee"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->eee"] := NPFromTheoryExpression["\[Tau]->eee"]
+NPInfo["\[Tau]->eee"] := ""
+
+
+LowScale$default["\[Tau]->eee"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* ::Subsection:: *)
+(*\[Tau] -> l\[Gamma] - to do*)
+
+
+ObservableList["\[Tau]->l\[Gamma]"] = {"\[Tau]->\[Mu]\[Gamma]","\[Tau]->e\[Gamma]"};
+
+
+Brljli\[Gamma][j_,i_] := (Lifetime[leptons[[j]]]Mass[leptons[[j]]]^3)/(4\[Pi]) (Abs[WCL["e\[Gamma]",{i,j}]]^2+Abs[WCL["e\[Gamma]",{j,i}]]^2)
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> \[Mu]\[Gamma]*)
+
+
+TheoryExpression["\[Tau]->\[Mu]\[Gamma]"] := Brljli\[Gamma][3,2]
+
+
+ExpValue$default["\[Tau]->\[Mu]\[Gamma]"] := Around[0,4.2]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->\[Mu]\[Gamma]"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->\[Mu]\[Gamma]"] := Around[0,null]
+SMInfo["\[Tau]->\[Mu]\[Gamma]"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->\[Mu]\[Gamma]"] := NPFromTheoryExpression["\[Tau]->\[Mu]\[Gamma]"]
+NPInfo["\[Tau]->\[Mu]\[Gamma]"] := ""
+
+
+LowScale$default["\[Tau]->\[Mu]\[Gamma]"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* ::Subsubsection:: *)
+(*\[Tau] -> e\[Gamma]*)
+
+
+TheoryExpression["\[Tau]->e\[Gamma]"] := Brljli\[Gamma][3,1]
+
+
+ExpValue$default["\[Tau]->e\[Gamma]"] := Around[0,4.2]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->e\[Gamma]"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->e\[Gamma]"] := Around[0,null]
+SMInfo["\[Tau]->e\[Gamma]"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->e\[Gamma]"] := NPFromTheoryExpression["\[Tau]->e\[Gamma]"]
+NPInfo["\[Tau]->e\[Gamma]"] := ""
+
+
+LowScale$default["\[Tau]->e\[Gamma]"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* ::Section:: *)
+(*\[Mu] LFV - to do*)

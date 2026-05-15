@@ -44,7 +44,7 @@ PackageExport["ToDownBasis"]
 PackageExport["MatchingScale"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Internal*)
 
 
@@ -88,7 +88,7 @@ SetMatchingOrder[ord_]:=If[MatchQ[ord,0]||MatchQ[ord,1],MatchingOrder=ord;,Messa
 GetMatchingOrder[]:=If[MatchingOrder==0,Print["Tree-level matching"],Print["One-loop matching"]];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Tree - level matching conditions*)
 
 
@@ -96,7 +96,7 @@ GetMatchingOrder[]:=If[MatchingOrder==0,Print["Tree-level matching"],Print["One-
 (*Auxiliary definitions*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Mass rotation*)
 
 
@@ -330,6 +330,9 @@ TLMatching[WCLS["mW",{}]] := 1/2 Param["g2"] Param["vev"]+1/16 Param["g2"] Param
 
 
 TLMatching[WCLS["e\[Gamma]",{\[Alpha]_,\[Beta]_}]]:=1/Sqrt[2] Param["vev"](-Param["sW"]WC["eW",{\[Alpha],\[Beta]}]+Param["cW"]WC["eB",{\[Alpha],\[Beta]}]);
+
+
+TLMatching[WCLS["eZ",{\[Alpha]_,\[Beta]_}]]:=1/Sqrt[2] Param["vev"](Param["cW"]WC["eW",{\[Alpha],\[Beta]}]+Param["sW"]WC["eB",{\[Alpha],\[Beta]}]);
 
 
 (* ::Subsubsection:: *)
@@ -633,7 +636,7 @@ EWScaleParameters = {
 };
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Matching function*)
 
 

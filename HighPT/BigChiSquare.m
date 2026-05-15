@@ -237,6 +237,6 @@ ChiSquarePiece[obs_Association, OptionsPattern[]] := Module[
 	(*Print["Running in the SMEFT..."];*)
 	np\[CapitalLambda] = SMEFTRun[npSMEFT, Max[obs["Scale"],\[Mu]EW], OptionValue[EFTscale]]/.GetParameters[];
 	(*Print["Fetching SM and Exp input and building piece..."];*)
-	chi2p = (obs["SM"]["Value"](1+np\[CapitalLambda])-obs["Exp"]["Value"]);
+	chi2p = If[MatchQ[obs["SM"]["Value"],0],(np\[CapitalLambda]-obs["Exp"]["Value"]),(obs["SM"]["Value"](1+np\[CapitalLambda])-obs["Exp"]["Value"])];
 	Return@chi2p
 ];
