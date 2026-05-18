@@ -623,7 +623,7 @@ Sn["Al"] = 0.0167;
 (*NPContribution["\[Mu]Al->eAl"] := Mass["\[Mu]"]^5/(4Param["vev"]^4\[CapitalGamma]capt["Al"])(Abs[wCL["DL\[ScriptL]",{1,2}]DD["Al"]+1/24(CVRp Vp["Al"]+CSLp Sp["Al"]+CVRn Vn["Al"]+CSLn Sn["Al"])]^2+Abs[wCL["DR\[ScriptL]",{1,2}]DD["Al"]+1/24(CVLp Vp["Al"]+CSRp Sp["Al"]+CVLn Vn["Al"]+CSRn Sn["Al"])]^2)/.OlcyrtoLEFT/.GetParameters/.Around[a_,b_]->a;*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Higgs and Z - OLD*)
 
 
@@ -761,7 +761,7 @@ Abs[Param["cW"]WC["eW",{3,2}]+Param["sW"]WC["eB",{3,2}]]^2)/.GetParameters[];
 LowScale["Z->\[Mu]\[Tau]"] := Mass["ZBoson"]/.GetParameters[];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*\[CapitalDelta]F = 1 - to do*)
 
 
@@ -805,7 +805,7 @@ LowScale["Z->\[Mu]\[Tau]"] := Mass["ZBoson"]/.GetParameters[];
 (*Subscript[K, L]->\[Mu]e*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Z LFV decays - WIP*)
 
 
@@ -859,7 +859,7 @@ cPPd[i_,j_,k_,l_] := WCL["edSRR",{i,j,k,l}]-WCL["edSRL",{i,j,k,l}]+WCL["edSRR",{
 (*\[Tau] -> lP - WIP*)
 
 
-ObservableList["\[Tau]->lP"] = {"\[Tau]->\[Mu]KS"};
+ObservableList["\[Tau]->lP"] = {"\[Tau]->\[Mu]KS","\[Tau]->eKS"};
 
 
 (* ::Subsubsection:: *)
@@ -867,6 +867,9 @@ ObservableList["\[Tau]->lP"] = {"\[Tau]->\[Mu]KS"};
 
 
 Br\[Tau]KSl[lep_] := Lifetime["\[Tau]"] (DecayConstant["K"]^2 Mass["\[Tau]"]^3)/(512 \[Pi]) (1-Mass["K0"]^2/Mass["\[Tau]"]^2)^2 (Abs[cVAd[lep,3,1,2]-cVAd[lep,3,2,1]+Mass["K0"]^2/(Mass["\[Tau]"](Mass["s"]+Mass["d"])) (cSPd[lep,3,1,2]-cSPd[lep,3,2,1])]^2+Abs[cAAd[lep,3,1,2]-cAAd[lep,3,2,1]-Mass["K0"]^2/(Mass["\[Tau]"](Mass["s"]+Mass["d"])) (cPPd[lep,3,1,2]-cPPd[lep,3,2,1])]^2)
+
+
+(* \[Tau]-> KS \[Mu] *)
 
 
 TheoryExpression["\[Tau]->\[Mu]KS"] := Br\[Tau]KSl[2]
@@ -885,6 +888,27 @@ NPInfo["\[Tau]->\[Mu]KS"] := "Light lepton masses neglected."
 
 
 LowScale$default["\[Tau]->\[Mu]KS"] := Mass["\[Tau]"]/.GetParameters[]
+
+
+(* \[Tau]-> KS e *)
+
+
+TheoryExpression["\[Tau]->eKS"] := Br\[Tau]KSl[1]
+
+
+ExpValue$default["\[Tau]->eKS"] := Around[0,2.6]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->eKS"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Tau]->eKS"] := Around[0,null]
+SMInfo["\[Tau]->eKS"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Tau]->eKS"] := NPFromTheoryExpression["\[Tau]->eKS"]
+NPInfo["\[Tau]->eKS"] := "Light lepton masses neglected."
+
+
+LowScale$default["\[Tau]->eKS"] := Mass["\[Tau]"]/.GetParameters[]
 
 
 (* ::Subsubsection:: *)
