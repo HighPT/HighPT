@@ -58,16 +58,16 @@ SubstituteRulesLEFTZH = {
 	ff[{Vector, 2}, {"ZBoson", 0}, Right, {i_d, j_d}] :> - 4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) Param["vev"] WCL["gZdR", {i, j}] WCL["2Z", {}] ,
 	
 	(* Regular Scalar (S, 2) Form-Factors *)
-	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_u, j_u}] :> 4 WCL["\[Beta]ZuR", {i, j}] WCL["1Z", {}] , 
-	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_d, j_d}] :> 4 WCL["\[Beta]ZdR", {i, j}] WCL["1Z", {}] , 
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_u, j_u}] :> 4 WCL["uZ", {i, j}] WCL["1Z", {}] , 
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_d, j_d}] :> 4 WCL["dZ", {i, j}] WCL["1Z", {}] , 
 	
 	(* Singular Scalar (S, 2) Form-Factors *)
-	ff[{Scalar, 2}, {"ZBoson", 0}, Right, {i_u, j_u}] :>  4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) WCL["\[Beta]ZuR", {i, j}] WCL["1Z", {}] , 
-	ff[{Scalar, 2}, {"ZBoson", 0}, Right, {i_d, j_d}] :>  4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) WCL["\[Beta]ZdR", {i, j}] WCL["1Z", {}] , 
+	ff[{Scalar, 2}, {"ZBoson", 0}, Right, {i_u, j_u}] :>  4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) WCL["uZ", {i, j}] WCL["1Z", {}] , 
+	ff[{Scalar, 2}, {"ZBoson", 0}, Right, {i_d, j_d}] :>  4*\[Pi]*Param["\[Alpha]EM"]/(Param["sW"]^2 * Param["cW"]^2) WCL["dZ", {i, j}] WCL["1Z", {}] , 
 	
 	(* Tensor Form-Factors *)
-	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_u, j_u}] :> Param["vev"]^2 WCL["\[Beta]ZHuR", {i, j}] , 
-	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_d, j_d}] :> Param["vev"]^2 WCL["\[Beta]ZHdR", {i, j}] 
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_u, j_u}] :> Param["vev"]^2 WCL["uZH", {i, j}] , 
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_d, j_d}] :> Param["vev"]^2 WCL["dZH", {i, j}] 
 };
 
 
@@ -93,16 +93,16 @@ SubstituteRulesLEFTWH = {
 	ff[{Vector, 2}, {"WBoson", 0}, Right, {i_u, j_d}] :> - 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 Param["vev"] WCL["gWqR", {i, j}] WCL["2W", {}] ,
 	
 	(* Regular Scalar (S, 2) Form-Factors *)
-	ff[{Scalar, 2}, {"regular", {0, 0}}, Left,  {i_u, j_d}] :> 2 WCL["\[Beta]WqL", {i, j}] WCL["1W", {}] , 
-	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_u, j_d}] :> 2 WCL["\[Beta]WqR", {i, j}] WCL["1W", {}] , 
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Left,  {i_u, j_d}] :> 2 WCL["qWL", {i, j}] WCL["1W", {}] , 
+	ff[{Scalar, 2}, {"regular", {0, 0}}, Right, {i_u, j_d}] :> 2 WCL["qWR", {i, j}] WCL["1W", {}] , 
 	
 	(* Singular Scalar (S, 2) Form-Factors *)
-	ff[{Scalar, 2}, {"WBoson", 0}, Left,  {i_u, j_d}] :> 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 WCL["\[Beta]WqL", {i, j}] WCL["1W", {}] , 
-	ff[{Scalar, 2}, {"WBoson", 0}, Right, {i_u, j_d}] :> 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 WCL["\[Beta]WqR", {i, j}] WCL["1W", {}] , 
+	ff[{Scalar, 2}, {"WBoson", 0}, Left,  {i_u, j_d}] :> 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 WCL["qWL", {i, j}] WCL["1W", {}] , 
+	ff[{Scalar, 2}, {"WBoson", 0}, Right, {i_u, j_d}] :> 0.5 4*\[Pi]*Param["\[Alpha]EM"]/Param["sW"]^2 WCL["qWR", {i, j}] WCL["1W", {}] , 
 	
 	(* Regular Tensor (T, 1) Form-Factors *)
-	ff[{Tensor, 1}, {"regular", {1, 0}}, Left,  {i_u, j_d}] :> Param["vev"]^2 WCL["\[Beta]WHqL", {i, j}] ,
-	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_u, j_d}] :> Param["vev"]^2 WCL["\[Beta]WHqR", {i, j}]
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Left,  {i_u, j_d}] :> Param["vev"]^2 WCL["qWHL", {i, j}] ,
+	ff[{Tensor, 1}, {"regular", {1, 0}}, Right, {i_u, j_d}] :> Param["vev"]^2 WCL["qWHR", {i, j}]
 };
 
 

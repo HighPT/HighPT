@@ -15,7 +15,7 @@ Package["HighPT`"]
 (*Public:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Scoping*)
 
 
@@ -36,7 +36,7 @@ PackageExport["PartonicCrossSectionVH"]
 (*Internal	*)
 
 
-PackageScope["HadronicDifferentialCrossSectionVH"]
+PackageExport["HadronicDifferentialCrossSectionVH"]
 (*PackageScope["PartonicCrossSectionVH"]*)
 PackageScope["PDFConvCrossSection"]
 PackageScope["PartonicCMEnergyIntegration"]
@@ -46,7 +46,7 @@ PackageScope["PartonicCMEnergyIntegration"]
 (*Private:*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Parton-level cross-section for VH production*)
 
 
@@ -65,7 +65,7 @@ Options[PartonicCrossSectionVH]= {
 
 PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Module[
 	{
-		t, t1, t2, t3, t4, pTmin, pTminYh, pTmax, pTmaxYh, yHmin, yHmax, ampSqVH, intAmpSq, \[Lambda], mV, \[Sigma], finalStateV, \[Epsilon], subs,
+		t, t1, t2, t3, t4, pTmin, pTminYh, pTmax, pTmaxYh, yHmin, yHmax, ampSqVH, intAmpSq, \[Lambda], mV, \[Sigma], finalStateV, \[Epsilon], subs, replaceMasses,
 		factor = 1 / (16 * \[Pi] * s^2)
 	},
 	(* t must be real *)
@@ -85,6 +85,9 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 	mV = Mass[finalStateV];
 	\[Lambda] = \[Lambda]IntLimits[s, mV];
 	
+	(* List with mass replacements *)
+	replaceMasses = Mass[#] -> GetParameters[][Mass[#]]& /@ {"H", "ZBoson", "WBoson"};
+	
 	(* User pT cuts *)
 	{pTmin, pTmax} = OptionValue[PTcuts];
 	
@@ -103,7 +106,7 @@ PartonicCrossSectionVH[s_, {\[Psi]1_[i_], \[Psi]2_[j_]}, OptionsPattern[]] := Mo
 		\[Sigma] = (intAmpSq /. t -> t4) - (intAmpSq /. t -> t3) + (intAmpSq /. t -> t2) - (intAmpSq /. t -> t1)
 	];
 	
-	Return @ Expand[factor * \[Sigma] ] (* GeV^-2*)
+	Return @ Expand[factor * \[Sigma]] (* GeV^-2*)
 ]
 
 
@@ -153,7 +156,7 @@ IntegrateTVH[arg_, t_, finalStateV_] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*ReplaceIntegrals*)
 
 
@@ -171,14 +174,111 @@ ReplaceIntegralsVH[t_] := {
 (*Hadron-level cross-section for VH production*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Integration over the partonic center of mass energy*)
 
 
 PartonicCMEnergyIntegration::usage = "Performs the integration over the partonic CM energy";
 
 
-PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_:(Z|W), arguments_] := Module[
+PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_ : (Z | W), arguments_] := Module[
+    {
+        \[Sigma], s, MyMin, MyMax,
+        sIntegralList, integralAssoc, integralAssocReverse,
+        dummyIntegral, replaceMasses,
+        canonicalIntegral, seen, nonRedundantIntegralList,
+        int, conjInt
+    },
+
+    (* Compute the hadronic cross-section *)
+    \[Sigma] = \[Sigma]HadFunc[s, V, arguments];
+
+    (* Replace Min/Max with proxies to avoid OneIdentity issues *)
+    \[Sigma] = \[Sigma] /. {Min -> MyMin, Max -> MyMax};
+
+    (* List with mass replacements *)
+    replaceMasses = Mass[#] -> GetParameters[][Mass[#]] & /@ {"H", "ZBoson", "WBoson"};
+
+    (* Build the integrand in s *)
+    \[Sigma] = MyTiming[
+        Integrand[\[Sigma], s],
+        "Integrand (s)"
+    ];
+
+    (* Collect all s integrals *)
+    sIntegralList = DeleteDuplicates @ Cases[\[Sigma], _Integrand, All];
+
+    (* Map each distinct integral to a dummy symbol *)
+    integralAssoc = AssociationThread[
+        sIntegralList,
+        dummyIntegral /@ Range[Length[sIntegralList]]
+    ];
+
+    (* Canonical conjugation rule for detecting redundant integrals *)
+    canonicalIntegral[int_] :=
+        Conjugate[int] //. {
+            Conjugate[Sqrt[arg_]] :> Sqrt[Conjugate[arg]],
+            Conjugate[x_MyMin] :> x,
+            Conjugate[x_MyMax] :> x
+        };
+
+    (* Remove redundant conjugate integrals efficiently *)
+    seen = <||>;
+
+    nonRedundantIntegralList = Reap[
+        Do[
+            If[! KeyExistsQ[seen, int],
+                conjInt = canonicalIntegral[int];
+
+                If[KeyExistsQ[seen, conjInt],
+                    integralAssoc[int] =
+                        Conjugate[integralAssoc[conjInt]],
+                    
+                    seen[int] = True;
+                    Sow[int];
+                ];
+            ],
+            {int, sIntegralList}
+        ]
+    ][[2, 1]];
+
+    (* Build rules only for the non-redundant integrals *)
+    integralAssocReverse = Thread[
+        integralAssoc /@ nonRedundantIntegralList ->
+            nonRedundantIntegralList
+    ];
+
+    integralAssocReverse = integralAssocReverse /. ReplacePropagators /. ReplaceConstants[] /. replaceMasses /. {MyMin -> Min, MyMax -> Max};
+
+    MyEcho[Length[integralAssocReverse], "# Integrals"];
+
+    (* Numerically evaluate independent integrals *)
+    integralAssocReverse = MyTiming[
+        ParallelMap[
+            # /. Integrand[arg_, x_] :>
+                NIntegrate[arg, {x, smin, smax}] &,
+            integralAssocReverse
+        ],
+        "NIntegrate"
+    ];
+
+    (* Substitute back in \[Sigma] *)
+    \[Sigma] = \[Sigma] /. integralAssoc;
+    \[Sigma] = \[Sigma] /. integralAssocReverse /. replaceMasses;
+
+    (* Warn if something is left unintegrated *)
+    If[! FreeQ[\[Sigma], _dummyIntegral],
+        Message[
+            CrossSection::inteval,
+            Length @ DeleteDuplicates @ Cases[\[Sigma], _dummyIntegral, All]
+        ]
+    ];
+
+    \[Sigma]
+]
+
+
+(*PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_:(Z|W), arguments_] := Module[
 	{
 		\[Sigma], s, subs, \[Epsilon], MyMin, MyMax, sIntegralList,
 		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse, replaceMasses
@@ -252,7 +352,7 @@ PartonicCMEnergyIntegration[\[Sigma]HadFunc_, {smin_, smax_}, V_:(Z|W), argument
     ];
 	
 	Return[\[Sigma]]
-]
+]*)
 
 
 (* ::Subsection:: *)
@@ -270,13 +370,13 @@ Options[CrossSectionVH] = {
 	Coefficients      -> All,
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	EFTscale          :> GetEFTScale[] 
+	EFTscale          :> GetEFTscale[]
 }
 
 
 CrossSectionVH[OptionsPattern[]] := Module[
 	{
-		\[Sigma], smin, smax, \[Sigma]Had, s, subs, \[Epsilon], MyMin, MyMax, sIntegralList,
+		\[Sigma], smin, smax, \[Sigma]Had, s, subs, \[Epsilon], MyMin, MyMax, sIntegralList, 
 		integralAssoc, dummyIntegral, nonRedundantIntegarlList = {}, integralAssocReverse
 	},
 	(* Check options -- TODO *)
@@ -405,7 +505,7 @@ PDFConvCrossSection[s_, W, OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*List of the different quark flavors and their Parton Luminosities for ZH and WH production*)
 
 
@@ -445,7 +545,7 @@ ListInitialQuarkFlavors[W] = {
 };
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Hadronic differential VH cross-section (for external use)*)
 
 

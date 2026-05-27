@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Exported*)
 
 
@@ -142,7 +142,7 @@ FormFactorVectorVH[s_, t_, X_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Transpose[
 ];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*InterferenceMatrixVH*)
 
 
@@ -156,7 +156,7 @@ InterferenceMatrixVH[s_, t_, mV_] :=
 	}
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Individual entries of the interference matrix*)
 
 
@@ -218,7 +218,7 @@ SpinSumAmplitudeSqVH[s_, t_, {\[Psi]1_[i_], \[Psi]2_[j_]}] := Module[{mV, totalA
 (*ExpandFormFactors*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Split FormFactor into regular and singular part*)
 
 
@@ -234,7 +234,7 @@ SplitFFVH::usage = "SplitFF returns the rule that splits the FormFactorVH into a
 SplitFFVH = FormFactorVH[{lorentz_, index_}, s_, t_, X_, {i_, j_}] :> RegularFFVH[{lorentz, index}, s, t, X, {i, j}] + SingularFFVH[{lorentz, index}, s, t, X, {i, j}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand regular form factors*)
 
 
@@ -265,7 +265,7 @@ ExpandRegularFFVH[OptionsPattern[]] := Module[{rule = {}},
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand singular form factors*)
 
 
@@ -372,7 +372,7 @@ LeftHandedCC[mediator_, order_, X_] := Module[{temp = 1},
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand the full form factors*)
 
 
@@ -410,36 +410,38 @@ SubstituteFFVH::remainingFFVH= "Not all form factors have been replaced. The rem
 Options[SubstituteFFVH]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
-	EFTscale          -> 1000
+	EFTscale          :> GetEFTscale[]
 };
 
 
 SubstituteFFVH[expr_, OptionsPattern[]] := Module[
 	{
-		truncexpr, canonizedExpr, subsExpr, finalExpr, finaExpr2, finalExpr3
+		exprBrokenLEFT, exprSMEFT, exprSMEFTnum, expandedExpr, rescaledExpr
 	},
-	(* obs: no mediator rules for the moment *)
 	
-	(* Apply the subs rules - FFs in terms of the LEFT' coefficients *)
-	canonizedExpr = expr /. CanonizeFFVH;
-	subsExpr = canonizedExpr /. SubstituteRulesLEFTVH;
+	(* Replace the FFs by the broken LEFT coefficients *)
+	(* obs: sets remaining FFs to zero *)
+	exprBrokenLEFT = expr /. CanonizeFFVH /. SubstituteRulesLEFTVH /. ff[___] :> 0;
 	
-	(* Check if there's no ff left *)
-	(*If[!FreeQ[expr,_ff], Message[SubstituteFFVH::remainingFFVH, DeleteDuplicates@Cases[expr,_ff,All]]];	
+	(* Replace broken LEFT coefficients in terms of SMEFT coefficients *)
+(*	exprSMEFT = MatchToSMEFT[
+		exprBrokenLEFT, 
+		SM -> True,
+		EFTorder -> OptionValue[EFTorder],
+		OperatorDimension -> OptionValue[OperatorDimension]
+	];
 	*)
-	(* Sets remaining ffs to zero *)
-	finalExpr = subsExpr /. ff[___] :> 0;
- 
-	(* Write down LEFT WCs in terms of SMEFT WCs *)
-	(* to do ... *)
+	exprSMEFT = exprBrokenLEFT;
 	
 	(* Replace constatns by their numerical values *)
-	finaExpr2 = finalExpr /. ReplaceConstants[];
-	finalExpr3 = ExpandConjugate[finaExpr2];
+	exprSMEFTnum = ExpandConjugate[exprSMEFT /. ReplaceConstants[]];
 	
 	(* Truncate the expression *)
-	truncexpr = EFTTruncate[finalExpr3, EFTorder -> OptionValue[EFTorder], OperatorDimension -> OptionValue[OperatorDimension]];
+	expandedExpr = EFTTruncate[exprSMEFTnum, EFTorder -> OptionValue[EFTorder], OperatorDimension -> OptionValue[OperatorDimension]];
+	
+	(* Fix the EFT scale for the coefficients *)
+	rescaledExpr = expandedExpr /. WC[lab_, ind_] :> Power[OptionValue[EFTscale], -MassDimension[lab] + 4] WC[lab, ind];
 	
 	(* Return results *)
-	Return[truncexpr/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}/.{0.->0}]
+	Return[rescaledExpr/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}/.{0.->0}]
 ];
