@@ -88,6 +88,6 @@ GetVariables[expr_]:=Module[
 	{varlist,var}
 	,
 	varlist=Variables/@(Level[expr,Depth[expr]]//.Conjugate[a_]:>a//.Re[a_]:>a//.Im[a_]:>a);
-	var=DeleteDuplicates[Join@@varlist];
+	var=DeleteCases[DeleteDuplicates[Join@@varlist],Log[_]];
 	Return[DeleteCases[var,_String]]
 ]

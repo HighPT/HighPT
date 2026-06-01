@@ -35,7 +35,27 @@ PackageScope["RedefineSMEFTCouplings"]
 
 
 (*list of parameters that do not get redefined in the SMEFT*)
-SMEFTInputParameterList$default=Flatten[{(*Mass["WBoson"],*)Mass["ZBoson"],Param["\[Alpha]EM"],Mass["H"],Param["\[Alpha]S"],Table[Yukawa[lab,{i,j}],{lab,{"u","d","e"}},{i,1,3},{j,1,3}],Param["vev"]}];
+SMEFTInputParameterList$default=Flatten[{
+	(*Mass["WBoson"],*)
+	Table[Mass[i],{i,{
+	"e","\[Mu]","\[Tau]",
+	"d","s","b",
+	"u","c","t",
+	"\[Pi]+","\[Pi]0",
+	"K+","K0",
+	"\[Eta]","\[Eta]'",
+	"\[Rho]",
+	"\[Phi]",
+	"D+","D0","Ds",
+	"B+","B0","Bs","Bc",
+	"p","n",
+	"ZBoson",
+	"H"
+}}],
+	Param["\[Alpha]EM"],Param["g3"],Param["\[Alpha]S"],
+	Table[Yukawa[lab,{i,j}],{lab,{"u","d","e"}},{i,1,3},{j,1,3}],
+	Param["vev"]
+}];
 
 (*list of the parameters that get redefined*)
 DimensionSixReplacements$default = Association[{

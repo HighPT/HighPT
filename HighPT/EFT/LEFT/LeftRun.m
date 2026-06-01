@@ -244,7 +244,7 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 	Switch[
 		mode,
 		"LL",
-		Return[SymmetricToNonRedundantLEFT[NonRedundantToSymmetricLEFT[expr]/.WCLS->WCL/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])]],
+		Return[SymmetricToNonRedundantLEFT[NonRedundantToSymmetricLEFT[expr]/.WCLS->WCL/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])/._LEFTAD->0]],
 		"DsixTools",
 		If[NumericQ[lowscale],
 			params=DeleteDuplicates@Cases[expr, _WCL, \[Infinity]];

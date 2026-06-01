@@ -231,7 +231,7 @@ MassRotate[Conjugate[a_],"uu"]:=MassRotate[a,"uu"]\[Conjugate]
 MassRotate[Conjugate[a_],"dd"]:=MassRotate[a,"dd"]\[Conjugate]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*W couplings*)
 
 
@@ -599,7 +599,7 @@ TLMatching[WCLS["udduS1RR",{i_,j_,k_,l_}]]:=-MassRotate[WC["quqd1",{k,l,i,j}],"d
 TLMatching[WCLS["udduS8RR",{i_,j_,k_,l_}]]:=-MassRotate[WC["quqd8",{k,l,i,j}],"d"];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*One - loop matching*)
 
 
@@ -703,7 +703,21 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 		1,
 		currentmasses=Association[Table[i->Mass[i]/.GetParameters[Errors->True],{i,{"u","c","t","d","s","b","e","\[Mu]","\[Tau]"}}]];
 		DefineParameters[EWScaleParameters];
-		If[
+		var = DeleteDuplicates[Cases[NonRedundantToSymmetricLEFT[expr],_WCLS,All]];
+		disp = Dispatch[Table[
+			i -> If[MatchQ[OptionValue[SMOnly],False],
+					tmp = RedefineSMEFTCouplings[(TLMatching[i]+OneLoopMatching[i])/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses, EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]];
+					If[
+						MatchQ[OptionValue[SM],False],
+						tmp - (tmp/._WC->0),
+						tmp
+					],
+					((TLMatching[i]+OneLoopMatching[i])/._WC->0)
+				],
+			{i,var}
+		]];
+		res = SymmetricToNonRedundantSMEFT[NonRedundantToSymmetricLEFT[expr]/.disp];
+		(*If[
 			!OptionValue[SMOnly],
 			If[
 				!OptionValue[SM],
@@ -711,7 +725,7 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 				res=expr/.a_WCL->OneLoopMatching[a]/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses
 			],
 			res=expr/.a_WCL:>(OneLoopMatching[a]/._WC->0)/.\[Mu]W->OptionValue[MatchingScale]/.ReplaceMasses
-		];	
+		];	*)
 		DefineParameters[
 			Table[Mass[i]->currentmasses[i],{i,{"u","c","t","d","s","b","e","\[Mu]","\[Tau]"}}]/.Around[a_,{b_,c_}]:>Around[a,Max[b,c]]/.List->Sequence
 			]
