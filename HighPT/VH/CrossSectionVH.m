@@ -15,11 +15,11 @@ Package["HighPT`"]
 (*Public:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Scoping*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Exported*)
 
 
@@ -32,7 +32,7 @@ PackageExport["W"]
 PackageExport["PartonicCrossSectionVH"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Internal	*)
 
 
@@ -46,7 +46,7 @@ PackageScope["PartonicCMEnergyIntegration"]
 (*Private:*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Parton-level cross-section for VH production*)
 
 
@@ -174,7 +174,7 @@ ReplaceIntegralsVH[t_] := {
 (*Hadron-level cross-section for VH production*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Integration over the partonic center of mass energy*)
 
 
@@ -505,7 +505,7 @@ PDFConvCrossSection[s_, W, OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*List of the different quark flavors and their Parton Luminosities for ZH and WH production*)
 
 
@@ -530,13 +530,13 @@ ListInitialQuarkFlavors[Z] = {
 
 
 ListInitialQuarkFlavors[W] = {
-	<|"PDF" -> "d_ubar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 1, "\[Psi]J" -> 1|>,
+	<|"PDF" -> "d_ubar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 1, "\[Psi]J" -> 1|>, 
 	<|"PDF" -> "d_cbar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 2, "\[Psi]J" -> 1|>,
 	<|"PDF" -> "s_ubar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 1, "\[Psi]J" -> 2|>,
 	<|"PDF" -> "s_cbar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 2, "\[Psi]J" -> 2|>,
 	<|"PDF" -> "b_ubar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 1, "\[Psi]J" -> 3|>,
 	<|"PDF" -> "b_cbar", "\[Psi]bar" -> u, "\[Psi]" -> d, "\[Psi]barI" -> 2, "\[Psi]J" -> 3|>,
-	<|"PDF" -> "u_dbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 1, "\[Psi]J" -> 1|>,
+	<|"PDF" -> "u_dbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 1, "\[Psi]J" -> 1|>, 
 	<|"PDF" -> "u_sbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 2, "\[Psi]J" -> 1|>,
 	<|"PDF" -> "u_bbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 3, "\[Psi]J" -> 1|>,
 	<|"PDF" -> "c_dbar", "\[Psi]bar" -> d, "\[Psi]" -> u, "\[Psi]barI" -> 1, "\[Psi]J" -> 2|>,

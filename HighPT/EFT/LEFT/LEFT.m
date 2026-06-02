@@ -115,7 +115,7 @@ Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
 WCL[x_, {f1_[i_], f2_[j_]}] := WCL[x, {i, j}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*WCL classes and redundancies*)
 
 
@@ -132,8 +132,9 @@ class2WCL=Alternatives[
 	"gZdL", "gZdR",
 	"gZuL", "gZuR",
 	(* NEW COUPLINGS FOR Vh\[Psi]^2 vector operators *)
-	"gZHuL", "gZHuR", "gZHdL", "gZHdR",
-	"gWHqL", "gWHqR"
+	"gZHuL", "gZHuR", "gZHdL", "gZHdR"
+	
+	(*"gWHqL", "gWqL"*)
 ];
 
 
@@ -615,7 +616,7 @@ $WCLList5LEFT=List[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*d = 5 (\[Psi]2HV) *)
 
 

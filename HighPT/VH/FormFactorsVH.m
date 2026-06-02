@@ -416,32 +416,19 @@ Options[SubstituteFFVH]= {
 
 SubstituteFFVH[expr_, OptionsPattern[]] := Module[
 	{
-		exprBrokenLEFT, exprSMEFT, exprSMEFTnum, expandedExpr, rescaledExpr
+		exprBrokenLEFT, exprLEFTnum, expandedExpr
 	},
 	
 	(* Replace the FFs by the broken LEFT coefficients *)
 	(* obs: sets remaining FFs to zero *)
 	exprBrokenLEFT = expr /. CanonizeFFVH /. SubstituteRulesLEFTVH /. ff[___] :> 0;
 	
-	(* Replace broken LEFT coefficients in terms of SMEFT coefficients *)
-(*	exprSMEFT = MatchToSMEFT[
-		exprBrokenLEFT, 
-		SM -> True,
-		EFTorder -> OptionValue[EFTorder],
-		OperatorDimension -> OptionValue[OperatorDimension]
-	];
-	*)
-	exprSMEFT = exprBrokenLEFT;
-	
 	(* Replace constatns by their numerical values *)
-	exprSMEFTnum = ExpandConjugate[exprSMEFT /. ReplaceConstants[]];
+	exprLEFTnum = ExpandConjugate[exprBrokenLEFT /. ReplaceConstants[]];
 	
 	(* Truncate the expression *)
-	expandedExpr = EFTTruncate[exprSMEFTnum, EFTorder -> OptionValue[EFTorder], OperatorDimension -> OptionValue[OperatorDimension]];
-	
-	(* Fix the EFT scale for the coefficients *)
-	rescaledExpr = expandedExpr /. WC[lab_, ind_] :> Power[OptionValue[EFTscale], -MassDimension[lab] + 4] WC[lab, ind];
+	expandedExpr = EFTTruncate[exprLEFTnum, EFTorder -> OptionValue[EFTorder], OperatorDimension -> OptionValue[OperatorDimension]];
 	
 	(* Return results *)
-	Return[rescaledExpr/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}/.{0.->0}]
+	Return[expandedExpr/.{Complex[a_,0.]:> a, Complex[b_,0]:> b}/.{0.->0}]
 ];
