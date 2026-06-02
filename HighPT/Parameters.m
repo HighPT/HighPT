@@ -861,6 +861,7 @@ GF$current = GF$default;
 mZ$current = mZ$default;
 \[CapitalGamma]Z$current = \[CapitalGamma]Z$default;
 \[CapitalGamma]W$current = \[CapitalGamma]W$default;
+mH$current = mH$default;
 
 (*\[Lambda]$current  = \[Lambda]$default;*)
 mH$current = mH$default;
@@ -1100,6 +1101,7 @@ Options[DefineParameters]= {
 	"\[Alpha]EM"         :> \[Alpha]EM$current,
 	"GF"          :> GF$current,
 	"mZ"          :> mZ$current,
+	"mH"          :> mH$current,
 	"\[CapitalGamma]Z"          :> \[CapitalGamma]Z$current,
 	"\[CapitalGamma]W"          :> \[CapitalGamma]W$current,
 	(*"\[Lambda]"           :> \[Lambda]$current,*)
@@ -1159,6 +1161,7 @@ DefineParameters[Default] := DefineParameters[
 	"\[Alpha]EM"         -> \[Alpha]EM$default,
 	"GF"          -> GF$default,
 	"mZ"          -> mZ$default,
+	"mH"          :> mH$default,
 	"\[CapitalGamma]Z"          -> \[CapitalGamma]Z$default,
 	"\[CapitalGamma]W"          -> \[CapitalGamma]W$default,
 	(*"\[Lambda]"           -> \[Lambda]$default,*)
@@ -1497,6 +1500,7 @@ DefineParameters[Default] := DefineParameters[
 		Yukawa["e",{3,3}] -> $Ye[[3,3]],
 		
 		(* masses & widths *)
+		Mass["Higgs"]          -> $mH,
 		Mass["ZBoson"]         -> $mZ,
 		Width["ZBoson"]        -> $\[CapitalGamma]Z,
 		Mass["WBoson"]         -> $mW,
@@ -1725,7 +1729,7 @@ ExperimentalParameters = <||>;
 DefineParameters[Default]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*GetParameters*)
 
 
@@ -1749,7 +1753,7 @@ GetParameters[OptionsPattern[]]:= If[MatchQ[OptionValue[Errors],True],
 (*Charge definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*electric charges*)
 
 

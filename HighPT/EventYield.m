@@ -92,7 +92,8 @@ Options[EventYield]= {
 	EFTorder          :> GetEFTorder[],
 	OperatorDimension :> GetOperatorDimension[],
 	EFTscale          :> GetEFTscale[],
-	Luminosity        -> Default
+	Luminosity        -> Default,
+	"Clipped"         -> All
 };
 
 
@@ -206,6 +207,11 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 		{i, Length[sBins]}
 	];
 	
+	(* for clipped limits only take first n bins *)
+	If["Clipped"=!=All,
+		MyBins = MyBins[[;;OptionValue["Clipped"]]]
+	];
+	
 	(* Launch parallel Kernels *)
 	$\[Sigma]Parallel=\[Sigma]full;
 	Quiet[LaunchKernels[],LaunchKernels::nodef];
@@ -224,7 +230,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 	];
 	CloseKernels[];
 	
-	(* sum contributions of all bins *)
+	(* sum contributions of all bins by default *)
 	NObserved = Plus@@\[Sigma]Binned;
 	
 	(* multiply by luminosity [lumi]=fb^-1 *)
@@ -234,7 +240,7 @@ EventYield[proc_String, OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Evaluation of a single bin*)
 
 

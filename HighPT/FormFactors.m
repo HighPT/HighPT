@@ -54,6 +54,11 @@ PackageScope["TChannelSum"]
 PackageScope["UChannelSum"]
 
 
+(* flag that determines whether (d=8)^2 contributions should be included *)
+PackageScope["$SquaredD8"]
+$SquaredD8=False;
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -62,7 +67,7 @@ PackageScope["UChannelSum"]
 (*FormFactor*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Usage*)
 
 
@@ -141,7 +146,7 @@ FormFactor::unknownindices= "The fifth argument of FormFactor `1` must be a list
 FormFactor[_,_,_,_,x:Except[{_,_,_,_}]]:= (Message[FormFactor::unknownindices, x]; Abort[])
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -164,6 +169,7 @@ MakeBoxes["regular", TraditionalForm] := ToBoxes["reg"]
 MakeBoxes["Photon", TraditionalForm] := ToBoxes["\[Gamma]"]
 MakeBoxes["ZBoson", TraditionalForm] := ToBoxes["Z"]
 MakeBoxes["WBoson", TraditionalForm] := ToBoxes["W"]
+MakeBoxes["Higgs", TraditionalForm] := ToBoxes["h"]
 
 
 MakeBoxes[Left, TraditionalForm]  := ToBoxes["L"]
@@ -205,7 +211,7 @@ InterferenceMatrix[s_, t_, {X_, Y_}]:=
 }
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Individual entries of the interference matrix*)
 
 
@@ -267,7 +273,7 @@ ComputeInterferencePattern[s_, t_, {X_,Y_}, {a_,b_,i_,j_}]:= Module[
 (*ExpandFormFactors*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Split FormFactor into regular and singular part*)
 
 
@@ -334,7 +340,7 @@ ExpandRegularFF[OptionsPattern[]]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Expand singular form factors*)
 
 
@@ -384,7 +390,7 @@ TChannelSum[_,0]:=0
 UChannelSum[_,0]:=0
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Expand the full FormFactors*)
 
 
@@ -431,7 +437,7 @@ ExpandFormFactors[arg_, OptionsPattern[]]:= Module[
 (*Basic form factor properties*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Require neutral form factors*)
 
 
@@ -445,7 +451,7 @@ FF[_,_,{_,_},{_\[Nu],_e,_u,_u}]:=0
 FF[_,_,{_,_},{_\[Nu],_e,_d,_d}]:=0
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Simplifications for Tensor and Scalar form factors*)
 
 
@@ -647,7 +653,7 @@ RotateMassToWeakBasis[expr_]:= Module[{ccRules, ncRules},
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Substitute form factors*)
 
 

@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Exported*)
 
 
@@ -32,7 +32,7 @@ PackageExport["SanDiegoBasis"]
 PackageExport["LEFTBasis"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Internal*)
 
 
@@ -107,12 +107,22 @@ Format[WCL[label_,{indices__}],TraditionalForm]:=Module[
 ]
 
 
+(* ::Subsection::Closed:: *)
+(*Flavor indices*)
+
+
+(* remove unwanted indices *)
+WCL[x_, {f1_[i_], f2_[j_]}] := WCL[x, {i, j}]
+
+
 (* ::Subsection:: *)
 (*WCL classes and redundancies*)
 
 
 class0WCL=Alternatives[
-	"G", "Gt", "mW"
+	"G", "Gt", "mW",
+	(* Higgs couplings *)
+	"1Z", "1W", "2Z", "2A", "2W"
 ];
 
 
@@ -120,7 +130,11 @@ class2WCL=Alternatives[
 	"gZeL", "gZeR",
 	"gZ\[Nu]L",
 	"gZdL", "gZdR",
-	"gZuL", "gZuR"
+	"gZuL", "gZuR",
+	(* NEW COUPLINGS FOR Vh\[Psi]^2 vector operators *)
+	"gZHuL", "gZHuR", "gZHdL", "gZHdR"
+	
+	(*"gWHqL", "gWqL"*)
 ];
 
 
@@ -158,19 +172,19 @@ class8WCL= Alternatives[
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Index relabeling redundancies*)
 
 
 (* ::Text:: *)
-(*2 fermion operators -class 2*)
+(*2 fermion operators -class 2 *)
 
 
 WCL[lab:class2WCL,{p_Integer,r_Integer}]:= WCL[lab,{r,p}]\[Conjugate] /; p>r
 
 
 (* ::Text:: *)
-(*2 fermion operators -class 3*)
+(*2 fermion operators -class 3 *)
 
 
 WCL[lab:class3WCL,{p_Integer,r_Integer}]:= WCL[lab,{r,p}] /; p>r
@@ -329,7 +343,7 @@ WCL[lab:class10WCL,{i_Integer,j_Integer,k_Integer,l_Integer}]:= -WCL[lab,{j,i,l,
 WCL[lab:class10WCL,{i_Integer,i_Integer,k_Integer,l_Integer}]:= 0
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Real coefficients*)
 
 
@@ -408,7 +422,7 @@ WCL/:Im[WCL[lab:class7WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 WCL/:Im[WCL[lab:class8WCL,{a_Integer,a_Integer,i_Integer,i_Integer}]]:= 0
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Set coefficients with top quark to zero*)
 
 
@@ -486,73 +500,47 @@ WCL[lab:zeroWCLclass6,{OrderlessPatternSequence[3,b_Integer,i_Integer,j_Integer]
 
 
 (* ::Subsection:: *)
-(*WCL argument check*)
+(*Coefficients in San Diego basis*)
 
 
-WCL::unknownWCLlabel= "The label `1` is not an allowed label for LEFT Wilson coefficients (WCL)."
-
-
-(* ::Subsubsection:: *)
-(*d = 2*)
-
-
-$WCLList2=List[
-	"mW"
-]
-
-
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d = 3*)
 
 
-$WCLList3=List[
+$WCLList3SD=List[
 	"M\[Nu]","Me",
 	"Mu","Md"
 ]
 
 
-(* ::Subsubsection:: *)
-(*d = 4*)
-
-
-$WCLList4=List[
-	"gZeL","gZeR",
-	"gZ\[Nu]L",
-	"gZdL","gZdR",
-	"gZuL","gZuR",
-	"gWqL","gWqR",
-	"gWlL"
-]
-
-
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*d = 5*)
 
 
-$WCLList5=List[
+$WCLList5SD=List[
 	(* (\[Nu]\[Nu])X *)
 	"\[Nu]\[Gamma]",
 	(* (LR)X *)
-	"e\[Gamma]","eZ",
-	"u\[Gamma]","d\[Gamma]","uZ","dZ",
+	"e\[Gamma]",
+	"u\[Gamma]","d\[Gamma]",
 	"uG","dG"
 ]
 
 
-(* ::Subsubsection:: *)
-(*d=6 X^3*)
+(* ::Subsubsection::Closed:: *)
+(*d = 6 (X^3)*)
 
 
-$WCLList6X3=List[
+$WCLList6X3SD=List[
 	"G","Gt"
 ]
 
 
-(* ::Subsubsection:: *)
-(*d=6 (\[Psi]^4) *)
+(* ::Subsubsection::Closed:: *)
+(*d = 6 (\[Psi]^4) *)
 
 
-$WCLList6psi4=List[
+$WCLList6psi4SD=List[
 	(* (LL)(LL) *)
 	"\[Nu]\[Nu]VLL","eeVLL","\[Nu]eVLL",
 	"\[Nu]uVLL","\[Nu]dVLL","euVLL","edVLL","\[Nu]eduVLL",
@@ -583,58 +571,130 @@ $WCLList6psi4=List[
 ]
 
 
-(* ::Subsubsection:: *)
-(*d=6 (\[Psi]^2D^2V) *)
+(* ::Subsubsection::Closed:: *)
+(*All San Diego WC labels*)
 
 
-$WCLList6psi2 = List[
+SanDiegoCoefLabels = Join[$WCLList3SD, $WCLList5SD, $WCLList6X3SD, $WCLList6psi4SD]
 
+
+(* ::Subsection:: *)
+(*Coefficients in broken LEFT *)
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 2*)
+
+
+$WCLList2LEFT=List[
+	"mW"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 4 *)
+
+
+$WCLList4LEFT=List[
+	"gZeL","gZeR",
+	"gZ\[Nu]L",
+	"gZdL","gZdR",
+	"gZuL","gZuR",
+	"gWqL","gWqR",
+	"gWlL"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 5 *)
+
+
+$WCLList5LEFT=List[
+	"eZ",
+	"uZ","dZ",
+	"qWL", "qWR"
 ]
 
 
 (* ::Subsubsection:: *)
-(*d=7 (operators with gluons, for LFV) *)
+(*d = 5 (\[Psi]2HV) *)
 
 
-(*$WCLList7=List[
-	"eeGG","eeGGt"
-]*)
-
-
-(* ::Subsubsection:: *)
-(*d=8 (\[Psi]^4D^2) *)
-
-
-$WCLList8psi4D2 = List[
-
+$WCLList5psi2HVLEFT=List[
+	"gZHuL", "gZHuR", 
+	"gZHdL", "gZHdR", 
+	"gWHqL", "gWHqR"
 ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 6 (\[Psi]^2 X H)*)
+
+
+$WCList6psi2XHLEFT = List[
+	"uZH", "dZH", 
+	"qWHL", "qWHR"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 3 (HVV) *)
+
+
+$WCList3HVVLEFT = List[
+	"1Z", "1W"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*d = 5 (HXX) *)
+
+
+$WCList5HXXLEFT = List[
+	"2Z", "2W", "2A"
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*All broken LEFT WC labels*)
+
+
+BrokenLEFTCoefLabels = Join[$WCLList2LEFT, $WCLList4LEFT, $WCLList5LEFT, $WCLList5psi2HVLEFT, $WCList6psi2XHLEFT, $WCList3HVVLEFT, $WCList5HXXLEFT]
+
+
+(* ::Subsection::Closed:: *)
+(*WCL argument check*)
+
+
+WCL::unknownWCLlabel= "The label `1` is not an allowed label for LEFT Wilson coefficients (WCL)."
 
 
 (* ::Subsubsection:: *)
 (*Check WC label*)
 
 
-WCL[l:Except[Alternatives@@Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4(*,$WCLList7*), {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
+GetAllWCL = Join[SanDiegoCoefLabels, BrokenLEFTCoefLabels]
+
+
+WCL[l:Except[Alternatives@@Join[GetAllWCL, {_Pattern, _Blank, _Except, _BlankNullSequence, _BlankSequence}]],___]:=(
 	Message[WCL::unknownWCLlabel,l];
 	Abort[]
 )
 
 
-GetAllWCL = Join[$WCLList2,$WCLList3, $WCLList4, $WCLList5, $WCLList6X3, $WCLList6psi4]
-
-
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*San Diego Basis *)
 
 
+(* !!! Returns the number of flavor indices for a given coefficient !!! *)
 NindLEFT[lab_] := If[
-	MemberQ[$WCLList6psi4,lab],
+	MemberQ[$WCLList6psi4SD,lab],
 	4,
 	If[
-		MemberQ[Join[$WCLList3,$WCLList5,$WCLList4],lab],
+		MemberQ[Join[$WCLList3SD,$WCLList5SD, $WCLList4LEFT, $WCLList5LEFT, $WCLList5psi2HVLEFT, $WCList6psi2XHLEFT],lab],
 		2,
 		If[
-			MemberQ[Join[$WCLList6X3,$WCLList2],lab],
+			MemberQ[Join[$WCLList6X3SD, $WCLList2LEFT, $WCList3HVVLEFT, $WCList5HXXLEFT],lab],
 			0,
 			Abort[]
 		]
@@ -654,7 +714,10 @@ SanDiegoBasis::WrongLabel = "The label `1` is not a San Diego label"
 
 SanDiegoBasis[lab_] := Module[
 	{tab},
-	If[!MemberQ[Join[$WCLList3,Complement[$WCLList5,{"eZ","uZ","dZ"}],$WCLList6X3,$WCLList6psi4],lab],Message[SanDiegoBasis::WrongLabel,lab];Abort[]];
+	(* Check if the coefficient belongs to the San Diego basis *)
+	If[!MemberQ[SanDiegoCoefLabels,lab],Message[SanDiegoBasis::WrongLabel,lab];Abort[]];
+	
+	(* Generates all coefficients with different flavor indices *)
 	Switch[NindLEFT[lab],
 		0,
 		tab = WCL[lab,{}],
@@ -669,10 +732,10 @@ SanDiegoBasis[lab_] := Module[
 ]
 
 
-SanDiegoBasis[] = Table[SanDiegoBasis[lab],{lab,Join[$WCLList6X3,$WCLList3,Complement[$WCLList5,{"eZ","uZ","dZ"}],$WCLList6psi4]}]//Flatten
+SanDiegoBasis[] = Table[SanDiegoBasis[lab],{lab, SanDiegoCoefLabels}]//Flatten
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Full LEFT basis*)
 
 
@@ -681,8 +744,12 @@ LEFTBasis::WrongLabel = "The label `1` is not a LEFT label"
 
 LEFTBasis[lab_] := Module[
 	{tab},
-	If[MemberQ[Join[$WCLList3,Complement[$WCLList5,{"eZ","uZ","dZ"}],$WCLList6X3,$WCLList6psi4],lab],Return[SanDiegoBasis[lab]]];
-	If[!MemberQ[Join[$WCLList2,$WCLList4,{"eZ","uZ","dZ"}],lab],Message[LEFTBasis::WrongLabel,lab];Abort[]];
+	(* If in SD basis, use SanDiegoBasis function *)
+	If[MemberQ[SanDiegoCoefLabels,lab],Return[SanDiegoBasis[lab]]];
+	(* Check if the label is defined in one of the broken LEFT coefficient classes *)
+	If[!MemberQ[BrokenLEFTCoefLabels,lab],Message[LEFTBasis::WrongLabel,lab];Abort[]];
+	
+	(* Generates all coefficients with different flavor indices *)
 	Switch[NindLEFT[lab],
 		0,
 		tab = WCL[lab,{}],
@@ -697,7 +764,7 @@ LEFTBasis[lab_] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Map of redundant structures*)
 
 
@@ -761,7 +828,7 @@ NonRedundantToSymmetricAssociation = Association[
 			{i,LEFTBasis[lab]}
 		]
 		,
-		{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4,$WCLList4,$WCLList2]}
+		{lab,Join[SanDiegoCoefLabels, BrokenLEFTCoefLabels]}
 	]//Flatten
 ]
 
@@ -780,7 +847,7 @@ SymmetricToNonRedundantAssociation = Association[
 		{i,LEFTBasis[lab]}
 		]
 		,
-		{lab,Join[$WCLList6X3,$WCLList3,$WCLList5,$WCLList6psi4]}
+		{lab,Join[SanDiegoCoefLabels, BrokenLEFTCoefLabels]}
 	]//Flatten
 ]
 
@@ -788,13 +855,13 @@ SymmetricToNonRedundantAssociation = Association[
 SymmetricToNonRedundantLEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*LEFT Truncation*)
 
 
-MassDimension[Alternatives@@$WCLList4] := 4
-MassDimension[Alternatives@@$WCLList5] := 5
-MassDimension[Alternatives@@Join[$WCLList6X3,$WCLList6psi4]] := 6
+MassDimension[Alternatives@@$WCLList4LEFT] := 4
+MassDimension[Alternatives@@Join[$WCLList5SD, $WCLList5LEFT, $WCLList5psi2HVLEFT, $WCList5HXXLEFT]] := 5
+MassDimension[Alternatives@@Join[$WCLList6X3SD, $WCLList6psi4SD, $WCList6psi2XHLEFT]] := 6
 
 
 DimensionCountingLEFT[expr_]:=expr/.WCL[lab_,ind_]:>WCL[lab,ind]*Power[eps,MassDimension[lab]-4]/.Conjugate[WC[lab_,ind_]]:>Conjugate[WC[lab,ind]]*Power[eps,MassDimension[lab]-4]

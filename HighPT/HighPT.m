@@ -264,7 +264,7 @@ InitializeModel["Mediators", OptionsPattern[]]:= Module[
 $defaultMediatorProperties = <||>
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Auxiliary functions for defining and using a model*)
 
 
@@ -433,7 +433,7 @@ ModifyMediator[OptionsPattern[]]:=Module[
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DefineSM*)
 
 
@@ -459,7 +459,7 @@ DefineSM[eft_]:= Module[
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*ReplaceChannelSums*)
 
 
@@ -493,7 +493,7 @@ ReplaceChannelSums[]:= {
 }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SM properties*)
 
 
@@ -535,7 +535,7 @@ LeftHandedWSM[mediator_, type_, ord_, {X_,Y_}]:= Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*KroneckerDelta*)
 
 

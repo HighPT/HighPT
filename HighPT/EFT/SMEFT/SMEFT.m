@@ -153,7 +153,7 @@ WC::usage=
 WC[\"label\",{\[ScriptR],\[ScriptS]}] Wilson coefficient associated to the two-fermion operator denoted by label with flavor indices \[ScriptR],\[ScriptS] which can be either lepton or quark indices.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Formatting*)
 
 
@@ -185,7 +185,7 @@ Format[WC[label_,{indices___}],TraditionalForm]:= Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Flavor indices*)
 
 

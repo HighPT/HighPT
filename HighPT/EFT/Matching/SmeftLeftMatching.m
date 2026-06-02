@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Exported*)
 
 
@@ -241,13 +241,14 @@ g22onmW2:=(*(4\[Pi] Param["\[Alpha]EM"])/(Param["sW"]^2 Mass["WBoson"]^2)(1+Para
 WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+Param["vev"]^4/2 (WC["l2H4D2",{\[Alpha],\[Beta]}]+I*WC["l2H4D3",{\[Alpha],\[Beta]}]);
 
 
-WCoupling["q",{i_,j_}]:=Vckm[i,j]+Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"ud"]+Param["vev"]^4/2 (MassRotate[WC["q2H4D2",{i,j}],"ud"]+I*MassRotate[WC["q2H4D3",{i,j}],"ud"]);
+WCouplingNP["q", {i_, j_}] := Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"ud"];
+WCoupling["q",{i_,j_}]:=Vckm[i,j] + (WCouplingNP["q", {i, j}] + WCouplingNP["q", {i, j}]\[Conjugate]) (1 - KroneckerDelta[i,j]) + WCouplingNP["q", {i, j}] KroneckerDelta[i,j] + Param["vev"]^4/2 (MassRotate[WC["q2H4D2",{i,j}],"ud"]+I*MassRotate[WC["q2H4D3",{i,j}],"ud"]);
 
 
 WCoupling["ud",{i_,j_}]:=1/2 Param["vev"]^2 WC["Hud",{i,j}] + Param["vev"]^4/2 WC["udH4D",{i,j}];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Z couplings*)
 
 
@@ -275,7 +276,7 @@ ZCoupling["dL",{i_,j_}]:=(-(1/2)+1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param
 ZCoupling["dR",{i_,j_}]:=(1/3 Param["sW"]^2)KroneckerDelta[i,j]-1/2 Param["vev"]^2 WC["Hd",{i,j}]-Param["vev"]^4/4 WC["d2H4D",{i,j}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Masses*)
 
 
@@ -285,14 +286,14 @@ TLMatching[WCLS["Mu",{\[Alpha]_,\[Beta]_}]] := Param["vev"]/Sqrt[2] (Yukawa["u",
 TLMatching[WCLS["Md",{\[Alpha]_,\[Beta]_}]] := Param["vev"]/Sqrt[2] (Yukawa["d",{\[Alpha],\[Beta]}]-1/2 Param["vev"]^2 WC["dH",{\[Beta],\[Alpha]}]\[Conjugate]);
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*\[Nu]\[Nu]X*)
 
 
 TLMatching[WCLS["\[Nu]\[Gamma]",{\[Alpha]_,\[Beta]_}]]:=0;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*\[Delta]gZ, \[Delta]gW*)
 
 
@@ -335,7 +336,7 @@ TLMatching[WCLS["e\[Gamma]",{\[Alpha]_,\[Beta]_}]]:=1/Sqrt[2] Param["vev"](-Para
 TLMatching[WCLS["eZ",{\[Alpha]_,\[Beta]_}]]:=1/Sqrt[2] Param["vev"](Param["cW"]WC["eW",{\[Alpha],\[Beta]}]+Param["sW"]WC["eB",{\[Alpha],\[Beta]}]);
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Nonleptonic*)
 
 
@@ -351,7 +352,7 @@ TLMatching[WCLS["uG",{i_,j_}]]:=1/Sqrt[2] Param["vev"]MassRotate[WC["uG",{i,j}],
 TLMatching[WCLS["dG",{i_,j_}]]:=1/Sqrt[2] Param["vev"]MassRotate[WC["dG",{i,j}],"d"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*X^3*)
 
 
@@ -361,11 +362,11 @@ TLMatching[WCLS["G",{}]]:=WC["G",{}];
 TLMatching[WCLS["Gt",{}]]:=WC["Gt",{}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*(LL) (LL)*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Leptonic*)
 
 
@@ -376,7 +377,7 @@ TLMatching[WCLS["eeVLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ll",{\[A
 TLMatching[WCLS["\[Nu]eVLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ll",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]+WC["ll",{\[Gamma],\[Delta],\[Alpha],\[Beta]}]-g22onmW2/2 WCoupling["l",{\[Alpha],\[Delta]}]WCoupling["l",{\[Beta],\[Gamma]}]\[Conjugate]-gZ2onmZ2 ZCoupling["\[Nu]L",{\[Alpha],\[Beta]}]ZCoupling["eL",{\[Gamma],\[Delta]}];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Semileptonic*)
 
 
@@ -395,7 +396,7 @@ TLMatching[WCLS["edVLL",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["lq1",{\[Alp
 TLMatching[WCLS["\[Nu]eduVLL",{\[Alpha]_,\[Beta]_,i_,j_}]]:=2 MassRotate[WC["lq3",{\[Alpha],\[Beta],i,j}],"du"]-g22onmW2/2 WCoupling["l",{\[Alpha],\[Beta]}]WCoupling["q",{j,i}]\[Conjugate];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Nonleptonic*)
 
 
@@ -411,18 +412,18 @@ TLMatching[WCLS["udV1LL",{i_,j_,k_,l_}]]:=MassRotate[WC["qq1",{i,j,k,l}],"uudd"]
 TLMatching[WCLS["udV8LL",{i_,j_,k_,l_}]]:=4 MassRotate[WC["qq3",{i,l,k,j}],"uddu"]+4 MassRotate[WC["qq3",{k,j,i,l}],"duud"]-g22onmW2 WCoupling["q",{i,l}]WCoupling["q",{j,k}]\[Conjugate];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*(RR) (RR)*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Leptonic*)
 
 
 TLMatching[WCLS["eeVRR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ee",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-gZ2onmZ2/4 ZCoupling["eR",{\[Alpha],\[Beta]}]ZCoupling["eR",{\[Gamma],\[Delta]}]-gZ2onmZ2/4 ZCoupling["eR",{\[Alpha],\[Delta]}]ZCoupling["eR",{\[Gamma],\[Beta]}];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Semileptonic*)
 
 
@@ -432,7 +433,7 @@ TLMatching[WCLS["euVRR",{\[Alpha]_,\[Beta]_,i_,j_}]]:=WC["eu",{\[Alpha],\[Beta],
 TLMatching[WCLS["edVRR",{\[Alpha]_,\[Beta]_,i_,j_}]]:=WC["ed",{\[Alpha],\[Beta],i,j}]-gZ2onmZ2 ZCoupling["eR",{\[Alpha],\[Beta]}]ZCoupling["dR",{i,j}];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Nonleptonic*)
 
 
@@ -448,11 +449,11 @@ TLMatching[WCLS["udV1RR",{i_,j_,k_,l_}]]:=WC["ud1",{i,j,k,l}]-g22onmW2/2 1/3 WCo
 TLMatching[WCLS["udV8RR",{i_,j_,k_,l_}]]:=WC["ud8",{i,j,k,l}]-g22onmW2 WCoupling["ud",{i,l}]WCoupling["ud",{j,k}]\[Conjugate];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*(LL) (RR)*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Leptonic*)
 
 
@@ -462,7 +463,7 @@ TLMatching[WCLS["\[Nu]eVLR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["le",
 TLMatching[WCLS["eeVLR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["le",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-gZ2onmZ2 ZCoupling["eL",{\[Alpha],\[Beta]}]ZCoupling["eR",{\[Gamma],\[Delta]}];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Semileptonic*)
 
 
@@ -487,7 +488,7 @@ TLMatching[WCLS["deVLR",{i_,j_,\[Alpha]_,\[Beta]_}]]:=MassRotate[WC["eq",{\[Alph
 TLMatching[WCLS["\[Nu]eduVLR",{\[Alpha]_,\[Beta]_,i_,j_}]]:=-(g22onmW2/2)WCoupling["l",{\[Alpha],\[Beta]}]WCoupling["ud",{j,i}]\[Conjugate];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Nonleptonic*)
 
 
@@ -521,11 +522,11 @@ TLMatching[WCLS["udduV1LR",{i_,j_,k_,l_}]]:=-(g22onmW2/2)WCoupling["q",{i,j}]WCo
 TLMatching[WCLS["udduV8LR",{i_,j_,k_,l_}]]:=0;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*(LR) (RL)*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Semileptonic*)
 
 
@@ -538,18 +539,18 @@ TLMatching[WCLS["edSRL",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["ledq",{\[Al
 TLMatching[WCLS["\[Nu]eduSRL",{\[Alpha]_,\[Beta]_,i_,j_}]]:=MassRotate[WC["ledq",{\[Alpha],\[Beta],i,j}],"u"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*(LR) (LR)*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Leptonic*)
 
 
 TLMatching[WCLS["eeSRR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=0;
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Semileptonic*)
 
 
@@ -597,6 +598,71 @@ TLMatching[WCLS["udduS1RR",{i_,j_,k_,l_}]]:=-MassRotate[WC["quqd1",{k,l,i,j}],"d
 
 
 TLMatching[WCLS["udduS8RR",{i_,j_,k_,l_}]]:=-MassRotate[WC["quqd8",{k,l,i,j}],"d"];
+
+
+(* ::Subsection:: *)
+(*gZH, gWH *)
+
+
+(* Left-handed *)
+TLMatching[WCLS["gZHuL",{i_,j_}]] := Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["sW"]*Param["cW"]) Param["vev"] (MassRotate[WC["Hq1",{i,j}],"uu"] - MassRotate[WC["Hq3",{i,j}],"uu"])
+TLMatching[WCLS["gZHdL",{i_,j_}]] := Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["sW"]*Param["cW"]) Param["vev"] (MassRotate[WC["Hq1",{i,j}],"dd"] + MassRotate[WC["Hq3",{i,j}],"dd"])
+(* Right-handed *)
+TLMatching[WCLS["gZHuR",{i_,j_}]] := Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["sW"]*Param["cW"]) Param["vev"] WC["Hu", {i, j}]
+TLMatching[WCLS["gZHdR",{i_,j_}]] := Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["sW"]*Param["cW"]) Param["vev"] WC["Hd", {i, j}]
+
+
+TLMatching[WCLS["gWHqL",{i_,j_}]] := - Sqrt[2] Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/Param["sW"] Param["vev"] ((MassRotate[WC["Hq3",{i,j}],"ud"] + MassRotate[WC["Hq3",{j, i}],"ud"]\[Conjugate]) (1 - KroneckerDelta[i,j]) + MassRotate[WC["Hq3",{i,j}],"ud"]KroneckerDelta[i,j])
+TLMatching[WCLS["gWHqR",{i_,j_}]] := - (1/Sqrt[2]) Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/Param["sW"] Param["vev"] WC["Hud", {i, j}]
+
+
+(* ::Subsection::Closed:: *)
+(*(LR)Z*)
+
+
+TLMatching[WCLS["uZ",{i_,j_}]] :=  (1/Sqrt[2]) Param["vev"] (Param["cW"] MassRotate[WC["uW",{i,j}],"u"] - Param["sW"] MassRotate[WC["uB",{i,j}],"u"])
+TLMatching[WCLS["dZ",{i_,j_}]] := -(1/Sqrt[2]) Param["vev"] (Param["cW"] MassRotate[WC["dW",{i,j}],"d"] + Param["sW"] MassRotate[WC["dB",{i,j}],"d"])
+
+
+(* ::Subsection::Closed:: *)
+(*(LR)W*)
+
+
+TLMatching[WCLS["qWR",{i_,j_}]] := Param["vev"] MassRotate[WC["dW", {i, j}], "u"]
+TLMatching[WCLS["qWL",{i_,j_}]] := Param["vev"] MassRotate[WC["uW", {j, i}], "d"]\[Conjugate]
+
+
+(* ::Subsection::Closed:: *)
+(*(LR)ZH*)
+
+
+TLMatching[WCLS["uZH",{i_,j_}]] :=  (1/Sqrt[2]) (Param["cW"] MassRotate[WC["uW", {i, j}],"u"] - Param["sW"] MassRotate[WC["uB", {i, j}], "u"])
+TLMatching[WCLS["dZH",{i_,j_}]] := -(1/Sqrt[2]) (Param["cW"] MassRotate[WC["dW", {i, j}],"d"] + Param["sW"] MassRotate[WC["dB", {i, j}], "d"])
+
+
+(* ::Subsection::Closed:: *)
+(*(LR)WH*)
+
+
+TLMatching[WCLS["qWHR",{i_,j_}]] := MassRotate[WC["dW", {i, j}], "u"]
+TLMatching[WCLS["qWHL",{i_,j_}]] := MassRotate[WC["uW", {j, i}], "d"]\[Conjugate]
+
+
+(* ::Subsection::Closed:: *)
+(*HVV*)
+
+
+TLMatching[WCLS["1Z", {}]] := (1/4) Param["vev"] Param["gZ"]^2 (1 + Param["vev"] WC["HD", {}])
+TLMatching[WCLS["1W", {}]] := (1/2) Param["vev"] Param["g2"]^2 
+
+
+(* ::Subsection::Closed:: *)
+(*HXX*)
+
+
+TLMatching[WCLS["2Z", {}]] := Param["vev"] (Param["cW"]^2 WC["HW", {}] + Param["sW"]^2 WC["HB", {}] + Param["sW"]Param["cW"] WC["HWB", {}])
+TLMatching[WCLS["2A", {}]] := Param["vev"] (2 * Param["sW"] * Param["cW"] (WC["HW", {}] - WC["HB", {}]) - (Param["cW"]^2 - Param["sW"]^2) WC["HWB", {}])
+TLMatching[WCLS["2W", {}]] := 2 Param["vev"] WC["HW", {}]
 
 
 (* ::Section:: *)
@@ -734,7 +800,7 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 ];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Standard Model values for (LEFT) Wilson Coefficients*)
 
 
@@ -783,7 +849,7 @@ SMValue[WCL["gWqR",{i_,j_}]] := 0
 SMValue[WCL["gWlL",{i_,j_}]] := -(Param["g2"]/Sqrt[2])KroneckerDelta[i,j]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Basis rotation*)
 
 

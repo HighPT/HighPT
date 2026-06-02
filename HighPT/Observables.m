@@ -101,7 +101,7 @@ PackageScope["AllSelector"]
 (*Define observable sectors*)
 
 
-ObservableSectors[] := {"Flavor","Drell-Yan","Higgs","EW","LEP2","FCC","custom"};
+ObservableSectors[] := {"Flavor","Drell-Yan","Higgs","EW","LEP2","FCC","custom", "STXS-VH"};
 
 
 (* Remove EWObservables from here eventually *)
