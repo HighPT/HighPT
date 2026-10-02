@@ -244,7 +244,7 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 	Switch[
 		mode,
 		"LL",
-		Return[SymmetricToNonRedundantLEFT[NonRedundantToSymmetricLEFT[expr]/.WCLS->WCL/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])/._LEFTAD->0]],
+		Return[SymmetricHermitianToNonRedundantLEFT[NonRedundantToSymmetricHermitianLEFT[expr]/.WCLS->WCL/.wc_WCL->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]LEFTAD[wc])/._LEFTAD->0]],
 		"DsixTools",
 		If[NumericQ[lowscale],
 			params=DeleteDuplicates@Cases[expr, _WCL, \[Infinity]];
@@ -257,7 +257,7 @@ LEFTRun[expr_,lowscale_,highscale_]:=Module[
 			(*params=Select[Variables[temp/.Conjugate[a_]->a/.Re->Identity/.Abs->Identity],MemberQ[DsixTools`LEFTParameterList[],#] &];
 			temp=temp/.Dispatch[(#1->DsixTools`LEFTEvolve[#1,lowscale]&)/@params];*)
 			(*Return[DsixToolsToHighPTLEFT[temp]]*)
-			Return[SymmetricToNonRedundantLEFT[NonRedundantToSymmetricLEFT[expr]/.WCLS->WCL/.evolution]],
+			Return[SymmetricHermitianToNonRedundantLEFT[NonRedundantToSymmetricHermitianLEFT[expr]/.WCLS->WCL/.evolution]],
 			Message[LEFTRun::nonnumericlowscale];Abort[]
 		];,
 		"Off",

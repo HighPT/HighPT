@@ -362,11 +362,11 @@ TLMatching[WCLS["G",{}]]:=WC["G",{}];
 TLMatching[WCLS["Gt",{}]]:=WC["Gt",{}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*(LL) (LL)*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Leptonic*)
 
 
@@ -374,7 +374,7 @@ TLMatching[WCLS["\[Nu]\[Nu]VLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["
 
 
 TLMatching[WCLS["eeVLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ll",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-gZ2onmZ2/4 ZCoupling["eL",{\[Alpha],\[Beta]}]ZCoupling["eL",{\[Gamma],\[Delta]}]-gZ2onmZ2/4 ZCoupling["eL",{\[Alpha],\[Delta]}]ZCoupling["eL",{\[Gamma],\[Beta]}];
-TLMatching[WCLS["\[Nu]eVLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ll",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]+WC["ll",{\[Gamma],\[Delta],\[Alpha],\[Beta]}]-g22onmW2/2 WCoupling["l",{\[Alpha],\[Delta]}]WCoupling["l",{\[Beta],\[Gamma]}]\[Conjugate]-gZ2onmZ2 ZCoupling["\[Nu]L",{\[Alpha],\[Beta]}]ZCoupling["eL",{\[Gamma],\[Delta]}];
+TLMatching[WCLS["\[Nu]eVLL",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["ll",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]+WC["ll",{\[Gamma],\[Delta],\[Alpha],\[Beta]}]+Param["vev"]^2/2 (WC["l4H21",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]+WC["l4H21",{\[Gamma],\[Delta],\[Alpha],\[Beta]}]+WC["l4H22",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-WC["l4H22",{\[Gamma],\[Delta],\[Alpha],\[Beta]}])-g22onmW2/2 WCoupling["l",{\[Alpha],\[Delta]}]WCoupling["l",{\[Beta],\[Gamma]}]\[Conjugate]-gZ2onmZ2 ZCoupling["\[Nu]L",{\[Alpha],\[Beta]}]ZCoupling["eL",{\[Gamma],\[Delta]}];
 
 
 (* ::Subsubsection::Closed:: *)

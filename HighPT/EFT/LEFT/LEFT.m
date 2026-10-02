@@ -19,7 +19,7 @@ Package["HighPT`"]
 (*Scoping*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Exported*)
 
 
@@ -32,7 +32,7 @@ PackageExport["SanDiegoBasis"]
 PackageExport["LEFTBasis"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Internal*)
 
 
@@ -45,7 +45,9 @@ PackageScope["GetAllWCL"]
 PackageScope["LEFTTruncate"]
 
 
+PackageScope["NonRedundantToSymmetricHermitianLEFT"]
 PackageScope["NonRedundantToSymmetricLEFT"]
+PackageScope["SymmetricHermitianToNonRedundantLEFT"]
 PackageScope["SymmetricToNonRedundantLEFT"]
 
 
@@ -764,7 +766,7 @@ LEFTBasis[lab_] := Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Map of redundant structures*)
 
 
@@ -820,7 +822,7 @@ RedundancyAssociation[lab_]:=Module[
 ]
 
 
-NonRedundantToSymmetricAssociation = Association[
+NonRedundantToSymmetricHermitianAssociation = Association[
 	Table[
 		Table[
 			i -> Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]+Sum[Conjugate[WCLS[lab,j]],{j,RedundancyAssociation[lab]["conjugate"][i]/._Missing->0}]-Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["minus"][i]/._Missing->0}]
@@ -831,12 +833,24 @@ NonRedundantToSymmetricAssociation = Association[
 		{lab,Join[SanDiegoCoefLabels, BrokenLEFTCoefLabels]}
 	]//Flatten
 ]
+NonRedundantToSymmetricAssociation = Association[
+	Table[
+		Table[
+			i -> Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]-Sum[WCLS[lab,j],{j,RedundancyAssociation[lab]["minus"][i]/._Missing->0}]
+			,
+			{i,LEFTBasis[lab]}
+		]
+		,
+		{lab,Join[SanDiegoCoefLabels, BrokenLEFTCoefLabels]}
+	]//Flatten
+]
 
 
+NonRedundantToSymmetricHermitianLEFT[expr_] := expr/.NonRedundantToSymmetricHermitianAssociation
 NonRedundantToSymmetricLEFT[expr_] := expr/.NonRedundantToSymmetricAssociation
 
 
-SymmetricToNonRedundantAssociation = Association[
+SymmetricHermitianToNonRedundantAssociation = Association[
 	Table[
 		Table[
 			If[Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["conjugate"][i]/._Missing->{},RedundancyAssociation[lab]["minus"][i]/._Missing->{}]] == 1,
@@ -850,8 +864,23 @@ SymmetricToNonRedundantAssociation = Association[
 		{lab,Join[SanDiegoCoefLabels, BrokenLEFTCoefLabels]}
 	]//Flatten
 ]
+SymmetricToNonRedundantAssociation = Association[
+	Table[
+		Table[
+			If[Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["minus"][i]/._Missing->{}]] == 1,
+				Nothing[],
+				i->1/Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["minus"][i]/._Missing->{}]] i
+			]
+			,
+		{i,LEFTBasis[lab]}
+		]
+		,
+		{lab,Join[SanDiegoCoefLabels, BrokenLEFTCoefLabels]}
+	]//Flatten
+]
 
 
+SymmetricHermitianToNonRedundantLEFT[expr_] := expr/.SymmetricHermitianToNonRedundantAssociation
 SymmetricToNonRedundantLEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
 
 

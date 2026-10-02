@@ -43,7 +43,7 @@ ObsTable["LFV"] := Grid[{{"LFV",Column[ObsTable/@$LFVSectors]}},Dividers->All];
 CL90to95=3.09/2.3;
 
 
-ObservableSectors["LFV"] := {"ZLFV","\[Tau]LFV"};
+ObservableSectors["LFV"] := {"ZLFV","\[Tau]LFV","\[Mu]LFV"};
 ObservableList["LFV"] := ObservableList/@ObservableSectors["LFV"]
 
 
@@ -875,8 +875,8 @@ Br\[Tau]KSl[lep_] := Lifetime["\[Tau]"] (DecayConstant["K"]^2 Mass["\[Tau]"]^3)/
 TheoryExpression["\[Tau]->\[Mu]KS"] := Br\[Tau]KSl[2]
 
 
-ExpValue$default["\[Tau]->\[Mu]KS"] := Around[0,2.3]*10^-8*CL90to95/2
-ExpInfo["\[Tau]->\[Mu]KS"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+ExpValue$default["\[Tau]->\[Mu]KS"] := Around[0,1.8]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->\[Mu]KS"] := Row[{"Belle II: ", Ref["PDGlep"]}]
 
 
 SMPrediction$default["\[Tau]->\[Mu]KS"] := Around[0,null]
@@ -896,8 +896,8 @@ LowScale$default["\[Tau]->\[Mu]KS"] := Mass["\[Tau]"]/.GetParameters[]
 TheoryExpression["\[Tau]->eKS"] := Br\[Tau]KSl[1]
 
 
-ExpValue$default["\[Tau]->eKS"] := Around[0,2.6]*10^-8*CL90to95/2
-ExpInfo["\[Tau]->eKS"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+ExpValue$default["\[Tau]->eKS"] := Around[0,0.8]*10^-8*CL90to95/2
+ExpInfo["\[Tau]->eKS"] := Row[{"Belle II: ", Ref["PDGlep"]}]
 
 
 SMPrediction$default["\[Tau]->eKS"] := Around[0,null]
@@ -1053,8 +1053,8 @@ NPInfo["\[Tau]->eee"] := ""
 LowScale$default["\[Tau]->eee"] := Mass["\[Tau]"]/.GetParameters[]
 
 
-(* ::Subsection:: *)
-(*\[Tau] -> l\[Gamma] - to do*)
+(* ::Subsection::Closed:: *)
+(*\[Tau] -> l\[Gamma] - to xcheck*)
 
 
 ObservableList["\[Tau]->l\[Gamma]"] = {"\[Tau]->\[Mu]\[Gamma]","\[Tau]->e\[Gamma]"};
@@ -1109,3 +1109,28 @@ LowScale$default["\[Tau]->e\[Gamma]"] := Mass["\[Tau]"]/.GetParameters[]
 
 (* ::Section:: *)
 (*\[Mu] LFV - to do*)
+
+
+ObservableList["\[Mu]LFV"] = {"\[Mu]->eee"};
+
+
+(* ::Subsubsection:: *)
+(*\[Mu] -> eee*)
+
+
+TheoryExpression["\[Mu]->eee"] := Brlj3li[2,1]
+
+
+ExpValue$default["\[Mu]->eee"] := Around[0,1.0]*10^-12*CL90to95/2
+ExpInfo["\[Mu]->eee"] := Row[{"From PDG: ", Ref["PDGlep"]}]
+
+
+SMPrediction$default["\[Mu]->eee"] := Around[0,null]
+SMInfo["\[Mu]->eee"] := "Forbidden in the SM."
+
+
+NPContribution$default["\[Mu]->eee"] := NPFromTheoryExpression["\[Mu]->eee"]
+NPInfo["\[Mu]->eee"] := ""
+
+
+LowScale$default["\[Mu]->eee"] := Mass["\[Mu]"]/.GetParameters[]

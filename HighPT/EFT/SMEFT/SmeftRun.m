@@ -199,12 +199,12 @@ SMEFTRun[expr_,lowscale_, highscale_,OptionsPattern[]]:=Module[
 	Switch[
 		mode,
 		"LL",
-		Return[SymmetricToNonRedundantSMEFT[NonRedundantToSymmetricSMEFT[expr]/.wc_WC->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[wc])]],
+		Return[SymmetricHermitianToNonRedundantSMEFT[NonRedundantToSymmetricHermitianSMEFT[expr]/.wc_WC->(wc+1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[wc])]],
 		"NLL",
 		params=DeleteDuplicates@Cases[expr, _WC, All];
 		evolution=Dispatch@Table[wc->Expand[(wc+1/2 1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[wc])/.a_WC->(a+1/2 1/(16\[Pi]^2)Log[lowscale/highscale]SMEFTAD[a])]/.Log[b_]^2->2*Log[b]^2,{wc,params}];
 		(*Print[evolution];*)
-		Return[SymmetricToNonRedundantSMEFT[NonRedundantToSymmetricSMEFT[expr]/.evolution]],
+		Return[SymmetricHermitianToNonRedundantSMEFT[NonRedundantToSymmetricHermitianSMEFT[expr]/.evolution]],
 		"DsixTools",
 		(*If[MatchQ[OptionValue[Basis],"custom"],
 			Message[SMEFTRun::custombasisdsixtools];Abort[]];*)
@@ -228,7 +228,7 @@ SMEFTRun[expr_,lowscale_, highscale_,OptionsPattern[]]:=Module[
 			];
 			evolution=Dispatch[Join[(#1->DsixToolsToHighPTSMEFT[DsixTools`SMEFTEvolve[HighPTToDsixToolsSMEFT[#1],lowscale,highscale]]&)/@params,eqevolution]];
 			(*Print[evolution//Normal];*)
-			Return[SymmetricToNonRedundantSMEFT[NonRedundantToSymmetricSMEFT[expr]/.evolution]],
+			Return[SymmetricHermitianToNonRedundantSMEFT[NonRedundantToSymmetricHermitianSMEFT[expr]/.evolution]],
 			Message[SMEFTRun::nonnumericscale];Abort[];
 		];,
 		"Off",

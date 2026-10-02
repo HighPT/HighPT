@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+   
+
+
 Package["HighPT`"]
 
 
@@ -66,7 +69,9 @@ PackageScope["$WCList4d8"]
 (*PackageScope["RelatedIndicesSMEFT"]
 PackageScope["ToRedundantSMEFT"]
 PackageScope["ToNonRedundantSMEFT"]*)
+PackageScope["NonRedundantToSymmetricHermitianSMEFT"]
 PackageScope["NonRedundantToSymmetricSMEFT"]
+PackageScope["SymmetricHermitianToNonRedundantSMEFT"]
 PackageScope["SymmetricToNonRedundantSMEFT"]
 
 
@@ -227,7 +232,8 @@ class3WC= Alternatives[
 
 
 class6WC= Alternatives[
-	"ll","qq1","qq3","uu","dd"
+	"ll","qq1","qq3","uu","dd",
+	"l4H21"
 ];
 
 
@@ -750,7 +756,7 @@ RedundancyAssociation[lab_]:=Module[
 ]
 
 
-NonRedundantToSymmetricAssociation = Association[
+NonRedundantToSymmetricHermitianAssociation = Association[
 	Table[
 		Table[
 			i -> Sum[WC[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]+Sum[Conjugate[WC[lab,j]],{j,RedundancyAssociation[lab]["conjugate"][i]/._Missing->0}]
@@ -761,12 +767,24 @@ NonRedundantToSymmetricAssociation = Association[
 		{lab,Join[$WCList0d6,$WCList2d6,$WCList4d6]}
 	]//Flatten
 ]
+NonRedundantToSymmetricAssociation = Association[
+	Table[
+		Table[
+			i -> Sum[WC[lab,j],{j,RedundancyAssociation[lab]["redundant"][i]}]
+			,
+			{i,WarsawBasis[lab]}
+		]
+		,
+		{lab,Join[$WCList0d6,$WCList2d6,$WCList4d6]}
+	]//Flatten
+]
 
 
+NonRedundantToSymmetricHermitianSMEFT[expr_] := expr/.NonRedundantToSymmetricHermitianAssociation
 NonRedundantToSymmetricSMEFT[expr_] := expr/.NonRedundantToSymmetricAssociation
 
 
-SymmetricToNonRedundantAssociation = Association[
+SymmetricHermitianToNonRedundantAssociation = Association[
 	Table[
 		Table[
 			If[Length[Join[RedundancyAssociation[lab]["redundant"][i],RedundancyAssociation[lab]["conjugate"][i]/._Missing->{}]] == 1,
@@ -780,8 +798,23 @@ SymmetricToNonRedundantAssociation = Association[
 		{lab,Join[$WCList0d6,$WCList2d6,$WCList4d6]}
 	]//Flatten
 ]
+SymmetricToNonRedundantAssociation = Association[
+	Table[
+		Table[
+			If[Length[RedundancyAssociation[lab]["redundant"][i]] == 1,
+				Nothing[],
+				i->1/Length[RedundancyAssociation[lab]["redundant"][i]] i
+			]
+			,
+		{i,WarsawBasis[lab]}
+		]
+		,
+		{lab,Join[$WCList0d6,$WCList2d6,$WCList4d6]}
+	]//Flatten
+]
 
 
+SymmetricHermitianToNonRedundantSMEFT[expr_] := expr/.SymmetricHermitianToNonRedundantAssociation
 SymmetricToNonRedundantSMEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
 
 
