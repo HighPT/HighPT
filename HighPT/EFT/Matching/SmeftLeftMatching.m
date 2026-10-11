@@ -238,11 +238,11 @@ MassRotate[Conjugate[a_],"dd"]:=MassRotate[a,"dd"]\[Conjugate]
 g22onmW2:=(*(4\[Pi] Param["\[Alpha]EM"])/(Param["sW"]^2 Mass["WBoson"]^2)(1+Param["vev"]^2WC["HW",{}])^2*)Param["g2"]^2/Mass["WBoson"]^2;
 
 
-WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+Param["vev"]^4/2 (WC["l2H4D2",{\[Alpha],\[Beta]}]+I*WC["l2H4D3",{\[Alpha],\[Beta]}]);
+WCoupling["l",{\[Alpha]_,\[Beta]_}]:=KroneckerDelta[\[Alpha],\[Beta]]+Param["vev"]^2 WC["Hl3",{\[Alpha],\[Beta]}]+Param["vev"]^4/2 (WC["l2H4D2",{\[Alpha],\[Beta]}]-I*WC["l2H4D3",{\[Alpha],\[Beta]}]+WC["l2H4D4",{\[Alpha],\[Beta]}]);
 
 
 WCouplingNP["q", {i_, j_}] := Param["vev"]^2 MassRotate[WC["Hq3",{i,j}],"ud"];
-WCoupling["q",{i_,j_}]:=Vckm[i,j] + (WCouplingNP["q", {i, j}] + WCouplingNP["q", {i, j}]\[Conjugate]) (1 - KroneckerDelta[i,j]) + WCouplingNP["q", {i, j}] KroneckerDelta[i,j] + Param["vev"]^4/2 (MassRotate[WC["q2H4D2",{i,j}],"ud"]+I*MassRotate[WC["q2H4D3",{i,j}],"ud"]);
+WCoupling["q",{i_,j_}]:=Vckm[i,j] (*+ (WCouplingNP["q", {i, j}] + WCouplingNP["q", {i, j}]\[Conjugate]) (1 - KroneckerDelta[i,j])*) + WCouplingNP["q", {i, j}](* KroneckerDelta[i,j]*) + Param["vev"]^4/2 (MassRotate[WC["q2H4D2",{i,j}],"ud"]-I*MassRotate[WC["q2H4D3",{i,j}],"ud"]+MassRotate[WC["q2H4D4",{i,j}],"ud"]);
 
 
 WCoupling["ud",{i_,j_}]:=1/2 Param["vev"]^2 WC["Hud",{i,j}] + Param["vev"]^4/2 WC["udH4D",{i,j}];
@@ -293,7 +293,7 @@ TLMatching[WCLS["Md",{\[Alpha]_,\[Beta]_}]] := Param["vev"]/Sqrt[2] (Yukawa["d",
 TLMatching[WCLS["\[Nu]\[Gamma]",{\[Alpha]_,\[Beta]_}]]:=0;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*\[Delta]gZ, \[Delta]gW*)
 
 
@@ -449,18 +449,18 @@ TLMatching[WCLS["udV1RR",{i_,j_,k_,l_}]]:=WC["ud1",{i,j,k,l}]-g22onmW2/2 1/3 WCo
 TLMatching[WCLS["udV8RR",{i_,j_,k_,l_}]]:=WC["ud8",{i,j,k,l}]-g22onmW2 WCoupling["ud",{i,l}]WCoupling["ud",{j,k}]\[Conjugate];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*(LL) (RR)*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Leptonic*)
 
 
-TLMatching[WCLS["\[Nu]eVLR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["le",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-gZ2onmZ2 ZCoupling["\[Nu]L",{\[Alpha],\[Beta]}]ZCoupling["eR",{\[Gamma],\[Delta]}];
+TLMatching[WCLS["\[Nu]eVLR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["le",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-gZ2onmZ2 ZCoupling["\[Nu]L",{\[Alpha],\[Beta]}]ZCoupling["eR",{\[Gamma],\[Delta]}] + Param["vev"]^2/2 (WC["l2e2H21",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-WC["l2e2H22",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]);
 
 
-TLMatching[WCLS["eeVLR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["le",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-gZ2onmZ2 ZCoupling["eL",{\[Alpha],\[Beta]}]ZCoupling["eR",{\[Gamma],\[Delta]}];
+TLMatching[WCLS["eeVLR",{\[Alpha]_,\[Beta]_,\[Gamma]_,\[Delta]_}]]:=WC["le",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]-gZ2onmZ2 ZCoupling["eL",{\[Alpha],\[Beta]}]ZCoupling["eR",{\[Gamma],\[Delta]}]+ Param["vev"]^2/2 (WC["l2e2H21",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]+WC["l2e2H22",{\[Alpha],\[Beta],\[Gamma],\[Delta]}]);
 
 
 (* ::Subsubsection::Closed:: *)
@@ -612,7 +612,7 @@ TLMatching[WCLS["gZHuR",{i_,j_}]] := Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["s
 TLMatching[WCLS["gZHdR",{i_,j_}]] := Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/(Param["sW"]*Param["cW"]) Param["vev"] WC["Hd", {i, j}]
 
 
-TLMatching[WCLS["gWHqL",{i_,j_}]] := - Sqrt[2] Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/Param["sW"] Param["vev"] ((MassRotate[WC["Hq3",{i,j}],"ud"] + MassRotate[WC["Hq3",{j, i}],"ud"]\[Conjugate]) (1 - KroneckerDelta[i,j]) + MassRotate[WC["Hq3",{i,j}],"ud"]KroneckerDelta[i,j])
+TLMatching[WCLS["gWHqL",{i_,j_}]] := - Sqrt[2] Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/Param["sW"] Param["vev"] ((*(MassRotate[WC["Hq3",{i,j}],"ud"] + MassRotate[WC["Hq3",{j, i}],"ud"]\[Conjugate]) (1 - KroneckerDelta[i,j])*) + MassRotate[WC["Hq3",{i,j}],"ud"](*KroneckerDelta[i,j]*))
 TLMatching[WCLS["gWHqR",{i_,j_}]] := - (1/Sqrt[2]) Sqrt[4*\[Pi]*Param["\[Alpha]EM"]]/Param["sW"] Param["vev"] WC["Hud", {i, j}]
 
 
@@ -747,10 +747,11 @@ MatchToSMEFT[expr_,OptionsPattern[]]:=Module[
 						tmp
 					],
 					(TLMatching[i]/._WC->0)
-				],
+				]//SymmetricToNonRedundantSMEFT,
 			{i,var}
 		]];
-		res = SymmetricToNonRedundantSMEFT[NonRedundantToSymmetricLEFT[expr]/.disp];
+		(*res = SymmetricToNonRedundantSMEFT[NonRedundantToSymmetricLEFT[expr]/.disp];*)
+		res = NonRedundantToSymmetricLEFT[expr]/.disp;
 		(*res=expr/.a_WCL:>EFTTruncate[TLMatching[a]/.b_Param:>SMEFTValue[b], EFTorder->(OptionValue[OperatorDimension]-4), OperatorDimension->OptionValue[OperatorDimension]];
 		(*Print[res];*)
 		If[!OptionValue[SM],res = (res - (res/._WC->0))];*)

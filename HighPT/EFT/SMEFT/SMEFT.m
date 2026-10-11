@@ -818,32 +818,76 @@ SymmetricHermitianToNonRedundantSMEFT[expr_] := expr/.SymmetricHermitianToNonRed
 SymmetricToNonRedundantSMEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
 
 
-(*relatedtable = Table[
-	Cases[
-		Join[
-			Flatten[Table[{j,WC[i,j]},{i,$WCList4d6},{j,indexlist4}],1],
-			Flatten[Table[{j,WC[i,j]},{i,$WCList2d6},{j,indexlist2}],1],
-			Flatten[Table[{j,WC[i,j]},{i,$WCList0d6},{j,indexlist0}],1]
-		],
-		{_,i}
-		],
-	{i,WarsawBasis[]}
-];*)
+(* ::Section:: *)
+(*SMEFT values of parameters*)
 
 
-(*RelatedIndicesSMEFT = Association@Table[i[[1,2]]->i[[;;,1]],{i,relatedtable}];*)
+SMEFTValue[x_] := x
 
 
-(*replaceredundantSMEFT = Dispatch@Table[i->Sum[WC[i[[1]],j],{j,RelatedIndicesSMEFT[i]}],{i,Keys@RelatedIndicesSMEFT}]*)
+(* ::Subsection:: *)
+(*Higgs mass, vev, self-coupling*)
 
 
-(*replacenonredundantSMEFT = Dispatch@Table[i->1/Length[RelatedIndicesSMEFT[i]]*i,{i,Keys@RelatedIndicesSMEFT}]*)
+CHkin = Param["vev"]^2 (WC["HBox",{}]-1/4 WC["HD",{}])
 
 
-(*ToRedundantSMEFT[expr_] := expr/.replaceredundantSMEFT*)
+(*SMEFTValue[Param["\[Lambda]"]] := *)
+SMEFTValue[Param["vev"]] := Param["vev"](1+(3 Param["vev"]^2)/(4 Param["\[Lambda]"])WC["H",{}])
+(*SMEFTValue[Mass["H"]] := 2 Param["\[Lambda]"] Param["vev"]^2(1 - (3 Param["vev"]^2)/(2 Param["\[Lambda]"])WC["H",{}]+2*CHkin)*)
 
 
-(*ToNonRedundantSMEFT[expr_] := expr/.replacenonredundantSMEFT*)
+(* ::Subsection:: *)
+(*Yukawas - to do*)
+
+
+(* ::Subsection:: *)
+(*Gauge couplings*)
+
+
+YY = WC["WBH41",{}] + 2 WC["HWB",{}](WC["HW",{}]+WC["HB",{}]);
+
+
+(*SMEFTValue[Param["g1"]] := Param["g1"](1+Param["vev"]^2WC["HB",{}])
+SMEFTValue[Param["g2"]] := Param["g2"](1+Param["vev"]^2WC["HW",{}])
+SMEFTValue[Param["g3"]] := Param["g3"](1+Param["vev"]^2WC["HG",{}])*)
+
+
+(*SMEFTValue[Param["\[Alpha]EM"]] := (Param["g1"]^2 Param["g2"]^2)/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2))-(Param["g1"]^3 Param["g2"]^3 Param["vev"]^2 WC["HWB",{}])/(2 \[Pi] (Param["g1"]^2+Param["g2"]^2)^2)-1/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3) Param["g2"]^3 (2 Param["g1"]^5 Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+2 Param["g1"]^3 Param["g2"]^2 Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+2 Param["g1"]^5 Param["vev"]^4 WC["HW",{}] WC["HWB",{}]+2 Param["g1"]^3 Param["g2"]^2 Param["vev"]^4 WC["HW",{}] WC["HWB",{}]-4 Param["g1"]^4 Param["g2"] Param["vev"]^4 WC["HWB",{}]^2+Param["g1"]^5 Param["vev"]^4 WC["WBH41",{}]+Param["g1"]^3 Param["g2"]^2 Param["vev"]^4 WC["WBH41",{}])*)
+
+
+SMEFTValue[Param["\[Alpha]EM"]] := (Param["g1"]^2 Param["g2"]^2)/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2))-(Param["g1"]^3 Param["g2"]^3 Param["vev"]^2 WC["HWB",{}])/(2 \[Pi] (Param["g1"]^2+Param["g2"]^2)^2)-(Param["g1"]^5 Param["g2"]^3 Param["vev"]^4 WC["HB",{}] WC["HWB",{}])/(2 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)-(Param["g1"]^3 Param["g2"]^5 Param["vev"]^4 WC["HB",{}] WC["HWB",{}])/(2 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)-(Param["g1"]^5 Param["g2"]^3 Param["vev"]^4 WC["HW",{}] WC["HWB",{}])/(2 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)-(Param["g1"]^3 Param["g2"]^5 Param["vev"]^4 WC["HW",{}] WC["HWB",{}])/(2 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)+(Param["g1"]^4 Param["g2"]^4 Param["vev"]^4 WC["HWB",{}]^2)/(\[Pi] (Param["g1"]^2+Param["g2"]^2)^3)+(Param["g1"]^6 Param["g2"]^2 Param["vev"]^4 WC["W2H43",{}])/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)+(Param["g1"]^4 Param["g2"]^4 Param["vev"]^4 WC["W2H43",{}])/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)-(Param["g1"]^5 Param["g2"]^3 Param["vev"]^4 WC["WBH41",{}])/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)-(Param["g1"]^3 Param["g2"]^5 Param["vev"]^4 WC["WBH41",{}])/(4 \[Pi] (Param["g1"]^2+Param["g2"]^2)^3)
+
+
+(*SMEFTValue[Param["gZ"]] := Sqrt[Param["g2"]^2+Param["g1"]^2](1+(Param["g1"]Param["g2"]Param["vev"]^2)/(Param["g1"]^2+Param["g2"]^2) WC["HWB",{}]) + 1/(Param["g1"]^2+Param["g2"]^2)^(3/2) Param["vev"]^4/2 (Param["g1"]Param["g2"](Param["g1"]^2+Param["g2"]^2)YY + (Param["g1"]^4+Param["g1"]^2 Param["g2"]^2+Param["g2"]^4)WC["HWB",{}]^2)*)
+
+
+SMEFTValue[Param["gZ"]] := Sqrt[Param["g1"]^2+Param["g2"]^2]+(Param["g1"] Param["g2"] Param["vev"]^2 WC["HWB",{}])/Sqrt[Param["g1"]^2+Param["g2"]^2]+(Param["g1"]^3 Param["g2"] Param["vev"]^4 WC["HB",{}] WC["HWB",{}])/(Param["g1"]^2+Param["g2"]^2)^(3/2)+(Param["g1"] Param["g2"]^3 Param["vev"]^4 WC["HB",{}] WC["HWB",{}])/(Param["g1"]^2+Param["g2"]^2)^(3/2)+(Param["g1"]^3 Param["g2"] Param["vev"]^4 WC["HW",{}] WC["HWB",{}])/(Param["g1"]^2+Param["g2"]^2)^(3/2)+(Param["g1"] Param["g2"]^3 Param["vev"]^4 WC["HW",{}] WC["HWB",{}])/(Param["g1"]^2+Param["g2"]^2)^(3/2)+(Param["g1"]^4 Param["vev"]^4 WC["HWB",{}]^2)/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g1"]^2 Param["g2"]^2 Param["vev"]^4 WC["HWB",{}]^2)/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g2"]^4 Param["vev"]^4 WC["HWB",{}]^2)/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g1"]^2 Param["g2"]^2 Param["vev"]^4 WC["W2H43",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g2"]^4 Param["vev"]^4 WC["W2H43",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g1"]^3 Param["g2"] Param["vev"]^4 WC["WBH41",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g1"] Param["g2"]^3 Param["vev"]^4 WC["WBH41",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))
+
+
+(* ::Subsection:: *)
+(*Mixing angle*)
+
+
+(*SMEFTValue[Param["sW"]] := Param["g1"]/Sqrt[Param["g1"]^2+Param["g2"]^2]-(Param["g1"]^2 Param["g2"] Param["vev"]^2 WC["HWB",{}]-Param["g2"]^3 Param["vev"]^2 WC["HWB",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^(3/2))-1/(8 Param["g1"] (Param["g1"]^2+Param["g2"]^2)^(5/2)) (4 Param["g1"]^5 Param["g2"] Param["vev"]^4 WC["HB",{}] WC["HWB",{}]-4 Param["g1"] Param["g2"]^5 Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+4 Param["g1"]^5 Param["g2"] Param["vev"]^4 WC["HW",{}] WC["HWB",{}]-4 Param["g1"] Param["g2"]^5 Param["vev"]^4 WC["HW",{}] WC["HWB",{}]-7 Param["g1"]^4 Param["g2"]^2 Param["vev"]^4 WC["HWB",{}]^2+6 Param["g1"]^2 Param["g2"]^4 Param["vev"]^4 WC["HWB",{}]^2+Param["g2"]^6 Param["vev"]^4 WC["HWB",{}]^2+2 Param["g1"]^5 Param["g2"] Param["vev"]^4 WC["WBH41",{}]-2 Param["g1"] Param["g2"]^5 Param["vev"]^4 WC["WBH41",{}])*)
+SMEFTValue[Param["sW"]] := Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)]-(Param["g1"] Param["g2"] Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^2 WC["HWB",{}])/(2 (Param["g1"]^2+Param["g2"]^2))+(Param["g2"]^3 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^2 WC["HWB",{}])/(2 Param["g1"] (Param["g1"]^2+Param["g2"]^2))-(Param["g1"]^3 Param["g2"] Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["HB",{}] WC["HWB",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^2)+(Param["g2"]^5 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["HB",{}] WC["HWB",{}])/(2 Param["g1"] (Param["g1"]^2+Param["g2"]^2)^2)-(Param["g1"]^3 Param["g2"] Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["HW",{}] WC["HWB",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^2)+(Param["g2"]^5 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["HW",{}] WC["HWB",{}])/(2 Param["g1"] (Param["g1"]^2+Param["g2"]^2)^2)+(7 Param["g1"]^2 Param["g2"]^2 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["HWB",{}]^2)/(8 (Param["g1"]^2+Param["g2"]^2)^2)-(3 Param["g2"]^4 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["HWB",{}]^2)/(4 (Param["g1"]^2+Param["g2"]^2)^2)-(Param["g2"]^6 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["HWB",{}]^2)/(8 Param["g1"]^2 (Param["g1"]^2+Param["g2"]^2)^2)-(Param["g1"]^2 Param["g2"]^2 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["W2H43",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^2)-(Param["g2"]^4 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["W2H43",{}])/(2 (Param["g1"]^2+Param["g2"]^2)^2)-(Param["g1"]^3 Param["g2"] Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["WBH41",{}])/(4 (Param["g1"]^2+Param["g2"]^2)^2)+(Param["g2"]^5 Sqrt[Param["g1"]^2/(Param["g1"]^2+Param["g2"]^2)] Param["vev"]^4 WC["WBH41",{}])/(4 Param["g1"] (Param["g1"]^2+Param["g2"]^2)^2)
+SMEFTValue[Param["cW"]] := EFTTruncate[Sqrt[1-SMEFTValue[Param["sW"]]^2], EFTorder->4, OperatorDimension->8](*(Param["g2"]/Sqrt[Param["g2"]^2+Param["g1"]^2]) (1+Param["vev"]^2/2 Param["g2"]/Param["g1"] (Param["g2"]^2-Param["g1"]^2)/(Param["g2"]^2+Param["g1"]^2) WC["HWB",{}])(*//SMEFTValues*)*)
+
+
+(* ::Subsection:: *)
+(*Gauge boson masses*)
+
+
+SMEFTValue[Mass["WBoson"]] := 1/2 Param["g2"] Param["vev"]+1/16 Param["g2"] Param["vev"]^5 (WC["H61",{}]-WC["H62",{}])
+
+
+(*SMEFTValue[Mass["ZBoson"]] := 1/2 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"]+(Param["vev"]^3 (Param["g1"]^2 WC["HD",{}]+Param["g2"]^2 WC["HD",{}]+4 Param["g1"] Param["g2"] WC["HWB",{}]))/(8 Sqrt[Param["g1"]^2+Param["g2"]^2])+1/8 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"] (-((8 (1/8 (Param["g1"]^2+Param["g2"]^2) Param["vev"]^4 WC["HD",{}]+1/2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HWB",{}])^2)/((Param["g1"]^2+Param["g2"]^2)^2 Param["vev"]^4))+1/((Param["g1"]^2+Param["g2"]^2) Param["vev"]^2) 8 (1/16 (Param["g1"]^2+Param["g2"]^2) (Param["vev"]^6 WC["H61",{}]+Param["vev"]^6 WC["H62",{}])+1/4 Param["g1"] Param["g2"] Param["vev"]^6 WC["HD",{}] WC["HWB",{}]+1/4 Param["vev"]^2 (2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HB",{}] WC["HWB",{}]+2 Param["g1"] Param["g2"] Param["vev"]^4 WC["HW",{}] WC["HWB",{}]+Param["g1"]^2 Param["vev"]^4 WC["HWB",{}]^2+Param["g2"]^2 Param["vev"]^4 WC["HWB",{}]^2+Param["g1"] Param["g2"] Param["vev"]^4 WC["WBH41",{}])))*)
+
+
+(*SMEFTValue[Mass["ZBoson"]] := 1/2 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"]+(3 Param["g1"]^2 Param["vev"]^3 WC["H",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["\[Lambda]"])+(3 Param["g2"]^2 Param["vev"]^3 WC["H",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["\[Lambda]"])-(9 Param["g1"]^4 Param["vev"]^5 WC["H",{}]^2)/(64 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"]^2)-(9 Param["g1"]^2 Param["g2"]^2 Param["vev"]^5 WC["H",{}]^2)/(32 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"]^2)-(9 Param["g2"]^4 Param["vev"]^5 WC["H",{}]^2)/(64 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"]^2)+(9 Param["g1"]^2 Param["vev"]^5 WC["H",{}]^2)/(64 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["\[Lambda]"]^2)+(9 Param["g2"]^2 Param["vev"]^5 WC["H",{}]^2)/(64 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["\[Lambda]"]^2)+(Param["g1"]^2 Param["vev"]^5 WC["H61",{}])/(16 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g2"]^2 Param["vev"]^5 WC["H61",{}])/(16 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g1"]^2 Param["vev"]^5 WC["H62",{}])/(16 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g2"]^2 Param["vev"]^5 WC["H62",{}])/(16 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g1"]^2 Param["vev"]^3 WC["HD",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g2"]^2 Param["vev"]^3 WC["HD",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2])-(3 Param["g1"]^4 Param["vev"]^5 WC["H",{}] WC["HD",{}])/(32 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"])-(3 Param["g1"]^2 Param["g2"]^2 Param["vev"]^5 WC["H",{}] WC["HD",{}])/(16 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"])-(3 Param["g2"]^4 Param["vev"]^5 WC["H",{}] WC["HD",{}])/(32 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"])+(3 Param["g1"]^2 Param["vev"]^5 WC["H",{}] WC["HD",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["\[Lambda]"])+(3 Param["g2"]^2 Param["vev"]^5 WC["H",{}] WC["HD",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["\[Lambda]"])-(Param["g1"]^4 Param["vev"]^5 WC["HD",{}]^2)/(64 (Param["g1"]^2+Param["g2"]^2)^(3/2))-(Param["g1"]^2 Param["g2"]^2 Param["vev"]^5 WC["HD",{}]^2)/(32 (Param["g1"]^2+Param["g2"]^2)^(3/2))-(Param["g2"]^4 Param["vev"]^5 WC["HD",{}]^2)/(64 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g1"] Param["g2"] Param["vev"]^3 WC["HWB",{}])/(2 Sqrt[Param["g1"]^2+Param["g2"]^2])-(3 Param["g1"]^3 Param["g2"] Param["vev"]^5 WC["H",{}] WC["HWB",{}])/(8 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"])-(3 Param["g1"] Param["g2"]^3 Param["vev"]^5 WC["H",{}] WC["HWB",{}])/(8 (Param["g1"]^2+Param["g2"]^2)^(3/2) Param["\[Lambda]"])+(3 Param["g1"] Param["g2"] Param["vev"]^5 WC["H",{}] WC["HWB",{}])/(2 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["\[Lambda]"])+(Param["g1"] Param["g2"] Param["vev"]^5 WC["HB",{}] WC["HWB",{}])/(2 Sqrt[Param["g1"]^2+Param["g2"]^2])-(Param["g1"]^3 Param["g2"] Param["vev"]^5 WC["HD",{}] WC["HWB",{}])/(8 (Param["g1"]^2+Param["g2"]^2)^(3/2))-(Param["g1"] Param["g2"]^3 Param["vev"]^5 WC["HD",{}] WC["HWB",{}])/(8 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g1"] Param["g2"] Param["vev"]^5 WC["HD",{}] WC["HWB",{}])/(4 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g1"] Param["g2"] Param["vev"]^5 WC["HW",{}] WC["HWB",{}])/(2 Sqrt[Param["g1"]^2+Param["g2"]^2])-(Param["g1"]^2 Param["g2"]^2 Param["vev"]^5 WC["HWB",{}]^2)/(4 (Param["g1"]^2+Param["g2"]^2)^(3/2))+(Param["g1"]^2 Param["vev"]^5 WC["HWB",{}]^2)/(4 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g2"]^2 Param["vev"]^5 WC["HWB",{}]^2)/(4 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g1"] Param["g2"] Param["vev"]^5 WC["WBH41",{}])/(4 Sqrt[Param["g1"]^2+Param["g2"]^2])*)
+
+
+SMEFTValue[Mass["ZBoson"]] := 1/2 Sqrt[Param["g1"]^2+Param["g2"]^2] Param["vev"]+(Param["g1"]^2 Param["vev"]^6 WC["H61",{}])/(16 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g2"]^2 Param["vev"]^6 WC["H61",{}])/(16 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g1"]^2 Param["vev"]^6 WC["H62",{}])/(16 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g2"]^2 Param["vev"]^6 WC["H62",{}])/(16 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g1"]^2 Param["vev"]^3 WC["HD",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g2"]^2 Param["vev"]^3 WC["HD",{}])/(8 Sqrt[Param["g1"]^2+Param["g2"]^2])-(Param["g1"]^4 Param["vev"]^8 WC["HD",{}]^2)/(64 (Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2)^(3/2))-(Param["g1"]^2 Param["g2"]^2 Param["vev"]^8 WC["HD",{}]^2)/(32 (Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2)^(3/2))-(Param["g2"]^4 Param["vev"]^8 WC["HD",{}]^2)/(64 (Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2)^(3/2))+(Param["g1"] Param["g2"] Param["vev"]^3 WC["HWB",{}])/(2 Sqrt[Param["g1"]^2+Param["g2"]^2])+(Param["g1"] Param["g2"] Param["vev"]^6 WC["HB",{}] WC["HWB",{}])/(2 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])-(Param["g1"]^3 Param["g2"] Param["vev"]^8 WC["HD",{}] WC["HWB",{}])/(8 (Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2)^(3/2))-(Param["g1"] Param["g2"]^3 Param["vev"]^8 WC["HD",{}] WC["HWB",{}])/(8 (Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2)^(3/2))+(Param["g1"] Param["g2"] Param["vev"]^6 WC["HD",{}] WC["HWB",{}])/(4 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g1"] Param["g2"] Param["vev"]^6 WC["HW",{}] WC["HWB",{}])/(2 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])-(Param["g1"]^2 Param["g2"]^2 Param["vev"]^8 WC["HWB",{}]^2)/(4 (Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2)^(3/2))+(Param["g1"]^2 Param["vev"]^6 WC["HWB",{}]^2)/(4 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g2"]^2 Param["vev"]^6 WC["HWB",{}]^2)/(4 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g2"]^2 Param["vev"]^6 WC["W2H43",{}])/(4 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])+(Param["g1"] Param["g2"] Param["vev"]^6 WC["WBH41",{}])/(4 Sqrt[Param["g1"]^2 Param["vev"]^2+Param["g2"]^2 Param["vev"]^2])
 
 
 (* ::Section:: *)
@@ -859,50 +903,6 @@ DimensionCountingSMEFT[expr_]:=expr/.WC[lab_,ind_]:>WC[lab,ind]*Power[eps,MassDi
 
 
 SMEFTTruncate[expr_,lambdapower_Integer]:=(Series[DimensionCountingSMEFT[expr],{eps,0,-lambdapower}]//Normal)/.eps->1
-
-
-(* ::Section:: *)
-(*Truncate the (mixed) EFT - OLD*)
-
-
-(*Options[EFTTruncate] = {
-	EFTorder :> GetEFTorder[],
-	OperatorDimension :> GetOperatorDimension[],
-	ExpandComplex -> False
-};*)
-
-
-(*EFTTruncate[expr_, OptionsPattern[]] := Module[
-	{
-	tmpexpr,
-	exprwithdimensions, eps, ReWC, ImWC,
-	expanded
-	}
-	,
-	eps/:Conjugate[eps]:=eps;
-	(*ReWC/:Conjugate[ReWC[lab_,ind_]]:=ReWC[lab,ind];
-	ReWC/:Re[ReWC[lab_,ind_]]:=ReWC[lab,ind];
-	ReWC/:Im[ReWC[lab_,ind_]]:=0;
-	ImWC/:Conjugate[ImWC[lab_,ind_]]:=ImWC[lab,ind];
-	ImWC/:Re[ImWC[lab_,ind_]]:=0;
-	ImWC/:Im[ImWC[lab_,ind_]]:=ImWC[lab,ind];*)
-	If[
-		MatchQ[OptionValue[OperatorDimension],6],
-		tmpexpr = expr/.WC[l:Alternatives@@Join[$WCList0d8,$WCList2d8,$WCList4d8],_]:>0,
-		tmpexpr = expr
-	];
-	Switch[OptionValue[ExpandComplex],
-		True,
-		(*exprwithdimensions = ComplexExpand[tmpexpr/.WCL[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*(ReWCL[lab,ind]+I*ImWCL[lab,ind])/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*(ReWC[lab,ind]+I*ImWC[lab,ind])]*)
-		exprwithdimensions = tmpexpr/.Power[Abs[x_],2]:>Times[x,Conjugate[x]]/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WC[lab,ind](*;Print[tmpexpr]*),
-		False,
-		exprwithdimensions = tmpexpr(*/.WCL[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WCL[lab,ind]*)/.WC[lab_,ind_]:>Power[eps,MassDimension[lab]-4]*WC[lab,ind](*/.Conjugate[Times[eps,WCL[lab_,ind_]]]:>Times[eps,Conjugate[WCL[lab,ind]]]/.Conjugate[Times[eps,WC[lab_,ind_]]]:>Times[eps,Conjugate[WC[lab,ind]]]*),
-		_,
-		Print["Wrong value given for option ExpandComplex"];Abort[]
-	];
-	expanded = Normal[Series[exprwithdimensions,{eps,0,OptionValue[EFTorder]}]]/.eps->1;
-	Return[expanded(*/.ReWCL[lab_,ind_]:>Re[WCL[lab,ind]]/.ReWC[lab_,ind_]:>Re[WC[lab,ind]]/.ImWCL[lab_,ind_]:>Im[WCL[lab,ind]]/.ImWC[lab_,ind_]:>Im[WC[lab,ind]]*)]
-];*)
 
 
 (* ::Section:: *)

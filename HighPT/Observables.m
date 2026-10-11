@@ -55,6 +55,7 @@ PackageExport["TheoryExpression"]
 
 PackageScope["THCorrelation"]
 PackageScope["ExpCorrelation"]
+PackageScope["ExpCorrelation$default"]
 
 
 PackageScope["ExpValue"]
@@ -63,7 +64,6 @@ PackageScope["ExpValue$default"]
 
 PackageScope["SMPrediction"]
 PackageScope["SMPrediction$default"]
-PackageScope["SMExpression"] (* Probably outdated, check *)
 
 
 PackageScope["NPFromTheoryExpression"]
@@ -93,6 +93,9 @@ PackageScope["CheckboxBarSelectAll"]
 PackageScope["AllSelector"]
 
 
+PackageScope["null"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
 
@@ -104,16 +107,11 @@ PackageScope["AllSelector"]
 ObservableSectors[] := {"Flavor","Drell-Yan","Higgs","EW","LEP2","FCC","custom", "STXS-VH"};
 
 
-(* Remove EWObservables from here eventually *)
-ObservableList[] := Join[ObservableList/@ObservableSectors[],EWObservables[]]
+ObservableList[] := ObservableList/@ObservableSectors[]
 
 
-(*ObservableList["Flavor"] := FlavorObservables[];*)
+(* To be removed after Drell-Yan update *)
 ObservableList["Drell-Yan"] := Keys@LHCSearch[];
-(*ObservableList["EW"] := EWObservables[];*)
-(*ObservableList["Higgs"] := HiggsObservables[];*)
-(*ObservableList["LEP2"] := LEP2Observables[];*)
-(*ObservableList["FCC"] := FCCObservables[];*)
 
 
 ObservableList[_] := {}
@@ -123,7 +121,11 @@ ObservableList["custom"] := $CustomObservables;
 $CustomObservables = {};
 
 
-(* ::Section:: *)
+ObsTable[] := Column[ObsTable/@ObservableSectors[],Frame->True]
+ObsTable[sec_String] := Grid[{{sec,Column[ObsTable/@ObservableSectors[sec]]}},Dividers->All];
+
+
+(* ::Section::Closed:: *)
 (*Define Obs*)
 
 
@@ -153,14 +155,10 @@ Obs[label_] := If[MemberQ[Flatten[ObservableList[]],label],
 ]
 
 
-(* Obsolete, remove eventually *)
-SMPrediction$default[obs_]:=InputDependence[obs]*NumericalInput[obs]/.GetParameters[Errors->True]
-
-
 ObsGrid[obs_]:=Grid[Join[{{"label",obs}},Table[{i,Obs[obs][i]},{i,Keys@Obs[i]}]],Dividers->{All,True}]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Print information*)
 
 
@@ -181,7 +179,10 @@ THCorrelation[i_,j_] := 0
 SetAttributes[THCorrelation,Orderless]
 
 
-(* ::Section:: *)
+ExpCorrelation[i_,j_] := ExpCorrelation$default[i,j]
+
+
+(* ::Section::Closed:: *)
 (*Check observable implementation*)
 
 
@@ -219,7 +220,7 @@ CheckTheoryExpression[expr_] := Module[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Change an observable (also used to initialize)*)
 
 
@@ -287,6 +288,10 @@ ChangeObservable[obs_String,OptionsPattern[]] := Module[
 
 
 (* ::Section:: *)
+(*Change Correlation (to do)*)
+
+
+(* ::Section::Closed:: *)
 (*Restore observables to default values*)
 
 
@@ -298,7 +303,7 @@ RestoreObservables[obs_List] := RestoreObservables/@obs
 RestoreObservables[obs_String] := ChangeObservable[obs,Default]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Custom defined observables*)
 
 
@@ -418,7 +423,8 @@ RemoveObservable[name_String] := Module[
 (*Computing NP part from theory expressions*)
 
 
-(*NPFromTheoryExpression[obs_] := 1/SMPrediction$default[obs]["Value"] ((TheoryExpression[obs](*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>(SMValue[a,TreeOnly->True]+a))-(TheoryExpression[obs](*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>SMValue[a,TreeOnly->True]/._WC->0))/.GetParameters[]*)
+(* Default computation of NP contributions *)
+NPContribution$default[obs_] := NPFromTheoryExpression[obs]
 
 
 NPFromTheoryExpression[obs_] := Module[
@@ -433,14 +439,14 @@ NPFromTheoryExpression[obs_] := Module[
 	];
 	If[MatchQ[SMPrediction$default[obs]["Value"],0],
 		Return[expr/.GetParameters[]],
-		withsm = (expr(*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>(SMValue[a,TreeOnly->True]+a));
-		smonly = (expr(*/.PhiPPpl\[Nu]Rep[obs]*)/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>SMValue[a,TreeOnly->True]/._WC->0);
-		Return[1/SMPrediction$default[obs]["Value"] (withsm - smonly)/.GetParameters[]]
+		withsm = (expr/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>(SMValue[a,TreeOnly->True]+a));
+		smonly = (expr/.Around[a_,b_]:>a/._Phi:>0/.a_WCL:>SMValue[a,TreeOnly->True]/._WC->0);
+		Return[(*1/SMPrediction$default[obs]["Value"]*) (withsm - smonly)/.GetParameters[]]
 	]
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Interface for selecting observables*)
 
 

@@ -42,9 +42,6 @@ PackageScope["WCLS"]
 PackageScope["GetAllWCL"]
 
 
-PackageScope["LEFTTruncate"]
-
-
 PackageScope["NonRedundantToSymmetricHermitianLEFT"]
 PackageScope["NonRedundantToSymmetricLEFT"]
 PackageScope["SymmetricHermitianToNonRedundantLEFT"]
@@ -882,18 +879,3 @@ SymmetricToNonRedundantAssociation = Association[
 
 SymmetricHermitianToNonRedundantLEFT[expr_] := expr/.SymmetricHermitianToNonRedundantAssociation
 SymmetricToNonRedundantLEFT[expr_] := expr/.SymmetricToNonRedundantAssociation
-
-
-(* ::Section::Closed:: *)
-(*LEFT Truncation*)
-
-
-MassDimension[Alternatives@@$WCLList4LEFT] := 4
-MassDimension[Alternatives@@Join[$WCLList5SD, $WCLList5LEFT, $WCLList5psi2HVLEFT, $WCList5HXXLEFT]] := 5
-MassDimension[Alternatives@@Join[$WCLList6X3SD, $WCLList6psi4SD, $WCList6psi2XHLEFT]] := 6
-
-
-DimensionCountingLEFT[expr_]:=expr/.WCL[lab_,ind_]:>WCL[lab,ind]*Power[eps,MassDimension[lab]-4]/.Conjugate[WC[lab_,ind_]]:>Conjugate[WC[lab,ind]]*Power[eps,MassDimension[lab]-4]
-
-
-LEFTTruncate[expr_,lambdapower_Integer]:=(Series[DimensionCountingLEFT[expr],{eps,0,-lambdapower}]//Normal)/.eps->1

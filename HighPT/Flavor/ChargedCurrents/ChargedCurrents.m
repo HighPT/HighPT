@@ -30,17 +30,14 @@ Package["HighPT`"]
 PackageScope["SubstitutePsi"]
 
 
+PackageScope["SEW"]
+PackageScope["Phi"]
+PackageScope["PhiPPpl\[Nu]Rep"]
+PackageScope["PhiPPpl\[Nu]CorrRep"]
+
+
 (* ::Chapter:: *)
 (*Private:*)
-
-
-(*$ChargedCurrentSectors={"b->c"};*)
-
-
-(*FlavorObservables["ChargedCurrents"] = FlavorObservables/@$ChargedCurrentSectors*)
-
-
-(*ObsTable["ChargedCurrents"] := Grid[{{"ChargedCurrents",Column[ObsTable/@$ChargedCurrentSectors]}},Dividers->All];*)
 
 
 ObservableSectors["ChargedCurrents"] := {"b->c","s->u"};
@@ -48,7 +45,142 @@ ObservableList["ChargedCurrents"] := ObservableList/@ObservableSectors["ChargedC
 
 
 (* ::Section:: *)
-(*Semileptonic inputs OLD*)
+(*Semileptonic inputs *)
+
+
+(* ::Subsection:: *)
+(*Semileptonic inputs*)
+
+
+(* Short-distance corrections -- TODO LATER, Sew, \[Delta] and other stuff -- See stuff implemented by Luighi! *)
+
+
+SubstituteCC = {};
+
+
+(* ::Subsection:: *)
+(*Importing phase-space integrals*)
+
+
+(* Importing *)
+
+
+Get@FileNameJoin[{Global`$DirectoryHighPT,"Flavor","Inputs","PhiPPplnu.wl"}];
+Get@FileNameJoin[{Global`$DirectoryHighPT,"Flavor","Inputs","PhiPPplnuCorr.wl"}];
+
+
+(* Extracting the vectors of Wilson coefficients *)
+(* San Diego basis: {cVL,cVLR,cSRR,cSRL,cTRR} *)
+
+
+VecWC["B0->D+e\[Nu]"] := DeleteDuplicates@Cases[Keys[PhiPPpl\[Nu]Rep["B0->D+e\[Nu]"]],WCL[_,_],Infinity];
+VecWC["B0->D+\[Mu]\[Nu]"] := DeleteDuplicates@Cases[Keys[PhiPPpl\[Nu]Rep["B0->D+\[Mu]\[Nu]"]],WCL[_,_],Infinity];
+VecWC["B0->D+\[Tau]\[Nu]"] := DeleteDuplicates@Cases[Keys[PhiPPpl\[Nu]Rep["B0->D+\[Tau]\[Nu]"]],WCL[_,_],Infinity];
+
+
+(* ::Subsection:: *)
+(*Reconstructing the observables*)
+
+
+(* Decays width: mean and uncertainty *)
+
+
+mean\[CapitalGamma]obs[proc_String] := Sum[Re[c1*c2\[Conjugate]]*Phi[proc,c1,c2],{c1,VecWC[proc]},{c2,VecWC[proc]}](*/.PhiPPpl\[Nu]Rep[proc]/._Phi\[Rule]0/.Around[a_,b_]\[RuleDelayed]a*)
+
+
+\[Sigma]\[CapitalGamma]obs[proc_String] := Sqrt[Sum[
+	Re[c1 c2\[Conjugate]]Re[d1 d2\[Conjugate]]Phi[proc,c1,c2]["Uncertainty"]Phi[proc,d1,d2]["Uncertainty"] PhiCorr[Phi[proc,c1,c2],Phi[proc,d1,d2]],
+{c1,cChiral["PtoPpl\[Nu]"]},{c2,cChiral["PtoPpl\[Nu]"]},{d1,cChiral["PtoPpl\[Nu]"]},{d2,cChiral["PtoPpl\[Nu]"]}]](*/.PhiPPpl\[Nu]CorrRep[proc,proc]/._PhiCorr\[Rule]0/.PhiPPpl\[Nu]Rep[proc]*)
+
+
+\[CapitalGamma]obs[proc_String] := Around[(mean\[CapitalGamma]obs[proc]/.PhiPPpl\[Nu]Rep[proc]/._Phi->0/.Around[a_,b_]:>a),(\[Sigma]\[CapitalGamma]obs[proc]/.PhiPPpl\[Nu]CorrRep[proc,proc]/._PhiCorr->0/.PhiPPpl\[Nu]Rep[proc])]
+
+
+(* Ratio of decay widths: todo *)
+
+
+(* ::Section:: *)
+(*b -> c (Olcyr)*)
+
+
+ObservableList["b->c"] = {"B0->D+\[Tau]\[Nu]"};
+
+
+(*ObservableList["b->c"] = {(*"B0->D+e\[Nu]", "B0->D+\[Mu]\[Nu]",*) "B0->D+\[Tau]\[Nu]"(*, "RD(\[Mu]/e)" ,"RD(\[Tau]/l)"*)};*)
+
+
+(* ::Subsection:: *)
+(*Semileptonic*)
+
+
+(* TO CORRECT: I am not summing on neutrino flavors *)
+
+
+(* ::Subsubsection:: *)
+(*B0 -> D+e\[Nu] (TO DO - but be careful with conflicts with Luighi!)*)
+
+
+(* ::Subsubsection:: *)
+(*B0 -> D+\[Mu]\[Nu] (TO DO- but be careful with conflicts with Luighi!)*)
+
+
+(* ::Subsubsection:: *)
+(*B0 -> D+\[Tau]\[Nu] (Olcyr check here)*)
+
+
+(* To be removed later *)
+
+
+TheoryExpression["B0->D+\[Tau]\[Nu]"] := Lifetime["B0"]*SEW*mean\[CapitalGamma]obs["B0->D+\[Tau]\[Nu]"]/.Around[a_,b_]->a
+
+
+(* TO CHANGE LATER! *)
+
+
+ExpValue$default["B0->D+\[Tau]\[Nu]"] := Around[{0.1,0.02}]
+ExpInfo["B0->D+\[Tau]\[Nu]"] := ""
+
+
+SMPrediction$default["B0->D+\[Tau]\[Nu]"] := Lifetime["B0"]*SEW*\[CapitalGamma]obs["B0->D+\[Tau]\[Nu]"]/.a_WCL->SMValue[a,TreeOnly->True]/.GetParameters[Errors->False]/.SubstitutePsi
+SMInfo["B0->D+\[Tau]\[Nu]"] := "FLAG 2+1 average"
+
+
+NPInfo["B0->D+\[Tau]\[Nu]"] := ""
+
+
+LowScale$default["B0->D+\[Tau]\[Nu]"] := Mass["b"]/.GetParameters[]
+
+
+(* ::Subsubsection:: *)
+(*RD(\[Mu]/e) (TO DO)*)
+
+
+(* ::Subsection:: *)
+(*Leptonic (TO DO)*)
+
+
+me = {Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]};
+
+
+(* ::Subsubsection:: *)
+(*Bc -> \[Tau]\[Nu]*)
+
+
+(* TO BE FIXED: need mc at mb! *)
+
+
+(*Bctol\[Nu][lep_] := Lifetime["Bc"]/(64 \[Pi]) DecayConstant["Bc"]^2 Mass["Bc"]me[[lep]]^2 (1-me[[lep]]^2/Mass["Bc"]^2)^2 Sum[Abs[WCL["\[Nu]eduVLL",{j,lep,3,2}]-WCL["\[Nu]eduVLR",{j,lep,3,2}]-Mass["Bc"]^2/(Mass["c"]+Mass["b"]) (WCL["\[Nu]eduSRR",{j,lep,3,2}]-WCL["\[Nu]eduSRL",{j,lep,2,2}])]^2,{j,3}]*)
+
+
+(*ExpValue$default["Bc-\[Tau]\[Nu]Olcyr"] := Around[{0,0.3}]
+ExpInfo["Bc-\[Tau]\[Nu]Olcyr"] := "Condition that the total width is not saturated"*)
+
+
+(*LowScale$default["Bc-\[Tau]\[Nu]Olcyr"] := Mass["b"]/.GetParameters[]*)
+
+
+(* ::Section:: *)
+(*Semileptonic inputs (Luighi, to be substituted by Olcyr's numbers eventually)*)
 
 
 (* ::Code:: *)
@@ -124,14 +256,8 @@ SubstitutePsi = {
 };
 
 
-(* ::Section::Closed:: *)
-(*b -> c OLD*)
-
-
-ObservableList["b->c"] := {(*"B->D\[Mu]\[Nu]"*)};
-
-
-(*LowScale$default[Alternatives@@(ObservableList["b->c"]//Flatten)] := Mass["b"]/.GetParameters[];*)
+(* ::Section:: *)
+(*b -> c (Luighi, to be substituted by Olcyr's implementation)*)
 
 
 BtoDl\[Nu][proc_String,lep_] := Sum[(Psi["VV"][proc]Abs[WCL["\[Nu]eduVLL",{nu,lep,3,2}] + WCL["\[Nu]eduVLR",{nu,lep,3,2}]]^2+Psi["VS"][proc]/(Mass["b"]-Mass["c"]) Re[(WCL["\[Nu]eduVLL",{nu,lep,3,2}] + WCL["\[Nu]eduVLR",{nu,lep,3,2}])(WCL["\[Nu]eduSRR",{nu,lep,3,2}]+WCL["\[Nu]eduSRL",{nu,lep,3,2}])\[Conjugate]]+Psi["VT"][proc]Re[(WCL["\[Nu]eduVLL",{nu,lep,3,2}] + WCL["\[Nu]eduVLR",{nu,lep,3,2}])WCL["\[Nu]eduTRR",{nu,lep,3,2}]\[Conjugate]]+Psi["SS"][proc]/(Mass["b"]-Mass["c"])^2 Abs[WCL["\[Nu]eduSRR",{nu,lep,3,2}] + WCL["\[Nu]eduSRL",{nu,lep,3,2}]]^2+Psi["TT"][proc]Abs[WCL["\[Nu]eduTRR",{nu,lep,3,2}]]^2),{nu,3}]
@@ -219,8 +345,8 @@ SMPrediction$default["B->Dl\[Nu]_iso"] := TheoryExpression["B->Dl\[Nu]_iso"]/.a_
 ExpInfo["B->Dl\[Nu]_iso"] := "Isospin average of B0->D+ and B-->D0, from HFLAV (insert link)"
 
 
-(* ::Section::Closed:: *)
-(*b -> u OLD*)
+(* ::Section:: *)
+(*b -> u (Luighi, to be substituted by Olcyr's implementation)*)
 
 
 Bto\[Pi]l\[Nu][proc_String,lep_] := Sum[(Psi["VV"][proc]Abs[WCL["\[Nu]eduVLL",{nu,lep,3,1}] + WCL["\[Nu]eduVLR",{nu,lep,3,1}]]^2+Psi["VS"][proc]/(Mass["b"]-Mass["u"]) Re[(WCL["\[Nu]eduVLL",{nu,lep,3,1}] + WCL["\[Nu]eduVLR",{nu,lep,3,1}])(WCL["\[Nu]eduSRR",{nu,lep,3,1}]+WCL["\[Nu]eduSRL",{nu,lep,3,1}])\[Conjugate]]+Psi["VT"][proc]Re[(WCL["\[Nu]eduVLL",{nu,lep,3,1}] + WCL["\[Nu]eduVLR",{nu,lep,3,1}])WCL["\[Nu]eduTRR",{nu,lep,3,1}]\[Conjugate]]+Psi["SS"][proc]/(Mass["b"]-Mass["u"])^2 Abs[WCL["\[Nu]eduSRR",{nu,lep,3,1}] + WCL["\[Nu]eduSRL",{nu,lep,3,1}]]^2+Psi["TT"][proc]Abs[WCL["\[Nu]eduTRR",{nu,lep,3,1}]]^2),{nu,3}]
@@ -257,18 +383,15 @@ SMPrediction$default["B0->\[Pi]-l\[Nu]_high"] := TheoryExpression["B0->\[Pi]-l\[
 (*Correlations*)
 
 
-(*ExpCorrelation["RD\[Tau]l","RD*\[Tau]l"] = -0.39;*)
-
-
 (* ::Section:: *)
 (*s -> u *)
 
 
-ObservableList["s->u"] = {"K+->\[Pi]0\[Mu]\[Nu]", "KL->\[Pi]-\[Mu]\[Nu]", "K+->\[Mu]\[Nu]", "K+->e\[Nu]"};
+ObservableList["s->u"] = {(*"K+->\[Pi]0\[Mu]\[Nu]", "KL->\[Pi]-\[Mu]\[Nu]",*) "K+->\[Mu]\[Nu]", "K+->e\[Nu]"};
 
 
-(* ::Subsection:: *)
-(*Semileptonic*)
+(* ::Subsection::Closed:: *)
+(*Semileptonic (Luighi, to be substituted by Olcyr's implementation)*)
 
 
 Kto\[Pi]l\[Nu][proc_String,lep_] := (1+\[Delta]EM[proc]+\[Delta]SU2[proc])Sum[(Psi["VV"][proc]Abs[WCL["\[Nu]eduVLL",{nu,lep,2,1}] + WCL["\[Nu]eduVLR",{nu,lep,2,1}]]^2+Psi["VS"][proc]/(Mass["s"]-Mass["u"]) Re[(WCL["\[Nu]eduVLL",{nu,lep,2,1}] + WCL["\[Nu]eduVLR",{nu,lep,2,1}])(WCL["\[Nu]eduSRR",{nu,lep,2,1}]+WCL["\[Nu]eduSRL",{nu,lep,2,1}])\[Conjugate]]+Psi["VT"][proc]Re[(WCL["\[Nu]eduVLL",{nu,lep,2,1}] + WCL["\[Nu]eduVLR",{nu,lep,2,1}])WCL["\[Nu]eduTRR",{nu,lep,2,1}]\[Conjugate]]+Psi["SS"][proc]/(Mass["s"]-Mass["u"])^2 Abs[WCL["\[Nu]eduSRR",{nu,lep,2,1}] + WCL["\[Nu]eduSRL",{nu,lep,2,1}]]^2+Psi["TT"][proc]Abs[WCL["\[Nu]eduTRR",{nu,lep,2,1}]]^2),{nu,3}]
@@ -345,8 +468,8 @@ NPContribution$default["KL->\[Pi]-\[Mu]\[Nu]"] := NPFromTheoryExpression["KL->\[
 LowScale$default["KL->\[Pi]-\[Mu]\[Nu]"] := Mass["K0"]/.GetParameters[]
 
 
-(* ::Subsection:: *)
-(*Leptonic*)
+(* ::Subsection::Closed:: *)
+(*Leptonic (Poster child)*)
 
 
 me = {Mass["e"],Mass["\[Mu]"],Mass["\[Tau]"]};
@@ -371,9 +494,6 @@ SMPrediction$default["K+->\[Mu]\[Nu]"] := Lifetime["K+"]Param["GF"]^2/(8\[Pi]) D
 SMInfo["K+->\[Mu]\[Nu]"] := Row[{"Rosner et al. ", Hyperlink["1509.02220","https://arxiv.org/pdf/1509.02220"]}]
 
 
-NPContribution$default["K+->\[Mu]\[Nu]"] := NPFromTheoryExpression["K+->\[Mu]\[Nu]"]
-
-
 LowScale$default["K+->\[Mu]\[Nu]"] := Mass["K+"]/.GetParameters[]
 
 
@@ -390,9 +510,6 @@ ExpInfo["K+->e\[Nu]"] := Row[{"From PDG: ", Ref["PDGK"]}]
 
 SMPrediction$default["K+->e\[Nu]"] := Lifetime["K+"]Param["GF"]^2/(8\[Pi]) DecayConstant["K"]^2 Mass["e"]^2 Mass["K+"](1-Mass["e"]^2/Mass["K+"]^2)^2 Abs[Vckm[1,2]]^2 (1+\[Delta]K)/.GetParameters[Errors->True]
 SMInfo["K+->e\[Nu]"] := Row[{"Rosner et al. ", Hyperlink["1509.02220","https://arxiv.org/pdf/1509.02220"]}]
-
-
-NPContribution$default["K+->e\[Nu]"] := NPFromTheoryExpression["K+->e\[Nu]"]
 
 
 LowScale$default["K+->e\[Nu]"] := Mass["K+"]/.GetParameters[]
